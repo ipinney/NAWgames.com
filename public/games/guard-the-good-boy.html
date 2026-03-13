@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Guard the Good Boy 🐕</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+  :root {
+    --blue: #4A90D9;
+    --blue-dark: #2C6FAC;
+    --blue-light: #A8D4F5;
+    --yellow: #FFD93D;
+    --orange: #FF6B35;
+    --red: #FF3B3B;
+    --green: #4CAF50;
+    --purple: #9C27B0;
+    --bg: #FFF9F0;
+    --card: #FFFFFF;
+    --text: #2D2D2D;
+    --shadow: 0 4px 20px rgba(0,0,0,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    max-width: 480px;
+    margin: 0 auto;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; flex-direction: column; min-height: 100vh; padding: 16px; }
+  .screen.active { display: flex; }
+
+  /* ===== TITLE SCREEN ===== */
+  #title-screen {
+    background: linear-gradient(160deg, #1a3a5c 0%, #2C6FAC 40%, #4A90D9 70%, #A8D4F5 100%);
+    align-items: center; justify-content: center; text-align: center; gap: 20px;
+    position: relative; overflow: hidden;
+  }
+  #title-screen::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(255,217,61,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255,107,53,0.1) 0%, transparent 50%);
+  }
+  .title-stars { position: absolute; inset: 0; pointer-events: none; }
+  .star {
+    position: absolute; font-size: 18px;
+    animation: twinkle 2s infinite ease-in-out;
+  }
+  @keyframes twinkle { 0%,100%{opacity:0.3;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+
+  .game-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 10vw, 3rem);
+    color: white;
+    text-shadow: 4px 4px 0px #1a3a5c, 0 0 30px rgba(255,217,61,0.5);
+    line-height: 1.1;
+    position: relative; z-index:1;
+  }
+  .game-subtitle {
+    font-size: 1rem; color: rgba(255,255,255,0.85);
+    font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    position: relative; z-index:1;
+  }
+
+  /* Bluey SVG on title */
+  .title-bluey { position: relative; z-index:1; animation: titleBounce 2s ease-in-out infinite; }
+  @keyframes titleBounce { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-15px) rotate(3deg)} }
+
+  .btn-start {
+    background: var(--yellow);
+    color: #1a3a5c;
+    border: none; border-radius: 50px;
+    padding: 16px 48px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #c9a800, var(--shadow);
+    transition: all 0.1s;
+    position: relative; z-index:1;
+  }
+  .btn-start:active { transform: translateY(4px); box-shadow: 0 2px 0 #c9a800; }
+
+  .title-info { color: rgba(255,255,255,0.7); font-size:0.85rem; position:relative;z-index:1; }
+
+  /* ===== MAIN GAME ===== */
+  #game-screen { background: var(--bg); padding: 0; }
+
+  /* Top HUD */
+  .hud {
+    background: linear-gradient(135deg, #1a3a5c, #2C6FAC);
+    padding: 12px 16px 8px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px;
+  }
+  .hud-left { display:flex; flex-direction:column; }
+  .hud-day { color: rgba(255,255,255,0.7); font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+  .hud-love {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'Fredoka One', cursive;
+    color: white; font-size: 1.1rem;
+  }
+  .love-hearts { display:flex; gap:2px; }
+  .heart { font-size: 1.1rem; transition: transform 0.3s; }
+  .heart.filled { filter: drop-shadow(0 0 4px rgba(255,100,100,0.8)); }
+
+  .hud-center {
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .bluey-name {
+    font-family: 'Fredoka One', cursive;
+    color: var(--yellow); font-size: 1rem;
+  }
+  .bluey-level {
+    color: rgba(255,255,255,0.8); font-size: 0.7rem; font-weight: 700;
+  }
+
+  .hud-right { display:flex; flex-direction:column; align-items:flex-end; gap:2px; }
+  .score-label { color: rgba(255,255,255,0.6); font-size:0.65rem; font-weight:700; text-transform:uppercase; }
+  .score-val {
+    font-family: 'Fredoka One', cursive;
+    color: var(--yellow); font-size: 1.3rem;
+    text-shadow: 0 0 10px rgba(255,217,61,0.5);
+  }
+
+  /* Stats bars */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 6px; padding: 10px 12px;
+    background: white;
+    border-bottom: 2px solid #f0e8d8;
+  }
+  .stat-item { display:flex; flex-direction:column; gap:3px; align-items:center; }
+  .stat-label { font-size: 0.6rem; font-weight:800; text-transform:uppercase; color:#888; letter-spacing:0.5px; }
+  .stat-bar-wrap {
+    width: 100%; height: 8px; background: #EEE; border-radius: 10px; overflow:hidden;
+  }
+  .stat-bar {
+    height: 100%; border-radius: 10px;
+    transition: width 0.5s ease;
+  }
+  .stat-bar.hunger { background: linear-gradient(90deg, #FF6B35, #FFD93D); }
+  .stat-bar.thirst { background: linear-gradient(90deg, #4A90D9, #A8D4F5); }
+  .stat-bar.happy  { background: linear-gradient(90deg, #FF4081, #FF80AB); }
+  .stat-bar.clean  { background: linear-gradient(90deg, #9C27B0, #CE93D8); }
+  .stat-emoji { font-size: 1rem; }
+
+  /* Dog arena */
+  .arena {
+    position: relative;
+    height: 220px;
+    background: linear-gradient(180deg, #87CEEB 0%, #87CEEB 60%, #7EC850 60%, #5DA035 100%);
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .arena-ground {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
+    background: linear-gradient(180deg, #7EC850, #5DA035);
+  }
+  /* clouds */
+  .cloud {
+    position: absolute; font-size: 2rem; opacity: 0.7;
+    animation: cloudDrift linear infinite;
+  }
+  @keyframes cloudDrift { from{transform:translateX(-80px)} to{transform:translateX(calc(100vw + 80px))} }
+
+  /* Bluey in arena */
+  .bluey-arena {
+    position: absolute;
+    bottom: 55px; left: 50%; transform: translateX(-50%);
+    transition: transform 0.3s;
+    cursor: pointer;
+    z-index: 5;
+  }
+  .bluey-arena:hover { transform: translateX(-50%) scale(1.05); }
+  .bluey-arena.pet-anim { animation: petReact 0.5s ease; }
+  @keyframes petReact { 0%{transform:translateX(-50%) scale(1)} 50%{transform:translateX(-50%) scale(1.15) rotate(5deg)} 100%{transform:translateX(-50%) scale(1)} }
+  .bluey-arena.alert-anim { animation: alertShake 0.4s ease; }
+  @keyframes alertShake { 0%,100%{transform:translateX(-50%)} 25%{transform:translateX(calc(-50% - 8px))} 75%{transform:translateX(calc(-50% + 8px))} }
+
+  /* Mood bubble */
+  .mood-bubble {
+    position: absolute; bottom: 175px; left: 50%;
+    transform: translateX(-50%);
+    background: white; border-radius: 16px; padding: 4px 10px;
+    font-size: 1.2rem; box-shadow: var(--shadow);
+    opacity: 0; transition: opacity 0.3s;
+    z-index: 10; white-space: nowrap;
+    border: 2px solid #eee;
+  }
+  .mood-bubble.show { opacity: 1; }
+
+  /* Villain */
+  .villain {
+    position: absolute; bottom: 55px;
+    font-size: 2.5rem;
+    z-index: 8;
+    cursor: pointer;
+    transition: left 0.5s linear, right 0.5s linear;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+  }
+  .villain.from-left { left: -60px; animation: villainWalkRight 0.5s steps(2) infinite; }
+  .villain.from-right { right: -60px; animation: villainWalkLeft 0.5s steps(2) infinite; }
+  @keyframes villainWalkRight { 0%{transform:scaleX(1)} 50%{transform:scaleX(1) translateY(-3px)} }
+  @keyframes villainWalkLeft  { 0%{transform:scaleX(-1)} 50%{transform:scaleX(-1) translateY(-3px)} }
+  .villain-hp {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: #FF3B3B; color: white; font-size:0.55rem; font-weight:800;
+    padding: 1px 6px; border-radius: 10px; white-space:nowrap;
+  }
+
+  /* Floating text */
+  .float-text {
+    position: absolute; font-family:'Fredoka One',cursive;
+    font-size: 1.3rem; font-weight:900; pointer-events:none;
+    z-index: 20; animation: floatUp 1.2s ease forwards;
+  }
+  @keyframes floatUp { 0%{opacity:1;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-80px) scale(0.5)} }
+
+  /* Actions grid */
+  .actions-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 8px; padding: 12px;
+    background: white;
+    border-top: 2px solid #f0e8d8;
+  }
+  .action-btn {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px; padding: 10px 4px;
+    background: #F8F5EE;
+    border: 2px solid #E8E0D0;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.65rem; font-weight: 800;
+    color: #666; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .action-btn .action-icon { font-size: 1.6rem; }
+  .action-btn:active { transform: scale(0.93); background: #EDE8DC; }
+  .action-btn.cooldown { opacity: 0.4; pointer-events: none; }
+  .action-btn.highlight {
+    border-color: var(--orange);
+    background: #FFF5EE;
+    animation: btnPulse 1s ease infinite;
+  }
+  @keyframes btnPulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0.4)} 50%{box-shadow:0 0 0 6px rgba(255,107,53,0)} }
+
+  /* Medals section */
+  .medals-bar {
+    padding: 8px 12px;
+    background: linear-gradient(90deg, #FFF9F0, #FFF3E0);
+    border-top: 2px solid #f0e8d8;
+    display: flex; gap: 6px; align-items: center; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .medals-bar::-webkit-scrollbar { display:none; }
+  .medals-label { font-size:0.65rem; font-weight:800; color:#AAA; text-transform:uppercase; white-space:nowrap; }
+  .medal {
+    font-size: 1.4rem; filter: grayscale(100%) opacity(0.3);
+    transition: all 0.5s; flex-shrink:0; position:relative;
+  }
+  .medal.earned { filter: none; animation: medalEarned 0.6s ease; }
+  @keyframes medalEarned { 0%{transform:scale(0) rotate(-30deg)} 60%{transform:scale(1.3) rotate(5deg)} 100%{transform:scale(1) rotate(0)} }
+  .medal-tooltip {
+    display:none; position:absolute; bottom:110%; left:50%; transform:translateX(-50%);
+    background:#333; color:white; font-size:0.6rem; padding:3px 7px; border-radius:6px;
+    white-space:nowrap; z-index:50;
+  }
+  .medal:hover .medal-tooltip { display:block; }
+
+  /* Alert banner */
+  .alert-banner {
+    position: fixed; top: 0; left: 50%; transform: translateX(-50%) translateY(-100%);
+    max-width: 480px; width: 100%;
+    background: var(--red); color: white;
+    padding: 14px 20px; text-align:center;
+    font-family: 'Fredoka One', cursive; font-size: 1.1rem;
+    z-index: 100; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow: 0 4px 20px rgba(255,59,59,0.5);
+  }
+  .alert-banner.show { transform: translateX(-50%) translateY(0); }
+
+  /* Defense mini-game overlay */
+  #defense-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(10,20,40,0.92); z-index: 200;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px;
+  }
+  #defense-overlay.active { display: flex; }
+  .defense-title {
+    font-family: 'Fredoka One', cursive;
+    color: var(--yellow); font-size: 1.8rem;
+    text-align:center;
+    text-shadow: 0 0 20px rgba(255,217,61,0.6);
+  }
+  .defense-subtitle { color: rgba(255,255,255,0.7); font-size:0.9rem; text-align:center; }
+  .defense-arena {
+    width: min(400px, 90vw); height: 200px;
+    background: linear-gradient(180deg, #1a3a5c 0%, #2C6FAC 100%);
+    border-radius: 20px; position:relative; overflow:hidden;
+    border: 3px solid rgba(255,217,61,0.4);
+  }
+  .defense-bluey {
+    position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+  }
+  .defense-enemy {
+    position:absolute; font-size:2.5rem; top:20px;
+    cursor:pointer; transition: all 0.2s;
+    animation: enemyBob 0.5s ease-in-out infinite;
+    z-index:5;
+    filter: drop-shadow(0 0 8px rgba(255,59,59,0.6));
+  }
+  @keyframes enemyBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+  .defense-enemy:active { transform:scale(0.7); }
+  .defense-timer-bar {
+    width: min(400px, 90vw); height: 14px;
+    background: #333; border-radius:10px; overflow:hidden;
+  }
+  .defense-timer-fill {
+    height:100%; background: linear-gradient(90deg, var(--green), var(--yellow));
+    border-radius:10px; transition: width 0.1s linear;
+  }
+  .defense-score-disp {
+    font-family:'Fredoka One',cursive; color:white; font-size:1.2rem;
+  }
+  .defense-btn {
+    background: var(--yellow); color:#1a3a5c; border:none;
+    padding: 14px 40px; border-radius:50px; font-family:'Fredoka One',cursive;
+    font-size:1.2rem; cursor:pointer;
+    box-shadow: 0 4px 0 #c9a800;
+  }
+  .defense-btn:active { transform:translateY(3px); box-shadow:0 1px 0 #c9a800; }
+  .defense-result {
+    font-family:'Fredoka One',cursive; font-size:1.5rem; text-align:center;
+    display:none;
+  }
+  .defense-result.show { display:block; }
+
+  /* Victory overlay */
+  #victory-overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(10,20,40,0.95); z-index:300;
+    align-items:center; justify-content:center;
+    flex-direction:column; gap:12px;
+    text-align:center; padding:20px;
+  }
+  #victory-overlay.active { display:flex; }
+  .victory-emoji { font-size:4rem; animation: victoryPop 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes victoryPop { 0%{transform:scale(0)} 100%{transform:scale(1)} }
+  .victory-title {
+    font-family:'Fredoka One',cursive; color:var(--yellow);
+    font-size:2rem; text-shadow:0 0 20px rgba(255,217,61,0.7);
+  }
+  .victory-text { color:rgba(255,255,255,0.8); font-size:0.95rem; max-width:300px; }
+  .confetti-wrap { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+  .confetti-piece {
+    position:absolute; width:10px; height:10px; border-radius:2px;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0%{transform:translateY(-20px) rotate(0deg); opacity:1}
+    100%{transform:translateY(110vh) rotate(720deg); opacity:0}
+  }
+
+  /* Notification dot */
+  .notif-dot {
+    position:absolute; top:4px; right:4px;
+    width:8px; height:8px; background:var(--red);
+    border-radius:50%; display:none;
+    animation: notifPulse 1s infinite;
+  }
+  .notif-dot.show { display:block; }
+  @keyframes notifPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.4)} }
+
+  /* Danger indicator on stats */
+  .stat-item.danger .stat-label { color: var(--red); animation: dangerFlash 0.8s infinite; }
+  @keyframes dangerFlash { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* XP bar */
+  .xp-row {
+    padding: 6px 12px;
+    background: #f8f5ee;
+    border-bottom: 2px solid #f0e8d8;
+    display:flex; gap:8px; align-items:center;
+  }
+  .xp-label { font-size:0.65rem; font-weight:800; color:#AAA; text-transform:uppercase; white-space:nowrap; }
+  .xp-bar-wrap { flex:1; height:8px; background:#EEE; border-radius:10px; overflow:hidden; }
+  .xp-bar { height:100%; background:linear-gradient(90deg,#FFD93D,#FF6B35); border-radius:10px; transition:width 0.5s; }
+  .xp-val { font-size:0.65rem; font-weight:800; color:#888; white-space:nowrap; }
+
+  /* scrollable area */
+  .game-scroll { flex:1; overflow-y:auto; display:flex; flex-direction:column; }
+</style>
+</head>
+<body>
+
+<!-- ===== TITLE SCREEN ===== -->
+<div id="title-screen" class="screen active">
+  <div class="title-stars" id="title-stars"></div>
+
+  <div class="title-bluey">
+    <svg width="160" height="160" viewBox="0 0 160 160">
+      <!-- Body -->
+      <ellipse cx="80" cy="105" rx="42" ry="38" fill="#4A90D9"/>
+      <!-- Belly -->
+      <ellipse cx="80" cy="112" rx="26" ry="22" fill="#A8D4F5"/>
+      <!-- Head -->
+      <circle cx="80" cy="62" r="38" fill="#4A90D9"/>
+      <!-- Ears -->
+      <ellipse cx="52" cy="36" rx="12" ry="20" fill="#4A90D9" transform="rotate(-15 52 36)"/>
+      <ellipse cx="108" cy="36" rx="12" ry="20" fill="#4A90D9" transform="rotate(15 108 36)"/>
+      <ellipse cx="52" cy="36" rx="7" ry="13" fill="#2C6FAC" transform="rotate(-15 52 36)"/>
+      <ellipse cx="108" cy="36" rx="7" ry="13" fill="#2C6FAC" transform="rotate(15 108 36)"/>
+      <!-- Eyes -->
+      <circle cx="67" cy="58" r="9" fill="white"/>
+      <circle cx="93" cy="58" r="9" fill="white"/>
+      <circle cx="69" cy="59" r="5" fill="#1a3a5c"/>
+      <circle cx="95" cy="59" r="5" fill="#1a3a5c"/>
+      <circle cx="70" cy="57" r="2" fill="white"/>
+      <circle cx="96" cy="57" r="2" fill="white"/>
+      <!-- Nose -->
+      <ellipse cx="80" cy="72" rx="8" ry="5" fill="#1a3a5c"/>
+      <ellipse cx="78" cy="70" rx="2" ry="1.5" fill="rgba(255,255,255,0.4)"/>
+      <!-- Smile -->
+      <path d="M 68 80 Q 80 90 92 80" stroke="#1a3a5c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- Tongue -->
+      <ellipse cx="80" cy="84" rx="8" ry="6" fill="#FF6B8A"/>
+      <line x1="80" y1="80" x2="80" y2="90" stroke="#FF4A6E" stroke-width="1.5"/>
+      <!-- Paws -->
+      <ellipse cx="50" cy="138" rx="14" ry="10" fill="#4A90D9"/>
+      <ellipse cx="110" cy="138" rx="14" ry="10" fill="#4A90D9"/>
+      <ellipse cx="50" cy="140" rx="10" ry="6" fill="#2C6FAC"/>
+      <ellipse cx="110" cy="140" rx="10" ry="6" fill="#2C6FAC"/>
+      <!-- Tail -->
+      <path d="M 122 100 Q 145 80 140 60 Q 148 80 130 100" fill="#4A90D9"/>
+    </svg>
+  </div>
+
+  <div>
+    <div class="game-title">Guard the<br>Good Boy 🐕</div>
+    <div class="game-subtitle">Protect · Care · Defend</div>
+  </div>
+
+  <button class="btn-start" onclick="startGame()">Let's Go! 🦴</button>
+
+  <div class="title-info">Take care of Bluey & defend him from bad guys!</div>
+</div>
+
+<!-- ===== GAME SCREEN ===== -->
+<div id="game-screen" class="screen">
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-left">
+      <div class="hud-day" id="hud-day">Day 1</div>
+      <div class="hud-love">
+        <span>❤️</span>
+        <div class="love-hearts" id="love-hearts"></div>
+      </div>
+    </div>
+    <div class="hud-center">
+      <div class="bluey-name">Bluey</div>
+      <div class="bluey-level" id="hud-level">Level 1 Good Boy</div>
+    </div>
+    <div class="hud-right">
+      <div class="score-label">Score</div>
+      <div class="score-val" id="hud-score">0</div>
+    </div>
+  </div>
+
+  <!-- XP bar -->
+  <div class="xp-row">
+    <div class="xp-label">XP</div>
+    <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar" style="width:0%"></div></div>
+    <div class="xp-val" id="xp-val">0 / 100</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-item" id="stat-hunger">
+      <div class="stat-emoji">🍖</div>
+      <div class="stat-bar-wrap"><div class="stat-bar hunger" id="bar-hunger" style="width:80%"></div></div>
+      <div class="stat-label">Hungry</div>
+    </div>
+    <div class="stat-item" id="stat-thirst">
+      <div class="stat-emoji">💧</div>
+      <div class="stat-bar-wrap"><div class="stat-bar thirst" id="bar-thirst" style="width:80%"></div></div>
+      <div class="stat-label">Thirst</div>
+    </div>
+    <div class="stat-item" id="stat-happy">
+      <div class="stat-emoji">😄</div>
+      <div class="stat-bar-wrap"><div class="stat-bar happy" id="bar-happy" style="width:70%"></div></div>
+      <div class="stat-label">Happy</div>
+    </div>
+    <div class="stat-item" id="stat-clean">
+      <div class="stat-emoji">🛁</div>
+      <div class="stat-bar-wrap"><div class="stat-bar clean" id="bar-clean" style="width:90%"></div></div>
+      <div class="stat-label">Clean</div>
+    </div>
+  </div>
+
+  <div class="game-scroll">
+    <!-- Arena -->
+    <div class="arena" id="arena" onclick="petBluey(event)">
+      <div class="cloud" style="top:20px;animation-duration:18s;font-size:1.8rem">☁️</div>
+      <div class="cloud" style="top:40px;animation-duration:25s;animation-delay:-8s;font-size:2.5rem">☁️</div>
+      <div class="cloud" style="top:10px;animation-duration:22s;animation-delay:-14s">☁️</div>
+
+      <!-- Mood bubble -->
+      <div class="mood-bubble" id="mood-bubble">😊</div>
+
+      <!-- Bluey in arena -->
+      <div class="bluey-arena" id="bluey-arena">
+        <svg width="100" height="100" viewBox="0 0 160 160" id="bluey-svg">
+          <ellipse cx="80" cy="105" rx="42" ry="38" fill="#4A90D9"/>
+          <ellipse cx="80" cy="112" rx="26" ry="22" fill="#A8D4F5"/>
+          <circle cx="80" cy="62" r="38" fill="#4A90D9"/>
+          <ellipse cx="52" cy="36" rx="12" ry="20" fill="#4A90D9" transform="rotate(-15 52 36)"/>
+          <ellipse cx="108" cy="36" rx="12" ry="20" fill="#4A90D9" transform="rotate(15 108 36)"/>
+          <ellipse cx="52" cy="36" rx="7" ry="13" fill="#2C6FAC" transform="rotate(-15 52 36)"/>
+          <ellipse cx="108" cy="36" rx="7" ry="13" fill="#2C6FAC" transform="rotate(15 108 36)"/>
+          <circle cx="67" cy="58" r="9" fill="white"/>
+          <circle cx="93" cy="58" r="9" fill="white"/>
+          <circle cx="69" cy="59" r="5" fill="#1a3a5c" id="eye-l"/>
+          <circle cx="95" cy="59" r="5" fill="#1a3a5c" id="eye-r"/>
+          <circle cx="70" cy="57" r="2" fill="white"/>
+          <circle cx="96" cy="57" r="2" fill="white"/>
+          <ellipse cx="80" cy="72" rx="8" ry="5" fill="#1a3a5c"/>
+          <ellipse cx="78" cy="70" rx="2" ry="1.5" fill="rgba(255,255,255,0.4)"/>
+          <path d="M 68 80 Q 80 90 92 80" stroke="#1a3a5c" stroke-width="2.5" fill="none" stroke-linecap="round" id="mouth"/>
+          <ellipse cx="80" cy="84" rx="8" ry="6" fill="#FF6B8A" id="tongue"/>
+          <line x1="80" y1="80" x2="80" y2="90" stroke="#FF4A6E" stroke-width="1.5"/>
+          <ellipse cx="50" cy="138" rx="14" ry="10" fill="#4A90D9"/>
+          <ellipse cx="110" cy="138" rx="14" ry="10" fill="#4A90D9"/>
+          <ellipse cx="50" cy="140" rx="10" ry="6" fill="#2C6FAC"/>
+          <ellipse cx="110" cy="140" rx="10" ry="6" fill="#2C6FAC"/>
+          <path d="M 122 100 Q 145 80 140 60 Q 148 80 130 100" fill="#4A90D9"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-grid">
+      <button class="action-btn" id="btn-feed" onclick="doAction('feed')">
+        <span class="action-icon">🍖</span>Feed
+        <div class="notif-dot" id="notif-feed"></div>
+      </button>
+      <button class="action-btn" id="btn-water" onclick="doAction('water')">
+        <span class="action-icon">💧</span>Water
+        <div class="notif-dot" id="notif-water"></div>
+      </button>
+      <button class="action-btn" id="btn-play" onclick="doAction('play')">
+        <span class="action-icon">🎾</span>Play
+        <div class="notif-dot" id="notif-play"></div>
+      </button>
+      <button class="action-btn" id="btn-groom" onclick="doAction('groom')">
+        <span class="action-icon">🛁</span>Groom
+        <div class="notif-dot" id="notif-groom"></div>
+      </button>
+      <button class="action-btn" id="btn-walk" onclick="doAction('walk')">
+        <span class="action-icon">🦮</span>Walk
+      </button>
+      <button class="action-btn" id="btn-treat" onclick="doAction('treat')">
+        <span class="action-icon">🦴</span>Treat
+      </button>
+      <button class="action-btn" id="btn-nap" onclick="doAction('nap')">
+        <span class="action-icon">😴</span>Nap
+      </button>
+      <button class="action-btn" id="btn-hug" onclick="doAction('hug')">
+        <span class="action-icon">🤗</span>Hug
+      </button>
+    </div>
+
+    <!-- Medals -->
+    <div class="medals-bar">
+      <span class="medals-label">🏅 Awards</span>
+      <div class="medal" id="medal-0" title="">🦴<div class="medal-tooltip">First Feed</div></div>
+      <div class="medal" id="medal-1">🎖️<div class="medal-tooltip">First Defense</div></div>
+      <div class="medal" id="medal-2">⭐<div class="medal-tooltip">Level 3</div></div>
+      <div class="medal" id="medal-3">🏆<div class="medal-tooltip">5 Villains Defeated</div></div>
+      <div class="medal" id="medal-4">👑<div class="medal-tooltip">Level 5</div></div>
+      <div class="medal" id="medal-5">🗝️<div class="medal-tooltip">Key to the City!</div></div>
+      <div class="medal" id="medal-6">💎<div class="medal-tooltip">10 Villains Defeated</div></div>
+      <div class="medal" id="medal-7">🌟<div class="medal-tooltip">Perfect Care (all stats 90%+)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Alert Banner -->
+<div class="alert-banner" id="alert-banner">⚠️ Someone's eyeing Bluey!</div>
+
+<!-- ===== DEFENSE OVERLAY ===== -->
+<div id="defense-overlay">
+  <div class="defense-title" id="def-title">🚨 DEFEND BLUEY! 🚨</div>
+  <div class="defense-subtitle" id="def-subtitle">Tap the bad guys before they grab him!</div>
+
+  <div class="defense-timer-bar">
+    <div class="defense-timer-fill" id="def-timer-fill" style="width:100%"></div>
+  </div>
+
+  <div class="defense-arena" id="def-arena">
+    <div class="defense-bluey">
+      <svg width="70" height="70" viewBox="0 0 160 160">
+        <ellipse cx="80" cy="105" rx="42" ry="38" fill="#4A90D9"/>
+        <ellipse cx="80" cy="112" rx="26" ry="22" fill="#A8D4F5"/>
+        <circle cx="80" cy="62" r="38" fill="#4A90D9"/>
+        <ellipse cx="52" cy="36" rx="12" ry="20" fill="#4A90D9" transform="rotate(-15 52 36)"/>
+        <ellipse cx="108" cy="36" rx="12" ry="20" fill="#4A90D9" transform="rotate(15 108 36)"/>
+        <ellipse cx="52" cy="36" rx="7" ry="13" fill="#2C6FAC" transform="rotate(-15 52 36)"/>
+        <ellipse cx="108" cy="36" rx="7" ry="13" fill="#2C6FAC" transform="rotate(15 108 36)"/>
+        <circle cx="67" cy="58" r="9" fill="white"/>
+        <circle cx="93" cy="58" r="9" fill="white"/>
+        <circle cx="69" cy="59" r="5" fill="#1a3a5c"/>
+        <circle cx="95" cy="59" r="5" fill="#1a3a5c"/>
+        <ellipse cx="80" cy="72" rx="8" ry="5" fill="#1a3a5c"/>
+        <path d="M 68 80 Q 80 90 92 80" stroke="#1a3a5c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="defense-score-disp" id="def-score-disp">Taps: 0</div>
+
+  <div class="defense-result" id="def-result"></div>
+  <button class="defense-btn" id="def-close-btn" style="display:none" onclick="closeDefense()">Back to Bluey!</button>
+</div>
+
+<!-- ===== VICTORY OVERLAY ===== -->
+<div id="victory-overlay">
+  <div class="confetti-wrap" id="confetti-wrap"></div>
+  <div class="victory-emoji" id="victory-emoji">🏆</div>
+  <div class="victory-title" id="victory-title">Achievement!</div>
+  <div class="victory-text" id="victory-text">You earned something awesome!</div>
+  <button class="defense-btn" onclick="closeVictory()" style="margin-top:8px">Woof Yeah! 🐾</button>
+</div>
+
+<script>
+// ===== GAME STATE =====
+const G = {
+  score: 0,
+  day: 1,
+  level: 1,
+  xp: 0,
+  xpNext: 100,
+  love: 3, // hearts 1-5
+  hunger: 80,
+  thirst: 80,
+  happy: 70,
+  clean: 90,
+  villainCount: 0,
+  medalsEarned: new Set(),
+  ticks: 0,
+  defenseActive: false,
+  lastFed: 0,
+  lastWatered: 0,
+};
+
+const LEVELS = [
+  'Good Boy','Great Pup','Hero Hound','Legend Pup','City Legend','Bluey Supreme'
+];
+
+const VILLAINS = [
+  {emoji:'🤵',name:'Suspicious Dude',hp:3,reward:50},
+  {emoji:'🧟',name:'Zombie Neighbour',hp:4,reward:70},
+  {emoji:'🕵️',name:'Shady Agent',hp:5,reward:100},
+  {emoji:'🤡',name:'Clown Kidnapper',hp:6,reward:130},
+  {emoji:'👹',name:'Dog Demon',hp:8,reward:200},
+  {emoji:'🦹',name:'Super Villain',hp:10,reward:300},
+];
+
+const MOODS = {
+  happy:   ['😊','🥰','😄','🐶','💙','🎉','✨'],
+  hungry:  ['😮','😩','🍗','😤'],
+  thirsty: ['😰','💦','🥵'],
+  sad:     ['😢','😞','🥺'],
+  dirty:   ['🤢','🙈','💩'],
+  pet:     ['💙','😍','🐾','✨','❤️','🌟'],
+};
+
+function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function clamp(v,lo,hi){ return Math.max(lo,Math.min(hi,v)); }
+
+// ===== INIT =====
+function startGame(){
+  document.getElementById('title-screen').classList.remove('active');
+  document.getElementById('game-screen').classList.add('active');
+  renderAll();
+  startLoops();
+}
+
+function renderAll(){
+  // Score
+  document.getElementById('hud-score').textContent = G.score.toLocaleString();
+  // Day
+  document.getElementById('hud-day').textContent = `Day ${G.day}`;
+  // Level
+  document.getElementById('hud-level').textContent = `Level ${G.level} ${LEVELS[Math.min(G.level-1,5)]}`;
+  // Love hearts
+  const lh = document.getElementById('love-hearts');
+  lh.innerHTML = '';
+  for(let i=1;i<=5;i++){
+    lh.innerHTML += `<span class="heart ${i<=G.love?'filled':''}">♥</span>`;
+  }
+  // Stats
+  document.getElementById('bar-hunger').style.width = G.hunger+'%';
+  document.getElementById('bar-thirst').style.width = G.thirst+'%';
+  document.getElementById('bar-happy').style.width  = G.happy+'%';
+  document.getElementById('bar-clean').style.width  = G.clean+'%';
+  // Danger indicators
+  setDanger('stat-hunger', G.hunger < 25);
+  setDanger('stat-thirst', G.thirst < 25);
+  setDanger('stat-happy',  G.happy  < 25);
+  setDanger('stat-clean',  G.clean  < 20);
+  // Notif dots
+  setNotif('notif-feed',  G.hunger < 35);
+  setNotif('notif-water', G.thirst < 35);
+  setNotif('notif-play',  G.happy  < 35);
+  setNotif('notif-groom', G.clean  < 30);
+  // XP
+  const xpPct = Math.round((G.xp/G.xpNext)*100);
+  document.getElementById('xp-bar').style.width = xpPct+'%';
+  document.getElementById('xp-val').textContent = `${G.xp} / ${G.xpNext}`;
+  // Bluey face
+  updateBlueyFace();
+}
+
+function setDanger(id, on){ document.getElementById(id).classList.toggle('danger', on); }
+function setNotif(id, on){ document.getElementById(id).classList.toggle('show', on); }
+
+function updateBlueyFace(){
+  const avg = (G.hunger + G.thirst + G.happy + G.clean)/4;
+  const mouth = document.getElementById('mouth');
+  const tongue = document.getElementById('tongue');
+  if(avg > 60){
+    mouth.setAttribute('d','M 68 80 Q 80 90 92 80');
+    if(tongue) tongue.setAttribute('rx','8');
+  } else if(avg > 35){
+    mouth.setAttribute('d','M 72 82 Q 80 85 88 82');
+    if(tongue) tongue.setAttribute('rx','4');
+  } else {
+    mouth.setAttribute('d','M 68 88 Q 80 80 92 88');
+    if(tongue) tongue.setAttribute('rx','0');
+  }
+}
+
+// ===== ACTIONS =====
+const cooldowns = {};
+const ACTION_DATA = {
+  feed:  { stat:'hunger', amount:30, xp:10, mood:'😋', msg:'Nom nom! 🍖', cooldown:3000 },
+  water: { stat:'thirst', amount:30, xp:8,  mood:'💧', msg:'Slurp! 💦',   cooldown:2000 },
+  play:  { stat:'happy',  amount:25, xp:15, mood:'🎾', msg:'Zoomies! 🐾', cooldown:4000 },
+  groom: { stat:'clean',  amount:35, xp:12, mood:'✨', msg:'So fresh! 🛁', cooldown:5000 },
+  walk:  { multi:true, stats:{happy:15,hunger:5,thirst:5}, xp:20, mood:'🦮', msg:'Adventure! 🌳', cooldown:8000 },
+  treat: { stat:'happy',  amount:20, xp:5,  mood:'🦴', msg:'TREAT!! 🦴',  cooldown:2500 },
+  nap:   { multi:true, stats:{happy:10,hunger:-5,thirst:-3}, xp:8, mood:'😴', msg:'Zzzzz... 💤', cooldown:10000 },
+  hug:   { stat:'happy',  amount:15, xp:12, mood:'🤗', msg:'Awwww! ❤️',  cooldown:1500 },
+};
+
+function doAction(act){
+  if(cooldowns[act]) return;
+  const d = ACTION_DATA[act];
+  if(d.multi){
+    for(const [s,v] of Object.entries(d.stats)){
+      G[s] = clamp(G[s]+v, 0, 100);
+    }
+  } else {
+    G[d.stat] = clamp(G[d.stat]+d.amount, 0, 100);
+  }
+  gainXP(d.xp);
+  addScore(d.xp * 2);
+  showMood(d.mood, 1500);
+  spawnFloat(d.msg, document.getElementById('arena'));
+
+  // Animate Bluey
+  const ba = document.getElementById('bluey-arena');
+  ba.classList.remove('pet-anim');
+  void ba.offsetWidth;
+  ba.classList.add('pet-anim');
+  setTimeout(()=> ba.classList.remove('pet-anim'), 600);
+
+  // Cooldown
+  const btn = document.getElementById('btn-'+act);
+  btn.classList.add('cooldown');
+  cooldowns[act] = true;
+  setTimeout(()=>{
+    btn.classList.remove('cooldown');
+    delete cooldowns[act];
+  }, d.cooldown);
+
+  // Medals
+  if(act === 'feed' && !G.medalsEarned.has(0)) earnMedal(0, "First Feed! 🦴", "Bluey's been fed for the first time!");
+  if(act === 'hug' || act === 'play') checkPerfectCare();
+
+  renderAll();
+  updateLove();
+}
+
+function petBluey(e){
+  if(G.defenseActive) return;
+  const ba = document.getElementById('bluey-arena');
+  ba.classList.remove('pet-anim');
+  void ba.offsetWidth;
+  ba.classList.add('pet-anim');
+  const moods = MOODS.pet;
+  showMood(moods[rnd(0, moods.length-1)], 1200);
+  gainXP(2);
+  addScore(5);
+  spawnFloatAt('+5 ✨', e.clientX, e.clientY);
+}
+
+// ===== FLOATING TEXT =====
+function spawnFloat(txt, container){
+  const el = document.createElement('div');
+  el.className = 'float-text';
+  el.textContent = txt;
+  el.style.left = rnd(20,60)+'%';
+  el.style.top = rnd(30,60)+'%';
+  el.style.color = randomColor();
+  container.appendChild(el);
+  setTimeout(()=> el.remove(), 1300);
+}
+function spawnFloatAt(txt, cx, cy){
+  const el = document.createElement('div');
+  el.className = 'float-text';
+  el.textContent = txt;
+  el.style.position = 'fixed';
+  el.style.left = cx+'px';
+  el.style.top = cy+'px';
+  el.style.color = randomColor();
+  el.style.zIndex = 999;
+  el.style.pointerEvents = 'none';
+  document.body.appendChild(el);
+  setTimeout(()=> el.remove(), 1300);
+}
+function randomColor(){
+  const colors=['#FFD93D','#FF6B35','#4A90D9','#FF4081','#4CAF50','#9C27B0','#FF3B3B'];
+  return colors[rnd(0,colors.length-1)];
+}
+
+// ===== MOOD BUBBLE =====
+let moodTimer;
+function showMood(emoji, duration){
+  const b = document.getElementById('mood-bubble');
+  b.textContent = emoji;
+  b.classList.add('show');
+  clearTimeout(moodTimer);
+  moodTimer = setTimeout(()=> b.classList.remove('show'), duration);
+}
+
+// ===== SCORE / XP =====
+function addScore(n){
+  G.score += n;
+  const el = document.getElementById('hud-score');
+  el.textContent = G.score.toLocaleString();
+  el.style.transform = 'scale(1.3)';
+  setTimeout(()=> el.style.transform='', 200);
+}
+function gainXP(n){
+  G.xp += n * G.level;
+  if(G.xp >= G.xpNext){
+    G.xp -= G.xpNext;
+    G.level++;
+    G.xpNext = Math.round(G.xpNext * 1.6);
+    levelUp();
+  }
+}
+function levelUp(){
+  const title = LEVELS[Math.min(G.level-1, 5)];
+  showVictory('🎉', `Level ${G.level}!`, `Bluey is now a ${title}!`);
+  if(G.level >= 3 && !G.medalsEarned.has(2)) earnMedal(2, "⭐ Reached Level 3!", "Bluey thinks you're pretty great.");
+  if(G.level >= 5 && !G.medalsEarned.has(4)) earnMedal(4, "👑 Level 5 Legend!", "You're basically royalty.");
+}
+function updateLove(){
+  const avg = (G.hunger + G.thirst + G.happy + G.clean)/4;
+  if(avg > 80) G.love = 5;
+  else if(avg > 65) G.love = 4;
+  else if(avg > 45) G.love = 3;
+  else if(avg > 25) G.love = 2;
+  else G.love = 1;
+  renderAll();
+}
+
+// ===== DECAY LOOP =====
+function startLoops(){
+  // Stat decay every 6s
+  setInterval(()=>{
+    G.hunger = clamp(G.hunger - rnd(2,5), 0, 100);
+    G.thirst = clamp(G.thirst - rnd(3,6), 0, 100);
+    G.happy  = clamp(G.happy  - rnd(1,4), 0, 100);
+    G.clean  = clamp(G.clean  - rnd(1,3), 0, 100);
+    G.ticks++;
+    if(G.ticks % 10 === 0){ G.day++; gainXP(5); addScore(20); }
+    updateLove();
+    renderAll();
+    maybeHighlightBtn();
+    maybeSpawnVillain();
+    updateMoodIdle();
+  }, 6000);
+}
+
+function maybeHighlightBtn(){
+  const map = {hunger:'btn-feed', thirst:'btn-water', happy:'btn-play', clean:'btn-groom'};
+  for(const [stat,btn] of Object.entries(map)){
+    document.getElementById(btn).classList.toggle('highlight', G[stat] < 30 && !cooldowns[stat.replace('hunger','feed').replace('thirst','water').replace('happy','play')]);
+  }
+}
+
+function updateMoodIdle(){
+  const min = Math.min(G.hunger, G.thirst, G.happy, G.clean);
+  let pool;
+  if(min < 20) pool = MOODS.sad;
+  else if(G.hunger < 30) pool = MOODS.hungry;
+  else if(G.thirst < 30) pool = MOODS.thirsty;
+  else if(G.clean < 25) pool = MOODS.dirty;
+  else pool = MOODS.happy;
+  showMood(pool[rnd(0,pool.length-1)], 2000);
+}
+
+// ===== VILLAIN SYSTEM =====
+let villainInterval;
+let villainActive = false;
+let villainEl = null;
+let villainData = null;
+let villainHP = 0;
+
+function maybeSpawnVillain(){
+  if(villainActive) return;
+  const chance = 0.25 + G.level * 0.05;
+  if(Math.random() < chance) spawnVillainArena();
+}
+
+function spawnVillainArena(){
+  if(villainActive) return;
+  villainActive = true;
+  const vd = VILLAINS[Math.min(Math.floor(G.villainCount/3), VILLAINS.length-1)];
+  villainData = vd;
+  villainHP = vd.hp;
+
+  // Show alert
+  const ab = document.getElementById('alert-banner');
+  ab.textContent = `🚨 ${vd.emoji} ${vd.name} is approaching! TAP them to fight back!`;
+  ab.classList.add('show');
+  setTimeout(()=> ab.classList.remove('show'), 3000);
+
+  // Shake Bluey
+  const ba = document.getElementById('bluey-arena');
+  ba.classList.add('alert-anim');
+  setTimeout(()=> ba.classList.remove('alert-anim'), 500);
+  showMood('😱', 2500);
+
+  // Spawn villain element
+  const arena = document.getElementById('arena');
+  const el = document.createElement('div');
+  el.className = 'villain' + (Math.random()<0.5 ? ' from-left' : ' from-right');
+  el.innerHTML = `${vd.emoji}<div class="villain-hp">❤️ ${villainHP}</div>`;
+  el.onclick = (e) => { e.stopPropagation(); tapVillain(el); };
+  arena.appendChild(el);
+  villainEl = el;
+
+  // Walk villain toward center
+  const fromLeft = el.classList.contains('from-left');
+  setTimeout(()=>{
+    if(fromLeft) el.style.left = rnd(10,30)+'%';
+    else el.style.right = rnd(10,30)+'%';
+  }, 100);
+
+  // Start defense mini-game automatically after 2s if not dealt with
+  setTimeout(()=>{
+    if(villainActive && villainEl){
+      triggerDefenseMiniGame(vd);
+    }
+  }, 2000);
+}
+
+function tapVillain(el){
+  if(!villainActive) return;
+  villainHP--;
+  el.querySelector('.villain-hp').textContent = `❤️ ${Math.max(0,villainHP)}`;
+  el.style.transform = 'scale(0.8) rotate(20deg)';
+  setTimeout(()=> el.style.transform='', 200);
+  spawnFloatAt('WHAM! 💥', 
+    el.getBoundingClientRect().left + 20,
+    el.getBoundingClientRect().top
+  );
+  if(villainHP <= 0) defeatVillain(true);
+}
+
+function defeatVillain(won){
+  if(!villainActive) return;
+  if(villainEl){ villainEl.remove(); villainEl = null; }
+  villainActive = false;
+  if(won){
+    G.villainCount++;
+    const reward = villainData.reward + G.level*20;
+    addScore(reward);
+    gainXP(30);
+    spawnFloat(`+${reward} 🏆 VILLAIN STOPPED!`, document.getElementById('arena'));
+    showMood('😤', 2000);
+    if(G.villainCount === 1 && !G.medalsEarned.has(1)) earnMedal(1, "🎖️ First Defense!", "You protected Bluey!");
+    if(G.villainCount >= 5 && !G.medalsEarned.has(3)) earnMedal(3, "🏆 5 Villains Down!", "Bluey is safe because of you.");
+    if(G.villainCount >= 10 && !G.medalsEarned.has(6)) earnMedal(6, "💎 10 Villains!", "You're a certified Good Boy Guardian.");
+    if(G.villainCount >= 8 && !G.medalsEarned.has(5)) earnMedal(5, "🗝️ Key to the City!", "The Mayor personally thanks you!");
+  } else {
+    G.happy = clamp(G.happy - 20, 0, 100);
+    G.score = Math.max(0, G.score - 100);
+    showMood('😭', 2500);
+    spawnFloat('They got Bluey! 😱', document.getElementById('arena'));
+    renderAll();
+  }
+}
+
+// ===== DEFENSE MINI-GAME =====
+let defTimer, defEnemies = [], defTaps = 0, defDuration = 12000;
+
+function triggerDefenseMiniGame(vd){
+  if(!villainActive) return;
+  if(villainEl){ villainEl.remove(); villainEl = null; }
+  G.defenseActive = true;
+  defTaps = 0;
+  defEnemies = [];
+  const ov = document.getElementById('defense-overlay');
+  ov.classList.add('active');
+  document.getElementById('def-title').textContent = `🚨 DEFEND BLUEY! 🚨`;
+  document.getElementById('def-subtitle').textContent = `Stop the ${vd.emoji} ${vd.name}! Tap them fast!`;
+  document.getElementById('def-score-disp').textContent = `Taps: 0`;
+  document.getElementById('def-result').classList.remove('show');
+  document.getElementById('def-result').textContent = '';
+  document.getElementById('def-close-btn').style.display = 'none';
+
+  const fill = document.getElementById('def-timer-fill');
+  fill.style.width = '100%';
+  fill.style.background = 'linear-gradient(90deg, #4CAF50, #FFD93D)';
+
+  const arena = document.getElementById('def-arena');
+  // Spawn enemies
+  const total = vd.hp;
+  let spawned = 0;
+  const spawnInterval = setInterval(()=>{
+    if(spawned >= total) { clearInterval(spawnInterval); return; }
+    spawnDefEnemy(vd.emoji, arena);
+    spawned++;
+  }, defDuration / (total * 1.5));
+
+  // Timer
+  const start = Date.now();
+  defTimer = setInterval(()=>{
+    const elapsed = Date.now() - start;
+    const pct = 1 - (elapsed / defDuration);
+    fill.style.width = Math.max(0, pct*100)+'%';
+    if(pct < 0.4) fill.style.background = 'linear-gradient(90deg,#FF3B3B,#FF6B35)';
+    if(elapsed >= defDuration){
+      clearInterval(defTimer);
+      clearInterval(spawnInterval);
+      endDefense(false, vd);
+    }
+  }, 50);
+}
+
+function spawnDefEnemy(emoji, arena){
+  const el = document.createElement('div');
+  el.className = 'defense-enemy';
+  el.textContent = emoji;
+  el.style.left = rnd(5, 75)+'%';
+  el.style.top = rnd(5, 50)+'%';
+  el.onclick = (e)=>{
+    e.stopPropagation();
+    defTaps++;
+    document.getElementById('def-score-disp').textContent = `Taps: ${defTaps}`;
+    spawnFloatAt('💥 POW!', e.clientX, e.clientY);
+    el.style.transform = 'scale(0)';
+    el.style.opacity = '0';
+    setTimeout(()=> el.remove(), 200);
+    defEnemies = defEnemies.filter(x=>x!==el);
+    if(defEnemies.length === 0 && defTaps > 0){
+      clearInterval(defTimer);
+      endDefense(true, villainData);
+    }
+  };
+  arena.appendChild(el);
+  defEnemies.push(el);
+}
+
+function endDefense(won, vd){
+  // Clear remaining enemies
+  defEnemies.forEach(e=> e.remove());
+  defEnemies = [];
+  const result = document.getElementById('def-result');
+  result.classList.add('show');
+  if(won){
+    result.style.color = '#4CAF50';
+    result.textContent = `🎉 YOU WIN! +${vd.reward + G.level*20} pts!`;
+    defeatVillain(true);
+  } else {
+    result.style.color = '#FF3B3B';
+    result.textContent = `😱 They got away! Bluey is shaken!`;
+    defeatVillain(false);
+  }
+  document.getElementById('def-close-btn').style.display = 'block';
+}
+
+function closeDefense(){
+  G.defenseActive = false;
+  document.getElementById('defense-overlay').classList.remove('active');
+  renderAll();
+}
+
+// ===== MEDALS =====
+function earnMedal(idx, title, text){
+  if(G.medalsEarned.has(idx)) return;
+  G.medalsEarned.add(idx);
+  const el = document.getElementById('medal-'+idx);
+  if(el) el.classList.add('earned');
+  setTimeout(()=> showVictory(el ? el.textContent : '🏅', title, text), 500);
+}
+
+function checkPerfectCare(){
+  if(G.hunger>90 && G.thirst>90 && G.happy>90 && G.clean>90 && !G.medalsEarned.has(7)){
+    earnMedal(7, "🌟 Perfect Care!", "All of Bluey's needs are over 90%!");
+  }
+}
+
+// ===== VICTORY OVERLAY =====
+function showVictory(emoji, title, text){
+  document.getElementById('victory-emoji').textContent = emoji;
+  document.getElementById('victory-title').textContent = title;
+  document.getElementById('victory-text').textContent = text;
+  document.getElementById('victory-overlay').classList.add('active');
+  spawnConfetti();
+}
+function closeVictory(){
+  document.getElementById('victory-overlay').classList.remove('active');
+  document.getElementById('confetti-wrap').innerHTML = '';
+}
+function spawnConfetti(){
+  const wrap = document.getElementById('confetti-wrap');
+  wrap.innerHTML = '';
+  const colors = ['#FFD93D','#FF6B35','#4A90D9','#FF4081','#4CAF50','#9C27B0'];
+  for(let i=0;i<40;i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = rnd(0,100)+'%';
+    p.style.background = colors[rnd(0,colors.length-1)];
+    p.style.animationDuration = rnd(2,4)+'s';
+    p.style.animationDelay = rnd(0,1500)+'ms';
+    p.style.width = rnd(8,14)+'px';
+    p.style.height = rnd(8,14)+'px';
+    p.style.borderRadius = Math.random()>0.5 ? '50%' : '2px';
+    wrap.appendChild(p);
+  }
+}
+
+// ===== TITLE SCREEN STARS =====
+function initStars(){
+  const wrap = document.getElementById('title-stars');
+  const starEmojis = ['⭐','✨','💫','🌟'];
+  for(let i=0;i<18;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.textContent = starEmojis[rnd(0,3)];
+    s.style.left = rnd(2,95)+'%';
+    s.style.top  = rnd(2,95)+'%';
+    s.style.animationDelay = rnd(0,2000)+'ms';
+    s.style.animationDuration = rnd(1500,3000)+'ms';
+    s.style.fontSize = rnd(12,24)+'px';
+    wrap.appendChild(s);
+  }
+}
+initStars();
+</script>
+</body>
+</html>
