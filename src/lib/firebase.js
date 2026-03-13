@@ -2,15 +2,15 @@ import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// Using chorizomejor-app Firebase project (shared family project)
-// Game data is namespaced via collection names (naw_games, game_requests)
+// Firebase config from environment variables
+// Set these in Vercel dashboard or .env.local for local dev
 const firebaseConfig = {
-  apiKey: "AIzaSyDf1s-6iPaJ5GmZgTgPnwLJsvwAj_7tYmA",
-  authDomain: "chorizomejor-app.firebaseapp.com",
-  projectId: "chorizomejor-app",
-  storageBucket: "chorizomejor-app.firebasestorage.app",
-  messagingSenderId: "616108968942",
-  appId: "1:616108968942:web:927666cffd3c0a15851cff"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
