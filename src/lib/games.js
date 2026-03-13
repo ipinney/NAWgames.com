@@ -8,7 +8,7 @@ const GAMES = [
     creator: 'Nolan',
     description: 'Rotary Bureau of Investigation — you\'re the getaway driver! Navigate a procedurally generated city, drive to the bank, survive the heist, and escape through the exit gate before the choppers get you.',
     createdAt: '2026-03-12',
-    thumbnail: null,
+    thumbnail: '/images/rbi-preview.png',
     color: 'from-yellow-500 to-green-700',
   },
   {
@@ -17,7 +17,7 @@ const GAMES = [
     creator: 'Addie',
     description: 'Protect your dog Bluey from villains trying to steal him! Tap enemies to fight them off, collect power-ups, and keep your good boy safe through waves of increasingly tricky baddies.',
     createdAt: '2026-03-12',
-    thumbnail: null,
+    thumbnail: '/images/guard-the-good-boy-preview.png',
     color: 'from-blue-400 to-sky-300',
   },
 ];

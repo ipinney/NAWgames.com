@@ -9,11 +9,19 @@ export default function GameCard({ game }) {
       <div className="bg-naw-card rounded-2xl overflow-hidden border border-white/5 hover:border-naw-purple/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/10">
         {/* Game thumbnail / gradient */}
         <div className={`h-40 bg-gradient-to-br ${game.color} relative overflow-hidden`}>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-6xl opacity-80 group-hover:scale-110 transition-transform duration-300">
-              🎮
-            </span>
-          </div>
+          {game.thumbnail ? (
+            <img
+              src={game.thumbnail}
+              alt={game.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-6xl opacity-80 group-hover:scale-110 transition-transform duration-300">
+                🎮
+              </span>
+            </div>
+          )}
           <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1">
             <span className="text-white/90 text-xs font-medium">Play Now</span>
           </div>
