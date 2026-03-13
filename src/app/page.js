@@ -21,28 +21,28 @@ export default function HomePage() {
             <span className="text-naw-green text-xs font-medium">Arcade Open</span>
           </div>
 
-          <h1 className="font-game text-3xl sm:text-4xl md:text-5xl glow mb-4 leading-relaxed">
+          <h1 className="font-game text-2xl sm:text-3xl md:text-4xl glow mb-4 leading-relaxed">
             <span className="bg-gradient-to-r from-naw-cyan via-naw-purple to-naw-pink bg-clip-text text-transparent">
               NAW GAMES
             </span>
           </h1>
-          <p className="text-white/60 text-lg max-w-xl mx-auto mb-2">
+          <p className="text-white/60 text-sm sm:text-base max-w-xl mx-auto mb-2">
             Games by <span className="text-naw-cyan font-semibold">Nolan</span>,{' '}
             <span className="text-naw-pink font-semibold">Addie</span> &{' '}
             <span className="text-naw-orange font-semibold">Wyatt</span>
           </p>
-          <p className="text-white/40 text-sm mb-8">Play our games or request your very own!</p>
+          <p className="text-white/40 text-xs sm:text-sm mb-8">Play our games or request your very own!</p>
 
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center justify-center gap-3">
             <a
               href="#games"
-              className="bg-gradient-to-r from-naw-purple to-naw-cyan text-white font-semibold px-6 py-3 rounded-xl hover:opacity-90 transition-opacity"
+              className="bg-gradient-to-r from-naw-purple to-naw-cyan text-white font-semibold px-5 py-2.5 rounded-xl text-sm hover:opacity-90 transition-opacity"
             >
               Browse Games
             </a>
             <Link
               href="/request"
-              className="border border-white/20 text-white/80 px-6 py-3 rounded-xl hover:bg-white/5 transition-colors"
+              className="border border-white/20 text-white/80 px-5 py-2.5 rounded-xl text-sm hover:bg-white/5 transition-colors"
             >
               Request a Game
             </Link>

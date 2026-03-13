@@ -20,24 +20,6 @@ const GAMES = [
     thumbnail: null,
     color: 'from-blue-400 to-sky-300',
   },
-  {
-    slug: 'space-defender',
-    title: 'Space Defender',
-    creator: 'Nolan',
-    description: 'Defend Earth from waves of alien invaders! Use arrow keys to move and spacebar to shoot.',
-    createdAt: '2026-03-10',
-    thumbnail: null,
-    color: 'from-purple-500 to-cyan-500',
-  },
-  {
-    slug: 'candy-catch',
-    title: 'Candy Catch',
-    creator: 'Addie',
-    description: 'Catch falling candy in your basket before it hits the ground. How high can you score?',
-    createdAt: '2026-03-11',
-    thumbnail: null,
-    color: 'from-pink-500 to-orange-500',
-  },
 ];
 
 export function getAllGames() {
