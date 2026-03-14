@@ -6,75 +6,141 @@
 <title>FNA Hunting Game</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #0a1a0a; overflow: hidden; touch-action: none; user-select: none; font-family: 'Courier New', monospace; }
+body { background: #1a3a10; overflow: hidden; touch-action: none; user-select: none; font-family: 'Courier New', monospace; }
 canvas { display: block; }
-#hud { position: fixed; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 15px; pointer-events: none; z-index: 10; }
-.hud-left, .hud-right { display: flex; flex-direction: column; gap: 4px; }
-.hud-bar { display: flex; align-items: center; gap: 6px; }
-.hud-label { color: #aaa; font-size: 11px; min-width: 50px; text-shadow: 1px 1px 2px #000; }
-.hud-track { width: 100px; height: 10px; background: rgba(0,0,0,0.6); border-radius: 5px; border: 1px solid rgba(255,255,255,0.2); }
-.hud-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
-.hud-val { color: #fff; font-size: 12px; font-weight: bold; text-shadow: 1px 1px 2px #000; min-width: 28px; text-align: right; }
-.hud-item { color: #fff; font-size: 12px; text-shadow: 1px 1px 2px #000; display: flex; align-items: center; gap: 4px; }
+
+#hud {
+  position: fixed; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 8px 12px; pointer-events: none; z-index: 10;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 100%);
+}
+.hud-left, .hud-right { display: flex; flex-direction: column; gap: 5px; }
+.hud-bar { display: flex; align-items: center; gap: 5px; }
+.hud-icon { font-size: 16px; }
+.hud-track { width: 80px; height: 12px; background: rgba(0,0,0,0.7); border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); }
+.hud-fill { height: 100%; border-radius: 5px; transition: width 0.3s; }
+.hud-val { color: #fff; font-size: 13px; font-weight: bold; text-shadow: 1px 1px 3px #000; min-width: 28px; }
+.hud-item { color: #fff; font-size: 13px; font-weight: bold; text-shadow: 1px 1px 3px #000; display: flex; align-items: center; gap: 4px; }
+
 #crosshair { position: fixed; pointer-events: none; z-index: 5; width: 30px; height: 30px; display: none; }
-#crosshair::before, #crosshair::after { content: ''; position: absolute; background: rgba(255,50,50,0.8); }
+#crosshair::before, #crosshair::after { content: ''; position: absolute; background: rgba(255,80,80,0.9); }
 #crosshair::before { width: 2px; height: 100%; left: 50%; transform: translateX(-50%); }
 #crosshair::after { width: 100%; height: 2px; top: 50%; transform: translateY(-50%); }
-#crosshair .dot { position: absolute; width: 4px; height: 4px; background: red; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%,-50%); }
-#mobile-controls { position: fixed; bottom: 0; left: 0; right: 0; z-index: 20; display: none; padding: 10px 20px 20px; justify-content: space-between; align-items: flex-end; }
-.dpad { position: relative; width: 130px; height: 130px; }
-.dpad-btn { position: absolute; width: 44px; height: 44px; background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.25); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.6); font-size: 18px; font-weight: bold; }
-.dpad-btn:active { background: rgba(255,255,255,0.3); }
+#crosshair .dot { position: absolute; width: 6px; height: 6px; background: #ff3333; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+
+/* Mobile controls - BIGGER for kids */
+#mobile-controls {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
+  display: none; padding: 8px 15px 15px;
+  justify-content: space-between; align-items: flex-end;
+}
+.dpad { position: relative; width: 150px; height: 150px; }
+.dpad-btn {
+  position: absolute; width: 52px; height: 52px;
+  background: rgba(255,255,255,0.18); border: 3px solid rgba(255,255,255,0.35);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.8); font-size: 22px; font-weight: bold;
+}
+.dpad-btn:active { background: rgba(255,255,255,0.4); }
 .dpad-up { top: 0; left: 50%; transform: translateX(-50%); }
 .dpad-down { bottom: 0; left: 50%; transform: translateX(-50%); }
 .dpad-left { left: 0; top: 50%; transform: translateY(-50%); }
 .dpad-right { right: 0; top: 50%; transform: translateY(-50%); }
-.action-btns { display: flex; gap: 10px; align-items: flex-end; }
-.action-btn { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; font-size: 10px; font-weight: bold; color: #fff; border: 2px solid; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+
+.action-btns { display: flex; gap: 8px; align-items: flex-end; flex-direction: column; }
+.action-btn {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  font-size: 11px; font-weight: bold; color: #fff; border: 3px solid;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+}
 .action-btn:active { transform: scale(0.9); }
-.btn-shoot { background: rgba(255,60,60,0.4); border-color: rgba(255,60,60,0.7); }
-.btn-build { background: rgba(60,180,255,0.4); border-color: rgba(60,180,255,0.7); }
-.btn-interact { background: rgba(60,255,120,0.4); border-color: rgba(60,255,120,0.7); }
-.overlay { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); color: #fff; text-align: center; padding: 20px; }
-.overlay h1 { font-size: 36px; margin-bottom: 8px; }
-.overlay h2 { font-size: 22px; margin-bottom: 15px; color: #f59e0b; }
-.overlay p { font-size: 14px; color: #ccc; margin-bottom: 6px; max-width: 400px; }
-.overlay .start-btn { margin-top: 20px; padding: 14px 40px; font-size: 18px; font-weight: bold; background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; border: none; border-radius: 10px; cursor: pointer; font-family: inherit; }
+.btn-shoot { background: rgba(255,60,60,0.5); border-color: rgba(255,60,60,0.8); font-size: 20px; }
+.btn-build { background: rgba(60,180,255,0.5); border-color: rgba(60,180,255,0.8); }
+.btn-interact { background: rgba(60,255,120,0.5); border-color: rgba(60,255,120,0.8); font-size: 18px; }
+.btn-eat { background: rgba(255,180,60,0.5); border-color: rgba(255,180,60,0.8); font-size: 18px; }
+
+/* Overlays */
+.overlay {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.88); color: #fff; text-align: center; padding: 20px;
+  overflow-y: auto;
+}
+.overlay h1 { font-size: 32px; margin-bottom: 6px; }
+.overlay h2 { font-size: 20px; margin-bottom: 12px; color: #f59e0b; }
+.overlay p { font-size: 15px; color: #ddd; margin-bottom: 8px; max-width: 380px; line-height: 1.4; }
+.overlay .start-btn {
+  margin-top: 16px; padding: 16px 50px; font-size: 22px; font-weight: bold;
+  background: linear-gradient(135deg, #f59e0b, #d97706); color: #000;
+  border: none; border-radius: 14px; cursor: pointer; font-family: inherit;
+  box-shadow: 0 4px 15px rgba(245,158,11,0.4);
+}
 .overlay .start-btn:hover { transform: scale(1.05); }
-.controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; text-align: left; margin: 10px 0; }
-.controls-grid span { font-size: 12px; color: #aaa; }
-.controls-grid strong { font-size: 12px; color: #fff; }
-#startScreen .title-glow { color: #f59e0b; text-shadow: 0 0 20px rgba(245,158,11,0.5), 0 0 40px rgba(245,158,11,0.2); }
+
+.tip-box {
+  background: rgba(255,255,255,0.08); border: 2px solid rgba(245,158,11,0.4);
+  border-radius: 12px; padding: 14px 18px; margin: 8px 0; max-width: 360px; text-align: left;
+}
+.tip-box .tip-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 14px; color: #eee; }
+.tip-box .tip-icon { font-size: 22px; min-width: 30px; text-align: center; }
+.tip-box .tip-text { line-height: 1.3; }
+
+#startScreen .title-glow { color: #f59e0b; text-shadow: 0 0 20px rgba(245,158,11,0.5); }
 #gameOverScreen h1 { color: #ef4444; }
-#gameOverScreen .stat { font-size: 14px; color: #ddd; margin: 3px 0; }
-#craftMenu { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(20,15,10,0.95); border: 2px solid rgba(245,158,11,0.5); border-radius: 12px; padding: 20px; z-index: 50; display: none; min-width: 280px; color: #fff; }
-#craftMenu h3 { color: #f59e0b; margin-bottom: 12px; text-align: center; font-size: 16px; }
-.craft-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; margin: 4px 0; background: rgba(255,255,255,0.05); border-radius: 6px; cursor: pointer; border: 1px solid transparent; }
-.craft-item:hover { border-color: rgba(245,158,11,0.4); background: rgba(255,255,255,0.1); }
-.craft-item.disabled { opacity: 0.4; cursor: not-allowed; }
-.craft-name { font-size: 13px; font-weight: bold; }
-.craft-cost { font-size: 11px; color: #aaa; }
-.craft-btn { padding: 4px 12px; background: #f59e0b; color: #000; border: none; border-radius: 4px; font-weight: bold; font-size: 11px; cursor: pointer; }
+#gameOverScreen .stat { font-size: 16px; color: #ddd; margin: 4px 0; }
+
+#craftMenu {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  background: rgba(20,15,10,0.96); border: 3px solid rgba(245,158,11,0.6);
+  border-radius: 14px; padding: 18px; z-index: 50; display: none;
+  min-width: 280px; max-width: 320px; color: #fff;
+}
+#craftMenu h3 { color: #f59e0b; margin-bottom: 10px; text-align: center; font-size: 18px; }
+.craft-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px; margin: 5px 0; background: rgba(255,255,255,0.06);
+  border-radius: 8px; cursor: pointer; border: 2px solid transparent;
+}
+.craft-item:hover, .craft-item:active { border-color: rgba(245,158,11,0.5); background: rgba(255,255,255,0.12); }
+.craft-item.disabled { opacity: 0.35; cursor: not-allowed; }
+.craft-name { font-size: 14px; font-weight: bold; }
+.craft-cost { font-size: 11px; color: #bbb; }
+.craft-btn { padding: 6px 14px; background: #f59e0b; color: #000; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; }
 .craft-item.disabled .craft-btn { background: #555; color: #888; }
+#craftClose { display: block; margin: 10px auto 0; padding: 8px 24px; background: #666; color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; }
+
+/* Floating hint */
+#hint {
+  position: fixed; bottom: 170px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.75); color: #fbbf24; font-size: 14px; font-weight: bold;
+  padding: 8px 18px; border-radius: 20px; border: 2px solid rgba(251,191,36,0.4);
+  z-index: 15; pointer-events: none; text-align: center; max-width: 90%;
+  transition: opacity 0.5s; text-shadow: 1px 1px 2px #000;
+}
+#hint.desktop-hint { bottom: 50px; }
 </style>
 </head>
 <body>
+
 <div id="hud">
   <div class="hud-left">
-    <div class="hud-bar"><span class="hud-label">HP</span><div class="hud-track"><div class="hud-fill" id="hpBar" style="width:100%;background:linear-gradient(90deg,#ef4444,#f87171)"></div></div><span class="hud-val" id="hpVal">100</span></div>
-    <div class="hud-bar"><span class="hud-label">Food</span><div class="hud-track"><div class="hud-fill" id="foodBar" style="width:100%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div><span class="hud-val" id="foodVal">100</span></div>
-    <div class="hud-bar"><span class="hud-label">Water</span><div class="hud-track"><div class="hud-fill" id="waterBar" style="width:100%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div></div><span class="hud-val" id="waterVal">100</span></div>
+    <div class="hud-bar"><span class="hud-icon">&#10084;&#65039;</span><div class="hud-track"><div class="hud-fill" id="hpBar" style="width:100%;background:linear-gradient(90deg,#ef4444,#f87171)"></div></div><span class="hud-val" id="hpVal">100</span></div>
+    <div class="hud-bar"><span class="hud-icon">&#127830;</span><div class="hud-track"><div class="hud-fill" id="foodBar" style="width:100%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div><span class="hud-val" id="foodVal">100</span></div>
+    <div class="hud-bar"><span class="hud-icon">&#128167;</span><div class="hud-track"><div class="hud-fill" id="waterBar" style="width:100%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div></div><span class="hud-val" id="waterVal">100</span></div>
   </div>
   <div class="hud-right">
-    <div class="hud-item">Ammo: <span id="ammoVal">20</span></div>
+    <div class="hud-item">Ammo: <span id="ammoVal">30</span></div>
     <div class="hud-item">Wood: <span id="woodVal">0</span></div>
     <div class="hud-item">Meat: <span id="meatVal">0</span></div>
-    <div class="hud-item">Shelters: <span id="shelterVal">0</span></div>
     <div class="hud-item">Day: <span id="dayVal">1</span></div>
-    <div class="hud-item" id="scoreItem">Score: <span id="scoreVal">0</span></div>
+    <div class="hud-item">Score: <span id="scoreVal">0</span></div>
   </div>
 </div>
+
 <div id="crosshair"><div class="dot"></div></div>
+
 <div id="mobile-controls">
   <div class="dpad">
     <div class="dpad-btn dpad-up" data-dir="up">&#9650;</div>
@@ -83,259 +149,391 @@ canvas { display: block; }
     <div class="dpad-btn dpad-right" data-dir="right">&#9654;</div>
   </div>
   <div class="action-btns">
-    <div class="action-btn btn-interact" id="btnInteract">E<br><span style="font-size:8px">ACT</span></div>
-    <div class="action-btn btn-build" id="btnBuild">B<br><span style="font-size:8px">BUILD</span></div>
-    <div class="action-btn btn-shoot" id="btnShoot">AIM<br><span style="font-size:8px">FIRE</span></div>
+    <div class="action-btn btn-eat" id="btnEat">&#127830;<br><span style="font-size:9px">EAT</span></div>
+    <div class="action-btn btn-interact" id="btnInteract">&#9995;<br><span style="font-size:9px">GRAB</span></div>
+    <div class="action-btn btn-build" id="btnBuild">&#128296;<br><span style="font-size:9px">BUILD</span></div>
+    <div class="action-btn btn-shoot" id="btnShoot">&#127919;</div>
   </div>
 </div>
+
+<div id="hint" style="display:none;"></div>
+
+<!-- Start Screen -->
 <div class="overlay" id="startScreen">
   <h1 class="title-glow">FNA HUNTING</h1>
-  <h2>Survive the Wilderness</h2>
-  <p>You survived a plane crash deep in the forest. Armed only with a rifle and your wits, you must hunt, gather water, and build shelter to survive.</p>
-  <div class="controls-grid">
-    <span>Move:</span><strong>WASD / Arrows</strong>
-    <span>Aim &amp; Shoot:</span><strong>Mouse / Tap</strong>
-    <span>Interact:</span><strong>E key</strong>
-    <span>Build Menu:</span><strong>B key</strong>
+  <h2>Survive the Wilderness!</h2>
+  <p>Your plane crashed in the forest! Use your rifle to hunt animals and stay alive as long as you can.</p>
+  <div class="tip-box">
+    <div class="tip-row"><span class="tip-icon">&#127939;</span><span class="tip-text"><b>Move</b> with the D-pad (or WASD keys)</span></div>
+    <div class="tip-row"><span class="tip-icon">&#127919;</span><span class="tip-text"><b>Shoot</b> with the red button (or tap screen)</span></div>
+    <div class="tip-row"><span class="tip-icon">&#9995;</span><span class="tip-text"><b>Grab</b> wood from trees &amp; water from ponds</span></div>
+    <div class="tip-row"><span class="tip-icon">&#127830;</span><span class="tip-text"><b>Eat</b> meat to refill your food bar</span></div>
+    <div class="tip-row"><span class="tip-icon">&#128296;</span><span class="tip-text"><b>Build</b> campfires &amp; shelters with wood</span></div>
   </div>
-  <p style="color:#f59e0b; margin-top:8px;">Hunt animals - Find water - Gather wood - Build shelters</p>
-  <button class="start-btn" id="startBtn">SURVIVE</button>
+  <p style="color:#f59e0b; margin-top:10px; font-size: 13px;">&#128308; Red animals (Bears, Wolves) are DANGEROUS!<br>&#128994; Green animals (Deer, Rabbits, Turkeys) are safe to hunt.</p>
+  <button class="start-btn" id="startBtn">LET'S GO!</button>
 </div>
+
+<!-- Game Over Screen -->
 <div class="overlay" id="gameOverScreen" style="display:none;">
-  <h1>YOU PERISHED</h1>
+  <h1>&#128128; OH NO!</h1>
   <h2 id="deathCause">Starvation</h2>
   <div id="gameStats"></div>
-  <button class="start-btn" id="restartBtn">TRY AGAIN</button>
+  <button class="start-btn" id="restartBtn">TRY AGAIN!</button>
 </div>
+
 <div id="craftMenu">
-  <h3>BUILD MENU (B to close)</h3>
+  <h3>&#128296; BUILD STUFF</h3>
   <div id="craftList"></div>
+  <button id="craftClose">CLOSE</button>
 </div>
+
 <canvas id="c"></canvas>
+
 <script>
 const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-let W,H,gameRunning=false,gamePaused=false,camera={x:0,y:0};
+let W,H,gameRunning=false,camera={x:0,y:0};
 let player,animals,bullets,particles,items,shelters,trees,rocks,waters,campfires;
-let worldW=4000,worldH=4000,dayTime=0,dayLength=3600,dayCount=1,nightAlpha=0,score=0,craftOpen=false;
+let worldW=3000,worldH=3000,dayTime=0,dayLength=4200,dayCount=1,nightAlpha=0,score=0,craftOpen=false;
 let isMobile=false,mobileDir={up:false,down:false,left:false,right:false};
-let aimX=0,aimY=0,keys={},mouseDown=false,shootCooldown=0,interactCooldown=0,damageFlash=0,messages=[];
+let aimX=0,aimY=0,keys={},shootCooldown=0,interactCooldown=0,damageFlash=0,messages=[];
+let hints=[],hintIdx=0,hintTimer=0,totalFrames=0;
 
 const recipes=[
-  {name:'Campfire',cost:{wood:5},icon:'Fire',desc:'Warmth at night (+HP regen)',type:'campfire'},
-  {name:'Lean-to Shelter',cost:{wood:10},icon:'Shelter',desc:'Sleep through night safely',type:'shelter'},
-  {name:'Log Cabin',cost:{wood:25},icon:'Cabin',desc:'Full shelter, big HP boost',type:'cabin'},
-  {name:'Ammo (5)',cost:{wood:3,meat:1},icon:'Ammo',desc:'Craft 5 bullets',type:'ammo'},
+  {name:'Campfire',cost:{wood:4},desc:'Heals you at night!',type:'campfire'},
+  {name:'Shelter',cost:{wood:8},desc:'Safe place to rest',type:'shelter'},
+  {name:'Big Cabin',cost:{wood:20},desc:'Super shelter!',type:'cabin'},
+  {name:'Ammo x5',cost:{wood:2,meat:1},desc:'Make 5 bullets',type:'ammo'},
 ];
 
 function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
 window.addEventListener('resize',resize);resize();
-function checkMobile(){isMobile=('ontouchstart' in window)||navigator.maxTouchPoints>0||W<768;document.getElementById('mobile-controls').style.display=isMobile?'flex':'none';document.getElementById('crosshair').style.display=isMobile?'none':'block';}
+function checkMobile(){isMobile=('ontouchstart' in window)||navigator.maxTouchPoints>0||W<900;
+  document.getElementById('mobile-controls').style.display=isMobile?'flex':'none';
+  document.getElementById('crosshair').style.display=isMobile?'none':'block';
+  let h=document.getElementById('hint');if(h)h.className=isMobile?'':'desktop-hint';}
 checkMobile();window.addEventListener('resize',checkMobile);
+
 function rand(a,b){return Math.random()*(b-a)+a;}
 function randInt(a,b){return Math.floor(rand(a,b+1));}
 function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
 function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
 function worldToScreen(wx,wy){return{x:wx-camera.x+W/2,y:wy-camera.y+H/2};}
-function addMsg(text,color='#fff'){messages.push({text,color,life:180});if(messages.length>5)messages.shift();}
+function addMsg(text,color){messages.push({text,color:color||'#fff',life:200});if(messages.length>4)messages.shift();}
+
+function showHint(text){
+  let el=document.getElementById('hint');el.textContent=text;el.style.display='block';el.style.opacity='1';
+  clearTimeout(el._t);el._t=setTimeout(()=>{el.style.opacity='0';setTimeout(()=>{el.style.display='none';},500);},4000);
+}
 
 function generateWorld(){
   trees=[];rocks=[];waters=[];
-  for(let i=0;i<600;i++){let x=rand(50,worldW-50),y=rand(50,worldH-50);
-    if(dist({x,y},{x:worldW/2,y:worldH/2})>200)trees.push({x,y,size:rand(20,40),type:randInt(0,2),health:3,hasWood:true});}
-  for(let i=0;i<80;i++)rocks.push({x:rand(100,worldW-100),y:rand(100,worldH-100),size:rand(12,25)});
-  for(let i=0;i<8;i++)waters.push({x:rand(300,worldW-300),y:rand(300,worldH-300),radius:rand(40,80)});
+  for(let i=0;i<400;i++){let x=rand(50,worldW-50),y=rand(50,worldH-50);
+    if(dist({x,y},{x:worldW/2,y:worldH/2})>150)trees.push({x,y,size:rand(22,38),type:randInt(0,2),health:3,hasWood:true});}
+  for(let i=0;i<50;i++)rocks.push({x:rand(100,worldW-100),y:rand(100,worldH-100),size:rand(10,22)});
+  // More water sources, closer to center so kids find them easily
+  for(let i=0;i<12;i++)waters.push({x:rand(200,worldW-200),y:rand(200,worldH-200),radius:rand(50,90)});
 }
 
 function spawnAnimals(){
   animals=[];
   let types=[
-    {name:'Deer',speed:1.8,hp:2,meat:3,size:18,color:'#c4863c',flee:true,score:50},
-    {name:'Rabbit',speed:2.5,hp:1,meat:1,size:10,color:'#d4a574',flee:true,score:25},
-    {name:'Bear',speed:1.2,hp:5,meat:5,size:28,color:'#5c3a1e',flee:false,aggressive:true,damage:15,score:150},
-    {name:'Wolf',speed:2.0,hp:3,meat:2,size:16,color:'#777',flee:false,aggressive:true,damage:10,score:100},
-    {name:'Turkey',speed:1.5,hp:1,meat:2,size:12,color:'#8B4513',flee:true,score:35},
+    {name:'Deer',speed:1.5,hp:2,meat:3,size:20,color:'#c4963c',flee:true,score:50,safe:true},
+    {name:'Rabbit',speed:2.2,hp:1,meat:1,size:12,color:'#d4b574',flee:true,score:25,safe:true},
+    {name:'Turkey',speed:1.3,hp:1,meat:2,size:14,color:'#a0724a',flee:true,score:35,safe:true},
+    {name:'Bear',speed:0.9,hp:5,meat:5,size:30,color:'#6a3a1e',flee:false,aggressive:true,damage:10,score:150,safe:false},
+    {name:'Wolf',speed:1.6,hp:3,meat:2,size:18,color:'#888',flee:false,aggressive:true,damage:8,score:100,safe:false},
   ];
-  for(let i=0;i<30;i++){let t=types[randInt(0,types.length-1)];
+  // More prey, fewer predators for kids
+  for(let i=0;i<20;i++){let t=types[randInt(0,2)];
     let a={...t,x:rand(100,worldW-100),y:rand(100,worldH-100),vx:0,vy:0,maxHp:t.hp,dir:rand(0,Math.PI*2),moveTimer:randInt(60,300),alerted:false,dead:false,deathTimer:0};
-    if(dist(a,{x:worldW/2,y:worldH/2})>200)animals.push(a);}
+    if(dist(a,{x:worldW/2,y:worldH/2})>250)animals.push(a);}
+  // Just a few predators
+  for(let i=0;i<4;i++){let t=types[randInt(3,4)];
+    let a={...t,x:rand(100,worldW-100),y:rand(100,worldH-100),vx:0,vy:0,maxHp:t.hp,dir:rand(0,Math.PI*2),moveTimer:randInt(60,300),alerted:false,dead:false,deathTimer:0};
+    if(dist(a,{x:worldW/2,y:worldH/2})>400)animals.push(a);}
 }
 
 function initGame(){
-  player={x:worldW/2,y:worldH/2,size:14,speed:2.5,dir:0,hp:100,maxHp:100,food:100,water:100,ammo:20,wood:0,meat:0,shelterCount:0};
+  player={x:worldW/2,y:worldH/2,size:14,speed:2.8,dir:0,hp:100,maxHp:100,food:100,water:100,ammo:30,wood:0,meat:0,shelterCount:0};
   bullets=[];particles=[];items=[];shelters=[];campfires=[];score=0;dayTime=0;dayCount=1;damageFlash=0;messages=[];craftOpen=false;
-  document.getElementById('craftMenu').style.display='none';
+  document.getElementById('craftMenu').style.display='none';hintIdx=0;hintTimer=0;totalFrames=0;
   generateWorld();spawnAnimals();
-  addMsg('You survived the crash... now survive the wild.','#f59e0b');
-  addMsg('Hunt animals for food. Find water ponds. Press E near trees for wood.','#60a5fa');
+  addMsg('You crashed in the forest! Time to survive!','#f59e0b');
+  // First hint after a moment
+  setTimeout(()=>showHint('Walk around! Use the arrows to move.'),1500);
 }
 
+// Input
 window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;
-  if(e.key.toLowerCase()==='b'&&gameRunning){craftOpen=!craftOpen;document.getElementById('craftMenu').style.display=craftOpen?'block':'none';if(craftOpen)updateCraftMenu();}
-  if(e.key.toLowerCase()==='e'&&gameRunning&&interactCooldown<=0)interact();});
+  if(e.key.toLowerCase()==='b'&&gameRunning){toggleCraft();}
+  if(e.key.toLowerCase()==='e'&&gameRunning&&interactCooldown<=0)interact();
+  if(e.key.toLowerCase()==='f'&&gameRunning)eatMeat();});
 window.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
 window.addEventListener('mousemove',e=>{aimX=e.clientX;aimY=e.clientY;let ch=document.getElementById('crosshair');ch.style.left=(e.clientX-15)+'px';ch.style.top=(e.clientY-15)+'px';});
-window.addEventListener('mousedown',e=>{if(!gameRunning||craftOpen)return;mouseDown=true;shoot();});
-window.addEventListener('mouseup',()=>{mouseDown=false;});
+window.addEventListener('mousedown',e=>{if(!gameRunning||craftOpen)return;shoot();});
+window.addEventListener('mouseup',()=>{});
 
 document.querySelectorAll('.dpad-btn').forEach(btn=>{let dir=btn.dataset.dir;
   btn.addEventListener('touchstart',e=>{e.preventDefault();mobileDir[dir]=true;});
   btn.addEventListener('touchend',e=>{e.preventDefault();mobileDir[dir]=false;});
   btn.addEventListener('touchcancel',e=>{mobileDir[dir]=false;});});
-document.getElementById('btnShoot').addEventListener('touchstart',e=>{e.preventDefault();if(gameRunning)shoot();});
-document.getElementById('btnBuild').addEventListener('touchstart',e=>{e.preventDefault();craftOpen=!craftOpen;document.getElementById('craftMenu').style.display=craftOpen?'block':'none';if(craftOpen)updateCraftMenu();});
+document.getElementById('btnShoot').addEventListener('touchstart',e=>{e.preventDefault();if(gameRunning&&!craftOpen){
+  // On mobile, shoot toward nearest animal in front
+  shootNearest(); }});
+document.getElementById('btnBuild').addEventListener('touchstart',e=>{e.preventDefault();toggleCraft();});
 document.getElementById('btnInteract').addEventListener('touchstart',e=>{e.preventDefault();if(gameRunning&&interactCooldown<=0)interact();});
-canvas.addEventListener('touchstart',e=>{if(!gameRunning||craftOpen)return;let touch=e.touches[0];aimX=touch.clientX;aimY=touch.clientY;shoot();});
-canvas.addEventListener('touchmove',e=>{let touch=e.touches[0];aimX=touch.clientX;aimY=touch.clientY;});
+document.getElementById('btnEat').addEventListener('touchstart',e=>{e.preventDefault();if(gameRunning)eatMeat();});
+document.getElementById('craftClose').addEventListener('click',()=>{craftOpen=false;document.getElementById('craftMenu').style.display='none';});
+document.getElementById('craftClose').addEventListener('touchstart',e=>{e.preventDefault();craftOpen=false;document.getElementById('craftMenu').style.display='none';});
+
+function toggleCraft(){craftOpen=!craftOpen;document.getElementById('craftMenu').style.display=craftOpen?'block':'none';if(craftOpen)updateCraftMenu();}
+
+function shootNearest(){
+  if(shootCooldown>0||player.ammo<=0)return;
+  // Find nearest alive animal within 400px
+  let best=null,bestD=400;
+  for(let a of animals){if(a.dead)continue;let d=dist(a,player);if(d<bestD){bestD=d;best=a;}}
+  if(best){
+    let angle=Math.atan2(best.y-player.y,best.x-player.x);
+    player.dir=angle;player.ammo--;shootCooldown=18;
+    bullets.push({x:player.x,y:player.y,vx:Math.cos(angle)*9,vy:Math.sin(angle)*9,life:50});
+    for(let i=0;i<4;i++)particles.push({x:player.x+Math.cos(angle)*16,y:player.y+Math.sin(angle)*16,vx:Math.cos(angle+rand(-0.3,0.3))*rand(2,4),vy:Math.sin(angle+rand(-0.3,0.3))*rand(2,4),life:rand(5,12),color:'#fbbf24',size:rand(2,4)});
+    animals.forEach(a=>{if(!a.dead&&dist(a,player)<250)a.alerted=true;});
+  } else {
+    // No animal nearby, just shoot forward
+    shoot();
+  }
+}
 
 function shoot(){
-  if(shootCooldown>0||player.ammo<=0)return;player.ammo--;shootCooldown=20;
+  if(shootCooldown>0||player.ammo<=0)return;player.ammo--;shootCooldown=18;
   let angle=Math.atan2(aimY-H/2,aimX-W/2);player.dir=angle;
-  bullets.push({x:player.x,y:player.y,vx:Math.cos(angle)*8,vy:Math.sin(angle)*8,life:60});
-  for(let i=0;i<5;i++)particles.push({x:player.x+Math.cos(angle)*16,y:player.y+Math.sin(angle)*16,vx:Math.cos(angle+rand(-0.3,0.3))*rand(2,5),vy:Math.sin(angle+rand(-0.3,0.3))*rand(2,5),life:rand(5,15),color:'#fbbf24',size:rand(2,4)});
-  animals.forEach(a=>{if(!a.dead&&dist(a,player)<300)a.alerted=true;});
+  bullets.push({x:player.x,y:player.y,vx:Math.cos(angle)*9,vy:Math.sin(angle)*9,life:50});
+  for(let i=0;i<4;i++)particles.push({x:player.x+Math.cos(angle)*16,y:player.y+Math.sin(angle)*16,vx:Math.cos(angle+rand(-0.3,0.3))*rand(2,4),vy:Math.sin(angle+rand(-0.3,0.3))*rand(2,4),life:rand(5,12),color:'#fbbf24',size:rand(2,4)});
+  animals.forEach(a=>{if(!a.dead&&dist(a,player)<250)a.alerted=true;});
 }
 
 function interact(){
-  interactCooldown=15;
-  for(let t of trees){if(t.hasWood&&dist(player,t)<t.size+25){t.health--;player.wood++;addMsg('+1 Wood','#a3e635');
+  interactCooldown=12;
+  for(let t of trees){if(t.hasWood&&dist(player,t)<t.size+30){t.health--;player.wood++;
+    addMsg('+1 Wood!','#a3e635');score+=5;
     for(let i=0;i<3;i++)particles.push({x:t.x,y:t.y,vx:rand(-2,2),vy:rand(-2,2),life:20,color:'#8B5E3C',size:3});
-    if(t.health<=0){t.hasWood=false;t.size*=0.5;addMsg('Tree depleted','#888');}return;}}
-  for(let w of waters){if(dist(player,w)<w.radius+15){player.water=Math.min(100,player.water+30);addMsg('+30 Water','#60a5fa');return;}}
-  for(let i=items.length-1;i>=0;i--){if(dist(player,items[i])<25&&items[i].type==='meat'){player.meat+=items[i].amount;addMsg('+'+items[i].amount+' Meat','#fb923c');items.splice(i,1);return;}}
-  if(player.meat>0&&player.food<80){player.meat--;player.food=Math.min(100,player.food+25);addMsg('Ate meat: +25 Food','#fbbf24');return;}
-  addMsg('Nothing nearby. Walk to trees, water, or animals.','#888');
+    if(t.health<=0){t.hasWood=false;t.size*=0.5;}return;}}
+  for(let w of waters){if(dist(player,w)<w.radius+20){player.water=Math.min(100,player.water+35);
+    addMsg('+35 Water!','#60a5fa');score+=10;return;}}
+  for(let i=items.length-1;i>=0;i--){if(dist(player,items[i])<30&&items[i].type==='meat'){player.meat+=items[i].amount;
+    addMsg('+'+items[i].amount+' Meat picked up!','#fb923c');items.splice(i,1);return;}}
+  showHint('Walk to a tree, pond, or dropped meat and press GRAB!');
+}
+
+function eatMeat(){
+  if(player.meat>0){player.meat--;player.food=Math.min(100,player.food+30);addMsg('Yum! +30 Food!','#fbbf24');score+=10;}
+  else{showHint('No meat! Hunt an animal first, then pick it up.');}
 }
 
 function updateCraftMenu(){
   let html='';recipes.forEach((r,i)=>{let canCraft=true,costStr=[];
     for(let[res,amt]of Object.entries(r.cost)){costStr.push(amt+' '+res);if((player[res]||0)<amt)canCraft=false;}
-    html+='<div class="craft-item '+(canCraft?'':'disabled')+'" onclick="craft('+i+')"><div><div class="craft-name">'+r.icon+' '+r.name+'</div><div class="craft-cost">'+costStr.join(', ')+' - '+r.desc+'</div></div><button class="craft-btn" '+(canCraft?'':'disabled')+'>BUILD</button></div>';});
+    html+='<div class="craft-item '+(canCraft?'':'disabled')+'" onclick="craft('+i+')"><div><div class="craft-name">'+r.name+'</div><div class="craft-cost">Needs: '+costStr.join(', ')+'</div><div class="craft-cost" style="color:#fbbf24">'+r.desc+'</div></div><button class="craft-btn" '+(canCraft?'':'disabled')+'>'+(canCraft?'BUILD':'Need more')+'</button></div>';});
   document.getElementById('craftList').innerHTML=html;
 }
 
 window.craft=function(idx){
   let r=recipes[idx];for(let[res,amt]of Object.entries(r.cost)){if((player[res]||0)<amt)return;}
   for(let[res,amt]of Object.entries(r.cost))player[res]-=amt;
-  if(r.type==='campfire'){campfires.push({x:player.x+rand(-20,20),y:player.y+rand(-20,20),life:1800});addMsg('Built a campfire!','#f59e0b');}
-  else if(r.type==='shelter'||r.type==='cabin'){shelters.push({x:player.x+rand(-30,30),y:player.y+rand(-30,30),type:r.type,size:r.type==='cabin'?40:28});player.shelterCount++;addMsg('Built a '+r.name+'!','#60a5fa');score+=r.type==='cabin'?200:100;}
-  else if(r.type==='ammo'){player.ammo+=5;addMsg('+5 Ammo crafted!','#a3e635');}
-  updateCraftMenu();
+  if(r.type==='campfire'){campfires.push({x:player.x+rand(-20,20),y:player.y+rand(-20,20),life:2400});addMsg('Campfire built!','#f59e0b');score+=30;}
+  else if(r.type==='shelter'||r.type==='cabin'){shelters.push({x:player.x+rand(-30,30),y:player.y+rand(-30,30),type:r.type,size:r.type==='cabin'?40:28});player.shelterCount++;addMsg(r.name+' built!','#60a5fa');score+=r.type==='cabin'?200:100;}
+  else if(r.type==='ammo'){player.ammo+=5;addMsg('+5 Ammo!','#a3e635');score+=15;}
+  updateCraftMenu();craftOpen=false;document.getElementById('craftMenu').style.display='none';
 };
 
+// Guided hints system
+const hintSequence=[
+  {frame:600,text:'See the blue ponds? Walk to one and press GRAB for water!'},
+  {frame:1500,text:'Walk to a tree and press GRAB to get wood!'},
+  {frame:2800,text:'Press the red button to SHOOT animals nearby!'},
+  {frame:4500,text:'When you have meat, press EAT to restore food!'},
+  {frame:6500,text:'Got wood? Press BUILD to make a campfire or shelter!'},
+  {frame:9000,text:'Watch out for Bears and Wolves - they chase you!'},
+];
+
+function checkHints(){
+  if(hintIdx<hintSequence.length&&totalFrames>=hintSequence[hintIdx].frame){
+    showHint(hintSequence[hintIdx].text);hintIdx++;}
+  // Context hints
+  if(totalFrames%600===0){
+    if(player.water<30&&player.water>0)showHint('Water is low! Find a blue pond and press GRAB!');
+    else if(player.food<30&&player.food>0&&player.meat>0)showHint('Food is low! Press EAT to eat your meat!');
+    else if(player.food<30&&player.food>0&&player.meat===0)showHint('Food is low! Hunt an animal for meat!');
+    else if(player.ammo<=3&&player.wood>=2&&player.meat>=1)showHint('Low ammo! Press BUILD to craft more bullets!');
+  }
+}
+
 function update(){
-  if(!gameRunning||gamePaused)return;
-  dayTime++;if(dayTime>=dayLength){dayTime=0;dayCount++;score+=100;addMsg('Day '+dayCount+' - You survived another day!','#f59e0b');
-    let types=[{name:'Deer',speed:1.8,hp:2,meat:3,size:18,color:'#c4863c',flee:true,score:50},{name:'Rabbit',speed:2.5,hp:1,meat:1,size:10,color:'#d4a574',flee:true,score:25},{name:'Turkey',speed:1.5,hp:1,meat:2,size:12,color:'#8B4513',flee:true,score:35}];
-    for(let i=0;i<5;i++){let t=types[randInt(0,types.length-1)];animals.push({...t,maxHp:t.hp,x:rand(100,worldW-100),y:rand(100,worldH-100),vx:0,vy:0,dir:rand(0,Math.PI*2),moveTimer:randInt(60,300),alerted:false,dead:false,deathTimer:0});}
-    if(dayCount>2&&dayCount%2===0){let pred=[{name:'Bear',speed:1.2,hp:5,meat:5,size:28,color:'#5c3a1e',flee:false,aggressive:true,damage:15,score:150},{name:'Wolf',speed:2.0,hp:3,meat:2,size:16,color:'#777',flee:false,aggressive:true,damage:10,score:100}];
-      for(let i=0;i<2;i++){let t=pred[randInt(0,1)];animals.push({...t,maxHp:t.hp,x:rand(100,worldW-100),y:rand(100,worldH-100),vx:0,vy:0,dir:rand(0,Math.PI*2),moveTimer:randInt(60,300),alerted:false,dead:false,deathTimer:0});}}}
+  if(!gameRunning)return;
+  totalFrames++;checkHints();
+  dayTime++;if(dayTime>=dayLength){dayTime=0;dayCount++;score+=100;addMsg('Day '+dayCount+'! You survived!','#f59e0b');
+    let types=[{name:'Deer',speed:1.5,hp:2,meat:3,size:20,color:'#c4963c',flee:true,score:50,safe:true},{name:'Rabbit',speed:2.2,hp:1,meat:1,size:12,color:'#d4b574',flee:true,score:25,safe:true},{name:'Turkey',speed:1.3,hp:1,meat:2,size:14,color:'#a0724a',flee:true,score:35,safe:true}];
+    for(let i=0;i<6;i++){let t=types[randInt(0,types.length-1)];animals.push({...t,maxHp:t.hp,x:rand(100,worldW-100),y:rand(100,worldH-100),vx:0,vy:0,dir:rand(0,Math.PI*2),moveTimer:randInt(60,300),alerted:false,dead:false,deathTimer:0});}
+    if(dayCount>3&&dayCount%2===0){let pred=[{name:'Wolf',speed:1.6,hp:3,meat:2,size:18,color:'#888',flee:false,aggressive:true,damage:8,score:100,safe:false}];
+      animals.push({...pred[0],maxHp:pred[0].hp,x:rand(100,worldW-100),y:rand(100,worldH-100),vx:0,vy:0,dir:rand(0,Math.PI*2),moveTimer:randInt(60,300),alerted:false,dead:false,deathTimer:0});}}
+
+  // Gentler night - less dark for kids
   let phase=dayTime/dayLength;
-  if(phase<0.25)nightAlpha=0;else if(phase<0.4)nightAlpha=(phase-0.25)/0.15*0.6;else if(phase<0.75)nightAlpha=0.6;else if(phase<0.9)nightAlpha=0.6-(phase-0.75)/0.15*0.6;else nightAlpha=0;
+  if(phase<0.3)nightAlpha=0;else if(phase<0.42)nightAlpha=(phase-0.3)/0.12*0.35;else if(phase<0.7)nightAlpha=0.35;else if(phase<0.85)nightAlpha=0.35-(phase-0.7)/0.15*0.35;else nightAlpha=0;
 
   let dx=0,dy=0;
   if(keys['w']||keys['arrowup']||mobileDir.up)dy-=1;if(keys['s']||keys['arrowdown']||mobileDir.down)dy+=1;
   if(keys['a']||keys['arrowleft']||mobileDir.left)dx-=1;if(keys['d']||keys['arrowright']||mobileDir.right)dx+=1;
   if(dx||dy){let len=Math.hypot(dx,dy);dx/=len;dy/=len;let nx=player.x+dx*player.speed,ny=player.y+dy*player.speed,blocked=false;
-    for(let t of trees){if(t.hasWood&&dist({x:nx,y:ny},t)<t.size*0.5+player.size){blocked=true;break;}}
-    for(let r of rocks){if(dist({x:nx,y:ny},r)<r.size+player.size*0.5){blocked=true;break;}}
+    for(let t of trees){if(t.hasWood&&dist({x:nx,y:ny},t)<t.size*0.4+player.size){blocked=true;break;}}
+    for(let r of rocks){if(dist({x:nx,y:ny},r)<r.size+player.size*0.4){blocked=true;break;}}
     if(!blocked){player.x=clamp(nx,20,worldW-20);player.y=clamp(ny,20,worldH-20);}
     if(!isMobile)player.dir=Math.atan2(aimY-H/2,aimX-W/2);else player.dir=Math.atan2(dy,dx);}
 
-  player.food-=0.012;player.water-=0.015;
-  if(nightAlpha>0.3){player.water-=0.005;if(campfires.some(c=>dist(player,c)<80))player.hp=Math.min(player.maxHp,player.hp+0.05);}
-  if(shelters.some(s=>dist(player,s)<50)&&nightAlpha>0.3)player.hp=Math.min(player.maxHp,player.hp+0.08);
-  if(player.food<=0){player.food=0;player.hp-=0.15;}if(player.water<=0){player.water=0;player.hp-=0.2;}
-  if(player.food>50&&player.water>50)player.hp=Math.min(player.maxHp,player.hp+0.02);
-  if(player.hp<=0){let cause='the wilderness';if(player.food<=0&&player.water<=0)cause='hunger and thirst';else if(player.food<=0)cause='starvation';else if(player.water<=0)cause='dehydration';else cause='animal attack';gameOver(cause);return;}
+  // SLOWER drain - much easier for kids
+  player.food-=0.007;player.water-=0.009;
+  if(nightAlpha>0.2){player.water-=0.003;if(campfires.some(c=>dist(player,c)<100))player.hp=Math.min(player.maxHp,player.hp+0.08);}
+  if(shelters.some(s=>dist(player,s)<60)&&nightAlpha>0.2)player.hp=Math.min(player.maxHp,player.hp+0.1);
+  if(player.food<=0){player.food=0;player.hp-=0.08;}if(player.water<=0){player.water=0;player.hp-=0.1;}
+  if(player.food>40&&player.water>40)player.hp=Math.min(player.maxHp,player.hp+0.03);
+  if(player.hp<=0){let cause='the wilderness';if(player.food<=0&&player.water<=0)cause='Hunger and Thirst';else if(player.food<=0)cause='Starvation';else if(player.water<=0)cause='Dehydration';else cause='Animal Attack';gameOver(cause);return;}
   if(shootCooldown>0)shootCooldown--;if(interactCooldown>0)interactCooldown--;if(damageFlash>0)damageFlash--;
 
   for(let i=bullets.length-1;i>=0;i--){let b=bullets[i];b.x+=b.vx;b.y+=b.vy;b.life--;if(b.life<=0){bullets.splice(i,1);continue;}
-    for(let a of animals){if(!a.dead&&dist(b,a)<a.size){a.hp--;b.life=0;a.alerted=true;
+    for(let a of animals){if(!a.dead&&dist(b,a)<a.size+4){a.hp--;b.life=0;a.alerted=true;
       for(let j=0;j<6;j++)particles.push({x:a.x,y:a.y,vx:rand(-2,2),vy:rand(-2,2),life:25,color:'#dc2626',size:rand(2,4)});
-      if(a.hp<=0){a.dead=true;a.deathTimer=300;items.push({x:a.x,y:a.y,type:'meat',amount:a.meat});score+=a.score;addMsg('Killed '+a.name+'! +'+a.meat+' meat dropped','#fb923c');}break;}}
-    for(let t of trees){if(t.hasWood&&dist(b,t)<t.size*0.4){b.life=0;break;}}}
+      if(a.hp<=0){a.dead=true;a.deathTimer=600;items.push({x:a.x,y:a.y,type:'meat',amount:a.meat});score+=a.score;addMsg(a.name+' down! Meat dropped!','#fb923c');}break;}}
+    for(let t of trees){if(t.hasWood&&dist(b,t)<t.size*0.35){b.life=0;break;}}}
 
   for(let a of animals){if(a.dead){a.deathTimer--;if(a.deathTimer<=0)a.remove=true;continue;}
     let d=dist(a,player);
-    if(a.aggressive&&d<250){a.alerted=true;let angle=Math.atan2(player.y-a.y,player.x-a.x);a.vx=Math.cos(angle)*a.speed;a.vy=Math.sin(angle)*a.speed;a.dir=angle;
-      if(d<a.size+player.size&&Math.random()<0.02){player.hp-=a.damage;damageFlash=15;addMsg(a.name+' attacked! -'+a.damage+' HP','#ef4444');let kb=Math.atan2(player.y-a.y,player.x-a.x);player.x+=Math.cos(kb)*10;player.y+=Math.sin(kb)*10;}}
-    else if(a.flee&&a.alerted&&d<200){let angle=Math.atan2(a.y-player.y,a.x-player.x);a.vx=Math.cos(angle)*a.speed*1.3;a.vy=Math.sin(angle)*a.speed*1.3;a.dir=angle;if(d>300)a.alerted=false;}
-    else{a.moveTimer--;if(a.moveTimer<=0){a.moveTimer=randInt(60,300);if(Math.random()<0.5){a.dir=rand(0,Math.PI*2);a.vx=Math.cos(a.dir)*a.speed*0.4;a.vy=Math.sin(a.dir)*a.speed*0.4;}else{a.vx=0;a.vy=0;}}if(d>400)a.alerted=false;}
+    if(a.aggressive&&d<220){a.alerted=true;let angle=Math.atan2(player.y-a.y,player.x-a.x);a.vx=Math.cos(angle)*a.speed;a.vy=Math.sin(angle)*a.speed;a.dir=angle;
+      if(d<a.size+player.size&&Math.random()<0.015){player.hp-=a.damage;damageFlash=15;addMsg(a.name+' bit you! -'+a.damage+' HP','#ef4444');let kb=Math.atan2(player.y-a.y,player.x-a.x);player.x+=Math.cos(kb)*12;player.y+=Math.sin(kb)*12;}}
+    else if(a.flee&&a.alerted&&d<180){let angle=Math.atan2(a.y-player.y,a.x-player.x);a.vx=Math.cos(angle)*a.speed*1.2;a.vy=Math.sin(angle)*a.speed*1.2;a.dir=angle;if(d>280)a.alerted=false;}
+    else{a.moveTimer--;if(a.moveTimer<=0){a.moveTimer=randInt(60,300);if(Math.random()<0.5){a.dir=rand(0,Math.PI*2);a.vx=Math.cos(a.dir)*a.speed*0.3;a.vy=Math.sin(a.dir)*a.speed*0.3;}else{a.vx=0;a.vy=0;}}if(d>350)a.alerted=false;}
     a.x=clamp(a.x+a.vx,20,worldW-20);a.y=clamp(a.y+a.vy,20,worldH-20);}
   animals=animals.filter(a=>!a.remove);
 
-  for(let i=particles.length-1;i>=0;i--){let p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vx*=0.95;p.vy*=0.95;p.life--;if(p.life<=0)particles.splice(i,1);}
+  for(let i=particles.length-1;i>=0;i--){let p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vx*=0.94;p.vy*=0.94;p.life--;if(p.life<=0)particles.splice(i,1);}
   for(let i=campfires.length-1;i>=0;i--){campfires[i].life--;if(campfires[i].life<=0)campfires.splice(i,1);}
-  for(let i=items.length-1;i>=0;i--){if(dist(player,items[i])<20){if(items[i].type==='meat'){player.meat+=items[i].amount;addMsg('Picked up '+items[i].amount+' meat','#fb923c');}items.splice(i,1);}}
-  camera.x+=(player.x-camera.x)*0.1;camera.y+=(player.y-camera.y)*0.1;
+  // Auto-pickup items when close
+  for(let i=items.length-1;i>=0;i--){if(dist(player,items[i])<28){if(items[i].type==='meat'){player.meat+=items[i].amount;addMsg('Picked up '+items[i].amount+' meat!','#fb923c');}items.splice(i,1);}}
+  camera.x+=(player.x-camera.x)*0.12;camera.y+=(player.y-camera.y)*0.12;
   messages=messages.filter(m=>{m.life--;return m.life>0;});
 
   document.getElementById('hpBar').style.width=(player.hp/player.maxHp*100)+'%';document.getElementById('hpVal').textContent=Math.ceil(player.hp);
   document.getElementById('foodBar').style.width=player.food+'%';document.getElementById('foodVal').textContent=Math.ceil(player.food);
   document.getElementById('waterBar').style.width=player.water+'%';document.getElementById('waterVal').textContent=Math.ceil(player.water);
   document.getElementById('ammoVal').textContent=player.ammo;document.getElementById('woodVal').textContent=player.wood;
-  document.getElementById('meatVal').textContent=player.meat;document.getElementById('shelterVal').textContent=player.shelterCount;
+  document.getElementById('meatVal').textContent=player.meat;
   document.getElementById('dayVal').textContent=dayCount;document.getElementById('scoreVal').textContent=score;
 }
 
 function draw(){
-  ctx.fillStyle='#2d5a1e';ctx.fillRect(0,0,W,H);ctx.save();ctx.translate(W/2-camera.x,H/2-camera.y);
-  ctx.fillStyle='#1a4a10';for(let x=0;x<worldW;x+=60)for(let y=0;y<worldH;y+=60)if((x+y)%120===0)ctx.fillRect(x,y,58,58);
-  ctx.strokeStyle='rgba(255,0,0,0.3)';ctx.lineWidth=4;ctx.strokeRect(0,0,worldW,worldH);
+  // BRIGHTER green background
+  ctx.fillStyle='#3a7a28';ctx.fillRect(0,0,W,H);ctx.save();ctx.translate(W/2-camera.x,H/2-camera.y);
+  // Ground pattern - lighter
+  ctx.fillStyle='#306a20';for(let x=0;x<worldW;x+=60)for(let y=0;y<worldH;y+=60)if((x+y)%120===0)ctx.fillRect(x,y,58,58);
+  // Lighter patches
+  ctx.fillStyle='#4a8a38';for(let x=30;x<worldW;x+=120)for(let y=30;y<worldH;y+=120)if((x*y)%240<120){ctx.beginPath();ctx.arc(x,y,15,0,Math.PI*2);ctx.fill();}
 
-  for(let w of waters){let grd=ctx.createRadialGradient(w.x,w.y,0,w.x,w.y,w.radius);grd.addColorStop(0,'rgba(30,100,200,0.7)');grd.addColorStop(0.7,'rgba(20,80,180,0.5)');grd.addColorStop(1,'rgba(20,60,140,0.1)');
+  ctx.strokeStyle='rgba(255,100,100,0.4)';ctx.lineWidth=4;ctx.strokeRect(0,0,worldW,worldH);
+
+  // Water ponds - VERY visible with labels
+  for(let w of waters){let grd=ctx.createRadialGradient(w.x,w.y,0,w.x,w.y,w.radius);grd.addColorStop(0,'rgba(40,130,230,0.8)');grd.addColorStop(0.6,'rgba(30,110,210,0.6)');grd.addColorStop(1,'rgba(20,80,180,0.15)');
     ctx.fillStyle=grd;ctx.beginPath();ctx.arc(w.x,w.y,w.radius,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='rgba(150,200,255,0.3)';ctx.beginPath();ctx.arc(w.x-w.radius*0.3,w.y-w.radius*0.3,w.radius*0.2,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='rgba(100,180,255,0.6)';ctx.font='10px monospace';ctx.textAlign='center';ctx.fillText('water',w.x,w.y+w.radius+12);}
+    ctx.fillStyle='rgba(180,220,255,0.4)';ctx.beginPath();ctx.arc(w.x-w.radius*0.25,w.y-w.radius*0.25,w.radius*0.25,0,Math.PI*2);ctx.fill();
+    // Big visible label
+    ctx.fillStyle='rgba(100,200,255,0.9)';ctx.font='bold 13px monospace';ctx.textAlign='center';ctx.fillText('WATER',w.x,w.y+w.radius+16);
+    // Animated ripples
+    let ripple=Math.sin(Date.now()/500)*3;ctx.strokeStyle='rgba(150,200,255,0.3)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(w.x,w.y,w.radius*0.6+ripple,0,Math.PI*2);ctx.stroke();}
 
-  for(let s of shelters){if(s.type==='cabin'){ctx.fillStyle='#5a3a1a';ctx.fillRect(s.x-s.size/2,s.y-s.size/2,s.size,s.size);ctx.strokeStyle='#8B5E3C';ctx.lineWidth=2;ctx.strokeRect(s.x-s.size/2,s.y-s.size/2,s.size,s.size);
-    ctx.fillStyle='#8B0000';ctx.beginPath();ctx.moveTo(s.x-s.size/2-5,s.y-s.size/2);ctx.lineTo(s.x,s.y-s.size/2-15);ctx.lineTo(s.x+s.size/2+5,s.y-s.size/2);ctx.fill();}
-    else{ctx.fillStyle='#4a3a1a';ctx.beginPath();ctx.moveTo(s.x,s.y-20);ctx.lineTo(s.x-18,s.y+10);ctx.lineTo(s.x+18,s.y+10);ctx.fill();ctx.strokeStyle='#8B5E3C';ctx.lineWidth=1;ctx.stroke();}}
+  // Shelters
+  for(let s of shelters){if(s.type==='cabin'){ctx.fillStyle='#6a4a2a';ctx.fillRect(s.x-s.size/2,s.y-s.size/2,s.size,s.size);ctx.strokeStyle='#9B6E4C';ctx.lineWidth=2;ctx.strokeRect(s.x-s.size/2,s.y-s.size/2,s.size,s.size);
+    ctx.fillStyle='#a03030';ctx.beginPath();ctx.moveTo(s.x-s.size/2-5,s.y-s.size/2);ctx.lineTo(s.x,s.y-s.size/2-15);ctx.lineTo(s.x+s.size/2+5,s.y-s.size/2);ctx.fill();
+    ctx.fillStyle='#fbbf24';ctx.font='bold 10px monospace';ctx.textAlign='center';ctx.fillText('CABIN',s.x,s.y+s.size/2+14);}
+    else{ctx.fillStyle='#5a4a2a';ctx.beginPath();ctx.moveTo(s.x,s.y-22);ctx.lineTo(s.x-20,s.y+12);ctx.lineTo(s.x+20,s.y+12);ctx.fill();ctx.strokeStyle='#9B6E4C';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle='#fbbf24';ctx.font='bold 10px monospace';ctx.textAlign='center';ctx.fillText('SHELTER',s.x,s.y+26);}}
 
-  for(let c of campfires){let flicker=Math.sin(Date.now()/100)*2;let grd=ctx.createRadialGradient(c.x,c.y,0,c.x,c.y,60);grd.addColorStop(0,'rgba(255,150,30,0.15)');grd.addColorStop(1,'rgba(255,100,0,0)');
-    ctx.fillStyle=grd;ctx.beginPath();ctx.arc(c.x,c.y,60,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(c.x,c.y,6+flicker,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(c.x+flicker,c.y-3,4,0,Math.PI*2);ctx.fill();}
+  // Campfires - with glow
+  for(let c of campfires){let flicker=Math.sin(Date.now()/100)*3;
+    let grd=ctx.createRadialGradient(c.x,c.y,0,c.x,c.y,80);grd.addColorStop(0,'rgba(255,160,40,0.2)');grd.addColorStop(1,'rgba(255,100,0,0)');
+    ctx.fillStyle=grd;ctx.beginPath();ctx.arc(c.x,c.y,80,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(c.x,c.y,8+flicker,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(c.x+flicker,c.y-4,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fef3c7';ctx.beginPath();ctx.arc(c.x-flicker*0.5,c.y-6,3,0,Math.PI*2);ctx.fill();}
 
-  for(let t of trees){if(t.type===0){ctx.fillStyle=t.hasWood?'#1a5c1a':'#2a3a2a';ctx.beginPath();ctx.moveTo(t.x,t.y-t.size);ctx.lineTo(t.x-t.size*0.6,t.y+t.size*0.3);ctx.lineTo(t.x+t.size*0.6,t.y+t.size*0.3);ctx.fill();ctx.fillStyle='#3a2a1a';ctx.fillRect(t.x-3,t.y+t.size*0.2,6,t.size*0.3);}
-    else if(t.type===1){ctx.fillStyle='#3a2a1a';ctx.fillRect(t.x-3,t.y-5,6,t.size*0.5);ctx.fillStyle=t.hasWood?'#2d7a2d':'#3a4a3a';ctx.beginPath();ctx.arc(t.x,t.y-t.size*0.4,t.size*0.5,0,Math.PI*2);ctx.fill();}
-    else{ctx.fillStyle=t.hasWood?'#1a6a2a':'#2a4a2a';ctx.beginPath();ctx.arc(t.x,t.y,t.size*0.4,0,Math.PI*2);ctx.fill();}}
+  // Trees - brighter
+  for(let t of trees){if(t.type===0){ctx.fillStyle=t.hasWood?'#228B22':'#3a5a3a';ctx.beginPath();ctx.moveTo(t.x,t.y-t.size);ctx.lineTo(t.x-t.size*0.6,t.y+t.size*0.3);ctx.lineTo(t.x+t.size*0.6,t.y+t.size*0.3);ctx.fill();ctx.fillStyle='#5a3a1a';ctx.fillRect(t.x-3,t.y+t.size*0.2,6,t.size*0.3);}
+    else if(t.type===1){ctx.fillStyle='#5a3a1a';ctx.fillRect(t.x-3,t.y-5,6,t.size*0.5);ctx.fillStyle=t.hasWood?'#32a852':'#4a6a4a';ctx.beginPath();ctx.arc(t.x,t.y-t.size*0.4,t.size*0.5,0,Math.PI*2);ctx.fill();}
+    else{ctx.fillStyle=t.hasWood?'#2a8a3a':'#3a5a3a';ctx.beginPath();ctx.arc(t.x,t.y,t.size*0.4,0,Math.PI*2);ctx.fill();}}
 
-  for(let r of rocks){ctx.fillStyle='#6a6a6a';ctx.beginPath();ctx.ellipse(r.x,r.y,r.size,r.size*0.7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#8a8a8a';ctx.beginPath();ctx.ellipse(r.x-r.size*0.2,r.y-r.size*0.15,r.size*0.4,r.size*0.25,0,0,Math.PI*2);ctx.fill();}
+  // Rocks
+  for(let r of rocks){ctx.fillStyle='#8a8a8a';ctx.beginPath();ctx.ellipse(r.x,r.y,r.size,r.size*0.7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#aaa';ctx.beginPath();ctx.ellipse(r.x-r.size*0.2,r.y-r.size*0.15,r.size*0.35,r.size*0.2,0,0,Math.PI*2);ctx.fill();}
 
-  for(let it of items){ctx.fillStyle='#dc6030';ctx.beginPath();ctx.arc(it.x,it.y,6,0,Math.PI*2);ctx.fill();let pulse=Math.sin(Date.now()/300)*3;ctx.strokeStyle='rgba(255,180,100,0.4)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(it.x,it.y,10+pulse,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#fff';ctx.font='10px monospace';ctx.textAlign='center';ctx.fillText('meat',it.x,it.y+4);}
+  // Items on ground - with BIG labels
+  for(let it of items){ctx.fillStyle='#e07040';ctx.beginPath();ctx.arc(it.x,it.y,8,0,Math.PI*2);ctx.fill();
+    let pulse=Math.sin(Date.now()/250)*4;ctx.strokeStyle='rgba(255,180,100,0.6)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(it.x,it.y,14+pulse,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 12px monospace';ctx.textAlign='center';ctx.fillText('MEAT',it.x,it.y-14);
+    ctx.fillStyle='#fbbf24';ctx.font='bold 10px monospace';ctx.fillText('(walk over)',it.x,it.y+22);}
 
-  for(let a of animals){if(a.dead){ctx.globalAlpha=a.deathTimer/300;ctx.fillStyle='#555';}else{ctx.globalAlpha=1;ctx.fillStyle=a.color;}
+  // Animals - with colored outlines and big labels
+  for(let a of animals){if(a.dead){ctx.globalAlpha=a.deathTimer/600;ctx.fillStyle='#666';}else{ctx.globalAlpha=1;ctx.fillStyle=a.color;}
+    // Colored ring: green=safe, red=dangerous
+    if(!a.dead){ctx.strokeStyle=a.safe?'#22c55e':'#ef4444';ctx.lineWidth=3;ctx.beginPath();ctx.arc(a.x,a.y,a.size+4,0,Math.PI*2);ctx.stroke();}
     ctx.beginPath();ctx.arc(a.x,a.y,a.size,0,Math.PI*2);ctx.fill();
-    if(!a.dead){let ex=Math.cos(a.dir)*a.size*0.4,ey=Math.sin(a.dir)*a.size*0.4;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(a.x+ex-2,a.y+ey,2,0,Math.PI*2);ctx.arc(a.x+ex+2,a.y+ey,2,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle=a.aggressive?'#ef4444':'#aaa';ctx.font='9px monospace';ctx.textAlign='center';ctx.fillText(a.name,a.x,a.y-a.size-4);
-      if(a.hp<a.maxHp){ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(a.x-12,a.y-a.size-2,24,3);ctx.fillStyle='#ef4444';ctx.fillRect(a.x-12,a.y-a.size-2,24*(a.hp/a.maxHp),3);}}ctx.globalAlpha=1;}
+    if(!a.dead){let ex=Math.cos(a.dir)*a.size*0.4,ey=Math.sin(a.dir)*a.size*0.4;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(a.x+ex-3,a.y+ey,2.5,0,Math.PI*2);ctx.arc(a.x+ex+3,a.y+ey,2.5,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=a.safe?'#86efac':'#fca5a5';ctx.font='bold 11px monospace';ctx.textAlign='center';ctx.fillText(a.name,a.x,a.y-a.size-8);
+      if(!a.safe){ctx.fillStyle='#ef4444';ctx.font='bold 9px monospace';ctx.fillText('DANGER!',a.x,a.y-a.size-20);}
+      if(a.hp<a.maxHp){ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(a.x-14,a.y-a.size-3,28,5);ctx.fillStyle='#ef4444';ctx.fillRect(a.x-14,a.y-a.size-3,28*(a.hp/a.maxHp),5);}}ctx.globalAlpha=1;}
 
-  ctx.fillStyle='#fbbf24';for(let b of bullets){ctx.beginPath();ctx.arc(b.x,b.y,3,0,Math.PI*2);ctx.fill();}
-  for(let p of particles){ctx.globalAlpha=p.life/30;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;
+  // Bullets
+  ctx.fillStyle='#fbbf24';ctx.shadowBlur=6;ctx.shadowColor='#f59e0b';for(let b of bullets){ctx.beginPath();ctx.arc(b.x,b.y,3,0,Math.PI*2);ctx.fill();}ctx.shadowBlur=0;
+  // Particles
+  for(let p of particles){ctx.globalAlpha=p.life/25;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;
 
-  let px=player.x,py=player.y;ctx.fillStyle=damageFlash>0?'#ff4444':'#e8c170';ctx.beginPath();ctx.arc(px,py,player.size,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#333';ctx.lineWidth=2;ctx.stroke();
-  let gx=Math.cos(player.dir)*18,gy=Math.sin(player.dir)*18;ctx.strokeStyle='#666';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(px+gx*0.4,py+gy*0.4);ctx.lineTo(px+gx,py+gy);ctx.stroke();
-  ctx.fillStyle='#333';ctx.beginPath();ctx.arc(px+Math.cos(player.dir)*5-Math.sin(player.dir)*4,py+Math.sin(player.dir)*5+Math.cos(player.dir)*4,2,0,Math.PI*2);ctx.arc(px+Math.cos(player.dir)*5+Math.sin(player.dir)*4,py+Math.sin(player.dir)*5-Math.cos(player.dir)*4,2,0,Math.PI*2);ctx.fill();
+  // Player - brighter and clearer
+  let px=player.x,py=player.y;
+  // Shadow
+  ctx.fillStyle='rgba(0,0,0,0.2)';ctx.beginPath();ctx.ellipse(px,py+player.size,player.size*0.8,4,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=damageFlash>0?'#ff6666':'#f0d080';ctx.beginPath();ctx.arc(px,py,player.size,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#654321';ctx.lineWidth=2.5;ctx.stroke();
+  // Gun
+  let gx=Math.cos(player.dir)*20,gy=Math.sin(player.dir)*20;ctx.strokeStyle='#555';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(px+gx*0.3,py+gy*0.3);ctx.lineTo(px+gx,py+gy);ctx.stroke();
+  // Eyes
+  ctx.fillStyle='#333';ctx.beginPath();ctx.arc(px+Math.cos(player.dir)*5-Math.sin(player.dir)*4,py+Math.sin(player.dir)*5+Math.cos(player.dir)*4,2.5,0,Math.PI*2);ctx.arc(px+Math.cos(player.dir)*5+Math.sin(player.dir)*4,py+Math.sin(player.dir)*5-Math.cos(player.dir)*4,2.5,0,Math.PI*2);ctx.fill();
+  // YOU label
+  ctx.fillStyle='#fbbf24';ctx.font='bold 10px monospace';ctx.textAlign='center';ctx.fillText('YOU',px,py-player.size-8);
   ctx.restore();
 
-  if(nightAlpha>0){ctx.fillStyle='rgba(5,5,30,'+nightAlpha+')';ctx.fillRect(0,0,W,H);
-    let grd=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,150);grd.addColorStop(0,'rgba(5,5,30,'+nightAlpha*0.6+')');grd.addColorStop(1,'rgba(5,5,30,0)');
-    ctx.globalCompositeOperation='destination-out';ctx.fillStyle=grd;ctx.beginPath();ctx.arc(W/2,H/2,150,0,Math.PI*2);ctx.fill();
-    for(let c of campfires){let sp=worldToScreen(c.x,c.y);let grd2=ctx.createRadialGradient(sp.x,sp.y,0,sp.x,sp.y,80);grd2.addColorStop(0,'rgba(5,5,30,'+nightAlpha*0.5+')');grd2.addColorStop(1,'rgba(5,5,30,0)');ctx.fillStyle=grd2;ctx.beginPath();ctx.arc(sp.x,sp.y,80,0,Math.PI*2);ctx.fill();}
+  // Night overlay - MUCH gentler
+  if(nightAlpha>0){ctx.fillStyle='rgba(10,10,40,'+nightAlpha+')';ctx.fillRect(0,0,W,H);
+    let grd=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,200);grd.addColorStop(0,'rgba(10,10,40,'+nightAlpha*0.7+')');grd.addColorStop(1,'rgba(10,10,40,0)');
+    ctx.globalCompositeOperation='destination-out';ctx.fillStyle=grd;ctx.beginPath();ctx.arc(W/2,H/2,200,0,Math.PI*2);ctx.fill();
+    for(let c of campfires){let sp=worldToScreen(c.x,c.y);let grd2=ctx.createRadialGradient(sp.x,sp.y,0,sp.x,sp.y,100);grd2.addColorStop(0,'rgba(10,10,40,'+nightAlpha*0.6+')');grd2.addColorStop(1,'rgba(10,10,40,0)');ctx.fillStyle=grd2;ctx.beginPath();ctx.arc(sp.x,sp.y,100,0,Math.PI*2);ctx.fill();}
     ctx.globalCompositeOperation='source-over';}
-  if(damageFlash>0){ctx.fillStyle='rgba(255,0,0,'+(damageFlash/30)+')';ctx.fillRect(0,0,W,H);}
+  if(damageFlash>0){ctx.fillStyle='rgba(255,0,0,'+(damageFlash/25)+')';ctx.fillRect(0,0,W,H);}
 
-  let my=H-(isMobile?180:60);for(let i=messages.length-1;i>=0;i--){let m=messages[i];ctx.globalAlpha=Math.min(1,m.life/30);ctx.fillStyle=m.color;ctx.font='bold 13px monospace';ctx.textAlign='center';ctx.fillText(m.text,W/2,my);my-=20;}ctx.globalAlpha=1;
+  // Messages - bigger font
+  let my=H-(isMobile?200:60);for(let i=messages.length-1;i>=0;i--){let m=messages[i];ctx.globalAlpha=Math.min(1,m.life/40);
+    ctx.fillStyle='rgba(0,0,0,0.5)';let tw=ctx.measureText(m.text).width;ctx.fillRect(W/2-tw/2-8,my-12,tw+16,20);
+    ctx.fillStyle=m.color;ctx.font='bold 14px monospace';ctx.textAlign='center';ctx.fillText(m.text,W/2,my);my-=24;}ctx.globalAlpha=1;
 
-  let mmSize=100,mmX=W-mmSize-10,mmY=H-mmSize-(isMobile?150:10);ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(mmX,mmY,mmSize,mmSize);ctx.strokeStyle='rgba(255,255,255,0.3)';ctx.strokeRect(mmX,mmY,mmSize,mmSize);
-  ctx.fillStyle='rgba(30,100,200,0.5)';for(let w of waters){ctx.beginPath();ctx.arc(mmX+(w.x/worldW)*mmSize,mmY+(w.y/worldH)*mmSize,2,0,Math.PI*2);ctx.fill();}
-  ctx.fillStyle='#60a5fa';for(let s of shelters)ctx.fillRect(mmX+(s.x/worldW)*mmSize-1,mmY+(s.y/worldH)*mmSize-1,3,3);
-  for(let a of animals){if(a.dead)continue;ctx.fillStyle=a.aggressive?'#ef4444':'#10b981';ctx.fillRect(mmX+(a.x/worldW)*mmSize,mmY+(a.y/worldH)*mmSize,2,2);}
-  ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(mmX+(player.x/worldW)*mmSize,mmY+(player.y/worldH)*mmSize,3,0,Math.PI*2);ctx.fill();
+  // Minimap - bigger
+  let mmSize=90,mmX=W-mmSize-10,mmY=10;
+  ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(mmX-2,mmY-2,mmSize+4,mmSize+4);
+  ctx.fillStyle='rgba(40,80,30,0.8)';ctx.fillRect(mmX,mmY,mmSize,mmSize);
+  ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;ctx.strokeRect(mmX,mmY,mmSize,mmSize);
+  ctx.fillStyle='rgba(40,130,230,0.6)';for(let w of waters){ctx.beginPath();ctx.arc(mmX+(w.x/worldW)*mmSize,mmY+(w.y/worldH)*mmSize,3,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle='#60a5fa';for(let s of shelters)ctx.fillRect(mmX+(s.x/worldW)*mmSize-2,mmY+(s.y/worldH)*mmSize-2,4,4);
+  for(let a of animals){if(a.dead)continue;ctx.fillStyle=a.aggressive?'#ef4444':'#22c55e';ctx.fillRect(mmX+(a.x/worldW)*mmSize,mmY+(a.y/worldH)*mmSize,3,3);}
+  ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(mmX+(player.x/worldW)*mmSize,mmY+(player.y/worldH)*mmSize,4,0,Math.PI*2);ctx.fill();
 }
 
-function gameOver(cause){gameRunning=false;document.getElementById('deathCause').textContent=cause.charAt(0).toUpperCase()+cause.slice(1);
-  document.getElementById('gameStats').innerHTML='<div class="stat">Score: '+score+'</div><div class="stat">Survived '+dayCount+' day'+(dayCount>1?'s':'')+'</div><div class="stat">Shelters built: '+player.shelterCount+'</div>';
+function gameOver(cause){gameRunning=false;document.getElementById('deathCause').textContent=cause;
+  document.getElementById('gameStats').innerHTML='<div class="stat">Score: '+score+'</div><div class="stat">Survived '+dayCount+' day'+(dayCount>1?'s':'')+'</div><div class="stat">Shelters: '+player.shelterCount+'</div><br><p style="color:#aaa;font-size:13px">Tip: Remember to drink water, eat meat, and build shelters!</p>';
   document.getElementById('gameOverScreen').style.display='flex';}
 
 function loop(){update();draw();requestAnimationFrame(loop);}
