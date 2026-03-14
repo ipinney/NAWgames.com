@@ -597,7 +597,7 @@ function gameOver(cause){gameRunning=false;document.getElementById('deathCause')
 function loop(){update();draw();requestAnimationFrame(loop);}
 document.getElementById('startBtn').addEventListener('click',()=>{document.getElementById('startScreen').style.display='none';initGame();gameRunning=true;});
 document.getElementById('restartBtn').addEventListener('click',()=>{document.getElementById('gameOverScreen').style.display='none';initGame();gameRunning=true;});
-generateWorld();camera.x=worldW/2;camera.y=worldH/2;player={x:worldW/2,y:worldH/2,size:22,dir:0};loop();
+shelters=[];campfires=[];items=[];bullets=[];particles=[];animals=[];messages=[];generateWorld();camera.x=worldW/2;camera.y=worldH/2;player={x:worldW/2,y:worldH/2,size:22,dir:0};loop();
 </script>
 </body>
 </html>
