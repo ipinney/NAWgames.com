@@ -20,6 +20,15 @@ const GAMES = [
     thumbnail: '/images/guard-the-good-boy-preview.png',
     color: 'from-blue-400 to-sky-300',
   },
+  {
+    slug: 'fna-hunting',
+    title: 'FNA Hunting',
+    creator: 'Ivan',
+    description: 'You survived a plane crash in the wilderness! Hunt deer, rabbits, bears and wolves with your rifle. Gather wood, find water, build shelters, and craft supplies to survive as long as you can.',
+    createdAt: '2026-03-14',
+    thumbnail: '/images/fna-hunting-preview.png',
+    color: 'from-amber-500 to-green-700',
+  },
 ];
 
 export function getAllGames() {
