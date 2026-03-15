@@ -38,6 +38,15 @@ const GAMES = [
     thumbnail: '/images/brick-breaker-preview.png',
     color: 'from-purple-500 to-cyan-500',
   },
+  {
+    slug: 'world-of-warships',
+    title: 'World of Warships',
+    creator: 'Nolan',
+    description: 'Command your battleship in epic WW2 naval combat! Fire cannons and torpedoes, sink enemy destroyers, cruisers, battleships and carriers across endless waves. Full sound effects, particle explosions, island terrain, and strategic AI combat.',
+    createdAt: '2026-03-15',
+    thumbnail: '/images/world-of-warships-preview.png',
+    color: 'from-blue-800 to-gray-700',
+  },
 ];
 
 export function getAllGames() {
