@@ -29,6 +29,15 @@ const GAMES = [
     thumbnail: '/images/fna-hunting-preview.png',
     color: 'from-amber-500 to-green-700',
   },
+  {
+    slug: 'brick-breaker',
+    title: 'Brick Breaker',
+    creator: 'Ivan',
+    description: 'Classic arcade action! Slide the paddle to bounce the ball and smash all the bricks. 30 levels of increasing difficulty with power-ups, multi-hit bricks, steel walls, and special patterns. How far can you get?',
+    createdAt: '2026-03-14',
+    thumbnail: '/images/brick-breaker-preview.png',
+    color: 'from-purple-500 to-cyan-500',
+  },
 ];
 
 export function getAllGames() {
