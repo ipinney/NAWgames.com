@@ -47,6 +47,24 @@ const GAMES = [
     thumbnail: '/images/world-of-warships-preview.png',
     color: 'from-blue-800 to-gray-700',
   },
+  {
+    slug: 'capybara',
+    title: 'Capybara Glow',
+    creator: 'Addie',
+    description: 'A magical glow-in-the-dark coloring studio! Paint capybaras, unicorns, elephants, butterflies, dolphins and cats with neon colors that glow and shine. Choose your brush, pick a glowing color, and create neon masterpieces in the dark.',
+    createdAt: '2026-03-15',
+    thumbnail: '/images/capybara-preview.png',
+    color: 'from-pink-500 to-purple-600',
+  },
+  {
+    slug: 'island-attack',
+    title: 'Island Attack',
+    creator: 'Nolan',
+    description: 'Build and defend your island kingdom! Gather resources, construct farms, walls and towers, recruit villagers, and fight off waves of invaders. Upgrade your defenses and grow your civilization — how many waves can you survive?',
+    createdAt: '2026-03-15',
+    thumbnail: '/images/island-attack-preview.png',
+    color: 'from-green-500 to-blue-700',
+  },
 ];
 
 export function getAllGames() {

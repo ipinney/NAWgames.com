@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Island Attack - NAW Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            background: #1a1330;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            display: block;
+        }
+
+        #ui-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .hud {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border: 3px solid #ffd700;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        .hud-item {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hud-label {
+            color: #ffd700;
+            min-width: 80px;
+        }
+
+        .build-menu {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border: 3px solid #00ff88;
+            border-radius: 8px;
+            z-index: 10;
+            pointer-events: auto;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 90%;
+        }
+
+        .build-btn {
+            background: #2a5f4a;
+            border: 2px solid #00ff88;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: all 0.2s;
+            pointer-events: auto;
+        }
+
+        .build-btn:hover {
+            background: #3a8f6a;
+            transform: scale(1.1);
+        }
+
+        .build-btn:active {
+            transform: scale(0.95);
+        }
+
+        .build-btn.selected {
+            background: #00ff88;
+            color: #000;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .screen-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: none;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .screen-overlay.active {
+            display: flex;
+        }
+
+        .title {
+            font-size: 72px;
+            font-weight: bold;
+            color: #00ff88;
+            text-shadow: 4px 4px 0 #ff6b00, 8px 8px 0 rgba(0, 0, 0, 0.5);
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #ffd700;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .controls-text {
+            font-size: 16px;
+            color: #fff;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+        }
+
+        .big-btn {
+            background: #00ff88;
+            border: none;
+            color: #000;
+            padding: 15px 40px;
+            font-size: 28px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .big-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0, 255, 136, 0.5);
+        }
+
+        .big-btn:active {
+            transform: scale(0.95);
+        }
+
+        .stats {
+            font-size: 20px;
+            color: #ffd700;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            max-width: 500px;
+        }
+
+        .stats p {
+            margin: 8px 0;
+        }
+
+        .wave-banner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border: 4px solid #ff6b00;
+            border-radius: 12px;
+            color: #ff6b00;
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 20;
+            pointer-events: none;
+            animation: waveBannerAnim 2s ease-out forwards;
+        }
+
+        @keyframes waveBannerAnim {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .touch-joystick {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 120px;
+            height: 120px;
+            background: rgba(0, 255, 136, 0.2);
+            border: 3px solid #00ff88;
+            border-radius: 50%;
+            z-index: 10;
+            pointer-events: auto;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .touch-joystick {
+                display: block;
+            }
+
+            .hud {
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            .title {
+                font-size: 48px;
+            }
+
+            .subtitle {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="ui-layer">
+        <div class="hud">
+            <div class="hud-item">
+                <span class="hud-label">🌲 Wood:</span>
+                <span id="wood-count">100</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">🪨 Stone:</span>
+                <span id="stone-count">50</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">🍞 Food:</span>
+                <span id="food-count">50</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">👥 Population:</span>
+                <span id="pop-count">3</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">🌊 Wave:</span>
+                <span id="wave-count">1</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">⏱ Time:</span>
+                <span id="wave-timer">Ready</span>
+            </div>
+        </div>
+
+        <div class="build-menu" id="build-menu">
+            <button class="build-btn" data-building="farm">🌾 Farm</button>
+            <button class="build-btn" data-building="wall">🧱 Wall</button>
+            <button class="build-btn" data-building="tower">🏹 Tower</button>
+            <button class="build-btn" data-building="house">🏠 House</button>
+            <button class="build-btn" data-building="castle">🏰 Castle</button>
+        </div>
+
+        <div id="start-screen" class="screen-overlay active">
+            <div class="title">ISLAND ATTACK</div>
+            <div class="subtitle">Build • Defend • Survive</div>
+            <div class="controls-text">
+                📱 <strong>Mobile:</strong> Tap buildings to select, tap tiles to place, drag to pan<br>
+                ⌨️ <strong>Keyboard:</strong> WASD/Arrows to pan, Click to place, Number keys (1-5) for buildings<br>
+                🎮 <strong>Gameplay:</strong> Defend your castle from invaders! Build farms for food, walls for defense, and towers to attack!
+            </div>
+            <button class="big-btn" id="start-btn">START GAME</button>
+        </div>
+
+        <div id="game-over-screen" class="screen-overlay">
+            <div class="title">GAME OVER</div>
+            <div class="stats" id="stats-display"></div>
+            <button class="big-btn" id="replay-btn">PLAY AGAIN</button>
+        </div>
+
+        <div class="touch-joystick" id="touch-joystick"></div>
+    </div>
+
+    <script>
+        'use strict';
+
+        // Canvas setup
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Game state
+        const TILE_SIZE = 32;
+        const ISLAND_WIDTH = 20;
+        const ISLAND_HEIGHT = 20;
+        const GRID_OFFSET_X = 100;
+        const GRID_OFFSET_Y = 100;
+
+        const BUILDING_TYPES = {
+            farm: { cost: { wood: 20, stone: 0 }, maxHP: 30, resource: 'food', icon: '🌾' },
+            wall: { cost: { wood: 0, stone: 20 }, maxHP: 60, resource: null, icon: '🧱' },
+            tower: { cost: { wood: 15, stone: 15 }, maxHP: 40, resource: null, icon: '🏹', range: 6, damage: 10, shootSpeed: 30 },
+            house: { cost: { wood: 30, stone: 0 }, maxHP: 50, resource: null, icon: '🏠', popBonus: 2 },
+            castle: { cost: { wood: 100, stone: 100 }, maxHP: 200, resource: null, icon: '🏰', popBonus: 5 }
+        };
+
+        let gameState = {
+            running: false,
+            wave: 1,
+            waveInProgress: false,
+            waveCountdown: 30,
+            wood: 100,
+            stone: 50,
+            food: 50,
+            population: 3,
+            maxPopulation: 3,
+            invadersDefeated: 0,
+            buildingsBuilt: 0,
+            maxPopulationReached: 3,
+            cameraX: 0,
+            cameraY: 0,
+            selectedBuilding: null,
+            shakeAmount: 0,
+            dayTime: 0
+        };
+
+        let island = [];
+        let buildings = [];
+        let villagers = [];
+        let invaders = [];
+        let particles = [];
+        let projectiles = [];
+
+        // Terrain generation
+        function generateIsland() {
+            island = [];
+            for (let y = 0; y < ISLAND_HEIGHT; y++) {
+                island[y] = [];
+                for (let x = 0; x < ISLAND_WIDTH; x++) {
+                    const dist = Math.hypot(x - ISLAND_WIDTH / 2, y - ISLAND_HEIGHT / 2);
+                    let type = 'water';
+                    if (dist < ISLAND_WIDTH / 3) {
+                        if (Math.random() < 0.15) type = 'sand';
+                        else if (Math.random() < 0.2) type = 'tree';
+                        else if (Math.random() < 0.1) type = 'rock';
+                        else type = 'grass';
+                    }
+                    island[y][x] = { type, explored: false };
+                }
+            }
+
+            // Place castle in center
+            const centerX = Math.floor(ISLAND_WIDTH / 2);
+            const centerY = Math.floor(ISLAND_HEIGHT / 2);
+            addBuilding(centerX, centerY, 'castle');
+        }
+
+        function getTile(x, y) {
+            if (x < 0 || x >= ISLAND_WIDTH || y < 0 || y >= ISLAND_HEIGHT) return null;
+            return island[y][x];
+        }
+
+        function canBuildAt(x, y, type) {
+            const tile = getTile(x, y);
+            if (!tile || tile.type === 'water') return false;
+            if (buildings.some(b => b.x === x && b.y === y)) return false;
+            return true;
+        }
+
+        function addBuilding(x, y, type, isUpgrade = false) {
+            const building = {
+                x, y, type,
+                hp: BUILDING_TYPES[type].maxHP,
+                maxHP: BUILDING_TYPES[type].maxHP,
+                level: 1,
+                resources: 0,
+                shootCooldown: 0,
+                particles: []
+            };
+            buildings.push(building);
+            if (!isUpgrade) {
+                gameState.buildingsBuilt++;
+                playSound('build');
+            }
+        }
+
+        function upgradeBuilding(building) {
+            building.level++;
+            building.maxHP = Math.floor(BUILDING_TYPES[building.type].maxHP * (1 + building.level * 0.2));
+            building.hp = building.maxHP;
+            if (building.type === 'tower') {
+                building.damage = (BUILDING_TYPES.tower.damage || 10) * (1 + building.level * 0.3);
+            }
+            playSound('build');
+        }
+
+        function spawnVillagers() {
+            for (let i = villagers.length; i < gameState.population; i++) {
+                villagers.push({
+                    x: ISLAND_WIDTH / 2,
+                    y: ISLAND_HEIGHT / 2,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    busy: false,
+                    targetResource: null,
+                    carriedResource: null
+                });
+            }
+        }
+
+        function spawnWave() {
+            gameState.waveInProgress = true;
+            playSound('horn');
+            showWaveBanner(`WAVE ${gameState.wave}!`);
+
+            const waveCount = Math.min(2 + gameState.wave, 10);
+            const spawnX = Math.random() < 0.5 ? -2 : ISLAND_WIDTH + 2;
+
+            for (let i = 0; i < waveCount; i++) {
+                const type = gameState.wave < 3 ? 'raider' : gameState.wave < 5 ? 'archer' : gameState.wave < 8 ? 'siegeUnit' : 'cannonBoat';
+                const invader = {
+                    x: spawnX + (Math.random() - 0.5) * 4,
+                    y: ISLAND_HEIGHT / 2 + (Math.random() - 0.5) * 6,
+                    type,
+                    hp: type === 'raider' ? 20 : type === 'archer' ? 15 : type === 'siegeUnit' ? 50 : 60,
+                    maxHP: type === 'raider' ? 20 : type === 'archer' ? 15 : type === 'siegeUnit' ? 50 : 60,
+                    damage: type === 'raider' ? 5 : type === 'archer' ? 3 : type === 'siegeUnit' ? 15 : 20,
+                    speed: type === 'raider' ? 1 : type === 'archer' ? 1.2 : type === 'siegeUnit' ? 0.6 : 0.4,
+                    shootCooldown: 0,
+                    shootSpeed: type === 'archer' ? 40 : type === 'cannonBoat' ? 60 : 999,
+                    targetX: ISLAND_WIDTH / 2,
+                    targetY: ISLAND_HEIGHT / 2,
+                    hitFlash: 0
+                };
+                invaders.push(invader);
+            }
+        }
+
+        function updateGameLogic() {
+            try {
+                if (!gameState.running) return;
+
+                // Resource gathering
+                buildings.forEach(b => {
+                    if (b.type === 'farm') {
+                        b.resources += 0.2 + b.level * 0.1;
+                        if (b.resources >= 10) {
+                            gameState.food += Math.floor(b.resources);
+                            b.resources = 0;
+                            createParticles(b.x, b.y, 5, '#00ff88');
+                        }
+                    }
+                });
+
+                // Villager movement and interaction
+                villagers.forEach(v => {
+                    if (!v.busy) {
+                        v.x += v.vx * 0.05;
+                        v.y += v.vy * 0.05;
+
+                        if (Math.random() < 0.01) {
+                            v.vx = (Math.random() - 0.5) * 2;
+                            v.vy = (Math.random() - 0.5) * 2;
+                        }
+
+                        const boundsX = ISLAND_WIDTH / 3;
+                        const boundsY = ISLAND_HEIGHT / 3;
+                        if (v.x < boundsX) v.vx = Math.abs(v.vx);
+                        if (v.x > ISLAND_WIDTH - boundsX) v.vx = -Math.abs(v.vx);
+                        if (v.y < boundsY) v.vy = Math.abs(v.vy);
+                        if (v.y > ISLAND_HEIGHT - boundsY) v.vy = -Math.abs(v.vy);
+                    }
+
+                    // Flee from invaders
+                    invaders.forEach(inv => {
+                        const dist = Math.hypot(v.x - inv.x, v.y - inv.y);
+                        if (dist < 3) {
+                            const angle = Math.atan2(v.y - inv.y, v.x - inv.x);
+                            v.vx = Math.cos(angle) * 3;
+                            v.vy = Math.sin(angle) * 3;
+                        }
+                    });
+                });
+
+                // Food consumption
+                if (gameState.food > 0) {
+                    gameState.food -= gameState.population * 0.01;
+                } else {
+                    gameState.population = Math.max(0, gameState.population - 0.02);
+                }
+
+                // Tower shooting
+                buildings.forEach(tower => {
+                    if (tower.type === 'tower') {
+                        tower.shootCooldown--;
+                        if (tower.shootCooldown <= 0 && invaders.length > 0) {
+                            const range = (BUILDING_TYPES.tower.range || 6) + tower.level;
+                            let target = null;
+                            let minDist = range;
+
+                            invaders.forEach(inv => {
+                                const dist = Math.hypot(inv.x - tower.x, inv.y - tower.y);
+                                if (dist < minDist) {
+                                    minDist = dist;
+                                    target = inv;
+                                }
+                            });
+
+                            if (target) {
+                                const angle = Math.atan2(target.y - tower.y, target.x - tower.x);
+                                const damage = (tower.damage || 10) + tower.level * 2;
+                                projectiles.push({
+                                    x: tower.x,
+                                    y: tower.y,
+                                    vx: Math.cos(angle) * 3,
+                                    vy: Math.sin(angle) * 3,
+                                    damage,
+                                    type: 'arrow'
+                                });
+                                tower.shootCooldown = tower.shootSpeed || 30;
+                                playSound('shoot');
+                            }
+                        }
+                    }
+                });
+
+                // Projectile movement and collision
+                projectiles = projectiles.filter(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    let hit = false;
+                    invaders.forEach(inv => {
+                        if (Math.hypot(inv.x - p.x, inv.y - p.y) < 0.5) {
+                            inv.hp -= p.damage;
+                            inv.hitFlash = 10;
+                            createParticles(p.x, p.y, 8, '#ffaa00');
+                            playSound('hit');
+                            hit = true;
+                            if (inv.hp <= 0) {
+                                gameState.invadersDefeated++;
+                                gameState.wood += 10 + gameState.wave;
+                                gameState.stone += 5 + gameState.wave;
+                                createParticles(inv.x, inv.y, 15, '#ffff00');
+                                playSound('explosion');
+                            }
+                        }
+                    });
+
+                    return !hit && p.x >= -2 && p.x <= ISLAND_WIDTH + 2 && p.y >= -2 && p.y <= ISLAND_HEIGHT + 2;
+                });
+
+                // Invader AI and attacks
+                invaders = invaders.filter(inv => {
+                    inv.hitFlash = Math.max(0, inv.hitFlash - 1);
+
+                    if (inv.hp <= 0) return false;
+
+                    // Find target
+                    let targetBuilding = null;
+                    let minDist = 999;
+
+                    buildings.forEach(b => {
+                        const dist = Math.hypot(b.x - inv.x, b.y - inv.y);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            targetBuilding = b;
+                        }
+                    });
+
+                    if (targetBuilding) {
+                        const angle = Math.atan2(targetBuilding.y - inv.y, targetBuilding.x - inv.x);
+                        inv.x += Math.cos(angle) * inv.speed * 0.05;
+                        inv.y += Math.sin(angle) * inv.speed * 0.05;
+
+                        if (Math.hypot(targetBuilding.x - inv.x, targetBuilding.y - inv.y) < 1) {
+                            targetBuilding.hp -= inv.damage * 0.01;
+                            if (targetBuilding.hp <= 0) {
+                                createParticles(targetBuilding.x, targetBuilding.y, 20, '#ff4444');
+                                playSound('explosion');
+                                gameState.shakeAmount = 8;
+
+                                if (targetBuilding.type === 'castle') {
+                                    gameOver();
+                                    return false;
+                                }
+                            }
+                            inv.shootCooldown--;
+                            if (inv.shootCooldown <= 0 && inv.type === 'archer') {
+                                const angle2 = Math.atan2(targetBuilding.y - inv.y, targetBuilding.x - inv.x);
+                                projectiles.push({
+                                    x: inv.x,
+                                    y: inv.y,
+                                    vx: Math.cos(angle2) * 2,
+                                    vy: Math.sin(angle2) * 2,
+                                    damage: inv.damage,
+                                    type: 'arrow',
+                                    hostile: true
+                                });
+                                inv.shootCooldown = inv.shootSpeed;
+                            }
+                        }
+                    }
+
+                    return true;
+                });
+
+                // Wave management
+                if (invaders.length === 0 && gameState.waveInProgress) {
+                    gameState.waveInProgress = false;
+                    gameState.waveCountdown = 30;
+                    gameState.wave++;
+                    playSound('victory');
+                    createParticles(ISLAND_WIDTH / 2, ISLAND_HEIGHT / 2, 30, '#ffff00');
+                }
+
+                if (!gameState.waveInProgress) {
+                    gameState.waveCountdown--;
+                    if (gameState.waveCountdown <= 0) {
+                        spawnWave();
+                    }
+                }
+
+                // Population management
+                const houseCount = buildings.filter(b => b.type === 'house').length;
+                const castleCount = buildings.filter(b => b.type === 'castle').length;
+                gameState.maxPopulation = 3 + houseCount * 2 + castleCount * 5;
+                if (gameState.population < gameState.maxPopulation && gameState.food > 20) {
+                    gameState.population += 0.05;
+                    gameState.food -= 0.05;
+                }
+
+                gameState.maxPopulationReached = Math.max(gameState.maxPopulationReached, Math.floor(gameState.population));
+
+                spawnVillagers();
+
+                // Particle system
+                particles = particles.filter(p => {
+                    p.life--;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.1;
+                    return p.life > 0;
+                });
+
+                // Camera follow
+                gameState.cameraX = Math.lerp(gameState.cameraX, (ISLAND_WIDTH / 2) * TILE_SIZE, 0.1);
+                gameState.cameraY = Math.lerp(gameState.cameraY, (ISLAND_HEIGHT / 2) * TILE_SIZE, 0.1);
+
+                // Screen shake
+                gameState.shakeAmount = Math.max(0, gameState.shakeAmount - 0.5);
+
+            } catch (e) {
+                console.error('Game loop error:', e);
+            }
+        }
+
+        function renderGame() {
+            try {
+                const shake = Math.random() * gameState.shakeAmount - gameState.shakeAmount / 2;
+                const shakeY = Math.random() * gameState.shakeAmount - gameState.shakeAmount / 2;
+
+                // Clear and background
+                ctx.fillStyle = '#1a1330';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Day/night cycle
+                gameState.dayTime = (gameState.dayTime + 0.001) % (Math.PI * 2);
+                const dayBrightness = 0.5 + Math.sin(gameState.dayTime) * 0.3;
+                const skyColor = `hsl(210, 60%, ${30 + dayBrightness * 20}%)`;
+                ctx.fillStyle = skyColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Translate for camera and shake
+                ctx.save();
+                ctx.translate(canvas.width / 2 + shake, canvas.height / 2 + shakeY);
+                ctx.translate(GRID_OFFSET_X - gameState.cameraX, GRID_OFFSET_Y - gameState.cameraY);
+
+                // Render tiles
+                for (let y = 0; y < ISLAND_HEIGHT; y++) {
+                    for (let x = 0; x < ISLAND_WIDTH; x++) {
+                        const tile = island[y][x];
+                        const px = x * TILE_SIZE;
+                        const py = y * TILE_SIZE;
+
+                        let color = '#4a7c7e';
+                        if (tile.type === 'grass') color = '#2d8659';
+                        else if (tile.type === 'sand') color = '#d4a574';
+                        else if (tile.type === 'water') color = '#1e5f8f';
+                        else if (tile.type === 'tree') color = '#1a4d2e';
+                        else if (tile.type === 'rock') color = '#696969';
+
+                        ctx.fillStyle = color;
+                        ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
+
+                        // Grid
+                        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(px, py, TILE_SIZE, TILE_SIZE);
+
+                        // Water animation
+                        if (tile.type === 'water') {
+                            const wave = Math.sin(gameState.dayTime + x * 0.3 + y * 0.3) * 3;
+                            ctx.fillStyle = 'rgba(100, 150, 255, 0.1)';
+                            ctx.fillRect(px, py + wave, TILE_SIZE, TILE_SIZE - Math.abs(wave));
+                        }
+                    }
+                }
+
+                // Render buildings
+                buildings.forEach(b => {
+                    const px = b.x * TILE_SIZE;
+                    const py = b.y * TILE_SIZE;
+
+                    // Shadow
+                    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                    ctx.fillRect(px + 2, py + TILE_SIZE - 4, TILE_SIZE - 4, 4);
+
+                    // Building base
+                    const colors = {
+                        farm: '#90ee90',
+                        wall: '#a0a0a0',
+                        tower: '#8b4513',
+                        house: '#cd853f',
+                        castle: '#ffd700'
+                    };
+                    ctx.fillStyle = colors[b.type];
+                    ctx.fillRect(px + 2, py + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+
+                    // Level indicator
+                    if (b.level > 1) {
+                        ctx.fillStyle = '#ff6b00';
+                        ctx.font = 'bold 12px Arial';
+                        ctx.fillText('L' + b.level, px + 4, py + 12);
+                    }
+
+                    // Health bar
+                    const hpPercent = b.hp / b.maxHP;
+                    ctx.fillStyle = hpPercent > 0.5 ? '#00ff88' : hpPercent > 0.25 ? '#ffff00' : '#ff6b00';
+                    ctx.fillRect(px + 2, py, (TILE_SIZE - 4) * hpPercent, 2);
+
+                    // Icon
+                    ctx.font = 'bold 16px Arial';
+                    ctx.fillText(BUILDING_TYPES[b.type].icon, px + 6, py + 20);
+                });
+
+                // Render villagers
+                ctx.fillStyle = '#00ffff';
+                villagers.forEach(v => {
+                    const px = v.x * TILE_SIZE;
+                    const py = v.y * TILE_SIZE;
+                    ctx.fillRect(px + 10, py + 10, 12, 12);
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(px + 12, py + 12, 2, 2);
+                    ctx.fillRect(px + 18, py + 12, 2, 2);
+                    ctx.fillStyle = '#00ffff';
+                });
+
+                // Render invaders
+                invaders.forEach(inv => {
+                    const px = inv.x * TILE_SIZE;
+                    const py = inv.y * TILE_SIZE;
+
+                    let color = inv.type === 'raider' ? '#ff4444' : inv.type === 'archer' ? '#ff8800' : inv.type === 'siegeUnit' ? '#cc0000' : '#ff00ff';
+                    if (inv.hitFlash > 0) color = '#ffffff';
+
+                    ctx.fillStyle = color;
+                    ctx.fillRect(px + 4, py + 4, TILE_SIZE - 8, TILE_SIZE - 8);
+
+                    // HP bar
+                    const hpPercent = Math.max(0, inv.hp / inv.maxHP);
+                    ctx.fillStyle = '#ff0000';
+                    ctx.fillRect(px + 4, py - 4, (TILE_SIZE - 8) * hpPercent, 2);
+                });
+
+                // Render projectiles
+                projectiles.forEach(p => {
+                    const px = p.x * TILE_SIZE;
+                    const py = p.y * TILE_SIZE;
+
+                    ctx.fillStyle = p.hostile ? '#ff6b00' : '#ffff00';
+                    ctx.fillRect(px - 2, py - 2, 4, 4);
+
+                    // Trail
+                    ctx.strokeStyle = p.hostile ? 'rgba(255, 107, 0, 0.5)' : 'rgba(255, 255, 0, 0.5)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(px - p.vx * 5, py - p.vy * 5);
+                    ctx.lineTo(px, py);
+                    ctx.stroke();
+                });
+
+                // Render particles
+                particles.forEach(p => {
+                    ctx.fillStyle = `rgba(${p.color}, ${p.life / p.maxLife})`;
+                    ctx.fillRect(p.x * TILE_SIZE, p.y * TILE_SIZE, 2, 2);
+                });
+
+                ctx.restore();
+
+                // UI updates
+                document.getElementById('wood-count').textContent = Math.floor(gameState.wood);
+                document.getElementById('stone-count').textContent = Math.floor(gameState.stone);
+                document.getElementById('food-count').textContent = Math.floor(gameState.food);
+                document.getElementById('pop-count').textContent = Math.floor(gameState.population);
+                document.getElementById('wave-count').textContent = gameState.wave;
+
+                if (gameState.waveInProgress) {
+                    document.getElementById('wave-timer').textContent = `${invaders.length} invaders`;
+                } else {
+                    document.getElementById('wave-timer').textContent = `Next: ${gameState.waveCountdown}s`;
+                }
+
+            } catch (e) {
+                console.error('Render error:', e);
+            }
+        }
+
+        function gameLoop() {
+            updateGameLogic();
+            renderGame();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Utility functions
+        function createParticles(x, y, count, color) {
+            for (let i = 0; i < count; i++) {
+                const angle = (Math.random() * Math.PI * 2);
+                const speed = Math.random() * 2 + 1;
+                const rgb = color.match(/\d+/g) || [255, 200, 0];
+                particles.push({
+                    x, y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 1,
+                    life: 30,
+                    maxLife: 30,
+                    color: rgb.join(',')
+                });
+            }
+        }
+
+        function showWaveBanner(text) {
+            const banner = document.createElement('div');
+            banner.className = 'wave-banner';
+            banner.textContent = text;
+            document.getElementById('ui-layer').appendChild(banner);
+            setTimeout(() => banner.remove(), 2000);
+        }
+
+        function gameOver() {
+            gameState.running = false;
+            const stats = `
+                Waves Survived: ${gameState.wave}<br>
+                Invaders Defeated: ${gameState.invadersDefeated}<br>
+                Buildings Built: ${gameState.buildingsBuilt}<br>
+                Max Population: ${gameState.maxPopulationReached}
+            `;
+            document.getElementById('stats-display').innerHTML = stats;
+            document.getElementById('game-over-screen').classList.add('active');
+        }
+
+        function startGame() {
+            gameState = {
+                ...gameState,
+                running: true,
+                wave: 1,
+                waveInProgress: false,
+                waveCountdown: 3,
+                wood: 100,
+                stone: 50,
+                food: 50,
+                population: 3,
+                maxPopulation: 3,
+                invadersDefeated: 0,
+                buildingsBuilt: 0,
+                maxPopulationReached: 3
+            };
+            buildings = [];
+            villagers = [];
+            invaders = [];
+            particles = [];
+            projectiles = [];
+            generateIsland();
+            document.getElementById('start-screen').classList.remove('active');
+            document.getElementById('game-over-screen').classList.remove('active');
+            spawnVillagers();
+        }
+
+        // Sound system (Web Audio API)
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            try {
+                const now = audioContext.currentTime;
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+
+                switch (type) {
+                    case 'build':
+                        osc.frequency.setValueAtTime(400, now);
+                        osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+                        gain.gain.setValueAtTime(0.3, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                        osc.start(now);
+                        osc.stop(now + 0.1);
+                        break;
+                    case 'shoot':
+                        osc.frequency.setValueAtTime(600, now);
+                        gain.gain.setValueAtTime(0.2, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                        osc.start(now);
+                        osc.stop(now + 0.08);
+                        break;
+                    case 'hit':
+                        osc.frequency.setValueAtTime(300, now);
+                        gain.gain.setValueAtTime(0.15, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                        osc.start(now);
+                        osc.stop(now + 0.05);
+                        break;
+                    case 'explosion':
+                        osc.frequency.setValueAtTime(150, now);
+                        osc.frequency.exponentialRampToValueAtTime(50, now + 0.3);
+                        gain.gain.setValueAtTime(0.4, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                        osc.start(now);
+                        osc.stop(now + 0.3);
+                        break;
+                    case 'horn':
+                        osc.frequency.setValueAtTime(440, now);
+                        osc.frequency.setValueAtTime(550, now + 0.1);
+                        gain.gain.setValueAtTime(0.3, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                        osc.start(now);
+                        osc.stop(now + 0.3);
+                        break;
+                    case 'victory':
+                        for (let i = 0; i < 3; i++) {
+                            const o = audioContext.createOscillator();
+                            const g = audioContext.createGain();
+                            o.connect(g);
+                            g.connect(audioContext.destination);
+                            o.frequency.setValueAtTime(440 + i * 100, now + i * 0.1);
+                            g.gain.setValueAtTime(0.2, now + i * 0.1);
+                            g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.2);
+                            o.start(now + i * 0.1);
+                            o.stop(now + i * 0.1 + 0.2);
+                        }
+                        break;
+                }
+            } catch (e) {
+                console.log('Audio unavailable:', e);
+            }
+        }
+
+        // Input handling
+        const keys = {};
+        window.addEventListener('keydown', (e) => {
+            keys[e.key.toLowerCase()] = true;
+            if (e.key === '1') gameState.selectedBuilding = 'farm';
+            if (e.key === '2') gameState.selectedBuilding = 'wall';
+            if (e.key === '3') gameState.selectedBuilding = 'tower';
+            if (e.key === '4') gameState.selectedBuilding = 'house';
+            if (e.key === '5') gameState.selectedBuilding = 'castle';
+        });
+        window.addEventListener('keyup', (e) => {
+            keys[e.key.toLowerCase()] = false;
+        });
+
+        // Camera panning with keyboard
+        setInterval(() => {
+            const speed = TILE_SIZE * 0.5;
+            if (keys['w'] || keys['arrowup']) gameState.cameraY -= speed;
+            if (keys['s'] || keys['arrowdown']) gameState.cameraY += speed;
+            if (keys['a'] || keys['arrowleft']) gameState.cameraX -= speed;
+            if (keys['d'] || keys['arrowright']) gameState.cameraX += speed;
+        }, 50);
+
+        // Click to place buildings
+        canvas.addEventListener('click', (e) => {
+            if (!gameState.running || !gameState.selectedBuilding) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const clickX = (e.clientX - rect.left - canvas.width / 2) / TILE_SIZE + gameState.cameraX / TILE_SIZE;
+            const clickY = (e.clientY - rect.top - canvas.height / 2) / TILE_SIZE + gameState.cameraY / TILE_SIZE;
+
+            const x = Math.floor(clickX);
+            const y = Math.floor(clickY);
+
+            // Check if clicking on existing building to upgrade
+            const existing = buildings.find(b => b.x === x && b.y === y);
+            if (existing) {
+                const cost = BUILDING_TYPES[existing.type].cost;
+                if (gameState.wood >= cost.wood && gameState.stone >= cost.stone) {
+                    gameState.wood -= cost.wood;
+                    gameState.stone -= cost.stone;
+                    upgradeBuilding(existing);
+                }
+                return;
+            }
+
+            // Try to place new building
+            const cost = BUILDING_TYPES[gameState.selectedBuilding].cost;
+            if (canBuildAt(x, y, gameState.selectedBuilding) &&
+                gameState.wood >= cost.wood &&
+                gameState.stone >= cost.stone) {
+                gameState.wood -= cost.wood;
+                gameState.stone -= cost.stone;
+                addBuilding(x, y, gameState.selectedBuilding);
+            }
+        });
+
+        // Build menu buttons
+        document.querySelectorAll('.build-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                gameState.selectedBuilding = btn.dataset.building;
+            });
+        });
+
+        // Game start
+        document.getElementById('start-btn').addEventListener('click', startGame);
+        document.getElementById('replay-btn').addEventListener('click', startGame);
+
+        // Math helper
+        Math.lerp = (a, b, t) => a + (b - a) * t;
+
+        // Start game loop
+        gameLoop();
+    </script>
+</body>
+</html>
