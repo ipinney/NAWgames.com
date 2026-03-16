@@ -7,7 +7,7 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #0a1628; overflow: hidden; touch-action: none; user-select: none; font-family: 'Segoe UI', Arial, sans-serif; }
-  canvas { display: block; }
+  canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
 
   #startScreen {
     position: fixed; inset: 0; z-index: 100;
@@ -127,14 +127,13 @@
   }
 
   /* Minimap */
-  #minimap {
-    position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+  canvas#minimap { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
     z-index: 45; border: 1px solid rgba(100,160,220,0.3);
     border-radius: 6px; background: rgba(10,22,40,0.8);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px); width: 140px; height: 140px;
   }
   @media (pointer: coarse) {
-    #minimap { bottom: 155px; }
+    canvas#minimap { bottom: 155px; }
   }
 </style>
 </head>
@@ -360,11 +359,16 @@ const mmCtx = mmCanvas.getContext('2d');
 
 let W, H;
 function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
 }
 resize();
 window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => setTimeout(resize, 200));
 
 // World
 const WORLD_W = 6000;
@@ -767,13 +771,13 @@ function updateEnemyAI(e) {
 function drawWater(cx, cy) {
   // Gradient ocean background
   const grd = ctx.createLinearGradient(0, 0, 0, H);
-  grd.addColorStop(0, '#0a1e3a');
-  grd.addColorStop(1, '#061428');
+  grd.addColorStop(0, '#122e52');
+  grd.addColorStop(1, '#0a1e3a');
   ctx.fillStyle = grd;
   ctx.fillRect(0, 0, W, H);
 
   // Animated wave lines
-  ctx.strokeStyle = 'rgba(40,80,140,0.12)';
+  ctx.strokeStyle = 'rgba(50,100,170,0.2)';
   ctx.lineWidth = 1;
   for (let i = 0; i < 30; i++) {
     const baseY = ((i * 80 - cy * 0.3 + waterTime * 15) % (H + 200)) - 100;
@@ -1492,8 +1496,12 @@ function render() {
 }
 
 function gameLoop() {
-  update();
-  render();
+  try {
+    update();
+    render();
+  } catch(e) {
+    console.error('Game loop error:', e);
+  }
   requestAnimationFrame(gameLoop);
 }
 
@@ -1531,6 +1539,7 @@ function startGame() {
   showWaveBanner(wave);
   playSound('wave_start');
 
+  resize(); // Force canvas resize on game start
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('gameOverScreen').classList.remove('active');
   gameRunning = true;
