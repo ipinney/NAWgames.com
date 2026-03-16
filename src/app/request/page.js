@@ -8,6 +8,7 @@ import { db } from '@/lib/firebase';
 export default function RequestPage() {
   const { user, loginWithGoogle, resendVerification, refreshUser } = useAuth();
   const [form, setForm] = useState({
+    requesterDisplayName: '',
     gameName: '',
     description: '',
     gameType: 'arcade',
@@ -42,7 +43,7 @@ export default function RequestPage() {
     try {
       await addDoc(collection(db, 'game_requests'), {
         ...form,
-        requesterName: user.displayName || 'Anonymous',
+        requesterName: form.requesterDisplayName || user.displayName || 'Anonymous',
         requesterEmail: user.email,
         requesterUid: user.uid,
         status: 'pending',
@@ -122,6 +123,21 @@ export default function RequestPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="bg-naw-card rounded-2xl border border-white/10 p-6 space-y-5">
+              {/* Your Name */}
+              <div>
+                <label className="block text-white/80 text-sm font-medium mb-2">
+                  Your Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={form.requesterDisplayName}
+                  onChange={(e) => setForm({ ...form, requesterDisplayName: e.target.value })}
+                  placeholder="e.g., Nolan, Addie, Wyatt..."
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:border-naw-purple focus:outline-none focus:ring-1 focus:ring-naw-purple transition-colors"
+                />
+              </div>
+
               {/* Game Name */}
               <div>
                 <label className="block text-white/80 text-sm font-medium mb-2">
