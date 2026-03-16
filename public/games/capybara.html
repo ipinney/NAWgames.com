@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capybara Glow Coloring Game - NAW Games</title>
+    <title>Capybara Glow - Coloring Game</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
         }
 
         body {
-            width: 100vw;
-            height: 100vh;
             background: #1a1330;
             font-family: 'Arial', sans-serif;
+            color: #ffffff;
             overflow: hidden;
+            user-select: none;
         }
 
         canvas {
@@ -29,315 +26,294 @@
             width: 100vw;
             height: 100vh;
             z-index: 1;
-        }
-
-        .ui-container {
-            position: fixed;
-            z-index: 2;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-        }
-
-        .title {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 3;
-            color: #00ffff;
-            font-size: clamp(2rem, 8vw, 5rem);
-            font-weight: bold;
-            text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff;
-            animation: glow-pulse 2s ease-in-out infinite;
-        }
-
-        .subtitle {
-            color: #ff00ff;
-            font-size: clamp(1rem, 4vw, 2rem);
-            text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
-            margin-top: 20px;
-        }
-
-        .play-button {
-            position: fixed;
-            top: 60%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px 60px;
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            background: linear-gradient(135deg, #ff00ff, #00ffff);
-            color: #1a1330;
-            border: 3px solid #00ffff;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            z-index: 3;
-            box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff;
-            transition: all 0.3s ease;
-            text-shadow: none;
-        }
-
-        .play-button:hover {
-            transform: translate(-50%, -50%) scale(1.1);
-            box-shadow: 0 0 30px #ff00ff, 0 0 50px #00ffff;
-        }
-
-        .play-button:active {
-            transform: translate(-50%, -50%) scale(0.95);
-        }
-
-        @keyframes glow-pulse {
-            0%, 100% { text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff; }
-            50% { text-shadow: 0 0 30px #00ffff, 0 0 50px #00ffff, 0 0 80px #00ffff; }
-        }
-
-        .game-ui {
-            display: none;
-        }
-
-        .game-ui.active {
             display: block;
         }
 
-        .top-bar {
+        #startScreen {
             position: fixed;
-            top: 10px;
-            left: 10px;
-            right: 10px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2d1b4e 0%, #1a1330 50%, #0f0820 100%);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 2;
-            color: #00ffff;
-            font-size: clamp(0.8rem, 2vw, 1.2rem);
-            text-shadow: 0 0 5px #00ffff;
-        }
-
-        .animal-name {
-            background: rgba(0, 255, 255, 0.1);
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 2px solid #00ffff;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-        }
-
-        .completion-indicator {
-            background: rgba(0, 255, 255, 0.1);
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 2px solid #00ffff;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-        }
-
-        .bottom-bar {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 2;
-            flex-wrap: wrap;
+            z-index: 100;
         }
 
-        .color-palette {
-            display: flex;
-            gap: 8px;
-            background: rgba(26, 19, 48, 0.8);
-            padding: 12px;
-            border-radius: 20px;
-            border: 2px solid #00ffff;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-            flex-wrap: wrap;
-            max-width: 90vw;
-            justify-content: center;
+        .start-content {
+            text-align: center;
+            animation: fadeInScale 0.8s ease-out;
         }
 
-        .color-btn {
-            width: clamp(30px, 6vw, 50px);
-            height: clamp(30px, 6vw, 50px);
-            border-radius: 50%;
-            border: 3px solid #ffffff;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 0 10px;
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
-        .color-btn:hover {
-            transform: scale(1.15);
-        }
-
-        .color-btn.selected {
-            border-width: 5px;
-            transform: scale(1.2);
-        }
-
-        .control-buttons {
-            display: flex;
-            gap: 10px;
-            background: rgba(26, 19, 48, 0.8);
-            padding: 12px;
-            border-radius: 20px;
-            border: 2px solid #ff00ff;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
-        }
-
-        .btn {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #ff00ff, #ff6600);
-            color: #1a1330;
-            border: 2px solid #ff00ff;
-            border-radius: 15px;
-            cursor: pointer;
+        .title {
+            font-size: 4rem;
             font-weight: bold;
-            font-size: clamp(0.7rem, 1.5vw, 1rem);
-            transition: all 0.2s ease;
-            box-shadow: 0 0 10px #ff00ff;
-            text-shadow: none;
+            margin-bottom: 1rem;
+            background: linear-gradient(120deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 0, 110, 0.5);
+            letter-spacing: 3px;
         }
 
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #ff00ff;
+        .subtitle {
+            font-size: 1.5rem;
+            color: #b195f8;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 20px rgba(177, 149, 248, 0.5);
         }
 
-        .btn:active {
+        .play-button {
+            padding: 15px 50px;
+            font-size: 1.5rem;
+            background: linear-gradient(120deg, #ff006e, #8338ec);
+            border: none;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px rgba(255, 0, 110, 0.6);
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 50px rgba(255, 0, 110, 0.8);
+        }
+
+        .play-button:active {
             transform: scale(0.95);
         }
 
-        .tool-selector {
-            display: flex;
-            gap: 10px;
-            background: rgba(26, 19, 48, 0.8);
-            padding: 12px;
-            border-radius: 20px;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
-        }
-
-        .tool-btn {
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #00ff00, #00ffff);
-            color: #1a1330;
-            border: 2px solid #00ff00;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: clamp(0.7rem, 1.5vw, 1rem);
-            transition: all 0.2s ease;
-            box-shadow: 0 0 10px #00ff00;
-            text-shadow: none;
-        }
-
-        .tool-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #00ff00;
-        }
-
-        .tool-btn.active {
-            background: linear-gradient(135deg, #ffff00, #ff6600);
-            border-color: #ffff00;
-            box-shadow: 0 0 20px #ffff00;
-        }
-
-        .brush-size-control {
-            display: flex;
-            gap: 8px;
-            background: rgba(26, 19, 48, 0.8);
-            padding: 12px;
-            border-radius: 20px;
-            border: 2px solid #ffaa00;
-            box-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
-            align-items: center;
-        }
-
-        .size-btn {
-            padding: 8px 14px;
-            background: linear-gradient(135deg, #ffaa00, #ff6600);
-            color: #1a1330;
-            border: 2px solid #ffaa00;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: clamp(0.7rem, 1.5vw, 1rem);
-            transition: all 0.2s ease;
-            box-shadow: 0 0 10px #ffaa00;
-            text-shadow: none;
-        }
-
-        .size-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px #ffaa00;
-        }
-
-        .size-btn.active {
-            background: linear-gradient(135deg, #ffff00, #ffaa00);
-            border-color: #ffff00;
-            box-shadow: 0 0 20px #ffff00;
-        }
-
-        .animal-nav {
+        #topBar {
             position: fixed;
-            right: 20px;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: rgba(26, 19, 48, 0.95);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 50;
+            border-bottom: 2px solid rgba(131, 56, 236, 0.5);
+            box-shadow: 0 4px 20px rgba(255, 0, 110, 0.2);
+        }
+
+        .animal-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #06ffa5;
+            text-shadow: 0 0 10px rgba(6, 255, 165, 0.6);
+        }
+
+        .completion {
+            font-size: 1rem;
+            color: #8338ec;
+            text-shadow: 0 0 10px rgba(131, 56, 236, 0.5);
+        }
+
+        .nav-arrows {
+            position: fixed;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            z-index: 2;
+            gap: 10px;
+            z-index: 40;
         }
 
-        .nav-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff00ff, #ff6600);
-            border: 3px solid #ff00ff;
-            color: #1a1330;
-            font-size: 24px;
+        .nav-button {
+            width: 45px;
+            height: 45px;
+            background: rgba(131, 56, 236, 0.6);
+            border: 2px solid rgba(131, 56, 236, 0.8);
+            color: #06ffa5;
+            font-size: 1.5rem;
             cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            box-shadow: 0 0 10px #ff00ff;
-            text-shadow: none;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(131, 56, 236, 0.4);
         }
 
-        .nav-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px #ff00ff;
+        .nav-button:hover {
+            background: rgba(131, 56, 236, 0.8);
+            box-shadow: 0 0 25px rgba(131, 56, 236, 0.7);
         }
 
-        .nav-btn:active {
+        .nav-button:active {
             transform: scale(0.9);
         }
 
-        .completion-popup {
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        #bottomToolbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 19, 48, 0.98);
+            border-top: 2px solid rgba(131, 56, 236, 0.5);
+            box-shadow: 0 -4px 20px rgba(255, 0, 110, 0.2);
+            z-index: 50;
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .palette-row {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 4px 0;
+            flex: 0 0 auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .palette-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .color-button {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .color-button:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .color-button.selected {
+            border-width: 3px;
+            transform: scale(1.2);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .tools-row {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .tool-button {
+            width: 36px;
+            height: 36px;
+            background: rgba(131, 56, 236, 0.5);
+            border: 2px solid rgba(131, 56, 236, 0.8);
+            color: #06ffa5;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 8px rgba(131, 56, 236, 0.4);
+            flex-shrink: 0;
+        }
+
+        .tool-button:hover {
+            background: rgba(131, 56, 236, 0.7);
+            box-shadow: 0 0 15px rgba(131, 56, 236, 0.7);
+        }
+
+        .tool-button.active {
+            background: rgba(255, 0, 110, 0.7);
+            border-color: rgba(255, 0, 110, 0.8);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 0, 110, 0.7);
+        }
+
+        .tool-button:active {
+            transform: scale(0.9);
+        }
+
+        .size-selector {
+            display: flex;
+            gap: 4px;
+            background: rgba(131, 56, 236, 0.3);
+            padding: 4px;
+            border-radius: 6px;
+            border: 1px solid rgba(131, 56, 236, 0.5);
+        }
+
+        .size-button {
+            width: 28px;
+            height: 28px;
+            background: transparent;
+            border: 1px solid rgba(131, 56, 236, 0.6);
+            color: #06ffa5;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .size-button.active {
+            background: rgba(131, 56, 236, 0.7);
+            border-color: rgba(131, 56, 236, 0.9);
+            box-shadow: 0 0 8px rgba(131, 56, 236, 0.6);
+        }
+
+        .size-button:hover {
+            background: rgba(131, 56, 236, 0.5);
+        }
+
+        #starPopup {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(26, 19, 48, 0.95);
+            background: linear-gradient(135deg, #2d1b4e 0%, #1a1330 100%);
+            border: 3px solid #06ffa5;
+            border-radius: 20px;
             padding: 40px;
-            border-radius: 30px;
-            border: 3px solid #ffff00;
             text-align: center;
-            z-index: 4;
+            z-index: 200;
             display: none;
-            box-shadow: 0 0 40px #ffff00;
+            box-shadow: 0 0 40px rgba(6, 255, 165, 0.6), inset 0 0 20px rgba(131, 56, 236, 0.3);
+            animation: popupAppear 0.5s ease-out;
+            min-width: 280px;
         }
 
-        .completion-popup.show {
-            display: block;
-            animation: popup-appear 0.5s ease-out;
-        }
-
-        @keyframes popup-appear {
+        @keyframes popupAppear {
             from {
                 opacity: 0;
                 transform: translate(-50%, -50%) scale(0.5);
@@ -348,1022 +324,1306 @@
             }
         }
 
-        .completion-popup h2 {
-            color: #ffff00;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #ffff00;
-        }
-
-        .stars {
-            font-size: 3rem;
+        .popup-stars {
+            font-size: 4rem;
             margin: 20px 0;
-            letter-spacing: 10px;
+            animation: starsRotate 1s ease-out;
         }
 
-        .continue-btn {
-            margin-top: 20px;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, #ffff00, #ff6600);
-            color: #1a1330;
-            border: 3px solid #ffff00;
+        @keyframes starsRotate {
+            from {
+                transform: rotate(-180deg);
+            }
+            to {
+                transform: rotate(0deg);
+            }
+        }
+
+        .popup-text {
+            font-size: 1.5rem;
+            color: #06ffa5;
+            text-shadow: 0 0 10px rgba(6, 255, 165, 0.6);
+            margin-bottom: 20px;
+        }
+
+        .continue-button {
+            padding: 10px 30px;
+            font-size: 1rem;
+            background: linear-gradient(120deg, #ff006e, #8338ec);
+            border: none;
+            color: white;
             border-radius: 20px;
             cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.6);
             font-weight: bold;
-            box-shadow: 0 0 15px #ffff00;
-            transition: all 0.2s ease;
         }
 
-        .continue-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px #ffff00;
+        .continue-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 0, 110, 0.8);
         }
 
-        @media (max-height: 600px) {
-            .animal-nav {
-                top: 30%;
-                right: 10px;
+        @media (max-width: 600px) {
+            .title {
+                font-size: 2.5rem;
             }
-            .bottom-bar {
-                bottom: 10px;
-                gap: 8px;
+
+            .subtitle {
+                font-size: 1.1rem;
             }
-            .control-buttons, .tool-selector, .brush-size-control, .color-palette {
-                padding: 8px;
+
+            .play-button {
+                padding: 12px 40px;
+                font-size: 1.2rem;
+            }
+
+            #topBar {
+                height: 45px;
+                padding: 0 15px;
+            }
+
+            .animal-name {
+                font-size: 1rem;
+            }
+
+            .completion {
+                font-size: 0.9rem;
+            }
+
+            .color-button {
+                width: 28px;
+                height: 28px;
+            }
+
+            .tool-button {
+                width: 32px;
+                height: 32px;
+                font-size: 0.95rem;
+            }
+
+            #bottomToolbar {
+                padding: 6px 8px;
+                gap: 6px;
+            }
+
+            .tools-row {
+                gap: 4px;
             }
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
 
-    <div class="ui-container" id="startScreen">
-        <div class="title">
-            ✨ Capybara Glow ✨
-            <div class="subtitle">Neon Coloring Adventure</div>
-        </div>
-        <button class="play-button" id="playBtn">PLAY</button>
+<div id="startScreen">
+    <div class="start-content">
+        <div class="title">Capybara Glow</div>
+        <div class="subtitle">Paint adorable animals with neon colors!</div>
+        <button class="play-button" onclick="startGame()">PLAY</button>
     </div>
+</div>
 
-    <div class="game-ui" id="gameUI">
-        <div class="top-bar">
-            <div class="animal-name" id="animalName">Capybara</div>
-            <div class="completion-indicator" id="completionIndicator">0%</div>
+<canvas id="gameCanvas"></canvas>
+
+<div id="topBar">
+    <div class="animal-name" id="animalName">Capybara</div>
+    <div class="completion" id="completion">0%</div>
+</div>
+
+<div class="nav-arrows">
+    <button class="nav-button" id="prevBtn" onclick="previousAnimal()">◀</button>
+    <button class="nav-button" id="nextBtn" onclick="nextAnimal()">▶</button>
+</div>
+
+<div id="bottomToolbar">
+    <div class="palette-row" id="paletteRow"></div>
+    <div class="tools-row">
+        <button class="tool-button" id="brushTool" onclick="selectTool('brush')" title="Brush">🖌</button>
+        <button class="tool-button" id="fillTool" onclick="selectTool('fill')" title="Fill">🪣</button>
+        <div class="size-selector">
+            <button class="size-button active" onclick="setBrushSize(5)">S</button>
+            <button class="size-button" onclick="setBrushSize(10)">M</button>
+            <button class="size-button" onclick="setBrushSize(15)">L</button>
         </div>
-
-        <div class="bottom-bar">
-            <div class="tool-selector">
-                <button class="tool-btn active" id="fillTool">🪣 Fill</button>
-                <button class="tool-btn" id="brushTool">🖌️ Brush</button>
-            </div>
-
-            <div class="color-palette" id="colorPalette"></div>
-
-            <div class="brush-size-control">
-                <label for="brushSize" style="color: #ffaa00; font-size: clamp(0.7rem, 1.5vw, 1rem);">Size:</label>
-                <button class="size-btn active" data-size="8">S</button>
-                <button class="size-btn" data-size="16">M</button>
-                <button class="size-btn" data-size="25">L</button>
-            </div>
-
-            <div class="control-buttons">
-                <button class="btn" id="clearBtn">🔄 Clear</button>
-                <button class="btn" id="homeBtn">🏠 Home</button>
-            </div>
-        </div>
-
-        <div class="animal-nav">
-            <button class="nav-btn" id="prevBtn">‹</button>
-            <button class="nav-btn" id="nextBtn">›</button>
-        </div>
+        <button class="tool-button" onclick="undoAction()" title="Undo">↶</button>
+        <button class="tool-button" onclick="clearCanvas()" title="Clear">🗑</button>
     </div>
+</div>
 
-    <div class="completion-popup" id="completionPopup">
-        <h2>🎉 Amazing! 🎉</h2>
-        <p id="popupMessage" style="color: #00ffff; font-size: clamp(1rem, 2vw, 1.5rem); margin-bottom: 20px;"></p>
-        <div class="stars" id="starRating">⭐⭐⭐</div>
-        <button class="continue-btn" id="nextAnimalBtn">Next Animal →</button>
-    </div>
+<div id="starPopup">
+    <div class="popup-stars" id="starCount">⭐⭐⭐</div>
+    <div class="popup-text">Amazing! Keep it up!</div>
+    <button class="continue-button" onclick="closeStarPopup()">Continue</button>
+</div>
 
-    <script>
-        // ===================== AUDIO ENGINE =====================
-        const AudioEngine = {
-            audioContext: null,
+<script>
+// ==================== GAME STATE ====================
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-            init() {
-                if (!this.audioContext) {
-                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                }
-            },
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
-            playPaintSound() {
-                this.init();
-                const ctx = this.audioContext;
-                const now = ctx.currentTime;
+const ANIMALS = ['Capybara', 'Unicorn', 'Elephant', 'Butterfly', 'Dolphin', 'Cat'];
+const COLORS = [
+    '#FF006E', '#FB5607', '#FFBE0B', '#8338EC', '#3A86FF', '#06FFA5',
+    '#FF4365', '#FFD166', '#06D6A0', '#EF476F', '#FFFFFF', '#FFB6C1'
+];
 
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
+let currentAnimalIndex = 0;
+let currentTool = 'brush';
+let currentColor = '#FF006E';
+let brushSize = 5;
+let isDrawing = false;
+let gameStarted = false;
+let completion = {};
+let showingPopup = false;
 
+// Initialize completion tracking
+ANIMALS.forEach(animal => {
+    completion[animal] = 0;
+});
+
+// ==================== AUDIO SYNTHESIS ====================
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+function playSoundEffect(type) {
+    const now = audioContext.currentTime;
+    switch (type) {
+        case 'paint':
+            const osc1 = audioContext.createOscillator();
+            const gain1 = audioContext.createGain();
+            osc1.connect(gain1);
+            gain1.connect(audioContext.destination);
+            osc1.frequency.value = 800 + Math.random() * 400;
+            gain1.gain.setValueAtTime(0.1, now);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            osc1.start(now);
+            osc1.stop(now + 0.1);
+            break;
+        case 'colorSelect':
+            const osc2 = audioContext.createOscillator();
+            const gain2 = audioContext.createGain();
+            osc2.connect(gain2);
+            gain2.connect(audioContext.destination);
+            osc2.frequency.setValueAtTime(600, now);
+            osc2.frequency.exponentialRampToValueAtTime(1000, now + 0.15);
+            gain2.gain.setValueAtTime(0.15, now);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+            osc2.start(now);
+            osc2.stop(now + 0.15);
+            break;
+        case 'animalSwitch':
+            const osc3 = audioContext.createOscillator();
+            const gain3 = audioContext.createGain();
+            osc3.connect(gain3);
+            gain3.connect(audioContext.destination);
+            osc3.frequency.setValueAtTime(1200, now);
+            osc3.frequency.exponentialRampToValueAtTime(600, now + 0.2);
+            gain3.gain.setValueAtTime(0.15, now);
+            gain3.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+            osc3.start(now);
+            osc3.stop(now + 0.2);
+            break;
+        case 'completion':
+            for (let i = 0; i < 3; i++) {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
                 osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                osc.frequency.setValueAtTime(800, now);
-                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
-
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-
-                osc.start(now);
-                osc.stop(now + 0.1);
-            },
-
-            playColorSelectSound() {
-                this.init();
-                const ctx = this.audioContext;
-                const now = ctx.currentTime;
-
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                osc.frequency.setValueAtTime(1200, now);
-                osc.frequency.linearRampToValueAtTime(1500, now + 0.15);
-
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-
-                osc.start(now);
-                osc.stop(now + 0.15);
-            },
-
-            playAnimalSwitchSound() {
-                this.init();
-                const ctx = this.audioContext;
-                const now = ctx.currentTime;
-
-                [800, 1000].forEach((freq, i) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-
-                    osc.frequency.setValueAtTime(freq, now);
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-
-                    osc.start(now + i * 0.05);
-                    osc.stop(now + 0.15);
-                });
-            },
-
-            playCompletionJingle() {
-                this.init();
-                const ctx = this.audioContext;
-                const now = ctx.currentTime;
-                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-
-                notes.forEach((freq, i) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-
-                    osc.frequency.setValueAtTime(freq, now + i * 0.15);
-                    gain.gain.setValueAtTime(0.3, now + i * 0.15);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.15 + 0.3);
-
-                    osc.start(now + i * 0.15);
-                    osc.stop(now + i * 0.15 + 0.3);
-                });
-            },
-
-            playUIClick() {
-                this.init();
-                const ctx = this.audioContext;
-                const now = ctx.currentTime;
-
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                osc.frequency.setValueAtTime(1500, now);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-
-                osc.start(now);
-                osc.stop(now + 0.08);
+                gain.connect(audioContext.destination);
+                const freq = 800 + i * 200;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, now + i * 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.2);
+                osc.start(now + i * 0.1);
+                osc.stop(now + i * 0.1 + 0.2);
             }
-        };
+            break;
+    }
+}
 
-        // ===================== ANIMAL DEFINITIONS =====================
-        const Animals = {
-            capybara: {
-                name: 'Capybara',
-                draw: function(ctx, x, y, scale) {
-                    ctx.save();
-                    ctx.translate(x, y);
-                    ctx.scale(scale, scale);
+// ==================== DRAWING ANIMALS WITH BEZIER CURVES ====================
+function drawAnimals() {
+    const animal = ANIMALS[currentAnimalIndex];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                    // Body
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, 80, 50, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+    const centerX = canvas.width / 2;
+    const centerY = (canvas.height - 100) / 2 + 25;
+    const scale = Math.min(canvas.width, canvas.height) / 500;
 
-                    // Head
-                    ctx.beginPath();
-                    ctx.ellipse(70, -15, 45, 40, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+    switch (animal) {
+        case 'Capybara':
+            drawCapybara(centerX, centerY, scale);
+            break;
+        case 'Unicorn':
+            drawUnicorn(centerX, centerY, scale);
+            break;
+        case 'Elephant':
+            drawElephant(centerX, centerY, scale);
+            break;
+        case 'Butterfly':
+            drawButterfly(centerX, centerY, scale);
+            break;
+        case 'Dolphin':
+            drawDolphin(centerX, centerY, scale);
+            break;
+        case 'Cat':
+            drawCat(centerX, centerY, scale);
+            break;
+    }
+}
 
-                    // Snout
-                    ctx.beginPath();
-                    ctx.ellipse(105, -10, 25, 20, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+function drawOutline() {
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.shadowColor = '#FF006E';
+    ctx.shadowBlur = 15;
+    ctx.stroke();
+    ctx.shadowColor = 'transparent';
+}
 
-                    // Ears
-                    ctx.beginPath();
-                    ctx.ellipse(60, -35, 15, 20, 0, 0, Math.PI * 2);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.ellipse(80, -40, 15, 20, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+function drawCapybara(x, y, s) {
+    // Body
+    ctx.beginPath();
+    ctx.ellipse(x - 30 * s, y - 20 * s, 85 * s, 55 * s, 0.1, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFE5B4';
+    ctx.fill();
+    drawOutline();
 
-                    // Eyes
-                    ctx.beginPath();
-                    ctx.arc(85, -20, 6, 0, Math.PI * 2);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.arc(95, -22, 6, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Head
+    ctx.beginPath();
+    ctx.ellipse(x + 50 * s, y - 40 * s, 55 * s, 50 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFE5B4';
+    ctx.fill();
+    drawOutline();
 
-                    // Legs
-                    ctx.beginPath();
-                    ctx.moveTo(-30, 40);
-                    ctx.lineTo(-30, 70);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(-10, 42);
-                    ctx.lineTo(-10, 72);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(30, 42);
-                    ctx.lineTo(30, 72);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(50, 40);
-                    ctx.lineTo(50, 70);
-                    ctx.stroke();
+    // Left ear
+    ctx.beginPath();
+    ctx.ellipse(x + 20 * s, y - 85 * s, 16 * s, 20 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFE5B4';
+    ctx.fill();
+    drawOutline();
 
-                    ctx.restore();
-                }
-            },
-            unicorn: {
-                name: 'Unicorn',
-                draw: function(ctx, x, y, scale) {
-                    ctx.save();
-                    ctx.translate(x, y);
-                    ctx.scale(scale, scale);
+    // Right ear
+    ctx.beginPath();
+    ctx.ellipse(x + 80 * s, y - 85 * s, 16 * s, 20 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFE5B4';
+    ctx.fill();
+    drawOutline();
 
-                    // Horn
-                    ctx.beginPath();
-                    ctx.moveTo(70, -60);
-                    ctx.lineTo(75, -30);
-                    ctx.lineTo(65, -30);
-                    ctx.closePath();
-                    ctx.stroke();
+    // Snout
+    ctx.beginPath();
+    ctx.moveTo(x + 100 * s, y - 45 * s);
+    ctx.bezierCurveTo(x + 115 * s, y - 50 * s, x + 120 * s, y - 35 * s, x + 115 * s, y - 25 * s);
+    ctx.bezierCurveTo(x + 110 * s, y - 30 * s, x + 100 * s, y - 35 * s, x + 100 * s, y - 45 * s);
+    ctx.fillStyle = '#FFE5B4';
+    ctx.fill();
+    drawOutline();
 
-                    // Head
-                    ctx.beginPath();
-                    ctx.ellipse(70, -20, 40, 45, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Eyes
+    ctx.beginPath();
+    ctx.ellipse(x + 55 * s, y - 48 * s, 7 * s, 8 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    drawOutline();
 
-                    // Mane
-                    ctx.beginPath();
-                    ctx.arc(50, -40, 20, 0, Math.PI * 2);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.arc(50, -20, 18, 0, Math.PI * 2);
-                    ctx.stroke();
+    ctx.beginPath();
+    ctx.ellipse(x + 85 * s, y - 48 * s, 7 * s, 8 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    drawOutline();
 
-                    // Snout
-                    ctx.beginPath();
-                    ctx.ellipse(100, -10, 20, 18, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Pupils
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.arc(x + 58 * s, y - 48 * s, 3 * s, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + 88 * s, y - 48 * s, 3 * s, 0, Math.PI * 2);
+    ctx.fill();
 
-                    // Body
-                    ctx.beginPath();
-                    ctx.ellipse(-10, 5, 85, 55, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Nose
+    ctx.beginPath();
+    ctx.ellipse(x + 105 * s, y - 30 * s, 6 * s, 5 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFB6C1';
+    ctx.fill();
+    drawOutline();
 
-                    // Tail
-                    ctx.beginPath();
-                    ctx.moveTo(-80, 10);
-                    ctx.quadraticCurveTo(-120, 20, -110, 60);
-                    ctx.stroke();
+    // Mouth
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2 * s;
+    ctx.beginPath();
+    ctx.arc(x + 105 * s, y - 20 * s, 10 * s, 0, Math.PI);
+    ctx.stroke();
 
-                    // Eyes
-                    ctx.beginPath();
-                    ctx.arc(60, -25, 5, 0, Math.PI * 2);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.arc(75, -28, 5, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Legs with bezier curves
+    const legs = [
+        { x: -35, y: 25 },
+        { x: -80, y: 25 },
+        { x: 15, y: 25 },
+        { x: -30, y: 25 }
+    ];
 
-                    // Legs
-                    ctx.beginPath();
-                    ctx.moveTo(-40, 50);
-                    ctx.lineTo(-40, 85);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(-15, 52);
-                    ctx.lineTo(-15, 87);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(20, 52);
-                    ctx.lineTo(20, 87);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(45, 50);
-                    ctx.lineTo(45, 85);
-                    ctx.stroke();
+    legs.forEach(leg => {
+        ctx.beginPath();
+        ctx.moveTo(x + leg.x * s, y + leg.y * s);
+        ctx.quadraticCurveTo(x + (leg.x - 7) * s, y + 50 * s, x + leg.x * s, y + 60 * s);
+        ctx.quadraticCurveTo(x + (leg.x + 15) * s, y + 62 * s, x + (leg.x + 25) * s, y + 58 * s);
+        ctx.quadraticCurveTo(x + (leg.x + 10) * s, y + 35 * s, x + leg.x * s, y + leg.y * s);
+        ctx.fillStyle = '#FFE5B4';
+        ctx.fill();
+        drawOutline();
+    });
 
-                    ctx.restore();
-                }
-            },
-            elephant: {
-                name: 'Elephant',
-                draw: function(ctx, x, y, scale) {
-                    ctx.save();
-                    ctx.translate(x, y);
-                    ctx.scale(scale, scale);
+    // Tail
+    ctx.beginPath();
+    ctx.moveTo(x - 115 * s, y);
+    ctx.bezierCurveTo(x - 140 * s, y - 10 * s, x - 150 * s, y + 15 * s, x - 135 * s, y + 25 * s);
+    ctx.quadraticCurveTo(x - 120 * s, y + 20 * s, x - 110 * s, y);
+    ctx.fillStyle = '#FFE5B4';
+    ctx.fill();
+    drawOutline();
+}
 
-                    // Body
-                    ctx.beginPath();
-                    ctx.ellipse(0, 10, 75, 60, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+function drawUnicorn(x, y, s) {
+    // Body with curve
+    ctx.beginPath();
+    ctx.moveTo(x - 60 * s, y);
+    ctx.bezierCurveTo(x - 40 * s, y - 45 * s, x + 40 * s, y - 50 * s, x + 70 * s, y - 10 * s);
+    ctx.quadraticCurveTo(x + 65 * s, y + 35 * s, x - 50 * s, y + 35 * s);
+    ctx.bezierCurveTo(x - 55 * s, y + 15 * s, x - 65 * s, y + 5 * s, x - 60 * s, y);
+    ctx.fillStyle = '#FFB6C1';
+    ctx.fill();
+    drawOutline();
 
-                    // Head
-                    ctx.beginPath();
-                    ctx.ellipse(50, -30, 50, 55, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Head
+    ctx.beginPath();
+    ctx.ellipse(x + 60 * s, y - 45 * s, 50 * s, 52 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFB6C1';
+    ctx.fill();
+    drawOutline();
 
-                    // Trunk
-                    ctx.beginPath();
-                    ctx.moveTo(75, -10);
-                    ctx.quadraticCurveTo(95, 20, 85, 50);
-                    ctx.stroke();
+    // Ears with curves
+    ctx.beginPath();
+    ctx.moveTo(x + 30 * s, y - 90 * s);
+    ctx.bezierCurveTo(x + 10 * s, y - 105 * s, x + 18 * s, y - 75 * s, x + 28 * s, y - 80 * s);
+    ctx.quadraticCurveTo(x + 32 * s, y - 85 * s, x + 30 * s, y - 90 * s);
+    ctx.fillStyle = '#FFB6C1';
+    ctx.fill();
+    drawOutline();
 
-                    // Ears
-                    ctx.beginPath();
-                    ctx.ellipse(25, -10, 35, 50, 0.3, 0, Math.PI * 2);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.ellipse(70, -15, 35, 50, -0.3, 0, Math.PI * 2);
-                    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x + 90 * s, y - 90 * s);
+    ctx.bezierCurveTo(x + 110 * s, y - 105 * s, x + 102 * s, y - 75 * s, x + 92 * s, y - 80 * s);
+    ctx.quadraticCurveTo(x + 88 * s, y - 85 * s, x + 90 * s, y - 90 * s);
+    ctx.fillStyle = '#FFB6C1';
+    ctx.fill();
+    drawOutline();
 
-                    // Eyes
-                    ctx.beginPath();
-                    ctx.arc(45, -40, 6, 0, Math.PI * 2);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.arc(60, -45, 6, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Spiral horn
+    ctx.beginPath();
+    ctx.moveTo(x + 60 * s, y - 100 * s);
+    ctx.bezierCurveTo(x + 58 * s, y - 140 * s, x + 62 * s, y - 170 * s, x + 60 * s, y - 180 * s);
+    ctx.bezierCurveTo(x + 62 * s, y - 170 * s, x + 65 * s, y - 140 * s, x + 60 * s, y - 100 * s);
+    ctx.fillStyle = '#FFD700';
+    ctx.fill();
+    drawOutline();
 
-                    // Tusk
-                    ctx.beginPath();
-                    ctx.moveTo(70, 10);
-                    ctx.quadraticCurveTo(80, 30, 75, 50);
-                    ctx.stroke();
+    // Mane sections (colorable zones)
+    const maneSections = [
+        { startX: 20, startY: -65, cp1x: -10, cp1y: -85, cp2x: -15, cp2y: -50, endX: 10, endY: -55 },
+        { startX: -10, startY: -35, cp1x: -40, cp1y: -50, cp2x: -45, cp2y: -15, endX: -20, endY: -25 },
+        { startX: -40, startY: 0, cp1x: -65, cp1y: -15, cp2x: -70, cp2y: 20, endX: -45, endY: 10 }
+    ];
 
-                    // Legs
-                    ctx.beginPath();
-                    ctx.moveTo(-35, 60);
-                    ctx.lineTo(-35, 90);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(-10, 65);
-                    ctx.lineTo(-10, 95);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(25, 65);
-                    ctx.lineTo(25, 95);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(50, 60);
-                    ctx.lineTo(50, 90);
-                    ctx.stroke();
+    maneSections.forEach(section => {
+        ctx.beginPath();
+        ctx.moveTo(x + section.startX * s, y + section.startY * s);
+        ctx.bezierCurveTo(
+            x + section.cp1x * s, y + section.cp1y * s,
+            x + section.cp2x * s, y + section.cp2y * s,
+            x + section.endX * s, y + section.endY * s
+        );
+        ctx.quadraticCurveTo(x + (section.startX + 5) * s, y + (section.startY + 5) * s, x + section.startX * s, y + section.startY * s);
+        ctx.fillStyle = '#FF69B4';
+        ctx.fill();
+        drawOutline();
+    });
 
-                    // Tail
-                    ctx.beginPath();
-                    ctx.moveTo(-60, 40);
-                    ctx.quadraticCurveTo(-90, 50, -95, 75);
-                    ctx.stroke();
+    // Face features
+    ctx.beginPath();
+    ctx.ellipse(x + 105 * s, y - 40 * s, 24 * s, 20 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFCCD5';
+    ctx.fill();
+    drawOutline();
 
-                    ctx.restore();
-                }
-            },
-            butterfly: {
-                name: 'Butterfly',
-                draw: function(ctx, x, y, scale) {
-                    ctx.save();
-                    ctx.translate(x, y);
-                    ctx.scale(scale, scale);
+    // Eye
+    ctx.beginPath();
+    ctx.ellipse(x + 68 * s, y - 52 * s, 9 * s, 11 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    drawOutline();
 
-                    // Body
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, 8, 50, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.arc(x + 70 * s, y - 52 * s, 5 * s, 0, Math.PI * 2);
+    ctx.fill();
 
-                    // Left upper wing
-                    ctx.beginPath();
-                    ctx.ellipse(-50, -25, 40, 35, -0.3, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Nose
+    ctx.beginPath();
+    ctx.ellipse(x + 110 * s, y - 37 * s, 7 * s, 6 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFB6C1';
+    ctx.fill();
+    drawOutline();
 
-                    // Right upper wing
-                    ctx.beginPath();
-                    ctx.ellipse(50, -25, 40, 35, 0.3, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Legs
+    const unicornLegs = [
+        { startX: -50, startY: 35, legX: -45 },
+        { startX: 10, startY: 35, legX: 5 },
+        { startX: -100, startY: 35, legX: -95 },
+        { startX: -60, startY: 35, legX: -55 }
+    ];
 
-                    // Left lower wing
-                    ctx.beginPath();
-                    ctx.ellipse(-45, 30, 35, 30, -0.2, 0, Math.PI * 2);
-                    ctx.stroke();
+    unicornLegs.forEach(leg => {
+        ctx.beginPath();
+        ctx.moveTo(x + leg.startX * s, y + leg.startY * s);
+        ctx.quadraticCurveTo(x + (leg.legX - 5) * s, y + 55 * s, x + leg.startX * s, y + 75 * s);
+        ctx.quadraticCurveTo(x + (leg.legX + 15) * s, y + 78 * s, x + (leg.legX + 20) * s, y + 75 * s);
+        ctx.quadraticCurveTo(x + (leg.legX + 5) * s, y + 55 * s, x + leg.startX * s, y + leg.startY * s);
+        ctx.fillStyle = '#FFB6C1';
+        ctx.fill();
+        drawOutline();
+    });
 
-                    // Right lower wing
-                    ctx.beginPath();
-                    ctx.ellipse(45, 30, 35, 30, 0.2, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Tail (segmented)
+    ctx.beginPath();
+    ctx.moveTo(x - 120 * s, y + 20 * s);
+    ctx.bezierCurveTo(x - 150 * s, y, x - 160 * s, y + 35 * s, x - 135 * s, y + 40 * s);
+    ctx.quadraticCurveTo(x - 120 * s, y + 30 * s, x - 120 * s, y + 20 * s);
+    ctx.fillStyle = '#FF69B4';
+    ctx.fill();
+    drawOutline();
 
-                    // Antennae
-                    ctx.beginPath();
-                    ctx.moveTo(-5, -50);
-                    ctx.quadraticCurveTo(-15, -70, -20, -75);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(5, -50);
-                    ctx.quadraticCurveTo(15, -70, 20, -75);
-                    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x - 130 * s, y + 45 * s);
+    ctx.bezierCurveTo(x - 165 * s, y + 50 * s, x - 170 * s, y + 75 * s, x - 145 * s, y + 75 * s);
+    ctx.quadraticCurveTo(x - 130 * s, y + 60 * s, x - 130 * s, y + 45 * s);
+    ctx.fillStyle = '#FF69B4';
+    ctx.fill();
+    drawOutline();
+}
 
-                    // Head
-                    ctx.beginPath();
-                    ctx.arc(0, -40, 8, 0, Math.PI * 2);
-                    ctx.stroke();
+function drawElephant(x, y, s) {
+    // Body
+    ctx.beginPath();
+    ctx.ellipse(x - 20 * s, y + 15 * s, 70 * s, 62 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#A9A9A9';
+    ctx.fill();
+    drawOutline();
 
-                    ctx.restore();
-                }
-            },
-            dolphin: {
-                name: 'Dolphin',
-                draw: function(ctx, x, y, scale) {
-                    ctx.save();
-                    ctx.translate(x, y);
-                    ctx.scale(scale, scale);
+    // Head
+    ctx.beginPath();
+    ctx.ellipse(x + 55 * s, y - 30 * s, 58 * s, 62 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#A9A9A9';
+    ctx.fill();
+    drawOutline();
 
-                    // Body
-                    ctx.beginPath();
-                    ctx.ellipse(-10, 0, 90, 45, 0.1, 0, Math.PI * 2);
-                    ctx.stroke();
+    // HUGE left ear
+    ctx.beginPath();
+    ctx.moveTo(x + 10 * s, y - 20 * s);
+    ctx.bezierCurveTo(x - 30 * s, y - 80 * s, x - 50 * s, y - 90 * s, x - 60 * s, y - 20 * s);
+    ctx.bezierCurveTo(x - 50 * s, y + 20 * s, x - 20 * s, y + 30 * s, x + 10 * s, y - 20 * s);
+    ctx.fillStyle = '#C0C0C0';
+    ctx.fill();
+    drawOutline();
 
-                    // Head
-                    ctx.beginPath();
-                    ctx.ellipse(50, -10, 35, 40, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Ear inner pattern
+    ctx.beginPath();
+    ctx.ellipse(x - 25 * s, y - 35 * s, 28 * s, 50 * s, 0.3, 0, Math.PI * 2);
+    ctx.strokeStyle = '#A9A9A9';
+    ctx.lineWidth = 2 * s;
+    ctx.stroke();
 
-                    // Beak
-                    ctx.beginPath();
-                    ctx.moveTo(75, -5);
-                    ctx.lineTo(105, 0);
-                    ctx.lineTo(75, 5);
-                    ctx.closePath();
-                    ctx.stroke();
+    // HUGE right ear
+    ctx.beginPath();
+    ctx.moveTo(x + 100 * s, y - 20 * s);
+    ctx.bezierCurveTo(x + 130 * s, y - 80 * s, x + 150 * s, y - 90 * s, x + 160 * s, y - 20 * s);
+    ctx.bezierCurveTo(x + 150 * s, y + 20 * s, x + 120 * s, y + 30 * s, x + 100 * s, y - 20 * s);
+    ctx.fillStyle = '#C0C0C0';
+    ctx.fill();
+    drawOutline();
 
-                    // Dorsal fin
-                    ctx.beginPath();
-                    ctx.moveTo(-5, -40);
-                    ctx.lineTo(5, -15);
-                    ctx.lineTo(-5, -15);
-                    ctx.closePath();
-                    ctx.stroke();
+    // Ear inner pattern
+    ctx.beginPath();
+    ctx.ellipse(x + 125 * s, y - 35 * s, 28 * s, 50 * s, -0.3, 0, Math.PI * 2);
+    ctx.strokeStyle = '#A9A9A9';
+    ctx.lineWidth = 2 * s;
+    ctx.stroke();
 
-                    // Pectoral fin left
-                    ctx.beginPath();
-                    ctx.ellipse(-20, 35, 25, 15, 0.3, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Trunk with curves
+    ctx.beginPath();
+    ctx.moveTo(x + 65 * s, y + 5 * s);
+    ctx.bezierCurveTo(x + 70 * s, y + 30 * s, x + 75 * s, y + 50 * s, x + 65 * s, y + 75 * s);
+    ctx.bezierCurveTo(x + 50 * s, y + 75 * s, x + 45 * s, y + 50 * s, x + 50 * s, y + 5 * s);
+    ctx.fillStyle = '#A9A9A9';
+    ctx.fill();
+    drawOutline();
 
-                    // Tail flukes
-                    ctx.beginPath();
-                    ctx.moveTo(-80, -5);
-                    ctx.quadraticCurveTo(-110, -30, -120, -45);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(-80, 5);
-                    ctx.quadraticCurveTo(-110, 30, -120, 45);
-                    ctx.stroke();
+    // Trunk curl at end
+    ctx.beginPath();
+    ctx.arc(x + 60 * s, y + 80 * s, 8 * s, 0, Math.PI * 2);
+    ctx.fillStyle = '#A9A9A9';
+    ctx.fill();
+    drawOutline();
 
-                    // Eye
-                    ctx.beginPath();
-                    ctx.arc(35, -20, 5, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Tusks with curves
+    ctx.beginPath();
+    ctx.moveTo(x + 55 * s, y + 15 * s);
+    ctx.bezierCurveTo(x + 35 * s, y + 25 * s, x + 20 * s, y + 40 * s, x + 15 * s, y + 55 * s);
+    ctx.quadraticCurveTo(x + 30 * s, y + 50 * s, x + 50 * s, y + 20 * s);
+    ctx.fillStyle = '#FFFACD';
+    ctx.fill();
+    drawOutline();
 
-                    ctx.restore();
-                }
-            },
-            cat: {
-                name: 'Cat',
-                draw: function(ctx, x, y, scale) {
-                    ctx.save();
-                    ctx.translate(x, y);
-                    ctx.scale(scale, scale);
+    ctx.beginPath();
+    ctx.moveTo(x + 75 * s, y + 15 * s);
+    ctx.bezierCurveTo(x + 95 * s, y + 25 * s, x + 110 * s, y + 40 * s, x + 115 * s, y + 55 * s);
+    ctx.quadraticCurveTo(x + 100 * s, y + 50 * s, x + 80 * s, y + 20 * s);
+    ctx.fillStyle = '#FFFACD';
+    ctx.fill();
+    drawOutline();
 
-                    // Head
-                    ctx.beginPath();
-                    ctx.ellipse(0, -10, 45, 50, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Eye
+    ctx.beginPath();
+    ctx.ellipse(x + 80 * s, y - 45 * s, 7 * s, 9 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    drawOutline();
 
-                    // Ears
-                    ctx.beginPath();
-                    ctx.moveTo(-35, -50);
-                    ctx.lineTo(-45, -80);
-                    ctx.lineTo(-25, -50);
-                    ctx.closePath();
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(35, -50);
-                    ctx.lineTo(45, -80);
-                    ctx.lineTo(25, -50);
-                    ctx.closePath();
-                    ctx.stroke();
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.arc(x + 80 * s, y - 45 * s, 4 * s, 0, Math.PI * 2);
+    ctx.fill();
 
-                    // Inner ears
-                    ctx.beginPath();
-                    ctx.moveTo(-35, -50);
-                    ctx.lineTo(-40, -70);
-                    ctx.lineTo(-30, -50);
-                    ctx.closePath();
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(35, -50);
-                    ctx.lineTo(40, -70);
-                    ctx.lineTo(30, -50);
-                    ctx.closePath();
-                    ctx.stroke();
+    // Legs
+    const elephantLegs = [
+        { x: -50, baseY: 70 },
+        { x: 10, baseY: 70 },
+        { x: -80, baseY: 70 },
+        { x: 40, baseY: 70 }
+    ];
 
-                    // Snout
-                    ctx.beginPath();
-                    ctx.ellipse(0, 10, 25, 20, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+    elephantLegs.forEach(leg => {
+        ctx.beginPath();
+        ctx.moveTo(x + leg.x * s, y + leg.baseY * s);
+        ctx.quadraticCurveTo(x + (leg.x - 8) * s, y + 85 * s, x + leg.x * s, y + 100 * s);
+        ctx.quadraticCurveTo(x + (leg.x + 20) * s, y + 103 * s, x + (leg.x + 28) * s, y + 100 * s);
+        ctx.quadraticCurveTo(x + (leg.x + 8) * s, y + 85 * s, x + leg.x * s, y + leg.baseY * s);
+        ctx.fillStyle = '#A9A9A9';
+        ctx.fill();
+        drawOutline();
+    });
 
-                    // Nose
-                    ctx.beginPath();
-                    ctx.ellipse(0, 5, 8, 6, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Tail
+    ctx.beginPath();
+    ctx.moveTo(x - 90 * s, y + 55 * s);
+    ctx.bezierCurveTo(x - 120 * s, y + 40 * s, x - 135 * s, y + 65 * s, x - 130 * s, y + 85 * s);
+    ctx.quadraticCurveTo(x - 110 * s, y + 85 * s, x - 95 * s, y + 70 * s);
+    ctx.fillStyle = '#A9A9A9';
+    ctx.fill();
+    drawOutline();
 
-                    // Eyes
-                    ctx.beginPath();
-                    ctx.arc(-15, -15, 8, 0, Math.PI * 2);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.arc(15, -15, 8, 0, Math.PI * 2);
-                    ctx.stroke();
+    // Tail tuft
+    ctx.beginPath();
+    ctx.arc(x - 130 * s, y + 85 * s, 14 * s, 0, Math.PI * 2);
+    ctx.fillStyle = '#8B8B8B';
+    ctx.fill();
+    drawOutline();
+}
 
-                    // Body
-                    ctx.beginPath();
-                    ctx.ellipse(0, 60, 50, 70, 0, 0, Math.PI * 2);
-                    ctx.stroke();
+function drawButterfly(x, y, s) {
+    // Upper left wing
+    ctx.beginPath();
+    ctx.moveTo(x - 15 * s, y - 30 * s);
+    ctx.bezierCurveTo(x - 85 * s, y - 65 * s, x - 95 * s, y - 10 * s, x - 60 * s, y + 15 * s);
+    ctx.bezierCurveTo(x - 40 * s, y + 8 * s, x - 25 * s, y - 8 * s, x - 15 * s, y - 30 * s);
+    ctx.fillStyle = '#FF006E';
+    ctx.fill();
+    drawOutline();
 
-                    // Tail
-                    ctx.beginPath();
-                    ctx.moveTo(45, 40);
-                    ctx.quadraticCurveTo(80, 60, 75, 10);
-                    ctx.stroke();
+    // Wing pattern circles - left upper
+    ctx.beginPath();
+    ctx.arc(x - 70 * s, y - 45 * s, 10 * s, 0, Math.PI * 2);
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2 * s;
+    ctx.stroke();
 
-                    // Front legs
-                    ctx.beginPath();
-                    ctx.moveTo(-20, 120);
-                    ctx.lineTo(-20, 160);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(20, 120);
-                    ctx.lineTo(20, 160);
-                    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(x - 50 * s, y - 12 * s, 8 * s, 0, Math.PI * 2);
+    ctx.stroke();
 
-                    // Back legs
-                    ctx.beginPath();
-                    ctx.moveTo(-35, 130);
-                    ctx.lineTo(-35, 170);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(35, 130);
-                    ctx.lineTo(35, 170);
-                    ctx.stroke();
+    // Upper right wing
+    ctx.beginPath();
+    ctx.moveTo(x + 15 * s, y - 30 * s);
+    ctx.bezierCurveTo(x + 85 * s, y - 65 * s, x + 95 * s, y - 10 * s, x + 60 * s, y + 15 * s);
+    ctx.bezierCurveTo(x + 40 * s, y + 8 * s, x + 25 * s, y - 8 * s, x + 15 * s, y - 30 * s);
+    ctx.fillStyle = '#8338EC';
+    ctx.fill();
+    drawOutline();
 
-                    ctx.restore();
-                }
+    // Wing pattern - right upper
+    ctx.beginPath();
+    ctx.arc(x + 70 * s, y - 45 * s, 10 * s, 0, Math.PI * 2);
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2 * s;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(x + 50 * s, y - 12 * s, 8 * s, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Lower left wing
+    ctx.beginPath();
+    ctx.moveTo(x - 10 * s, y + 15 * s);
+    ctx.bezierCurveTo(x - 70 * s, y + 35 * s, x - 80 * s, y + 75 * s, x - 35 * s, y + 90 * s);
+    ctx.bezierCurveTo(x - 15 * s, y + 75 * s, x - 10 * s, y + 40 * s, x - 10 * s, y + 15 * s);
+    ctx.fillStyle = '#3A86FF';
+    ctx.fill();
+    drawOutline();
+
+    // Wing pattern - left lower
+    ctx.beginPath();
+    ctx.arc(x - 55 * s, y + 55 * s, 8 * s, 0, Math.PI * 2);
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2 * s;
+    ctx.stroke();
+
+    // Lower right wing
+    ctx.beginPath();
+    ctx.moveTo(x + 10 * s, y + 15 * s);
+    ctx.bezierCurveTo(x + 70 * s, y + 35 * s, x + 80 * s, y + 75 * s, x + 35 * s, y + 90 * s);
+    ctx.bezierCurveTo(x + 15 * s, y + 75 * s, x + 10 * s, y + 40 * s, x + 10 * s, y + 15 * s);
+    ctx.fillStyle = '#06FFA5';
+    ctx.fill();
+    drawOutline();
+
+    // Wing pattern - right lower
+    ctx.beginPath();
+    ctx.arc(x + 55 * s, y + 55 * s, 8 * s, 0, Math.PI * 2);
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2 * s;
+    ctx.stroke();
+
+    // Body
+    ctx.beginPath();
+    ctx.ellipse(x, y + 20 * s, 13 * s, 55 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#2D1B4E';
+    ctx.fill();
+    drawOutline();
+
+    // Head
+    ctx.beginPath();
+    ctx.arc(x, y - 42 * s, 16 * s, 0, Math.PI * 2);
+    ctx.fillStyle = '#2D1B4E';
+    ctx.fill();
+    drawOutline();
+
+    // Antennae with curves
+    ctx.beginPath();
+    ctx.moveTo(x - 10 * s, y - 55 * s);
+    ctx.bezierCurveTo(x - 28 * s, y - 78 * s, x - 32 * s, y - 100 * s, x - 30 * s, y - 110 * s);
+    ctx.quadraticCurveTo(x - 22 * s, y - 90 * s, x - 10 * s, y - 55 * s);
+    ctx.fillStyle = '#2D1B4E';
+    ctx.fill();
+    drawOutline();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 10 * s, y - 55 * s);
+    ctx.bezierCurveTo(x + 28 * s, y - 78 * s, x + 32 * s, y - 100 * s, x + 30 * s, y - 110 * s);
+    ctx.quadraticCurveTo(x + 22 * s, y - 90 * s, x + 10 * s, y - 55 * s);
+    ctx.fillStyle = '#2D1B4E';
+    ctx.fill();
+    drawOutline();
+
+    // Eye
+    ctx.beginPath();
+    ctx.arc(x - 6 * s, y - 45 * s, 4 * s, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    drawOutline();
+}
+
+function drawDolphin(x, y, s) {
+    // Body - sleek curve
+    ctx.beginPath();
+    ctx.moveTo(x - 80 * s, y + 15 * s);
+    ctx.bezierCurveTo(x - 45 * s, y - 40 * s, x + 35 * s, y - 48 * s, x + 85 * s, y - 18 * s);
+    ctx.quadraticCurveTo(x + 78 * s, y + 25 * s, x + 55 * s, y + 28 * s);
+    ctx.bezierCurveTo(x + 20 * s, y + 30 * s, x - 50 * s, y + 38 * s, x - 80 * s, y + 15 * s);
+    ctx.fillStyle = '#87CEEB';
+    ctx.fill();
+    drawOutline();
+
+    // Dorsal fin
+    ctx.beginPath();
+    ctx.moveTo(x + 5 * s, y - 38 * s);
+    ctx.bezierCurveTo(x - 2 * s, y - 60 * s, x + 22 * s, y - 62 * s, x + 28 * s, y - 38 * s);
+    ctx.fillStyle = '#4FA8D5';
+    ctx.fill();
+    drawOutline();
+
+    // Head/Snout
+    ctx.beginPath();
+    ctx.moveTo(x + 70 * s, y - 28 * s);
+    ctx.bezierCurveTo(x + 90 * s, y - 32 * s, x + 115 * s, y - 20 * s, x + 125 * s, y - 8 * s);
+    ctx.quadraticCurveTo(x + 115 * s, y + 2 * s, x + 85 * s, y - 3 * s);
+    ctx.bezierCurveTo(x + 72 * s, y - 10 * s, x + 70 * s, y - 18 * s, x + 70 * s, y - 28 * s);
+    ctx.fillStyle = '#87CEEB';
+    ctx.fill();
+    drawOutline();
+
+    // Eye
+    ctx.beginPath();
+    ctx.ellipse(x + 78 * s, y - 38 * s, 6 * s, 8 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    drawOutline();
+
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.arc(x + 79 * s, y - 38 * s, 3 * s, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Smile
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2 * s;
+    ctx.beginPath();
+    ctx.arc(x + 95 * s, y - 5 * s, 12 * s, -Math.PI / 6, Math.PI / 6);
+    ctx.stroke();
+
+    // Pectoral fin
+    ctx.beginPath();
+    ctx.moveTo(x + 20 * s, y + 8 * s);
+    ctx.bezierCurveTo(x - 15 * s, y + 20 * s, x - 25 * s, y + 35 * s, x - 18 * s, y + 48 * s);
+    ctx.quadraticCurveTo(x + 5 * s, y + 33 * s, x + 20 * s, y + 8 * s);
+    ctx.fillStyle = '#4FA8D5';
+    ctx.fill();
+    drawOutline();
+
+    // Tail flukes
+    ctx.beginPath();
+    ctx.moveTo(x + 55 * s, y + 28 * s);
+    ctx.bezierCurveTo(x + 72 * s, y + 45 * s, x + 85 * s, y + 70 * s, x + 68 * s, y + 90 * s);
+    ctx.quadraticCurveTo(x + 55 * s, y + 70 * s, x + 55 * s, y + 28 * s);
+    ctx.fillStyle = '#4FA8D5';
+    ctx.fill();
+    drawOutline();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 55 * s, y + 28 * s);
+    ctx.bezierCurveTo(x + 72 * s, y + 10 * s, x + 85 * s, y - 18 * s, x + 68 * s, y - 38 * s);
+    ctx.quadraticCurveTo(x + 55 * s, y - 18 * s, x + 55 * s, y + 28 * s);
+    ctx.fillStyle = '#4FA8D5';
+    ctx.fill();
+    drawOutline();
+}
+
+function drawCat(x, y, s) {
+    // Body
+    ctx.beginPath();
+    ctx.ellipse(x - 25 * s, y + 25 * s, 55 * s, 58 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFA500';
+    ctx.fill();
+    drawOutline();
+
+    // Head
+    ctx.beginPath();
+    ctx.arc(x + 35 * s, y - 20 * s, 43 * s, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFA500';
+    ctx.fill();
+    drawOutline();
+
+    // Ears with curves
+    ctx.beginPath();
+    ctx.moveTo(x + 8 * s, y - 58 * s);
+    ctx.bezierCurveTo(x - 18 * s, y - 82 * s, x - 10 * s, y - 70 * s, x - 2 * s, y - 50 * s);
+    ctx.quadraticCurveTo(x + 3 * s, y - 48 * s, x + 8 * s, y - 58 * s);
+    ctx.fillStyle = '#FFA500';
+    ctx.fill();
+    drawOutline();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 62 * s, y - 58 * s);
+    ctx.bezierCurveTo(x + 88 * s, y - 82 * s, x + 80 * s, y - 70 * s, x + 72 * s, y - 50 * s);
+    ctx.quadraticCurveTo(x + 67 * s, y - 48 * s, x + 62 * s, y - 58 * s);
+    ctx.fillStyle = '#FFA500';
+    ctx.fill();
+    drawOutline();
+
+    // Inner ears
+    ctx.beginPath();
+    ctx.moveTo(x + 12 * s, y - 55 * s);
+    ctx.lineTo(x - 5 * s, y - 72 * s);
+    ctx.lineTo(x - 3 * s, y - 52 * s);
+    ctx.fillStyle = '#FFB6C1';
+    ctx.fill();
+    drawOutline();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 58 * s, y - 55 * s);
+    ctx.lineTo(x + 75 * s, y - 72 * s);
+    ctx.lineTo(x + 73 * s, y - 52 * s);
+    ctx.fillStyle = '#FFB6C1';
+    ctx.fill();
+    drawOutline();
+
+    // Face white area
+    ctx.beginPath();
+    ctx.ellipse(x + 35 * s, y - 10 * s, 28 * s, 32 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    drawOutline();
+
+    // Eyes
+    ctx.beginPath();
+    ctx.ellipse(x + 18 * s, y - 28 * s, 9 * s, 13 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    drawOutline();
+
+    ctx.beginPath();
+    ctx.ellipse(x + 52 * s, y - 28 * s, 9 * s, 13 * s, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    drawOutline();
+
+    // Pupils
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.arc(x + 18 * s, y - 25 * s, 5 * s, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + 52 * s, y - 25 * s, 5 * s, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Nose (triangular)
+    ctx.beginPath();
+    ctx.moveTo(x + 35 * s, y - 5 * s);
+    ctx.lineTo(x + 30 * s, y + 8 * s);
+    ctx.lineTo(x + 40 * s, y + 8 * s);
+    ctx.fillStyle = '#FFB6C1';
+    ctx.fill();
+    drawOutline();
+
+    // Mouth
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2.5 * s;
+    ctx.beginPath();
+    ctx.moveTo(x + 35 * s, y + 8 * s);
+    ctx.bezierCurveTo(x + 22 * s, y + 18 * s, x + 8 * s, y + 12 * s, x + 8 * s, y + 12 * s);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 35 * s, y + 8 * s);
+    ctx.bezierCurveTo(x + 48 * s, y + 18 * s, x + 62 * s, y + 12 * s, x + 62 * s, y + 12 * s);
+    ctx.stroke();
+
+    // Whiskers - left
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 1.5 * s;
+    ctx.beginPath();
+    ctx.moveTo(x + 8 * s, y - 20 * s);
+    ctx.lineTo(x - 28 * s, y - 22 * s);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 8 * s, y - 10 * s);
+    ctx.lineTo(x - 28 * s, y - 10 * s);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 8 * s, y);
+    ctx.lineTo(x - 28 * s, y + 2 * s);
+    ctx.stroke();
+
+    // Whiskers - right
+    ctx.beginPath();
+    ctx.moveTo(x + 62 * s, y - 20 * s);
+    ctx.lineTo(x + 98 * s, y - 22 * s);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 62 * s, y - 10 * s);
+    ctx.lineTo(x + 98 * s, y - 10 * s);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x + 62 * s, y);
+    ctx.lineTo(x + 98 * s, y + 2 * s);
+    ctx.stroke();
+
+    // Front paws
+    ctx.beginPath();
+    ctx.ellipse(x - 25 * s, y + 78 * s, 20 * s, 25 * s, 0.2, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFA500';
+    ctx.fill();
+    drawOutline();
+
+    ctx.beginPath();
+    ctx.ellipse(x + 25 * s, y + 78 * s, 20 * s, 25 * s, -0.2, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFA500';
+    ctx.fill();
+    drawOutline();
+
+    // Tail - curled
+    ctx.beginPath();
+    ctx.moveTo(x - 80 * s, y + 55 * s);
+    ctx.bezierCurveTo(x - 105 * s, y + 30 * s, x - 110 * s, y - 15 * s, x - 80 * s, y - 35 * s);
+    ctx.bezierCurveTo(x - 55 * s, y - 45 * s, x - 30 * s, y - 38 * s, x - 20 * s, y - 8 * s);
+    ctx.quadraticCurveTo(x - 50 * s, y + 25 * s, x - 80 * s, y + 55 * s);
+    ctx.fillStyle = '#FFA500';
+    ctx.fill();
+    drawOutline();
+}
+
+// ==================== CANVAS INTERACTION ====================
+function getPixelData(imageData, x, y) {
+    const data = imageData.data;
+    const index = (Math.round(y) * imageData.width + Math.round(x)) * 4;
+    return [data[index], data[index + 1], data[index + 2], data[index + 3]];
+}
+
+function setPixelData(imageData, x, y, color) {
+    const data = imageData.data;
+    const index = (Math.round(y) * imageData.width + Math.round(x)) * 4;
+    data[index] = color[0];
+    data[index + 1] = color[1];
+    data[index + 2] = color[2];
+    data[index + 3] = color[3];
+}
+
+function colorToRGB(color) {
+    const hex = color.replace('#', '');
+    return [
+        parseInt(hex.substr(0, 2), 16),
+        parseInt(hex.substr(2, 2), 16),
+        parseInt(hex.substr(4, 2), 16),
+        255
+    ];
+}
+
+function floodFill(x, y, newColor) {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const colorStack = [];
+    const targetColor = getPixelData(imageData, x, y);
+    const fillColor = colorToRGB(newColor);
+
+    if (targetColor[3] === 0) return;
+
+    colorStack.push({ x, y });
+    const visited = new Set();
+
+    while (colorStack.length > 0) {
+        const { x: cx, y: cy } = colorStack.pop();
+        const key = `${cx},${cy}`;
+        if (visited.has(key)) continue;
+        visited.add(key);
+
+        const currentColor = getPixelData(imageData, cx, cy);
+        if (
+            currentColor[0] === targetColor[0] &&
+            currentColor[1] === targetColor[1] &&
+            currentColor[2] === targetColor[2] &&
+            currentColor[3] === targetColor[3]
+        ) {
+            setPixelData(imageData, cx, cy, fillColor);
+
+            colorStack.push({ x: cx + 1, y: cy });
+            colorStack.push({ x: cx - 1, y: cy });
+            colorStack.push({ x: cx, y: cy + 1 });
+            colorStack.push({ x: cx, y: cy - 1 });
+        }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+    updateCompletion();
+}
+
+function paintBrush(x, y) {
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, brushSize);
+    const rgb = colorToRGB(currentColor);
+    gradient.addColorStop(0, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.8)`);
+    gradient.addColorStop(1, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0)`);
+
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(x, y, brushSize, 0, Math.PI * 2);
+    ctx.fill();
+
+    createParticle(x, y, currentColor);
+    playSoundEffect('paint');
+}
+
+function createParticle(x, y, color) {
+    const particle = {
+        x,
+        y,
+        vx: (Math.random() - 0.5) * 4,
+        vy: (Math.random() - 0.5) * 4 - 2,
+        life: 1,
+        color
+    };
+    particles.push(particle);
+}
+
+let particles = [];
+
+function updateParticles() {
+    particles = particles.filter(p => p.life > 0);
+    particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.1;
+        p.life -= 0.02;
+
+        const rgb = colorToRGB(p.color);
+        ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${p.life * 0.5})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+    });
+}
+
+// ==================== UI FUNCTIONS ====================
+function selectTool(tool) {
+    currentTool = tool;
+    playSoundEffect('colorSelect');
+    document.getElementById('brushTool').classList.remove('active');
+    document.getElementById('fillTool').classList.remove('active');
+    document.getElementById(tool === 'brush' ? 'brushTool' : 'fillTool').classList.add('active');
+}
+
+function setBrushSize(size) {
+    brushSize = size;
+    document.querySelectorAll('.size-button').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+function setColor(color) {
+    currentColor = color;
+    playSoundEffect('colorSelect');
+    document.querySelectorAll('.color-button').forEach(btn => btn.classList.remove('selected'));
+    event.target.classList.add('selected');
+}
+
+function updateCompletion() {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    let coloredPixels = 0;
+    let totalPixels = 0;
+
+    for (let i = 3; i < data.length; i += 4) {
+        if (data[i] > 200) {
+            totalPixels++;
+            const r = data[i - 3];
+            const g = data[i - 2];
+            const b = data[i - 1];
+            // Check if pixel is not default colors
+            if (!((r === 255 && g === 230 && b === 180) ||
+                  (r === 255 && g === 250 && b === 205) ||
+                  (r === 165 && g === 42 && b === 42) ||
+                  (r === 255 && g === 182 && b === 193) ||
+                  (r === 255 && g === 215 && b === 0) ||
+                  (r === 169 && g === 169 && b === 169) ||
+                  (r === 192 && g === 192 && b === 192) ||
+                  (r === 135 && g === 206 && b === 235) ||
+                  (r === 255 && g === 165 && b === 0) ||
+                  (r === 255 && g === 255 && b === 255) ||
+                  (r === 0 && g === 0 && b === 0))) {
+                coloredPixels++;
             }
-        };
-
-        // ===================== COLOR PALETTE =====================
-        const ColorPalette = [
-            { name: 'Neon Pink', hex: '#ff00ff', glow: '#ff00ff' },
-            { name: 'Neon Cyan', hex: '#00ffff', glow: '#00ffff' },
-            { name: 'Neon Green', hex: '#00ff00', glow: '#00ff00' },
-            { name: 'Neon Orange', hex: '#ff6600', glow: '#ff6600' },
-            { name: 'Neon Purple', hex: '#bb00ff', glow: '#bb00ff' },
-            { name: 'Neon Yellow', hex: '#ffff00', glow: '#ffff00' },
-            { name: 'Neon Red', hex: '#ff0055', glow: '#ff0055' },
-            { name: 'Neon White', hex: '#ffffff', glow: '#ffffff' },
-            { name: 'Neon Blue', hex: '#0099ff', glow: '#0099ff' },
-            { name: 'Rainbow Sparkle', hex: '#ff00ff', glow: '#00ffff' }
-        ];
-
-        // ===================== GAME STATE =====================
-        const GameState = {
-            currentAnimal: 0,
-            tool: 'fill', // 'fill' or 'brush'
-            brushSize: 8,
-            selectedColor: 0,
-            coloredPixels: new Set(),
-            isDrawing: false,
-            showStartScreen: true,
-            animals: Object.values(Animals),
-            totalAnimalPixels: 0,
-            completionThreshold: 0.7 // 70% to complete
-        };
-
-        // ===================== CANVAS & RENDERING =====================
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d', { willReadFrequently: true });
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            redrawCanvas();
         }
+    }
 
-        function getAnimalScale() {
-            return Math.min(canvas.width, canvas.height) / 400;
+    if (totalPixels > 0) {
+        const percent = Math.round((coloredPixels / totalPixels) * 100);
+        completion[ANIMALS[currentAnimalIndex]] = percent;
+        document.getElementById('completion').textContent = percent + '%';
+
+        if (percent >= 80 && !showingPopup) {
+            showingPopup = true;
+            setTimeout(() => { showingPopup = false; }, 2000);
+            showStarPopup();
         }
+    }
+}
+
+function showStarPopup() {
+    const stars = ['⭐', '⭐⭐', '⭐⭐⭐'];
+    const completion_val = completion[ANIMALS[currentAnimalIndex]];
+    let starIndex = 0;
+    if (completion_val >= 90) starIndex = 2;
+    else if (completion_val >= 85) starIndex = 1;
+
+    document.getElementById('starCount').textContent = stars[starIndex];
+    document.getElementById('starPopup').style.display = 'block';
+    playSoundEffect('completion');
+}
+
+function closeStarPopup() {
+    document.getElementById('starPopup').style.display = 'none';
+}
+
+function previousAnimal() {
+    if (currentAnimalIndex > 0) {
+        currentAnimalIndex--;
+        updateUI();
+        playSoundEffect('animalSwitch');
+    }
+}
+
+function nextAnimal() {
+    if (currentAnimalIndex < ANIMALS.length - 1) {
+        currentAnimalIndex++;
+        updateUI();
+        playSoundEffect('animalSwitch');
+    }
+}
+
+function updateUI() {
+    document.getElementById('animalName').textContent = ANIMALS[currentAnimalIndex];
+    document.getElementById('completion').textContent = completion[ANIMALS[currentAnimalIndex]] + '%';
+    document.getElementById('prevBtn').disabled = currentAnimalIndex === 0;
+    document.getElementById('nextBtn').disabled = currentAnimalIndex === ANIMALS.length - 1;
+    drawAnimals();
+}
+
+function clearCanvas() {
+    if (confirm('Clear this animal? (Undo will not work for this)')) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        completion[ANIMALS[currentAnimalIndex]] = 0;
+        drawAnimals();
+    }
+}
+
+function undoAction() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawAnimals();
+}
+
+function startGame() {
+    document.getElementById('startScreen').style.display = 'none';
+    gameStarted = true;
+    drawAnimals();
+    initPalette();
+    selectTool('brush');
+    updateUI();
+}
+
+function initPalette() {
+    const paletteRow = document.getElementById('paletteRow');
+    paletteRow.innerHTML = '';
+    COLORS.forEach((color, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'color-button' + (idx === 0 ? ' selected' : '');
+        btn.style.backgroundColor = color;
+        btn.onclick = () => setColor(color);
+        paletteRow.appendChild(btn);
+    });
+}
+
+// ==================== CANVAS EVENTS ====================
+canvas.addEventListener('mousedown', (e) => {
+    if (!gameStarted) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (y > canvas.height - 100) return;
+
+    isDrawing = true;
+    if (currentTool === 'brush') {
+        paintBrush(x, y);
+    } else if (currentTool === 'fill') {
+        floodFill(x, y, currentColor);
+    }
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!isDrawing || !gameStarted) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (y > canvas.height - 100) return;
+
+    if (currentTool === 'brush') {
+        paintBrush(x, y);
+    }
+});
+
+canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+});
+
+canvas.addEventListener('mouseleave', () => {
+    isDrawing = false;
+});
+
+// Touch support
+canvas.addEventListener('touchstart', (e) => {
+    if (!gameStarted) return;
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+
+    if (y > canvas.height - 100) return;
+
+    isDrawing = true;
+    if (currentTool === 'brush') {
+        paintBrush(x, y);
+    } else if (currentTool === 'fill') {
+        floodFill(x, y, currentColor);
+    }
+});
+
+canvas.addEventListener('touchmove', (e) => {
+    if (!isDrawing || !gameStarted) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+
+    if (y > canvas.height - 100) return;
+
+    if (currentTool === 'brush') {
+        paintBrush(x, y);
+    }
+});
+
+canvas.addEventListener('touchend', () => {
+    isDrawing = false;
+});
+
+// ==================== GAME LOOP ====================
+function gameLoop() {
+    if (gameStarted) {
+        drawAnimals();
+        updateParticles();
+    }
+    requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
 
-        function getAnimalPosition() {
-            return {
-                x: canvas.width * 0.5,
-                y: canvas.height * 0.45
-            };
-        }
-
-        function drawGlowingStroke(color) {
-            ctx.shadowBlur = 40;
-            ctx.shadowColor = color;
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 3;
-            ctx.stroke();
-
-            ctx.shadowBlur = 25;
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 2.5;
-            ctx.stroke();
-
-            ctx.shadowBlur = 10;
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 2;
-            ctx.stroke();
-        }
-
-        function drawAnimal() {
-            const animal = GameState.animals[GameState.currentAnimal];
-            const pos = getAnimalPosition();
-            const scale = getAnimalScale();
-
-            ctx.strokeStyle = '#00ffff';
-            ctx.lineWidth = 3;
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = '#00ffff';
-
-            animal.draw(ctx, pos.x, pos.y, scale);
-        }
-
-        function redrawCanvas() {
-            ctx.fillStyle = '#1a1330';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Draw grid background for aesthetic
-            ctx.strokeStyle = 'rgba(0, 255, 255, 0.05)';
-            ctx.lineWidth = 1;
-            const gridSize = 40;
-            for (let i = 0; i < canvas.width; i += gridSize) {
-                ctx.beginPath();
-                ctx.moveTo(i, 0);
-                ctx.lineTo(i, canvas.height);
-                ctx.stroke();
-            }
-            for (let i = 0; i < canvas.height; i += gridSize) {
-                ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.lineTo(canvas.width, i);
-                ctx.stroke();
-            }
-
-            drawAnimal();
-            drawColoredAreas();
-        }
-
-        function drawColoredAreas() {
-            if (GameState.coloredPixels.size === 0) return;
-
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const data = imageData.data;
-
-            const colorMap = new Map();
-
-            for (const pixelKey of GameState.coloredPixels) {
-                const idx = parseInt(pixelKey);
-                const color = colorMap.get(pixelKey);
-                if (color) {
-                    data[idx] = color.r;
-                    data[idx + 1] = color.g;
-                    data[idx + 2] = color.b;
-                    data[idx + 3] = 200;
-                }
-            }
-
-            ctx.putImageData(imageData, 0, 0);
-        }
-
-        function getPixelKey(x, y) {
-            return ((y * canvas.width + x) * 4).toString();
-        }
-
-        function isPixelInAnimal(x, y) {
-            const pos = getAnimalPosition();
-            const scale = getAnimalScale();
-
-            const dx = x - pos.x;
-            const dy = y - pos.y;
-
-            // Rough circular check for now
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            return distance < (150 * scale);
-        }
-
-        // ===================== UI INITIALIZATION =====================
-        function initializeUI() {
-            const paletteContainer = document.getElementById('colorPalette');
-            paletteContainer.innerHTML = '';
-
-            ColorPalette.forEach((color, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'color-btn';
-                btn.style.backgroundColor = color.hex;
-                btn.style.boxShadow = `0 0 15px ${color.glow}, inset 0 0 10px ${color.glow}`;
-                if (index === 0) btn.classList.add('selected');
-                btn.addEventListener('click', () => selectColor(index));
-                paletteContainer.appendChild(btn);
-            });
-        }
-
-        // ===================== EVENT HANDLERS =====================
-        function selectColor(index) {
-            GameState.selectedColor = index;
-            AudioEngine.playColorSelectSound();
-
-            document.querySelectorAll('.color-btn').forEach((btn, i) => {
-                btn.classList.toggle('selected', i === index);
-            });
-        }
-
-        function selectTool(tool) {
-            GameState.tool = tool;
-            AudioEngine.playUIClick();
-
-            document.querySelectorAll('.tool-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            if (tool === 'fill') {
-                document.getElementById('fillTool').classList.add('active');
-            } else {
-                document.getElementById('brushTool').classList.add('active');
-            }
-        }
-
-        function selectBrushSize(size) {
-            GameState.brushSize = size;
-            AudioEngine.playUIClick();
-
-            document.querySelectorAll('.size-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
-
-        function clearCanvas() {
-            GameState.coloredPixels.clear();
-            AudioEngine.playUIClick();
-            redrawCanvas();
-        }
-
-        function goToHome() {
-            AudioEngine.playUIClick();
-            GameState.showStartScreen = true;
-            document.getElementById('startScreen').style.display = 'block';
-            document.getElementById('gameUI').classList.remove('active');
-            document.getElementById('completionPopup').classList.remove('show');
-            redrawCanvas();
-        }
-
-        function switchAnimal(direction) {
-            AudioEngine.playAnimalSwitchSound();
-            GameState.currentAnimal += direction;
-            if (GameState.currentAnimal < 0) {
-                GameState.currentAnimal = GameState.animals.length - 1;
-            } else if (GameState.currentAnimal >= GameState.animals.length) {
-                GameState.currentAnimal = 0;
-            }
-
-            GameState.coloredPixels.clear();
-            document.getElementById('animalName').textContent = GameState.animals[GameState.currentAnimal].name;
-            document.getElementById('completionIndicator').textContent = '0%';
-            redrawCanvas();
-        }
-
-        function updateCompletion() {
-            const completion = Math.min(100, Math.round((GameState.coloredPixels.size / Math.max(GameState.totalAnimalPixels, 1)) * 100));
-            document.getElementById('completionIndicator').textContent = completion + '%';
-
-            if (completion >= GameState.completionThreshold * 100) {
-                showCompletionPopup(completion);
-            }
-        }
-
-        function showCompletionPopup(completion) {
-            AudioEngine.playCompletionJingle();
-
-            const stars = Math.min(3, Math.max(1, Math.ceil((completion / 100) * 3)));
-            const starDisplay = '⭐'.repeat(stars);
-
-            document.getElementById('starRating').textContent = starDisplay;
-            document.getElementById('popupMessage').textContent =
-                `You've colored ${completion}% of the ${GameState.animals[GameState.currentAnimal].name}!`;
-
-            document.getElementById('completionPopup').classList.add('show');
-        }
-
-        function startGame() {
-            AudioEngine.playUIClick();
-            GameState.showStartScreen = false;
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('gameUI').classList.add('active');
-            redrawCanvas();
-        }
-
-        // ===================== INTERACTION HANDLERS =====================
-        function floodFill(x, y) {
-            if (!isPixelInAnimal(x, y)) return;
-
-            AudioEngine.playPaintSound();
-
-            const color = ColorPalette[GameState.selectedColor];
-
-            // Simple fill: color nearby pixels
-            const radius = 30;
-            for (let dx = -radius; dx < radius; dx++) {
-                for (let dy = -radius; dy < radius; dy++) {
-                    if (dx * dx + dy * dy < radius * radius) {
-                        const px = x + dx;
-                        const py = y + dy;
-                        if (px >= 0 && px < canvas.width && py >= 0 && py < canvas.height && isPixelInAnimal(px, py)) {
-                            GameState.coloredPixels.add(getPixelKey(px, py));
-                        }
-                    }
-                }
-            }
-
-            updateCompletion();
-            redrawCanvas();
-        }
-
-        function paintBrush(x, y) {
-            if (!isPixelInAnimal(x, y)) return;
-
-            AudioEngine.playPaintSound();
-
-            const radius = GameState.brushSize / 2;
-            for (let dx = -radius; dx < radius; dx++) {
-                for (let dy = -radius; dy < radius; dy++) {
-                    if (dx * dx + dy * dy < radius * radius) {
-                        const px = x + dx;
-                        const py = y + dy;
-                        if (px >= 0 && px < canvas.width && py >= 0 && py < canvas.height && isPixelInAnimal(px, py)) {
-                            GameState.coloredPixels.add(getPixelKey(px, py));
-                        }
-                    }
-                }
-            }
-
-            updateCompletion();
-            redrawCanvas();
-        }
-
-        // ===================== TOUCH/MOUSE EVENTS =====================
-        canvas.addEventListener('mousedown', (e) => {
-            GameState.isDrawing = true;
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            if (GameState.tool === 'fill') {
-                floodFill(x, y);
-            } else {
-                paintBrush(x, y);
-            }
-        });
-
-        canvas.addEventListener('mousemove', (e) => {
-            if (!GameState.isDrawing) return;
-
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            if (GameState.tool === 'brush') {
-                paintBrush(x, y);
-            }
-        });
-
-        canvas.addEventListener('mouseup', () => {
-            GameState.isDrawing = false;
-        });
-
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            GameState.isDrawing = true;
-            const rect = canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-
-            if (GameState.tool === 'fill') {
-                floodFill(x, y);
-            } else {
-                paintBrush(x, y);
-            }
-        });
-
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (!GameState.isDrawing) return;
-
-            const rect = canvas.getBoundingClientRect();
-            const touch = e.touches[0];
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-
-            if (GameState.tool === 'brush') {
-                paintBrush(x, y);
-            }
-        });
-
-        canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            GameState.isDrawing = false;
-        });
-
-        // ===================== UI BUTTON EVENTS =====================
-        document.getElementById('playBtn').addEventListener('click', startGame);
-        document.getElementById('homeBtn').addEventListener('click', goToHome);
-        document.getElementById('clearBtn').addEventListener('click', clearCanvas);
-
-        document.getElementById('fillTool').addEventListener('click', () => selectTool('fill'));
-        document.getElementById('brushTool').addEventListener('click', () => selectTool('brush'));
-
-        document.getElementById('prevBtn').addEventListener('click', () => switchAnimal(-1));
-        document.getElementById('nextBtn').addEventListener('click', () => switchAnimal(1));
-
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => selectBrushSize(parseInt(e.target.dataset.size)));
-        });
-
-        document.getElementById('nextAnimalBtn').addEventListener('click', () => {
-            document.getElementById('completionPopup').classList.remove('show');
-            switchAnimal(1);
-        });
-
-        // ===================== INITIALIZATION =====================
-        window.addEventListener('resize', resizeCanvas);
-
-        resizeCanvas();
-        initializeUI();
-
-        // Pre-calculate animal pixels for completion
-        GameState.totalAnimalPixels = 2000;
-
-        console.log('Capybara Glow Coloring Game loaded! 🌈✨');
-    </script>
 </body>
 </html>
