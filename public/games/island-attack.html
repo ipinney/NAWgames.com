@@ -2,334 +2,309 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Island Attack - NAW Games</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
         body {
-            width: 100%;
+            width: 100vw;
             height: 100vh;
+            overflow: hidden;
             background: #1a1330;
             font-family: 'Arial', sans-serif;
-            overflow: hidden;
-            touch-action: none;
         }
 
         canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
             display: block;
-        }
-
-        #ui-layer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 2;
+            touch-action: none;
+        }
+
+        .hud-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
+            z-index: 100;
             pointer-events: none;
         }
 
-        .hud {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            border: 3px solid #ffd700;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: bold;
-            z-index: 10;
-            pointer-events: auto;
+        .resource-display {
+            display: flex;
+            gap: 20px;
+            font-size: 16px;
         }
 
-        .hud-item {
-            margin: 5px 0;
+        .resource-item {
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .hud-label {
-            color: #ffd700;
-            min-width: 80px;
+        .wave-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 16px;
         }
 
-        .build-menu {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+        .hud-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
             padding: 10px;
-            border: 3px solid #00ff88;
-            border-radius: 8px;
-            z-index: 10;
+            z-index: 100;
             pointer-events: auto;
             flex-wrap: wrap;
-            justify-content: center;
-            max-width: 90%;
         }
 
         .build-btn {
-            background: #2a5f4a;
-            border: 2px solid #00ff88;
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 4px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 3px solid white;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             font-size: 12px;
+            color: white;
+            font-weight: bold;
             transition: all 0.2s;
             pointer-events: auto;
         }
 
         .build-btn:hover {
-            background: #3a8f6a;
             transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.8);
         }
 
-        .build-btn:active {
-            transform: scale(0.95);
+        .build-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 0 20px rgba(245, 87, 108, 1);
+            border-color: #ffff00;
         }
 
-        .build-btn.selected {
-            background: #00ff88;
-            color: #000;
-            box-shadow: 0 0 10px #00ff88;
+        .build-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
-        .screen-overlay {
-            pointer-events: auto;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            display: none;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.85);
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .screen-overlay.active {
-            display: flex;
-        }
-
-        .title {
-            font-size: 72px;
-            font-weight: bold;
-            color: #00ff88;
-            text-shadow: 4px 4px 0 #ff6b00, 8px 8px 0 rgba(0, 0, 0, 0.5);
-            text-align: center;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 3px;
-        }
-
-        .subtitle {
-            font-size: 24px;
-            color: #ffd700;
-            text-align: center;
-            max-width: 600px;
-        }
-
-        .controls-text {
-            font-size: 16px;
-            color: #fff;
-            text-align: center;
-            max-width: 600px;
-            line-height: 1.6;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px;
-            border: 2px solid #00ff88;
-            border-radius: 8px;
-        }
-
-        .big-btn {
-            background: #00ff88;
-            border: none;
-            color: #000;
-            padding: 15px 40px;
-            font-size: 28px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .big-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 16px rgba(0, 255, 136, 0.5);
-        }
-
-        .big-btn:active {
-            transform: scale(0.95);
-        }
-
-        .stats {
-            font-size: 20px;
-            color: #ffd700;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 20px;
+        .quest-panel {
+            position: fixed;
+            top: 80px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.8);
             border: 2px solid #ffd700;
             border-radius: 8px;
-            max-width: 500px;
+            padding: 12px;
+            color: white;
+            font-size: 13px;
+            max-width: 200px;
+            z-index: 100;
+            pointer-events: none;
         }
 
-        .stats p {
-            margin: 8px 0;
+        .quest-title {
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
 
-        .wave-banner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0, 0, 0, 0.9);
-            padding: 30px;
-            border: 4px solid #ff6b00;
-            border-radius: 12px;
-            color: #ff6b00;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            pointer-events: auto;
+        }
+
+        .overlay.hidden {
+            display: none;
+        }
+
+        .overlay-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            pointer-events: auto;
+        }
+
+        .overlay-title {
             font-size: 48px;
             font-weight: bold;
-            text-align: center;
-            z-index: 20;
-            pointer-events: none;
-            animation: waveBannerAnim 2s ease-out forwards;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        @keyframes waveBannerAnim {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.5);
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(1);
-            }
+        .overlay-subtitle {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #ffffcc;
         }
 
-        .touch-joystick {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 120px;
-            height: 120px;
-            background: rgba(0, 255, 136, 0.2);
-            border: 3px solid #00ff88;
-            border-radius: 50%;
-            z-index: 10;
-            pointer-events: auto;
-            display: none;
+        .overlay-text {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .overlay-button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            font-size: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .overlay-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            color: #aaaaff;
+        }
+
+        .stat-value {
+            color: #ffff00;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .stars {
+            font-size: 40px;
+            margin-top: 15px;
         }
 
         @media (max-width: 768px) {
-            .touch-joystick {
-                display: block;
+            .resource-display {
+                font-size: 14px;
+                gap: 12px;
             }
-
-            .hud {
-                font-size: 12px;
-                padding: 10px;
-            }
-
-            .title {
-                font-size: 48px;
-            }
-
-            .subtitle {
-                font-size: 18px;
+            .build-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 10px;
             }
         }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
-    <div id="ui-layer">
-        <div class="hud">
-            <div class="hud-item">
-                <span class="hud-label">🌲 Wood:</span>
-                <span id="wood-count">100</span>
-            </div>
-            <div class="hud-item">
-                <span class="hud-label">🪨 Stone:</span>
-                <span id="stone-count">50</span>
-            </div>
-            <div class="hud-item">
-                <span class="hud-label">🍞 Food:</span>
-                <span id="food-count">50</span>
-            </div>
-            <div class="hud-item">
-                <span class="hud-label">👥 Population:</span>
-                <span id="pop-count">3</span>
-            </div>
-            <div class="hud-item">
-                <span class="hud-label">🌊 Wave:</span>
-                <span id="wave-count">1</span>
-            </div>
-            <div class="hud-item">
-                <span class="hud-label">⏱ Time:</span>
-                <span id="wave-timer">Ready</span>
-            </div>
-        </div>
 
-        <div class="build-menu" id="build-menu">
-            <button class="build-btn" data-building="farm">🌾 Farm</button>
-            <button class="build-btn" data-building="wall">🧱 Wall</button>
-            <button class="build-btn" data-building="tower">🏹 Tower</button>
-            <button class="build-btn" data-building="house">🏠 House</button>
-            <button class="build-btn" data-building="castle">🏰 Castle</button>
+    <div class="hud-top">
+        <div class="resource-display">
+            <div class="resource-item"><span>🪵</span> <span id="woodCount">200</span></div>
+            <div class="resource-item"><span>🪨</span> <span id="stoneCount">100</span></div>
+            <div class="resource-item"><span>🌾</span> <span id="foodCount">50</span></div>
+            <div class="resource-item"><span>💰</span> <span id="goldCount">0</span></div>
         </div>
+        <div class="wave-info">
+            <span id="waveDisplay">Wave: 1</span>
+            <span id="populationDisplay">👤 3/5</span>
+        </div>
+    </div>
 
-        <div id="start-screen" class="screen-overlay active">
-            <div class="title">ISLAND ATTACK</div>
-            <div class="subtitle">Build • Defend • Survive</div>
-            <div class="controls-text">
-                📱 <strong>Mobile:</strong> Tap buildings to select, tap tiles to place, drag to pan<br>
-                ⌨️ <strong>Keyboard:</strong> WASD/Arrows to pan, Click to place, Number keys (1-5) for buildings<br>
-                🎮 <strong>Gameplay:</strong> Defend your castle from invaders! Build farms for food, walls for defense, and towers to attack!
+    <div class="quest-panel" id="questPanel">
+        <div class="quest-title" id="questTitle">Quest</div>
+        <div id="questDesc">Build your first farm</div>
+    </div>
+
+    <div class="hud-bottom">
+        <button class="build-btn" id="farmBtn" data-building="farm">Farm<br>🌾</button>
+        <button class="build-btn" id="wallBtn" data-building="wall">Wall<br>🧱</button>
+        <button class="build-btn" id="towerBtn" data-building="tower">Tower<br>🏹</button>
+        <button class="build-btn" id="houseBtn" data-building="house">House<br>🏠</button>
+        <button class="build-btn" id="barracksBtn" data-building="barracks">Barracks<br>⚔️</button>
+    </div>
+
+    <div id="startScreen" class="overlay">
+        <div class="overlay-content">
+            <div class="overlay-title">🏝️ ISLAND ATTACK 🏝️</div>
+            <div class="overlay-subtitle">Build. Defend. Survive!</div>
+            <div class="overlay-text">
+                Tap to build • Drag to explore<br>
+                Defend your castle from invaders!<br><br>
+                Perfect for ages 8+
             </div>
-            <button class="big-btn" id="start-btn">START GAME</button>
+            <button class="overlay-button" onclick="game.startGame()">PLAY</button>
         </div>
+    </div>
 
-        <div id="game-over-screen" class="screen-overlay">
-            <div class="title">GAME OVER</div>
-            <div class="stats" id="stats-display"></div>
-            <button class="big-btn" id="replay-btn">PLAY AGAIN</button>
+    <div id="gameOverScreen" class="overlay hidden">
+        <div class="overlay-content">
+            <div class="overlay-title">⚔️ Island Fallen ⚔️</div>
+            <div class="overlay-text" id="gameOverStats"></div>
+            <div class="stars" id="stars"></div>
+            <button class="overlay-button" onclick="location.reload()">Try Again</button>
         </div>
-
-        <div class="touch-joystick" id="touch-joystick"></div>
     </div>
 
     <script>
-        'use strict';
-
-        // Canvas setup
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
+        // Resize canvas
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -337,746 +312,965 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // Game state
-        const TILE_SIZE = 32;
-        const ISLAND_WIDTH = 20;
-        const ISLAND_HEIGHT = 20;
-        const GRID_OFFSET_X = 100;
-        const GRID_OFFSET_Y = 100;
+        // ============ AUDIO SYSTEM ============
+        class AudioSystem {
+            constructor() {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                this.masterVolume = 0.3;
+            }
 
-        const BUILDING_TYPES = {
-            farm: { cost: { wood: 20, stone: 0 }, maxHP: 30, resource: 'food', icon: '🌾' },
-            wall: { cost: { wood: 0, stone: 20 }, maxHP: 60, resource: null, icon: '🧱' },
-            tower: { cost: { wood: 15, stone: 15 }, maxHP: 40, resource: null, icon: '🏹', range: 6, damage: 10, shootSpeed: 30 },
-            house: { cost: { wood: 30, stone: 0 }, maxHP: 50, resource: null, icon: '🏠', popBonus: 2 },
-            castle: { cost: { wood: 100, stone: 100 }, maxHP: 200, resource: null, icon: '🏰', popBonus: 5 }
-        };
+            playSound(type) {
+                try {
+                    const now = this.audioContext.currentTime;
+                    const osc = this.audioContext.createOscillator();
+                    const gain = this.audioContext.createGain();
+                    osc.connect(gain);
+                    gain.connect(this.audioContext.destination);
+                    gain.gain.setValueAtTime(this.masterVolume, now);
 
-        let gameState = {
-            running: false,
-            wave: 1,
-            waveInProgress: false,
-            waveCountdown: 30,
-            wood: 100,
-            stone: 50,
-            food: 50,
-            population: 3,
-            maxPopulation: 3,
-            invadersDefeated: 0,
-            buildingsBuilt: 0,
-            maxPopulationReached: 3,
-            cameraX: 0,
-            cameraY: 0,
-            selectedBuilding: null,
-            shakeAmount: 0,
-            dayTime: 0
-        };
-
-        let island = [];
-        let buildings = [];
-        let villagers = [];
-        let invaders = [];
-        let particles = [];
-        let projectiles = [];
-
-        // Terrain generation
-        function generateIsland() {
-            island = [];
-            for (let y = 0; y < ISLAND_HEIGHT; y++) {
-                island[y] = [];
-                for (let x = 0; x < ISLAND_WIDTH; x++) {
-                    const dist = Math.hypot(x - ISLAND_WIDTH / 2, y - ISLAND_HEIGHT / 2);
-                    let type = 'water';
-                    if (dist < ISLAND_WIDTH / 3) {
-                        if (Math.random() < 0.15) type = 'sand';
-                        else if (Math.random() < 0.2) type = 'tree';
-                        else if (Math.random() < 0.1) type = 'rock';
-                        else type = 'grass';
+                    switch(type) {
+                        case 'place':
+                            osc.frequency.setValueAtTime(600, now);
+                            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                            osc.start(now);
+                            osc.stop(now + 0.1);
+                            break;
+                        case 'collect':
+                            osc.frequency.setValueAtTime(800, now);
+                            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                            osc.start(now);
+                            osc.stop(now + 0.1);
+                            break;
+                        case 'shoot':
+                            osc.frequency.setValueAtTime(400, now);
+                            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                            osc.start(now);
+                            osc.stop(now + 0.05);
+                            break;
+                        case 'hit':
+                            osc.frequency.setValueAtTime(300, now);
+                            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                            osc.start(now);
+                            osc.stop(now + 0.15);
+                            break;
+                        case 'boom':
+                            osc.frequency.setValueAtTime(150, now);
+                            osc.frequency.exponentialRampToValueAtTime(50, now + 0.2);
+                            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                            osc.start(now);
+                            osc.stop(now + 0.2);
+                            break;
+                        case 'wave':
+                            osc.frequency.setValueAtTime(700, now);
+                            gain.gain.setValueAtTime(0.3 * this.masterVolume, now);
+                            gain.gain.exponentialRampToValueAtTime(0.05, now + 0.8);
+                            osc.start(now);
+                            osc.stop(now + 0.8);
+                            break;
+                        case 'quest':
+                            const notes = [523.25, 659.25, 783.99];
+                            for (let i = 0; i < notes.length; i++) {
+                                const noteOsc = this.audioContext.createOscillator();
+                                const noteGain = this.audioContext.createGain();
+                                noteOsc.connect(noteGain);
+                                noteGain.connect(this.audioContext.destination);
+                                noteOsc.frequency.value = notes[i];
+                                noteGain.gain.setValueAtTime(this.masterVolume * 0.2, now + i * 0.1);
+                                noteGain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.2);
+                                noteOsc.start(now + i * 0.1);
+                                noteOsc.stop(now + i * 0.1 + 0.2);
+                            }
+                            break;
                     }
-                    island[y][x] = { type, explored: false };
+                } catch(e) {
+                    // Audio errors fail silently
+                }
+            }
+        }
+
+        const audio = new AudioSystem();
+
+        // ============ PARTICLE SYSTEM ============
+        class Particle {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type;
+                this.life = 1;
+                this.velocity = {x: 0, y: 0};
+                this.gravity = 0.2;
+
+                if (type === 'dust') {
+                    this.velocity = {x: (Math.random() - 0.5) * 4, y: -Math.random() * 3 - 1};
+                    this.size = 3 + Math.random() * 2;
+                    this.color = '#' + Math.floor(Math.random()*16777215).toString(16);
+                } else if (type === 'sparkle') {
+                    this.velocity = {x: (Math.random() - 0.5) * 6, y: -Math.random() * 4 - 2};
+                    this.size = 2 + Math.random() * 2;
+                    this.color = '#FFD700';
+                } else if (type === 'explosion') {
+                    this.velocity = {x: (Math.random() - 0.5) * 8, y: -Math.random() * 5 - 2};
+                    this.size = 4 + Math.random() * 3;
+                    this.color = ['#FF6B6B', '#FFA500', '#FFD700'][Math.floor(Math.random() * 3)];
                 }
             }
 
-            // Place castle in center
-            const centerX = Math.floor(ISLAND_WIDTH / 2);
-            const centerY = Math.floor(ISLAND_HEIGHT / 2);
-            addBuilding(centerX, centerY, 'castle');
-        }
+            update() {
+                this.velocity.y += this.gravity;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.life -= 0.02;
+            }
 
-        function getTile(x, y) {
-            if (x < 0 || x >= ISLAND_WIDTH || y < 0 || y >= ISLAND_HEIGHT) return null;
-            return island[y][x];
-        }
-
-        function canBuildAt(x, y, type) {
-            const tile = getTile(x, y);
-            if (!tile || tile.type === 'water') return false;
-            if (buildings.some(b => b.x === x && b.y === y)) return false;
-            return true;
-        }
-
-        function addBuilding(x, y, type, isUpgrade = false) {
-            const building = {
-                x, y, type,
-                hp: BUILDING_TYPES[type].maxHP,
-                maxHP: BUILDING_TYPES[type].maxHP,
-                level: 1,
-                resources: 0,
-                shootCooldown: 0,
-                particles: []
-            };
-            buildings.push(building);
-            if (!isUpgrade) {
-                gameState.buildingsBuilt++;
-                playSound('build');
+            draw(ctx) {
+                ctx.globalAlpha = Math.max(0, this.life);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
             }
         }
 
-        function upgradeBuilding(building) {
-            building.level++;
-            building.maxHP = Math.floor(BUILDING_TYPES[building.type].maxHP * (1 + building.level * 0.2));
-            building.hp = building.maxHP;
-            if (building.type === 'tower') {
-                building.damage = (BUILDING_TYPES.tower.damage || 10) * (1 + building.level * 0.3);
-            }
-            playSound('build');
-        }
+        // ============ BUILDING SYSTEM ============
+        class Building {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type;
+                this.level = 1;
 
-        function spawnVillagers() {
-            for (let i = villagers.length; i < gameState.population; i++) {
-                villagers.push({
-                    x: ISLAND_WIDTH / 2,
-                    y: ISLAND_HEIGHT / 2,
-                    vx: (Math.random() - 0.5) * 2,
-                    vy: (Math.random() - 0.5) * 2,
-                    busy: false,
-                    targetResource: null,
-                    carriedResource: null
-                });
-            }
-        }
-
-        function spawnWave() {
-            gameState.waveInProgress = true;
-            playSound('horn');
-            showWaveBanner(`WAVE ${gameState.wave}!`);
-
-            const waveCount = Math.min(2 + gameState.wave, 10);
-            const spawnX = Math.random() < 0.5 ? -2 : ISLAND_WIDTH + 2;
-
-            for (let i = 0; i < waveCount; i++) {
-                const type = gameState.wave < 3 ? 'raider' : gameState.wave < 5 ? 'archer' : gameState.wave < 8 ? 'siegeUnit' : 'cannonBoat';
-                const invader = {
-                    x: spawnX + (Math.random() - 0.5) * 4,
-                    y: ISLAND_HEIGHT / 2 + (Math.random() - 0.5) * 6,
-                    type,
-                    hp: type === 'raider' ? 20 : type === 'archer' ? 15 : type === 'siegeUnit' ? 50 : 60,
-                    maxHP: type === 'raider' ? 20 : type === 'archer' ? 15 : type === 'siegeUnit' ? 50 : 60,
-                    damage: type === 'raider' ? 5 : type === 'archer' ? 3 : type === 'siegeUnit' ? 15 : 20,
-                    speed: type === 'raider' ? 1 : type === 'archer' ? 1.2 : type === 'siegeUnit' ? 0.6 : 0.4,
-                    shootCooldown: 0,
-                    shootSpeed: type === 'archer' ? 40 : type === 'cannonBoat' ? 60 : 999,
-                    targetX: ISLAND_WIDTH / 2,
-                    targetY: ISLAND_HEIGHT / 2,
-                    hitFlash: 0
+                const buildingStats = {
+                    farm: { cost: {wood: 20, stone: 0}, maxHp: 50, width: 2, height: 2, color: '#90EE90' },
+                    wall: { cost: {wood: 0, stone: 15}, maxHp: 80, width: 1, height: 1, color: '#A9A9A9' },
+                    tower: { cost: {wood: 25, stone: 15}, maxHp: 60, width: 2, height: 2, color: '#8B4513' },
+                    house: { cost: {wood: 30, stone: 10}, maxHp: 40, width: 2, height: 2, color: '#CD853F' },
+                    barracks: { cost: {wood: 40, stone: 30}, maxHp: 100, width: 3, height: 3, color: '#4B0082' }
                 };
-                invaders.push(invader);
+
+                const stats = buildingStats[type];
+                this.cost = stats.cost;
+                this.maxHp = stats.maxHp;
+                this.hp = this.maxHp;
+                this.width = stats.width;
+                this.height = stats.height;
+                this.color = stats.color;
+
+                this.lastShot = 0;
+            }
+
+            takeDamage(amount) {
+                this.hp = Math.max(0, this.hp - amount);
+                return this.hp <= 0;
+            }
+
+            draw(ctx, tileSize) {
+                // Building base
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x * tileSize, this.y * tileSize, this.width * tileSize, this.height * tileSize);
+
+                // Building outline
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(this.x * tileSize, this.y * tileSize, this.width * tileSize, this.height * tileSize);
+
+                // Special details
+                if (this.type === 'farm') {
+                    ctx.fillStyle = '#228B22';
+                    for (let i = 0; i < 4; i++) {
+                        ctx.fillRect(this.x * tileSize + 5 + i * 8, this.y * tileSize + 5, 4, 10);
+                    }
+                } else if (this.type === 'tower') {
+                    ctx.fillStyle = '#654321';
+                    ctx.fillRect(this.x * tileSize + 10, this.y * tileSize + 10, this.width * tileSize - 20, this.height * tileSize - 20);
+                    ctx.fillStyle = '#FFD700';
+                    ctx.beginPath();
+                    ctx.arc(this.x * tileSize + tileSize, this.y * tileSize + tileSize, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (this.type === 'house') {
+                    ctx.fillStyle = '#DEB887';
+                    ctx.beginPath();
+                    ctx.moveTo(this.x * tileSize + tileSize, this.y * tileSize);
+                    ctx.lineTo(this.x * tileSize + this.width * tileSize, this.y * tileSize + tileSize);
+                    ctx.lineTo(this.x * tileSize, this.y * tileSize + tileSize);
+                    ctx.fill();
+                    ctx.fillStyle = '#8B4513';
+                    ctx.fillRect(this.x * tileSize + 8, this.y * tileSize + 12, 8, 8);
+                }
+
+                // Health bar
+                const barWidth = this.width * tileSize;
+                const barHeight = 4;
+                ctx.fillStyle = '#333';
+                ctx.fillRect(this.x * tileSize, this.y * tileSize - 8, barWidth, barHeight);
+                ctx.fillStyle = this.hp > this.maxHp * 0.5 ? '#00AA00' : this.hp > this.maxHp * 0.25 ? '#FFAA00' : '#AA0000';
+                ctx.fillRect(this.x * tileSize, this.y * tileSize - 8, (this.hp / this.maxHp) * barWidth, barHeight);
             }
         }
 
-        function updateGameLogic() {
-            try {
-                if (!gameState.running) return;
+        // ============ INVADER SYSTEM ============
+        class Invader {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type;
+                this.speed = 0.5;
+                this.direction = {x: 0, y: 0};
+                this.target = null;
+                this.size = 12;
 
-                // Resource gathering
-                buildings.forEach(b => {
-                    if (b.type === 'farm') {
-                        b.resources += 0.2 + b.level * 0.1;
-                        if (b.resources >= 10) {
-                            gameState.food += Math.floor(b.resources);
-                            b.resources = 0;
-                            createParticles(b.x, b.y, 5, '#00ff88');
-                        }
-                    }
-                });
+                const invaderStats = {
+                    raider: { hp: 20, speed: 0.5, damage: 10, color: '#8B4513', reward: 50 },
+                    archer: { hp: 15, speed: 0.4, damage: 8, color: '#228B22', reward: 75 },
+                    siege: { hp: 50, speed: 0.2, damage: 20, color: '#A9A9A9', reward: 150 },
+                    boss: { hp: 100, speed: 0.15, damage: 30, color: '#FF1493', reward: 500 }
+                };
 
-                // Villager movement and interaction
-                villagers.forEach(v => {
-                    if (!v.busy) {
-                        v.x += v.vx * 0.05;
-                        v.y += v.vy * 0.05;
+                const stats = invaderStats[type];
+                this.maxHp = stats.hp;
+                this.hp = this.maxHp;
+                this.speed = stats.speed;
+                this.damage = stats.damage;
+                this.color = stats.color;
+                this.reward = stats.reward;
+                this.lastAttack = 0;
+            }
 
-                        if (Math.random() < 0.01) {
-                            v.vx = (Math.random() - 0.5) * 2;
-                            v.vy = (Math.random() - 0.5) * 2;
-                        }
+            takeDamage(amount) {
+                this.hp = Math.max(0, this.hp - amount);
+                return this.hp <= 0;
+            }
 
-                        const boundsX = ISLAND_WIDTH / 3;
-                        const boundsY = ISLAND_HEIGHT / 3;
-                        if (v.x < boundsX) v.vx = Math.abs(v.vx);
-                        if (v.x > ISLAND_WIDTH - boundsX) v.vx = -Math.abs(v.vx);
-                        if (v.y < boundsY) v.vy = Math.abs(v.vy);
-                        if (v.y > ISLAND_HEIGHT - boundsY) v.vy = -Math.abs(v.vy);
-                    }
-
-                    // Flee from invaders
-                    invaders.forEach(inv => {
-                        const dist = Math.hypot(v.x - inv.x, v.y - inv.y);
-                        if (dist < 3) {
-                            const angle = Math.atan2(v.y - inv.y, v.x - inv.x);
-                            v.vx = Math.cos(angle) * 3;
-                            v.vy = Math.sin(angle) * 3;
-                        }
-                    });
-                });
-
-                // Food consumption
-                if (gameState.food > 0) {
-                    gameState.food -= gameState.population * 0.01;
-                } else {
-                    gameState.population = Math.max(0, gameState.population - 0.02);
-                }
-
-                // Tower shooting
-                buildings.forEach(tower => {
-                    if (tower.type === 'tower') {
-                        tower.shootCooldown--;
-                        if (tower.shootCooldown <= 0 && invaders.length > 0) {
-                            const range = (BUILDING_TYPES.tower.range || 6) + tower.level;
-                            let target = null;
-                            let minDist = range;
-
-                            invaders.forEach(inv => {
-                                const dist = Math.hypot(inv.x - tower.x, inv.y - tower.y);
-                                if (dist < minDist) {
-                                    minDist = dist;
-                                    target = inv;
-                                }
-                            });
-
-                            if (target) {
-                                const angle = Math.atan2(target.y - tower.y, target.x - tower.x);
-                                const damage = (tower.damage || 10) + tower.level * 2;
-                                projectiles.push({
-                                    x: tower.x,
-                                    y: tower.y,
-                                    vx: Math.cos(angle) * 3,
-                                    vy: Math.sin(angle) * 3,
-                                    damage,
-                                    type: 'arrow'
-                                });
-                                tower.shootCooldown = tower.shootSpeed || 30;
-                                playSound('shoot');
-                            }
-                        }
-                    }
-                });
-
-                // Projectile movement and collision
-                projectiles = projectiles.filter(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-
-                    let hit = false;
-                    invaders.forEach(inv => {
-                        if (Math.hypot(inv.x - p.x, inv.y - p.y) < 0.5) {
-                            inv.hp -= p.damage;
-                            inv.hitFlash = 10;
-                            createParticles(p.x, p.y, 8, '#ffaa00');
-                            playSound('hit');
-                            hit = true;
-                            if (inv.hp <= 0) {
-                                gameState.invadersDefeated++;
-                                gameState.wood += 10 + gameState.wave;
-                                gameState.stone += 5 + gameState.wave;
-                                createParticles(inv.x, inv.y, 15, '#ffff00');
-                                playSound('explosion');
-                            }
-                        }
-                    });
-
-                    return !hit && p.x >= -2 && p.x <= ISLAND_WIDTH + 2 && p.y >= -2 && p.y <= ISLAND_HEIGHT + 2;
-                });
-
-                // Invader AI and attacks
-                invaders = invaders.filter(inv => {
-                    inv.hitFlash = Math.max(0, inv.hitFlash - 1);
-
-                    if (inv.hp <= 0) return false;
-
-                    // Find target
-                    let targetBuilding = null;
-                    let minDist = 999;
+            update(buildings, castle) {
+                // Find target building
+                if (!this.target || this.target.hp <= 0) {
+                    let closestDist = Infinity;
+                    let closestBuilding = null;
 
                     buildings.forEach(b => {
-                        const dist = Math.hypot(b.x - inv.x, b.y - inv.y);
-                        if (dist < minDist) {
-                            minDist = dist;
-                            targetBuilding = b;
+                        const dist = Math.sqrt((this.x - b.x) ** 2 + (this.y - b.y) ** 2);
+                        if (dist < closestDist && b.hp > 0) {
+                            closestDist = dist;
+                            closestBuilding = b;
                         }
                     });
 
-                    if (targetBuilding) {
-                        const angle = Math.atan2(targetBuilding.y - inv.y, targetBuilding.x - inv.x);
-                        inv.x += Math.cos(angle) * inv.speed * 0.05;
-                        inv.y += Math.sin(angle) * inv.speed * 0.05;
-
-                        if (Math.hypot(targetBuilding.x - inv.x, targetBuilding.y - inv.y) < 1) {
-                            targetBuilding.hp -= inv.damage * 0.01;
-                            if (targetBuilding.hp <= 0) {
-                                createParticles(targetBuilding.x, targetBuilding.y, 20, '#ff4444');
-                                playSound('explosion');
-                                gameState.shakeAmount = 8;
-
-                                if (targetBuilding.type === 'castle') {
-                                    gameOver();
-                                    return false;
-                                }
-                            }
-                            inv.shootCooldown--;
-                            if (inv.shootCooldown <= 0 && inv.type === 'archer') {
-                                const angle2 = Math.atan2(targetBuilding.y - inv.y, targetBuilding.x - inv.x);
-                                projectiles.push({
-                                    x: inv.x,
-                                    y: inv.y,
-                                    vx: Math.cos(angle2) * 2,
-                                    vy: Math.sin(angle2) * 2,
-                                    damage: inv.damage,
-                                    type: 'arrow',
-                                    hostile: true
-                                });
-                                inv.shootCooldown = inv.shootSpeed;
-                            }
-                        }
+                    if (!closestBuilding) {
+                        closestBuilding = castle;
                     }
+                    this.target = closestBuilding;
+                }
 
-                    return true;
+                // Move towards target
+                const dx = this.target.x - this.x;
+                const dy = this.target.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > 1.5) {
+                    this.direction.x = dx / dist;
+                    this.direction.y = dy / dist;
+                    this.x += this.direction.x * this.speed;
+                    this.y += this.direction.y * this.speed;
+                }
+            }
+
+            draw(ctx) {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x * 24, this.y * 24, this.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Eyes
+                ctx.fillStyle = 'white';
+                ctx.fillRect(this.x * 24 - 6, this.y * 24 - 4, 4, 4);
+                ctx.fillRect(this.x * 24 + 2, this.y * 24 - 4, 4, 4);
+
+                // Health bar
+                ctx.fillStyle = '#333';
+                ctx.fillRect(this.x * 24 - 15, this.y * 24 - 20, 30, 3);
+                ctx.fillStyle = '#00AA00';
+                ctx.fillRect(this.x * 24 - 15, this.y * 24 - 20, (this.hp / this.maxHp) * 30, 3);
+            }
+        }
+
+        // ============ MAIN GAME ============
+        class Game {
+            constructor() {
+                this.state = 'start'; // start, playing, gameOver
+                this.cameraX = 0;
+                this.cameraY = 0;
+                this.islandSize = 40;
+                this.tileSize = 24;
+
+                this.resources = {
+                    wood: 200,
+                    stone: 100,
+                    food: 50,
+                    gold: 0
+                };
+
+                this.population = { current: 3, max: 5 };
+                this.wave = 1;
+                this.waveTime = 90; // Tutorial phase
+                this.waveActive = false;
+                this.invaders = [];
+                this.buildings = [];
+                this.particles = [];
+                this.castle = { x: 18, y: 18, maxHp: 100, hp: 100 };
+
+                this.selectedBuilding = null;
+                this.mouseX = 0;
+                this.mouseY = 0;
+
+                this.tutorial = {
+                    active: true,
+                    step: 0,
+                    steps: [
+                        { message: 'Welcome to your island! Tap PLAY to begin.', target: null },
+                        { message: 'Let\'s build a farm! Tap the Farm button.', target: 'farmBtn' },
+                        { message: 'Now tap the island to place it.', target: null },
+                        { message: 'Great! Now build a wall. Tap the Wall button.', target: 'wallBtn' },
+                        { message: 'Place it next to your castle to protect it.', target: null },
+                        { message: 'Now build a tower! Tap the Tower button.', target: 'towerBtn' },
+                        { message: 'Place it near the edge to defend your island.', target: null },
+                        { message: 'Build a house for more villagers!', target: 'houseBtn' },
+                        { message: 'Ready to defend? The first wave arrives in 60 seconds!', target: null }
+                    ]
+                };
+
+                this.quests = [
+                    { text: 'Build your first farm', completed: false },
+                    { text: 'Build 3 walls', completed: false, progress: 0 },
+                    { text: 'Survive Wave 1', completed: false },
+                    { text: 'Reach population 10', completed: false },
+                    { text: 'Build your first tower', completed: false },
+                    { text: 'Defeat 20 invaders', completed: false, progress: 0 },
+                    { text: 'Upgrade a tower to level 3', completed: false }
+                ];
+                this.currentQuest = 0;
+
+                this.totalInvadersDefeated = 0;
+                this.totalBuildingsBuilt = 0;
+                this.shake = 0;
+                this.floatingTexts = [];
+                this.treePositions = [];
+                this.rockPositions = [];
+                this.generateIsland();
+
+                this.setupControls();
+                this.updateHUD();
+            }
+
+            generateIsland() {
+                // Place trees and rocks
+                for (let i = 0; i < 20; i++) {
+                    let x, y, valid;
+                    do {
+                        x = 5 + Math.floor(Math.random() * 30);
+                        y = 5 + Math.floor(Math.random() * 30);
+                        valid = Math.sqrt((x - 20) ** 2 + (y - 20) ** 2) > 6;
+                    } while (!valid || this.treePositions.some(t => Math.sqrt((t.x - x) ** 2 + (t.y - y) ** 2) < 3));
+                    this.treePositions.push({x, y, regrowTime: 0});
+                }
+
+                for (let i = 0; i < 15; i++) {
+                    let x, y, valid;
+                    do {
+                        x = 5 + Math.floor(Math.random() * 30);
+                        y = 5 + Math.floor(Math.random() * 30);
+                        valid = Math.sqrt((x - 20) ** 2 + (y - 20) ** 2) > 6;
+                    } while (!valid || this.rockPositions.some(r => Math.sqrt((r.x - x) ** 2 + (r.y - y) ** 2) < 3));
+                    this.rockPositions.push({x, y, regrowTime: 0});
+                }
+            }
+
+            setupControls() {
+                document.querySelectorAll('.build-btn').forEach(btn => {
+                    btn.addEventListener('click', () => this.selectBuilding(btn.dataset.building));
                 });
 
-                // Wave management
-                if (invaders.length === 0 && gameState.waveInProgress) {
-                    gameState.waveInProgress = false;
-                    gameState.waveCountdown = 30;
-                    gameState.wave++;
-                    playSound('victory');
-                    createParticles(ISLAND_WIDTH / 2, ISLAND_HEIGHT / 2, 30, '#ffff00');
-                }
+                canvas.addEventListener('mousedown', (e) => this.handleCanvasInput(e.clientX, e.clientY));
+                canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    this.handleCanvasInput(touch.clientX, touch.clientY);
+                });
 
-                if (!gameState.waveInProgress) {
-                    gameState.waveCountdown--;
-                    if (gameState.waveCountdown <= 0) {
-                        spawnWave();
+                canvas.addEventListener('mousemove', (e) => {
+                    this.mouseX = e.clientX;
+                    this.mouseY = e.clientY;
+                });
+
+                canvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    this.mouseX = touch.clientX;
+                    this.mouseY = touch.clientY;
+                });
+
+                // Pan controls
+                let dragStart = null;
+                canvas.addEventListener('mousedown', (e) => {
+                    if (!this.selectedBuilding) dragStart = {x: e.clientX, y: e.clientY};
+                });
+
+                canvas.addEventListener('mousemove', (e) => {
+                    if (dragStart && this.state === 'playing') {
+                        const dx = (e.clientX - dragStart.x) / 10;
+                        const dy = (e.clientY - dragStart.y) / 10;
+                        this.cameraX -= dx;
+                        this.cameraY -= dy;
+                        dragStart = {x: e.clientX, y: e.clientY};
+                    }
+                });
+
+                canvas.addEventListener('mouseup', () => dragStart = null);
+                canvas.addEventListener('mouseleave', () => dragStart = null);
+            }
+
+            selectBuilding(type) {
+                if (this.state !== 'playing') return;
+                const costs = {
+                    farm: {wood: 20, stone: 0},
+                    wall: {wood: 0, stone: 15},
+                    tower: {wood: 25, stone: 15},
+                    house: {wood: 30, stone: 10},
+                    barracks: {wood: 40, stone: 30}
+                };
+
+                const cost = costs[type];
+                if (this.resources.wood >= cost.wood && this.resources.stone >= cost.stone) {
+                    this.selectedBuilding = type;
+                    document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('active'));
+                    document.getElementById(type + 'Btn').classList.add('active');
+                } else {
+                    audio.playSound('hit');
+                }
+            }
+
+            handleCanvasInput(clientX, clientY) {
+                if (this.state !== 'playing') return;
+
+                const rect = canvas.getBoundingClientRect();
+                const worldX = (clientX - rect.left) / (this.tileSize) + this.cameraX;
+                const worldY = (clientY - rect.top) / (this.tileSize) + this.cameraY;
+                const tileX = Math.floor(worldX);
+                const tileY = Math.floor(worldY);
+
+                // Check if clicking on tree
+                for (let i = 0; i < this.treePositions.length; i++) {
+                    const tree = this.treePositions[i];
+                    if (Math.abs(tree.x - worldX) < 0.5 && Math.abs(tree.y - worldY) < 0.5 && tree.regrowTime <= 0) {
+                        this.resources.wood += 10;
+                        this.createParticles(worldX, worldY, 'sparkle', 5);
+                        audio.playSound('collect');
+                        tree.regrowTime = 30;
+                        this.createFloatingText('+10 Wood', worldX, worldY);
+                        this.updateHUD();
+                        return;
                     }
                 }
 
-                // Population management
-                const houseCount = buildings.filter(b => b.type === 'house').length;
-                const castleCount = buildings.filter(b => b.type === 'castle').length;
-                gameState.maxPopulation = 3 + houseCount * 2 + castleCount * 5;
-                if (gameState.population < gameState.maxPopulation && gameState.food > 20) {
-                    gameState.population += 0.05;
-                    gameState.food -= 0.05;
+                // Check if clicking on rock
+                for (let i = 0; i < this.rockPositions.length; i++) {
+                    const rock = this.rockPositions[i];
+                    if (Math.abs(rock.x - worldX) < 0.5 && Math.abs(rock.y - worldY) < 0.5 && rock.regrowTime <= 0) {
+                        this.resources.stone += 10;
+                        this.createParticles(worldX, worldY, 'sparkle', 5);
+                        audio.playSound('collect');
+                        rock.regrowTime = 45;
+                        this.createFloatingText('+10 Stone', worldX, worldY);
+                        this.updateHUD();
+                        return;
+                    }
                 }
 
-                gameState.maxPopulationReached = Math.max(gameState.maxPopulationReached, Math.floor(gameState.population));
+                if (this.selectedBuilding) {
+                    this.placeBuilding(tileX, tileY);
+                    return;
+                }
 
-                spawnVillagers();
+                // Click on building to upgrade
+                const building = this.buildings.find(b => b.x === tileX && b.y === tileY);
+                if (building) {
+                    this.upgradeBuilding(building);
+                }
+            }
 
-                // Particle system
-                particles = particles.filter(p => {
-                    p.life--;
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.vy += 0.1;
+            placeBuilding(x, y) {
+                if (!this.selectedBuilding) return;
+
+                const costs = {
+                    farm: {wood: 20, stone: 0},
+                    wall: {wood: 0, stone: 15},
+                    tower: {wood: 25, stone: 15},
+                    house: {wood: 30, stone: 10},
+                    barracks: {wood: 40, stone: 30}
+                };
+
+                const cost = costs[this.selectedBuilding];
+
+                // Check if enough resources
+                if (this.resources.wood < cost.wood || this.resources.stone < cost.stone) {
+                    audio.playSound('hit');
+                    return;
+                }
+
+                // Check if valid placement
+                const building = new Building(x, y, this.selectedBuilding);
+                const overlaps = this.buildings.some(b =>
+                    !(x + building.width <= b.x || x >= b.x + b.width ||
+                      y + building.height <= b.y || y >= b.y + b.height)
+                );
+
+                if (overlaps || x < 0 || y < 0 || x + building.width > this.islandSize || y + building.height > this.islandSize ||
+                    (x < 15 && y < 15 && x + building.width > 25 && y + building.height > 25)) {
+                    audio.playSound('hit');
+                    return;
+                }
+
+                // Place building
+                this.buildings.push(building);
+                this.resources.wood -= cost.wood;
+                this.resources.stone -= cost.stone;
+                this.totalBuildingsBuilt++;
+
+                // Update population
+                if (this.selectedBuilding === 'house') {
+                    this.population.max += 2;
+                    this.population.current = Math.min(this.population.current + 1, this.population.max);
+                }
+
+                audio.playSound('place');
+                this.createParticles(x + 0.5, y + 0.5, 'dust', 10);
+                this.createFloatingText('+' + this.selectedBuilding, x + 0.5, y + 0.5);
+
+                // Tutorial progression
+                if (this.tutorial.active) {
+                    if (this.selectedBuilding === 'farm' && this.tutorial.step === 1) {
+                        this.tutorial.step += 2;
+                    } else if (this.selectedBuilding === 'wall' && this.tutorial.step === 3) {
+                        this.tutorial.step += 2;
+                    } else if (this.selectedBuilding === 'tower' && this.tutorial.step === 5) {
+                        this.tutorial.step += 2;
+                    } else if (this.selectedBuilding === 'house' && this.tutorial.step === 7) {
+                        this.tutorial.step += 2;
+                    }
+                }
+
+                // Check quests
+                this.checkQuests();
+                this.updateHUD();
+
+                this.selectedBuilding = null;
+                document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('active'));
+            }
+
+            upgradeBuilding(building) {
+                if (building.level >= 3) return;
+                const costs = {
+                    farm: {wood: 30, stone: 0},
+                    wall: {wood: 0, stone: 20},
+                    tower: {wood: 40, stone: 20},
+                    house: {wood: 30, stone: 15},
+                    barracks: {wood: 50, stone: 40}
+                };
+
+                const cost = costs[building.type];
+                if (this.resources.wood >= cost.wood && this.resources.stone >= cost.stone) {
+                    building.level++;
+                    building.maxHp += 30;
+                    building.hp = building.maxHp;
+                    this.resources.wood -= cost.wood;
+                    this.resources.stone -= cost.stone;
+                    audio.playSound('place');
+                    this.createParticles(building.x + 0.5, building.y + 0.5, 'explosion', 15);
+                    this.checkQuests();
+                    this.updateHUD();
+                }
+            }
+
+            startWave() {
+                const waveData = [
+                    { invaders: [{type: 'raider', count: 3}], delay: 90 },
+                    { invaders: [{type: 'raider', count: 4}], delay: 60 },
+                    { invaders: [{type: 'raider', count: 5}, {type: 'archer', count: 1}], delay: 55 },
+                    { invaders: [{type: 'raider', count: 6}, {type: 'archer', count: 2}], delay: 50 },
+                    { invaders: [{type: 'raider', count: 7}, {type: 'archer', count: 3}], delay: 45 },
+                    { invaders: [{type: 'raider', count: 5}, {type: 'archer', count: 2}, {type: 'siege', count: 1}], delay: 45 },
+                    { invaders: [{type: 'archer', count: 4}, {type: 'siege', count: 2}], delay: 40 },
+                    { invaders: [{type: 'siege', count: 3}, {type: 'archer', count: 2}], delay: 35 },
+                    { invaders: [{type: 'siege', count: 4}], delay: 30 },
+                    { invaders: [{type: 'boss', count: 1}, {type: 'raider', count: 3}], delay: 60 }
+                ];
+
+                const data = waveData[Math.min(this.wave - 1, waveData.length - 1)];
+
+                this.invaders = [];
+                data.invaders.forEach(group => {
+                    for (let i = 0; i < group.count; i++) {
+                        const x = -2 + Math.random() * 4;
+                        const y = -2 + Math.random() * 4;
+                        this.invaders.push(new Invader(x, y, group.type));
+                    }
+                });
+
+                this.waveActive = true;
+                this.waveTime = data.delay;
+                audio.playSound('wave');
+                this.tutorial.active = false;
+            }
+
+            createParticles(x, y, type, count) {
+                for (let i = 0; i < count; i++) {
+                    this.particles.push(new Particle(x * this.tileSize, y * this.tileSize, type));
+                }
+            }
+
+            createFloatingText(text, x, y) {
+                this.floatingTexts.push({
+                    text,
+                    x: x * this.tileSize,
+                    y: y * this.tileSize,
+                    life: 1,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: -3
+                });
+            }
+
+            checkQuests() {
+                const quest = this.quests[this.currentQuest];
+                if (quest.text.includes('Build your first farm') && this.buildings.some(b => b.type === 'farm')) {
+                    quest.completed = true;
+                    this.resources.wood += 50;
+                    audio.playSound('quest');
+                    this.currentQuest++;
+                }
+                if (quest.text.includes('Build 3 walls')) {
+                    quest.progress = this.buildings.filter(b => b.type === 'wall').length;
+                    if (quest.progress >= 3) {
+                        quest.completed = true;
+                        this.resources.stone += 30;
+                        audio.playSound('quest');
+                        this.currentQuest++;
+                    }
+                }
+                if (quest.text.includes('Survive Wave 1') && this.wave > 1) {
+                    quest.completed = true;
+                    this.resources.gold += 100;
+                    audio.playSound('quest');
+                    this.currentQuest++;
+                }
+                if (quest.text.includes('Build your first tower') && this.buildings.some(b => b.type === 'tower')) {
+                    quest.completed = true;
+                    this.resources.stone += 30;
+                    audio.playSound('quest');
+                    this.currentQuest++;
+                }
+                if (quest.text.includes('Reach population 10') && this.population.current >= 10) {
+                    quest.completed = true;
+                    this.resources.wood += 50;
+                    this.resources.stone += 50;
+                    audio.playSound('quest');
+                    this.currentQuest++;
+                }
+                if (quest.text.includes('Defeat 20 invaders')) {
+                    quest.progress = this.totalInvadersDefeated;
+                    if (quest.progress >= 20) {
+                        quest.completed = true;
+                        this.resources.gold += 200;
+                        audio.playSound('quest');
+                        this.currentQuest++;
+                    }
+                }
+                if (quest.text.includes('Upgrade a tower to level 3') && this.buildings.some(b => b.type === 'tower' && b.level >= 3)) {
+                    quest.completed = true;
+                    this.resources.gold += 100;
+                    audio.playSound('quest');
+                    this.currentQuest++;
+                }
+
+                if (this.currentQuest >= this.quests.length) {
+                    this.currentQuest = this.quests.length - 1;
+                }
+            }
+
+            update() {
+                if (this.state !== 'playing') return;
+
+                // Update resources
+                const farmCount = this.buildings.filter(b => b.type === 'farm').length;
+                if (farmCount > 0) {
+                    this.resources.food += farmCount * 0.05;
+                }
+
+                // Regrow trees/rocks
+                this.treePositions.forEach(t => {
+                    if (t.regrowTime > 0) t.regrowTime--;
+                });
+                this.rockPositions.forEach(r => {
+                    if (r.regrowTime > 0) r.regrowTime--;
+                });
+
+                // Update particles
+                this.particles = this.particles.filter(p => {
+                    p.update();
                     return p.life > 0;
                 });
 
-                // Camera follow
-                gameState.cameraX = Math.lerp(gameState.cameraX, (ISLAND_WIDTH / 2) * TILE_SIZE, 0.1);
-                gameState.cameraY = Math.lerp(gameState.cameraY, (ISLAND_HEIGHT / 2) * TILE_SIZE, 0.1);
+                // Update floating text
+                this.floatingTexts = this.floatingTexts.filter(ft => {
+                    ft.x += ft.vx;
+                    ft.y += ft.vy;
+                    ft.vy -= 0.1;
+                    ft.life -= 0.02;
+                    return ft.life > 0;
+                });
 
-                // Screen shake
-                gameState.shakeAmount = Math.max(0, gameState.shakeAmount - 0.5);
+                // Update invaders
+                this.invaders.forEach(inv => {
+                    inv.update(this.buildings, this.castle);
 
-            } catch (e) {
-                console.error('Game loop error:', e);
+                    // Invader attacks
+                    if (inv.target && Math.sqrt((inv.x - inv.target.x) ** 2 + (inv.y - inv.target.y) ** 2) < 1.5) {
+                        if (Date.now() - inv.lastAttack > 1000) {
+                            inv.lastAttack = Date.now();
+                            const dead = inv.target.takeDamage(inv.damage);
+                            audio.playSound('hit');
+                            this.shake = 5;
+                            if (dead && inv.target !== this.castle) {
+                                this.createParticles(inv.target.x + 0.5, inv.target.y + 0.5, 'explosion', 15);
+                            } else if (dead && inv.target === this.castle) {
+                                this.gameOver();
+                            }
+                        }
+                    }
+                });
+
+                // Towers shoot
+                this.buildings.filter(b => b.type === 'tower').forEach(tower => {
+                    if (Date.now() - tower.lastShot > 1000) {
+                        let target = null;
+                        let closestDist = 10;
+                        this.invaders.forEach(inv => {
+                            const dist = Math.sqrt((tower.x - inv.x) ** 2 + (tower.y - inv.y) ** 2);
+                            if (dist < closestDist) {
+                                closestDist = dist;
+                                target = inv;
+                            }
+                        });
+
+                        if (target) {
+                            tower.lastShot = Date.now();
+                            audio.playSound('shoot');
+                            if (target.takeDamage(15)) {
+                                this.totalInvadersDefeated++;
+                                this.resources.gold += target.reward;
+                                this.createParticles(target.x, target.y, 'explosion', 10);
+                                this.checkQuests();
+                            }
+                        }
+                    }
+                });
+
+                // Remove defeated invaders
+                this.invaders = this.invaders.filter(inv => inv.hp > 0);
+
+                // Wave management
+                if (!this.waveActive) {
+                    this.waveTime--;
+                    if (this.waveTime <= 0) {
+                        this.startWave();
+                    }
+                } else {
+                    if (this.invaders.length === 0) {
+                        this.waveActive = false;
+                        this.wave++;
+                        this.waveTime = 60;
+                        this.checkQuests();
+                    }
+                }
+
+                // Update shake
+                if (this.shake > 0) this.shake--;
+
+                this.updateHUD();
             }
-        }
 
-        function renderGame() {
-            try {
-                const shake = Math.random() * gameState.shakeAmount - gameState.shakeAmount / 2;
-                const shakeY = Math.random() * gameState.shakeAmount - gameState.shakeAmount / 2;
-
-                // Clear and background
-                ctx.fillStyle = '#1a1330';
+            draw() {
+                // Clear canvas
+                ctx.fillStyle = '#87CEEB';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Day/night cycle
-                gameState.dayTime = (gameState.dayTime + 0.001) % (Math.PI * 2);
-                const dayBrightness = 0.5 + Math.sin(gameState.dayTime) * 0.3;
-                const skyColor = `hsl(210, 60%, ${30 + dayBrightness * 20}%)`;
-                ctx.fillStyle = skyColor;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Translate for camera and shake
                 ctx.save();
-                ctx.translate(canvas.width / 2 + shake, canvas.height / 2 + shakeY);
-                ctx.translate(GRID_OFFSET_X - gameState.cameraX, GRID_OFFSET_Y - gameState.cameraY);
+                if (this.shake > 0) {
+                    ctx.translate(Math.random() * this.shake - this.shake / 2, Math.random() * this.shake - this.shake / 2);
+                }
 
-                // Render tiles
-                for (let y = 0; y < ISLAND_HEIGHT; y++) {
-                    for (let x = 0; x < ISLAND_WIDTH; x++) {
-                        const tile = island[y][x];
-                        const px = x * TILE_SIZE;
-                        const py = y * TILE_SIZE;
+                // Draw island
+                ctx.translate(-this.cameraX * this.tileSize, -this.cameraY * this.tileSize);
 
-                        let color = '#4a7c7e';
-                        if (tile.type === 'grass') color = '#2d8659';
-                        else if (tile.type === 'sand') color = '#d4a574';
-                        else if (tile.type === 'water') color = '#1e5f8f';
-                        else if (tile.type === 'tree') color = '#1a4d2e';
-                        else if (tile.type === 'rock') color = '#696969';
-
-                        ctx.fillStyle = color;
-                        ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
-
-                        // Grid
-                        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(px, py, TILE_SIZE, TILE_SIZE);
-
-                        // Water animation
-                        if (tile.type === 'water') {
-                            const wave = Math.sin(gameState.dayTime + x * 0.3 + y * 0.3) * 3;
-                            ctx.fillStyle = 'rgba(100, 150, 255, 0.1)';
-                            ctx.fillRect(px, py + wave, TILE_SIZE, TILE_SIZE - Math.abs(wave));
+                // Draw water
+                ctx.fillStyle = '#4A90E2';
+                for (let x = -10; x < this.islandSize + 10; x++) {
+                    for (let y = -10; y < this.islandSize + 10; y++) {
+                        if (x < 0 || y < 0 || x >= this.islandSize || y >= this.islandSize) {
+                            ctx.fillRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
                         }
                     }
                 }
 
-                // Render buildings
-                buildings.forEach(b => {
-                    const px = b.x * TILE_SIZE;
-                    const py = b.y * TILE_SIZE;
-
-                    // Shadow
-                    ctx.fillStyle = 'rgba(0,0,0,0.3)';
-                    ctx.fillRect(px + 2, py + TILE_SIZE - 4, TILE_SIZE - 4, 4);
-
-                    // Building base
-                    const colors = {
-                        farm: '#90ee90',
-                        wall: '#a0a0a0',
-                        tower: '#8b4513',
-                        house: '#cd853f',
-                        castle: '#ffd700'
-                    };
-                    ctx.fillStyle = colors[b.type];
-                    ctx.fillRect(px + 2, py + 2, TILE_SIZE - 4, TILE_SIZE - 4);
-
-                    // Level indicator
-                    if (b.level > 1) {
-                        ctx.fillStyle = '#ff6b00';
-                        ctx.font = 'bold 12px Arial';
-                        ctx.fillText('L' + b.level, px + 4, py + 12);
+                // Draw island grass
+                ctx.fillStyle = '#90EE90';
+                for (let x = 0; x < this.islandSize; x++) {
+                    for (let y = 0; y < this.islandSize; y++) {
+                        const dist = Math.sqrt((x - 20) ** 2 + (y - 20) ** 2);
+                        if (dist < 22) {
+                            ctx.fillStyle = dist < 20 ? '#7CCC7C' : '#90EE90';
+                            ctx.fillRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+                        }
                     }
+                }
 
-                    // Health bar
-                    const hpPercent = b.hp / b.maxHP;
-                    ctx.fillStyle = hpPercent > 0.5 ? '#00ff88' : hpPercent > 0.25 ? '#ffff00' : '#ff6b00';
-                    ctx.fillRect(px + 2, py, (TILE_SIZE - 4) * hpPercent, 2);
+                // Draw castle
+                ctx.fillStyle = '#FFD700';
+                const cx = this.castle.x * this.tileSize;
+                const cy = this.castle.y * this.tileSize;
+                ctx.fillRect(cx - 20, cy - 20, 40, 40);
+                ctx.strokeStyle = '#FF6B6B';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(cx - 20, cy - 20, 40, 40);
+                ctx.fillStyle = '#FF6B6B';
+                ctx.fillRect(cx - 10, cy - 25, 8, 10);
+                ctx.fillRect(cx + 2, cy - 25, 8, 10);
 
-                    // Icon
-                    ctx.font = 'bold 16px Arial';
-                    ctx.fillText(BUILDING_TYPES[b.type].icon, px + 6, py + 20);
-                });
+                // Castle health bar
+                ctx.fillStyle = '#333';
+                ctx.fillRect(cx - 30, cy - 35, 60, 4);
+                ctx.fillStyle = '#00AA00';
+                ctx.fillRect(cx - 30, cy - 35, 60 * (this.castle.hp / 100), 4);
 
-                // Render villagers
-                ctx.fillStyle = '#00ffff';
-                villagers.forEach(v => {
-                    const px = v.x * TILE_SIZE;
-                    const py = v.y * TILE_SIZE;
-                    ctx.fillRect(px + 10, py + 10, 12, 12);
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(px + 12, py + 12, 2, 2);
-                    ctx.fillRect(px + 18, py + 12, 2, 2);
-                    ctx.fillStyle = '#00ffff';
-                });
-
-                // Render invaders
-                invaders.forEach(inv => {
-                    const px = inv.x * TILE_SIZE;
-                    const py = inv.y * TILE_SIZE;
-
-                    let color = inv.type === 'raider' ? '#ff4444' : inv.type === 'archer' ? '#ff8800' : inv.type === 'siegeUnit' ? '#cc0000' : '#ff00ff';
-                    if (inv.hitFlash > 0) color = '#ffffff';
-
-                    ctx.fillStyle = color;
-                    ctx.fillRect(px + 4, py + 4, TILE_SIZE - 8, TILE_SIZE - 8);
-
-                    // HP bar
-                    const hpPercent = Math.max(0, inv.hp / inv.maxHP);
-                    ctx.fillStyle = '#ff0000';
-                    ctx.fillRect(px + 4, py - 4, (TILE_SIZE - 8) * hpPercent, 2);
-                });
-
-                // Render projectiles
-                projectiles.forEach(p => {
-                    const px = p.x * TILE_SIZE;
-                    const py = p.y * TILE_SIZE;
-
-                    ctx.fillStyle = p.hostile ? '#ff6b00' : '#ffff00';
-                    ctx.fillRect(px - 2, py - 2, 4, 4);
-
-                    // Trail
-                    ctx.strokeStyle = p.hostile ? 'rgba(255, 107, 0, 0.5)' : 'rgba(255, 255, 0, 0.5)';
-                    ctx.lineWidth = 1;
+                // Draw trees
+                ctx.fillStyle = '#228B22';
+                this.treePositions.forEach(tree => {
+                    const opacity = tree.regrowTime > 0 ? 0.5 : 1;
+                    ctx.globalAlpha = opacity;
                     ctx.beginPath();
-                    ctx.moveTo(px - p.vx * 5, py - p.vy * 5);
-                    ctx.lineTo(px, py);
-                    ctx.stroke();
+                    ctx.arc(tree.x * this.tileSize, tree.y * this.tileSize, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
                 });
 
-                // Render particles
-                particles.forEach(p => {
-                    ctx.fillStyle = `rgba(${p.color}, ${p.life / p.maxLife})`;
-                    ctx.fillRect(p.x * TILE_SIZE, p.y * TILE_SIZE, 2, 2);
+                // Draw rocks
+                ctx.fillStyle = '#A9A9A9';
+                this.rockPositions.forEach(rock => {
+                    const opacity = rock.regrowTime > 0 ? 0.5 : 1;
+                    ctx.globalAlpha = opacity;
+                    ctx.fillRect(rock.x * this.tileSize - 6, rock.y * this.tileSize - 6, 12, 12);
+                    ctx.globalAlpha = 1;
+                });
+
+                // Draw buildings
+                this.buildings.forEach(b => b.draw(ctx, this.tileSize));
+
+                // Draw invaders
+                this.invaders.forEach(inv => inv.draw(ctx));
+
+                // Draw particles
+                this.particles.forEach(p => p.draw(ctx));
+
+                // Draw floating text
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                this.floatingTexts.forEach(ft => {
+                    ctx.fillStyle = 'rgba(255, 215, 0, ' + Math.max(0, ft.life) + ')';
+                    ctx.fillText(ft.text, ft.x, ft.y);
                 });
 
                 ctx.restore();
 
-                // UI updates
-                document.getElementById('wood-count').textContent = Math.floor(gameState.wood);
-                document.getElementById('stone-count').textContent = Math.floor(gameState.stone);
-                document.getElementById('food-count').textContent = Math.floor(gameState.food);
-                document.getElementById('pop-count').textContent = Math.floor(gameState.population);
-                document.getElementById('wave-count').textContent = gameState.wave;
-
-                if (gameState.waveInProgress) {
-                    document.getElementById('wave-timer').textContent = `${invaders.length} invaders`;
-                } else {
-                    document.getElementById('wave-timer').textContent = `Next: ${gameState.waveCountdown}s`;
+                // Draw wave banner
+                if (!this.waveActive && this.tutorial.active === false && this.waveTime > 0 && this.waveTime < 55) {
+                    ctx.font = 'bold 32px Arial';
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                    ctx.fillRect(canvas.width / 2 - 150, 100, 300, 80);
+                    ctx.strokeStyle = '#FF6B6B';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(canvas.width / 2 - 150, 100, 300, 80);
+                    ctx.fillStyle = '#FF6B6B';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Wave ' + this.wave, canvas.width / 2, 145);
+                    ctx.font = 'bold 16px Arial';
+                    ctx.fillText('Next in ' + Math.ceil(this.waveTime / 60) + 's', canvas.width / 2, 165);
                 }
 
-            } catch (e) {
-                console.error('Render error:', e);
+                // Draw tutorial tooltip
+                if (this.tutorial.active) {
+                    const step = this.tutorial.steps[this.tutorial.step];
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+                    ctx.fillRect(canvas.width / 2 - 150, canvas.height - 120, 300, 100);
+                    ctx.strokeStyle = '#FFFF00';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(canvas.width / 2 - 150, canvas.height - 120, 300, 100);
+                    ctx.fillStyle = '#FFFF00';
+                    ctx.font = 'bold 16px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(step.message, canvas.width / 2, canvas.height - 70, 280);
+                }
+            }
+
+            updateHUD() {
+                document.getElementById('woodCount').textContent = Math.floor(this.resources.wood);
+                document.getElementById('stoneCount').textContent = Math.floor(this.resources.stone);
+                document.getElementById('foodCount').textContent = Math.floor(this.resources.food);
+                document.getElementById('goldCount').textContent = Math.floor(this.resources.gold);
+                document.getElementById('waveDisplay').textContent = 'Wave: ' + this.wave;
+                document.getElementById('populationDisplay').textContent = '👤 ' + this.population.current + '/' + this.population.max;
+
+                const quest = this.quests[this.currentQuest];
+                if (quest) {
+                    document.getElementById('questTitle').textContent = 'Quest ' + (this.currentQuest + 1);
+                    document.getElementById('questDesc').textContent = quest.text + (quest.progress !== undefined ? ' (' + quest.progress + ')' : '');
+                }
+            }
+
+            startGame() {
+                this.state = 'playing';
+                document.getElementById('startScreen').classList.add('hidden');
+            }
+
+            gameOver() {
+                this.state = 'gameOver';
+                const stats = `
+                    <div class="stat-item"><div class="stat-label">Waves Survived</div><div class="stat-value">${this.wave}</div></div>
+                    <div class="stat-item"><div class="stat-label">Invaders Defeated</div><div class="stat-value">${this.totalInvadersDefeated}</div></div>
+                    <div class="stat-item"><div class="stat-label">Buildings Built</div><div class="stat-value">${this.totalBuildingsBuilt}</div></div>
+                    <div class="stat-item"><div class="stat-label">Max Population</div><div class="stat-value">${this.population.max}</div></div>
+                `;
+                document.getElementById('gameOverStats').innerHTML = stats;
+
+                let stars = '⭐';
+                if (this.wave > 5) stars += '⭐';
+                if (this.wave > 10) stars += '⭐';
+                document.getElementById('stars').textContent = stars;
+
+                document.getElementById('gameOverScreen').classList.remove('hidden');
             }
         }
 
+        const game = new Game();
+
         function gameLoop() {
-            updateGameLogic();
-            renderGame();
+            try {
+                game.update();
+                game.draw();
+            } catch(e) {
+                console.error('Game error:', e);
+            }
             requestAnimationFrame(gameLoop);
         }
 
-        // Utility functions
-        function createParticles(x, y, count, color) {
-            for (let i = 0; i < count; i++) {
-                const angle = (Math.random() * Math.PI * 2);
-                const speed = Math.random() * 2 + 1;
-                const rgb = color.match(/\d+/g) || [255, 200, 0];
-                particles.push({
-                    x, y,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed - 1,
-                    life: 30,
-                    maxLife: 30,
-                    color: rgb.join(',')
-                });
-            }
-        }
-
-        function showWaveBanner(text) {
-            const banner = document.createElement('div');
-            banner.className = 'wave-banner';
-            banner.textContent = text;
-            document.getElementById('ui-layer').appendChild(banner);
-            setTimeout(() => banner.remove(), 2000);
-        }
-
-        function gameOver() {
-            gameState.running = false;
-            const stats = `
-                Waves Survived: ${gameState.wave}<br>
-                Invaders Defeated: ${gameState.invadersDefeated}<br>
-                Buildings Built: ${gameState.buildingsBuilt}<br>
-                Max Population: ${gameState.maxPopulationReached}
-            `;
-            document.getElementById('stats-display').innerHTML = stats;
-            document.getElementById('game-over-screen').classList.add('active');
-        }
-
-        function startGame() {
-            gameState = {
-                ...gameState,
-                running: true,
-                wave: 1,
-                waveInProgress: false,
-                waveCountdown: 3,
-                wood: 100,
-                stone: 50,
-                food: 50,
-                population: 3,
-                maxPopulation: 3,
-                invadersDefeated: 0,
-                buildingsBuilt: 0,
-                maxPopulationReached: 3
-            };
-            buildings = [];
-            villagers = [];
-            invaders = [];
-            particles = [];
-            projectiles = [];
-            generateIsland();
-            document.getElementById('start-screen').classList.remove('active');
-            document.getElementById('game-over-screen').classList.remove('active');
-            spawnVillagers();
-        }
-
-        // Sound system (Web Audio API)
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playSound(type) {
-            try {
-                const now = audioContext.currentTime;
-                const osc = audioContext.createOscillator();
-                const gain = audioContext.createGain();
-                osc.connect(gain);
-                gain.connect(audioContext.destination);
-
-                switch (type) {
-                    case 'build':
-                        osc.frequency.setValueAtTime(400, now);
-                        osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
-                        gain.gain.setValueAtTime(0.3, now);
-                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-                        osc.start(now);
-                        osc.stop(now + 0.1);
-                        break;
-                    case 'shoot':
-                        osc.frequency.setValueAtTime(600, now);
-                        gain.gain.setValueAtTime(0.2, now);
-                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-                        osc.start(now);
-                        osc.stop(now + 0.08);
-                        break;
-                    case 'hit':
-                        osc.frequency.setValueAtTime(300, now);
-                        gain.gain.setValueAtTime(0.15, now);
-                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
-                        osc.start(now);
-                        osc.stop(now + 0.05);
-                        break;
-                    case 'explosion':
-                        osc.frequency.setValueAtTime(150, now);
-                        osc.frequency.exponentialRampToValueAtTime(50, now + 0.3);
-                        gain.gain.setValueAtTime(0.4, now);
-                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                        osc.start(now);
-                        osc.stop(now + 0.3);
-                        break;
-                    case 'horn':
-                        osc.frequency.setValueAtTime(440, now);
-                        osc.frequency.setValueAtTime(550, now + 0.1);
-                        gain.gain.setValueAtTime(0.3, now);
-                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                        osc.start(now);
-                        osc.stop(now + 0.3);
-                        break;
-                    case 'victory':
-                        for (let i = 0; i < 3; i++) {
-                            const o = audioContext.createOscillator();
-                            const g = audioContext.createGain();
-                            o.connect(g);
-                            g.connect(audioContext.destination);
-                            o.frequency.setValueAtTime(440 + i * 100, now + i * 0.1);
-                            g.gain.setValueAtTime(0.2, now + i * 0.1);
-                            g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.2);
-                            o.start(now + i * 0.1);
-                            o.stop(now + i * 0.1 + 0.2);
-                        }
-                        break;
-                }
-            } catch (e) {
-                console.log('Audio unavailable:', e);
-            }
-        }
-
-        // Input handling
-        const keys = {};
-        window.addEventListener('keydown', (e) => {
-            keys[e.key.toLowerCase()] = true;
-            if (e.key === '1') gameState.selectedBuilding = 'farm';
-            if (e.key === '2') gameState.selectedBuilding = 'wall';
-            if (e.key === '3') gameState.selectedBuilding = 'tower';
-            if (e.key === '4') gameState.selectedBuilding = 'house';
-            if (e.key === '5') gameState.selectedBuilding = 'castle';
-        });
-        window.addEventListener('keyup', (e) => {
-            keys[e.key.toLowerCase()] = false;
-        });
-
-        // Camera panning with keyboard
-        setInterval(() => {
-            const speed = TILE_SIZE * 0.5;
-            if (keys['w'] || keys['arrowup']) gameState.cameraY -= speed;
-            if (keys['s'] || keys['arrowdown']) gameState.cameraY += speed;
-            if (keys['a'] || keys['arrowleft']) gameState.cameraX -= speed;
-            if (keys['d'] || keys['arrowright']) gameState.cameraX += speed;
-        }, 50);
-
-        // Click to place buildings
-        canvas.addEventListener('click', (e) => {
-            if (!gameState.running || !gameState.selectedBuilding) return;
-
-            const rect = canvas.getBoundingClientRect();
-            const clickX = (e.clientX - rect.left - canvas.width / 2) / TILE_SIZE + gameState.cameraX / TILE_SIZE;
-            const clickY = (e.clientY - rect.top - canvas.height / 2) / TILE_SIZE + gameState.cameraY / TILE_SIZE;
-
-            const x = Math.floor(clickX);
-            const y = Math.floor(clickY);
-
-            // Check if clicking on existing building to upgrade
-            const existing = buildings.find(b => b.x === x && b.y === y);
-            if (existing) {
-                const cost = BUILDING_TYPES[existing.type].cost;
-                if (gameState.wood >= cost.wood && gameState.stone >= cost.stone) {
-                    gameState.wood -= cost.wood;
-                    gameState.stone -= cost.stone;
-                    upgradeBuilding(existing);
-                }
-                return;
-            }
-
-            // Try to place new building
-            const cost = BUILDING_TYPES[gameState.selectedBuilding].cost;
-            if (canBuildAt(x, y, gameState.selectedBuilding) &&
-                gameState.wood >= cost.wood &&
-                gameState.stone >= cost.stone) {
-                gameState.wood -= cost.wood;
-                gameState.stone -= cost.stone;
-                addBuilding(x, y, gameState.selectedBuilding);
-            }
-        });
-
-        // Build menu buttons
-        document.querySelectorAll('.build-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                gameState.selectedBuilding = btn.dataset.building;
-            });
-        });
-
-        // Game start
-        document.getElementById('start-btn').addEventListener('click', startGame);
-        document.getElementById('replay-btn').addEventListener('click', startGame);
-
-        // Math helper
-        Math.lerp = (a, b, t) => a + (b - a) * t;
-
-        // Start game loop
         gameLoop();
     </script>
 </body>
