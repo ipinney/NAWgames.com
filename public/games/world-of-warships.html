@@ -145,9 +145,9 @@
   <div class="start-subtitle">Naval Combat</div>
   <button class="start-btn" onclick="startGame()">BATTLE STATIONS</button>
   <div class="start-info">
-    <span>WASD</span> or <span>Joystick</span> — Steer &amp; Throttle<br>
-    <span>Click</span> / <span>Tap</span> — Fire Cannons<br>
-    <span>Space</span> / <span>Torpedo Btn</span> — Launch Torpedoes<br>
+    <span>WASD</span> or <span>Joystick</span> — Move (ship follows direction)<br>
+    <span>Click</span> / <span>Tap Fire</span> — Cannons (auto-aims nearest enemy!)<br>
+    <span>Space</span> / <span>Torpedo Btn</span> — Torpedo (auto-aims too!)<br>
     Destroy all enemy warships to advance!
   </div>
 </div>
@@ -411,8 +411,8 @@ function createPlayer() {
   return {
     x: WORLD_W / 2, y: WORLD_H / 2,
     angle: -Math.PI / 2,
-    speed: 0, maxSpeed: 3.5, accel: 0.04, drag: 0.985,
-    turnSpeed: 0.025,
+    speed: 0, maxSpeed: 2.0, accel: 0.035, drag: 0.985,
+    turnSpeed: 0.04,
     hp: 100, maxHp: 100,
     cannonCooldown: 0, torpedoCooldown: 0,
     cannonRate: 25, torpedoRate: 120,
@@ -426,26 +426,26 @@ function createEnemy(type, x, y, waveNum) {
   const templates = {
     destroyer: {
       width: 45, height: 14,
-      maxSpeed: 3.2, accel: 0.05, turnSpeed: 0.03,
-      hp: 40, cannonRate: 40, torpedoRate: 200,
+      maxSpeed: 1.8, accel: 0.035, turnSpeed: 0.025,
+      hp: 40, cannonRate: 50, torpedoRate: 240,
       score: 100, color: '#667788',
     },
     cruiser: {
       width: 55, height: 18,
-      maxSpeed: 2.5, accel: 0.04, turnSpeed: 0.025,
-      hp: 70, cannonRate: 30, torpedoRate: 160,
+      maxSpeed: 1.4, accel: 0.03, turnSpeed: 0.02,
+      hp: 70, cannonRate: 40, torpedoRate: 200,
       score: 200, color: '#556677',
     },
     battleship: {
       width: 70, height: 24,
-      maxSpeed: 2.0, accel: 0.03, turnSpeed: 0.018,
-      hp: 120, cannonRate: 25, torpedoRate: 140,
+      maxSpeed: 1.1, accel: 0.025, turnSpeed: 0.015,
+      hp: 120, cannonRate: 35, torpedoRate: 180,
       score: 350, color: '#445566',
     },
     carrier: {
       width: 80, height: 28,
-      maxSpeed: 1.5, accel: 0.025, turnSpeed: 0.015,
-      hp: 180, cannonRate: 50, torpedoRate: 180,
+      maxSpeed: 0.8, accel: 0.02, turnSpeed: 0.012,
+      hp: 180, cannonRate: 60, torpedoRate: 220,
       score: 500, color: '#3a4a5a',
     },
   };
@@ -623,24 +623,45 @@ function addWake(x, y, angle, width) {
 }
 
 // ==================== PROJECTILES ====================
+// Find nearest enemy for auto-aim
+function findNearestEnemy() {
+  let nearest = null, nearestDist = Infinity;
+  enemies.forEach(e => {
+    if (e.sinking) return;
+    const dx = e.x - player.x, dy = e.y - player.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < nearestDist && dist < 900) {
+      nearestDist = dist;
+      nearest = e;
+    }
+  });
+  return nearest;
+}
+
 function firePlayerCannon() {
   if (player.cannonCooldown > 0) return;
   player.cannonCooldown = player.cannonRate;
   playSound('cannon');
   camShake = 6;
 
-  // Fire from both sides
-  for (const side of [-1, 1]) {
-    const perpAngle = player.angle + Math.PI / 2 * side;
-    const ox = Math.cos(player.angle) * 15 + Math.cos(perpAngle) * 14;
-    const oy = Math.sin(player.angle) * 15 + Math.sin(perpAngle) * 14;
-    // Aim toward mouse/touch direction
-    const aimAngle = perpAngle + (Math.random() - 0.5) * 0.15;
+  // Auto-aim: find nearest enemy
+  const target = findNearestEnemy();
+  let aimAngle = player.angle; // default: fire forward
+  if (target) {
+    const dx = target.x - player.x, dy = target.y - player.y;
+    aimAngle = Math.atan2(dy, dx);
+  }
+
+  // Fire two shots with slight spread toward target
+  for (const spread of [-0.08, 0.08]) {
+    const a = aimAngle + spread + (Math.random() - 0.5) * 0.1;
+    const ox = Math.cos(a) * 20;
+    const oy = Math.sin(a) * 20;
     projectiles.push({
       x: player.x + ox, y: player.y + oy,
-      vx: Math.cos(aimAngle) * 8 + player.speed * Math.cos(player.angle) * 0.3,
-      vy: Math.sin(aimAngle) * 8 + player.speed * Math.sin(player.angle) * 0.3,
-      life: 80, damage: 15, owner: 'player',
+      vx: Math.cos(a) * 6,
+      vy: Math.sin(a) * 6,
+      life: 100, damage: 15, owner: 'player',
     });
     addParticle(player.x + ox, player.y + oy, 'smoke', 3);
   }
@@ -651,11 +672,19 @@ function firePlayerTorpedo() {
   player.torpedoCooldown = player.torpedoRate;
   playSound('torpedo');
 
+  // Auto-aim torpedo at nearest enemy
+  const target = findNearestEnemy();
+  let torpAngle = player.angle;
+  if (target) {
+    const dx = target.x - player.x, dy = target.y - player.y;
+    torpAngle = Math.atan2(dy, dx);
+  }
+
   torpedoes.push({
-    x: player.x + Math.cos(player.angle) * 30,
-    y: player.y + Math.sin(player.angle) * 30,
-    angle: player.angle,
-    speed: 4.5, life: 180, damage: 45, owner: 'player',
+    x: player.x + Math.cos(torpAngle) * 30,
+    y: player.y + Math.sin(torpAngle) * 30,
+    angle: torpAngle,
+    speed: 3.0, life: 200, damage: 45, owner: 'player',
     trail: [],
   });
 }
@@ -669,9 +698,9 @@ function fireEnemyCannon(enemy) {
   enemyProjectiles.push({
     x: enemy.x + Math.cos(aimAngle) * 20,
     y: enemy.y + Math.sin(aimAngle) * 20,
-    vx: Math.cos(aimAngle) * 6,
-    vy: Math.sin(aimAngle) * 6,
-    life: 70, damage: 8 + wave * 1.5,
+    vx: Math.cos(aimAngle) * 4,
+    vy: Math.sin(aimAngle) * 4,
+    life: 80, damage: 7 + wave * 1,
   });
   addParticle(enemy.x + Math.cos(aimAngle) * 20, enemy.y + Math.sin(aimAngle) * 20, 'smoke', 2);
 }
@@ -685,7 +714,7 @@ function fireEnemyTorpedo(enemy) {
   torpedoes.push({
     x: enemy.x + Math.cos(aimAngle) * 25,
     y: enemy.y + Math.sin(aimAngle) * 25,
-    angle: aimAngle, speed: 3, life: 160,
+    angle: aimAngle, speed: 2.0, life: 180,
     damage: 25 + wave * 2, owner: 'enemy',
     trail: [],
   });
@@ -1192,31 +1221,36 @@ function update() {
 
   waterTime += 0.008;
 
-  // --- Player input ---
-  let steerX = 0, steerY = 0;
-  if (keys['KeyW'] || keys['ArrowUp']) steerY = -1;
-  if (keys['KeyS'] || keys['ArrowDown']) steerY = 1;
-  if (keys['KeyA'] || keys['ArrowLeft']) steerX = -1;
-  if (keys['KeyD'] || keys['ArrowRight']) steerX = 1;
+  // --- Player input (directional: ship goes where you point) ---
+  let inputX = 0, inputY = 0;
+  if (keys['KeyW'] || keys['ArrowUp']) inputY = -1;
+  if (keys['KeyS'] || keys['ArrowDown']) inputY = 1;
+  if (keys['KeyA'] || keys['ArrowLeft']) inputX = -1;
+  if (keys['KeyD'] || keys['ArrowRight']) inputX = 1;
 
   // Mobile joystick
   if (Math.abs(mobileSteerX) > 0.1 || Math.abs(mobileSteerY) > 0.1) {
-    steerX = mobileSteerX;
-    steerY = mobileSteerY;
+    inputX = mobileSteerX;
+    inputY = mobileSteerY;
   }
 
-  // Turn
-  if (steerX !== 0) {
-    player.angle += steerX * player.turnSpeed;
-  }
+  const hasInput = Math.abs(inputX) > 0.05 || Math.abs(inputY) > 0.05;
 
-  // Throttle
-  if (steerY < 0) {
-    player.speed = Math.min(player.speed + player.accel, player.maxSpeed);
-  } else if (steerY > 0) {
-    player.speed = Math.max(player.speed - player.accel * 1.5, -player.maxSpeed * 0.3);
+  if (hasInput) {
+    // Target angle from input direction
+    const targetAngle = Math.atan2(inputY, inputX);
+    // Smoothly turn toward target
+    let angleDiff = targetAngle - player.angle;
+    while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+    while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+    player.angle += Math.sign(angleDiff) * Math.min(Math.abs(angleDiff), player.turnSpeed);
+    // Accelerate
+    const inputMag = Math.min(1, Math.sqrt(inputX * inputX + inputY * inputY));
+    player.speed = Math.min(player.speed + player.accel, player.maxSpeed * inputMag);
   } else {
+    // Coast to stop
     player.speed *= player.drag;
+    if (Math.abs(player.speed) < 0.01) player.speed = 0;
   }
 
   // Move player
