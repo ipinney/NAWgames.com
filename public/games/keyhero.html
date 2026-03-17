@@ -116,7 +116,8 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
     <button class="diff-btn" onclick="selectDiff(2)">💀 HARD</button>
   </div>
 
-  <button class="play-btn" onclick="startCountdown()">▶ PLAY</button>
+  <button class="play-btn" id="play-btn" onclick="startCountdown()">▶ PLAY</button>
+  <div id="loading-track" style="color:#aaa;font-size:13px;margin-top:8px;display:none">🎵 Loading audio…</div>
 </div>
 
 <!-- HUD -->
@@ -609,18 +610,46 @@ document.addEventListener('touchmove', e => e.preventDefault(), { passive: false
 
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 // ============================================================
-// AUDIO — Web Audio API + lookahead scheduler
+// AUDIO — OGG backing track + Web Audio API hit sounds
 // ──────────────────────────────────────────────────────────────────────────
-// Single source of truth: audioCtx.currentTime
-// Lookahead scheduler: schedule only 150ms ahead, refresh every 25ms.
-// This prevents scheduling 3000+ nodes at once (which causes timing jitter).
+// Architecture:
+//   • Pre-rendered OGG (FluidSynth + FluidR3_GM) = melody + drums + bass
+//   • AudioBufferSourceNode plays the OGG — audioCtx.currentTime IS the clock
+//   • Hit sounds: synthVoice (correct note) or square buzz (wrong key)
+//   • No scheduling storm: zero lookahead nodes, just one AudioBufferSource
 // ──────────────────────────────────────────────────────────────────────────
 const _AudioCtx = window.AudioContext || window.webkitAudioContext;
-let audioCtx = null;
+let audioCtx     = null;
+let trackBuffer  = null;   // decoded OGG AudioBuffer
+let trackSource  = null;   // currently playing AudioBufferSourceNode
+let trackLoading = false;
+let trackLoaded  = false;
+
+// Decode the OGG once on page load (or first user gesture)
+function loadTrack() {
+  if (trackLoading || trackLoaded) return;
+  trackLoading = true;
+  fetch('/games/shake-it-off.ogg')
+    .then(r => r.arrayBuffer())
+    .then(ab => {
+      if (!audioCtx) audioCtx = new _AudioCtx();
+      return audioCtx.decodeAudioData(ab);
+    })
+    .then(buf => {
+      trackBuffer  = buf;
+      trackLoaded  = true;
+      trackLoading = false;
+      // Hide loading indicator if shown
+      const ldEl = document.getElementById('loading-track');
+      if (ldEl) ldEl.style.display = 'none';
+    })
+    .catch(e => { console.error('Track load failed', e); trackLoading = false; });
+}
 
 function ensureAudio() {
   if (!audioCtx) audioCtx = new _AudioCtx();
   if (audioCtx.state === 'suspended') audioCtx.resume();
+  loadTrack();  // kick off fetch if not started
 }
 
 // Countdown / UI beep
@@ -659,16 +688,16 @@ function playPerfect() {
   });
 }
 
-// ── Synth voice (background melody + hit sounds) ──────────────────────────
-// Two detuned sawtooth oscillators → lowpass filter → ADSR gain envelope.
-// 3ms attack = crisp transient that aligns precisely with drum hits.
+// ── Synth voice for HIT feedback only ─────────────────────────────────────
+// Correct hit = bright sawtooth chord at the note's exact frequency.
+// This IS the melody note — the OGG guide track plays softly beneath.
 function synthVoice(hz, t, dur, gain, cutoff) {
   if (!audioCtx) return;
   const filt = audioCtx.createBiquadFilter();
   filt.type = 'lowpass'; filt.frequency.value = cutoff || 3000; filt.Q.value = 1.4;
   const mg = audioCtx.createGain();
   mg.gain.setValueAtTime(0,          t);
-  mg.gain.linearRampToValueAtTime(gain,       t + 0.003);   // 3ms attack
+  mg.gain.linearRampToValueAtTime(gain,       t + 0.003);
   mg.gain.exponentialRampToValueAtTime(gain*0.6, t + 0.08);
   mg.gain.setValueAtTime(gain*0.6,   t + Math.max(dur - 0.08, 0.01));
   mg.gain.exponentialRampToValueAtTime(0.0001, t + dur);
@@ -681,13 +710,13 @@ function synthVoice(hz, t, dur, gain, cutoff) {
   });
 }
 
-// Correct-lane hit → same voice, full volume (IS the music)
+// Correct-lane hit → full-volume synth voice at that note's frequency
 function playHitNote(hz, isPerfect) {
   if (!audioCtx) return;
-  synthVoice(hz, audioCtx.currentTime, 0.5, isPerfect ? 0.55 : 0.35, 4200);
+  synthVoice(hz, audioCtx.currentTime, 0.5, isPerfect ? 0.60 : 0.40, 4200);
 }
 
-// Wrong-lane press → flat square buzz (clearly dissonant vs the guide)
+// Wrong-lane press → detuned square buzz (clearly wrong)
 const LANE_HOME_HZ = [1174.66, 1567.98, 1760.0, 2093.0];
 function playWrongNote(lane) {
   if (!audioCtx) return;
@@ -698,128 +727,37 @@ function playWrongNote(lane) {
   o.connect(g); g.connect(audioCtx.destination); o.start(now); o.stop(now + 0.25);
 }
 
-// ── Drum synthesis helpers ─────────────────────────────────────────────────
-let _noiseBuf = null;
-function noiseBuf() {
-  if (_noiseBuf) return _noiseBuf;
-  const len = audioCtx.sampleRate * 2;
-  _noiseBuf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
-  const d = _noiseBuf.getChannelData(0);
-  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-  return _noiseBuf;
-}
-function drumKick(t) {
-  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-  o.type = 'sine';
-  o.frequency.setValueAtTime(160, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.10);
-  g.gain.setValueAtTime(0.60, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
-  o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + 0.16);
-}
-function drumSnare(t) {
-  const nb = audioCtx.createBufferSource(), ng = audioCtx.createGain();
-  nb.buffer = noiseBuf();
-  ng.gain.setValueAtTime(0.30, t); ng.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
-  nb.connect(ng); ng.connect(audioCtx.destination); nb.start(t); nb.stop(t + 0.11);
-  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-  o.type = 'triangle';
-  o.frequency.setValueAtTime(280, t); o.frequency.exponentialRampToValueAtTime(110, t + 0.06);
-  g.gain.setValueAtTime(0.13, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
-  o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + 0.08);
-}
-function drumHihat(t, loud) {
-  const nb = audioCtx.createBufferSource();
-  nb.buffer = noiseBuf();
-  const filt = audioCtx.createBiquadFilter();
-  filt.type = 'highpass'; filt.frequency.value = 8000;
-  const g = audioCtx.createGain();
-  g.gain.setValueAtTime(loud ? 0.13 : 0.08, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.022);
-  nb.connect(filt); filt.connect(g); g.connect(audioCtx.destination);
-  nb.start(t); nb.stop(t + 0.03);
-}
-
-// ── Lookahead scheduler ────────────────────────────────────────────────────
-// Fires every 25ms. Each call schedules only the next 150ms of audio.
-// At most ~6 melody notes + ~6 drum hits per call = ~20 audio nodes.
-// Compare: old approach = 3000+ nodes created all at once on game start.
-const LOOKAHEAD = 0.15;   // seconds ahead to schedule
-const SCHED_MS  = 25;     // how often to run (ms)
-let schedTimer  = null;
-let schedUntil  = 0;      // audio time we've scheduled up to so far
-let _beatDur    = 0;
-let _totalBeats = 0;
-let _melNotes   = [];     // sorted array of {beat, hz, dur}
-let melodyNodes = [];     // kept for API compatibility
-
-function freqToMidi(hz) { return Math.round(69 + 12 * Math.log2(hz / 440)); }
-
-function buildScheduleData(song) {
-  _beatDur    = 60 / song.bpm;
-  _totalBeats = Math.max(...song.notes.map(n => n[1])) + 8;
-  const perBeat = {};
-  song.notes.forEach(([lane, beat, hz]) => {
-    if (!perBeat[beat] || hz > perBeat[beat]) perBeat[beat] = hz;
-  });
-  _melNotes = Object.entries(perBeat).map(([b, hz]) => ({
-    beat: parseFloat(b),
-    hz,
-    dur: Math.min(_beatDur * 0.82, 0.40)
-  })).sort((a, b) => a.beat - b.beat);
-}
-
-function scheduleWindow(fromT, toT) {
-  const fromBeat = (fromT - songStartTime) / _beatDur;
-  const toBeat   = (toT   - songStartTime) / _beatDur;
-  if (toBeat < 0) return;  // song hasn't started yet
-
-  // Melody notes in [fromBeat, toBeat)
-  for (const n of _melNotes) {
-    if (n.beat < fromBeat) continue;
-    if (n.beat >= toBeat)  break;
-    const t = songStartTime + n.beat * _beatDur;
-    if (t > audioCtx.currentTime) synthVoice(n.hz, t, n.dur, 0.10);
-  }
-
-  // Drums on 0.5-beat grid in [fromBeat, toBeat)
-  const first = Math.max(0, Math.ceil(fromBeat * 2 - 1e-9) / 2);
-  for (let beat = first; beat < toBeat && beat <= _totalBeats; beat += 0.5) {
-    const t = songStartTime + beat * _beatDur;
-    if (t <= audioCtx.currentTime) continue;
-    const b4    = ((beat % 4) + 4) % 4;
-    const is8th = (beat % 1) !== 0;
-    if (!is8th) {
-      if (b4 === 0 || b4 === 2) drumKick(t);
-      if (b4 === 1 || b4 === 3) drumSnare(t);
-    }
-    drumHihat(t, !is8th);
-  }
-}
-
-function runScheduler() {
-  if (!audioCtx || !gameActive) return;
-  const until = audioCtx.currentTime + LOOKAHEAD;
-  if (schedUntil < until) {
-    scheduleWindow(schedUntil, until);
-    schedUntil = until;
-  }
-  schedTimer = setTimeout(runScheduler, SCHED_MS);
-}
-
+// ── Backing track playback ─────────────────────────────────────────────────
+// scheduleMelody() now plays the OGG from the exact offset so it is
+// perfectly locked to songStartTime = audioCtx.currentTime + 0.5
 function scheduleMelody(song) {
-  if (!audioCtx) return;
-  noiseBuf();              // pre-generate noise so first drums are instant
-  buildScheduleData(song); // pre-compute sorted melody note list
-  melodyNodes = [];
-  schedUntil  = audioCtx.currentTime;
-  runScheduler();
+  if (!audioCtx || !trackBuffer) return;
+  if (trackSource) { try { trackSource.stop(); } catch(e){} }
+  trackSource = audioCtx.createBufferSource();
+  trackSource.buffer = trackBuffer;
+  // Lower the guide track volume so hit sounds stand out on top
+  const gainNode = audioCtx.createGain();
+  gainNode.gain.value = 0.55;
+  trackSource.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  // songStartTime is set in startGame() just before this call.
+  // Start the source at songStartTime (scheduled, not immediate).
+  const delay = songStartTime - audioCtx.currentTime;
+  trackSource.start(songStartTime, 0);  // offset=0: play from beginning
 }
 
 function stopMelody() {
-  clearTimeout(schedTimer); schedTimer = null;
+  if (trackSource) {
+    try { trackSource.stop(); } catch(e) {}
+    trackSource = null;
+  }
   if (audioCtx) {
     try { audioCtx.close(); } catch(e) {}
-    audioCtx = null; _noiseBuf = null;
+    audioCtx = null;
   }
-  melodyNodes = [];
+  trackLoaded  = false;
+  trackBuffer  = null;
+  trackLoading = false;
 }
 
 
@@ -890,6 +828,24 @@ function startCountdown() {
 
 function startGame() {
   ensureAudio();
+
+  // If track not loaded yet, show loading state and wait
+  if (!trackLoaded) {
+    const ldEl = document.getElementById('loading-track');
+    if (ldEl) { ldEl.textContent = '🎵 Loading audio…'; ldEl.style.display = 'block'; }
+    document.getElementById('menu').style.display = 'flex';
+    // Retry once loaded
+    const waitId = setInterval(() => {
+      if (trackLoaded) {
+        clearInterval(waitId);
+        if (ldEl) ldEl.style.display = 'none';
+        document.getElementById('menu').style.display = 'none';
+        startGame();
+      }
+    }, 200);
+    return;
+  }
+
   score = 0; combo = 0; maxCombo = 0; hp = 100;
   perfects = 0; goods = 0; misses = 0;
   frameCount = 0; particles = []; floatingTexts = []; hitFlash = [0,0,0,0];
@@ -902,7 +858,7 @@ function startGame() {
     : SONG.notes;
   noteQueue = src.map(n => ({ lane: n[0], beat: n[1], hz: n[2], state: 'pending' }));
 
-  songStartTime = audioCtx.currentTime + 0.5;  // 500ms lead-in for scheduler
+  songStartTime = audioCtx.currentTime + 0.5;  // 500ms lead-in
   gameActive    = true;
 
   document.getElementById('hud').style.display = 'flex';
@@ -1211,6 +1167,22 @@ canvas.addEventListener('mouseup', e => {
 // INIT
 // ============================================================
 gameLoop();
+</script>
+<script>
+// Kick off OGG decode as soon as page loads (needs user gesture first on some browsers)
+document.addEventListener('click', function initAudio() {
+  document.removeEventListener('click', initAudio);
+  ensureAudio();
+}, { once: true });
+// Also try immediately (works if autoplay policy allows)
+window.addEventListener('load', () => {
+  try {
+    if (!audioCtx) audioCtx = new _AudioCtx();
+    const ldEl = document.getElementById('loading-track');
+    if (ldEl) ldEl.style.display = 'block';
+    loadTrack();
+  } catch(e) {}
+});
 </script>
 </body>
 </html>
