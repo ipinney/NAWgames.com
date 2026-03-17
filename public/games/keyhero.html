@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>KeyHero</title>
+<script src="https://cdn.jsdelivr.net/npm/soundfont-player@0.12.0/dist/soundfont-player.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: #08001a; overflow: hidden; touch-action: none; user-select: none; }
@@ -72,6 +73,17 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
   font-family:'Courier New',monospace; font-size:clamp(60px,18vw,120px); font-weight:bold;
   color:#cc44ff; text-shadow:0 0 60px #cc44ff;
 }
+/* ---- Loading overlay ---- */
+#loading-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 200;
+  background: radial-gradient(ellipse at 50% 30%, #12003a 0%, #050010 80%);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  color: white; text-align: center;
+}
+#loading-icon { font-size: 64px; animation: spin 1s linear infinite; }
+@keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+#loading-text { font-family:'Courier New',monospace; font-size: 20px; color:#dd88ff; margin-top:16px; letter-spacing:3px; }
+#loading-sub   { font-family:'Courier New',monospace; font-size: 14px; color:#886699; margin-top:8px; }
 </style>
 </head>
 <body>
@@ -110,6 +122,13 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
 
 <!-- Countdown -->
 <div id="countdown"></div>
+
+<!-- Loading music -->
+<div id="loading-overlay">
+  <div id="loading-icon">🎵</div>
+  <div id="loading-text">LOADING MUSIC</div>
+  <div id="loading-sub">Tuning instruments...</div>
+</div>
 
 <!-- Results -->
 <div id="results">
@@ -355,80 +374,103 @@ function playPerfect() {
   });
 }
 
-// ---- MUSIC SCHEDULING ----
-let melodyNodes = [];
+// ---- INSTRUMENT SOUNDS (soundfont-player) ----
+// Each genre maps to a real instrument from the FluidR3_GM soundfont
+const GENRE_INSTRUMENTS = {
+  classic: 'acoustic_grand_piano',
+  pop:     'electric_piano_1',
+  country: 'acoustic_guitar_nylon'
+};
+let currentInstrument = null;   // loaded Soundfont instrument
+let melodyNodes = [];           // refs to stop on game end
+
+// Convert Hz to MIDI note number (piano.play() accepts MIDI note or name)
+function freqToMidi(hz) {
+  return Math.round(69 + 12 * Math.log2(hz / 440));
+}
+
+async function loadInstrument(genre) {
+  ensureAudio();
+  const name = GENRE_INSTRUMENTS[genre] || 'acoustic_grand_piano';
+  document.getElementById('loading-overlay').style.display = 'flex';
+  document.getElementById('loading-sub').textContent = 'Loading ' + name.replace(/_/g,' ') + '...';
+  try {
+    currentInstrument = await Soundfont.instrument(audioCtx, name, {
+      soundfont: 'FluidR3_GM',
+      gain: 3.5
+    });
+  } catch(e) {
+    console.warn('Soundfont load failed, using oscillator fallback', e);
+    currentInstrument = null;
+  }
+  document.getElementById('loading-overlay').style.display = 'none';
+}
 
 function scheduleMelody(song) {
-  if (!audioCtx) return;
   melodyNodes = [];
+  if (!audioCtx) return;
   const beatDur = 60 / song.bpm;
   const totalBeats = Math.max(...song.notes.map(n => n[1])) + 8;
 
-  // Schedule ALL melody notes up-front (plays even if player misses)
+  // ── MELODY via real instrument samples ──────────────────────────────
   song.notes.forEach(([lane, beat, hz]) => {
     const t = songStartTime + beat * beatDur;
     if (t <= audioCtx.currentTime) return;
+    const noteDur = Math.min(beatDur * 0.88, 0.65);
 
-    // Lead: triangle wave — bright and clear
-    const o1 = audioCtx.createOscillator(), g1 = audioCtx.createGain();
-    o1.type = 'triangle'; o1.frequency.value = hz;
-    g1.gain.setValueAtTime(0, t);
-    g1.gain.linearRampToValueAtTime(0.42, t + 0.015);
-    g1.gain.exponentialRampToValueAtTime(0.001, t + Math.min(beatDur * 0.88, 0.65));
-    o1.connect(g1); g1.connect(audioCtx.destination);
-    o1.start(t); o1.stop(t + Math.min(beatDur, 0.7));
-    melodyNodes.push(o1);
-
-    // Sub-octave sine — warmth/body
-    const o2 = audioCtx.createOscillator(), g2 = audioCtx.createGain();
-    o2.type = 'sine'; o2.frequency.value = hz / 2;
-    g2.gain.setValueAtTime(0, t);
-    g2.gain.linearRampToValueAtTime(0.20, t + 0.02);
-    g2.gain.exponentialRampToValueAtTime(0.001, t + Math.min(beatDur * 0.7, 0.55));
-    o2.connect(g2); g2.connect(audioCtx.destination);
-    o2.start(t); o2.stop(t + Math.min(beatDur, 0.6));
-    melodyNodes.push(o2);
-
-    // Bell overtone — shimmer
-    const o3 = audioCtx.createOscillator(), g3 = audioCtx.createGain();
-    o3.type = 'sine'; o3.frequency.value = hz * 2.5;
-    g3.gain.setValueAtTime(0, t);
-    g3.gain.linearRampToValueAtTime(0.07, t + 0.01);
-    g3.gain.exponentialRampToValueAtTime(0.001, t + Math.min(beatDur * 0.5, 0.35));
-    o3.connect(g3); g3.connect(audioCtx.destination);
-    o3.start(t); o3.stop(t + Math.min(beatDur * 0.55, 0.4));
-    melodyNodes.push(o3);
+    if (currentInstrument) {
+      // Real instrument sample (piano / electric piano / guitar)
+      const node = currentInstrument.play(freqToMidi(hz), t, { duration: noteDur, gain: 3.5 });
+      if (node) melodyNodes.push(node);
+    } else {
+      // Fallback: triangle + sine if soundfont failed to load
+      const o1 = audioCtx.createOscillator(), g1 = audioCtx.createGain();
+      o1.type = 'triangle'; o1.frequency.value = hz;
+      g1.gain.setValueAtTime(0, t);
+      g1.gain.linearRampToValueAtTime(0.40, t + 0.015);
+      g1.gain.exponentialRampToValueAtTime(0.001, t + noteDur);
+      o1.connect(g1); g1.connect(audioCtx.destination);
+      o1.start(t); o1.stop(t + noteDur + 0.05);
+      melodyNodes.push(o1);
+    }
   });
 
-  // Schedule kick (beats 0,2) and snare (beats 1,3)
+  // ── RHYTHM: kick + snare ────────────────────────────────────────────
   for (let beat = 0; beat < totalBeats; beat++) {
     const t = songStartTime + beat * beatDur;
     if (t <= audioCtx.currentTime) continue;
     const beatInBar = beat % 4;
 
     if (beatInBar === 0 || beatInBar === 2) {
-      // Kick — pitched sine sweep
+      // Kick — pitched sine sweep down
       const o = audioCtx.createOscillator(), g = audioCtx.createGain();
       o.type = 'sine';
       o.frequency.setValueAtTime(110, t);
       o.frequency.exponentialRampToValueAtTime(42, t + 0.1);
-      g.gain.setValueAtTime(0.28, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+      g.gain.setValueAtTime(0.32, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
       o.connect(g); g.connect(audioCtx.destination);
-      o.start(t); o.stop(t + 0.16);
+      o.start(t); o.stop(t + 0.17);
       melodyNodes.push(o);
     }
     if (beatInBar === 1 || beatInBar === 3) {
-      // Snare — three detuned square partials
-      [220, 337, 455].forEach((f) => {
-        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-        o.type = 'square'; o.frequency.value = f;
-        g.gain.setValueAtTime(0.06, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
-        o.connect(g); g.connect(audioCtx.destination);
-        o.start(t); o.stop(t + 0.09);
-        melodyNodes.push(o);
-      });
+      // Snare — noise burst + pitch snap
+      const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * 0.12), audioCtx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (d.length * 0.25));
+      const ns = audioCtx.createBufferSource(), ng = audioCtx.createGain();
+      ns.buffer = buf;
+      ng.gain.setValueAtTime(0.22, t);
+      ng.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+      ns.connect(ng); ng.connect(audioCtx.destination);
+      ns.start(t);
+      melodyNodes.push(ns);
+      // Snare tone
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'triangle'; o.frequency.setValueAtTime(280, t); o.frequency.exponentialRampToValueAtTime(120, t + 0.07);
+      g.gain.setValueAtTime(0.12, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+      o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + 0.09);
+      melodyNodes.push(o);
     }
   }
 }
@@ -496,13 +538,17 @@ function selectDiff(d) {
 // GAME START / END
 // ============================================================
 let countdownTimer = null;
-function startCountdown(song) {
+async function startCountdown(song) {
   ensureAudio();
   selectedSong = song;
   FALL_BEATS = FALL_BEATS_BY_DIFF[selectedDiff];
   HIT_PERFECT = HIT_PERFECT_BEATS[selectedDiff];
   HIT_GOOD = HIT_GOOD_BEATS[selectedDiff];
   document.getElementById('menu').style.display = 'none';
+
+  // Load the real instrument for this genre (shows loading overlay)
+  await loadInstrument(selectedGenre);
+
   const cdEl = document.getElementById('countdown');
   cdEl.style.display = 'block';
   let count = 3;
@@ -567,6 +613,7 @@ function goMenu() {
   document.getElementById('results').style.display = 'none';
   document.getElementById('menu').style.display = 'flex';
   gameActive = false; stopMelody();
+  currentInstrument = null; // will reload fresh for next selection
 }
 
 // ============================================================
