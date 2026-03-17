@@ -950,7 +950,6 @@ function tryHit(lane) {
       spawnParticles(lane, LANE_COLORS[lane], 8);
     }
     hitFlash[lane] = 1.0;
-    // (no extra oscillator call — the soundfont hit above IS the note)
   } else {
     hitFlash[lane] = 0.4;
     playWrongNote(lane);  // Guitar Hero: press = wrong note sound
