@@ -14,40 +14,44 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
   position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 100;
   background: radial-gradient(ellipse at 50% 30%, #12003a 0%, #050010 80%);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  color: white; text-align: center; padding: 20px;
+  color: white; text-align: center; padding: 20px; overflow-y: auto;
 }
-.m-icon { font-size: clamp(44px,9vw,80px); margin-bottom: 6px; animation: iconPop 1.5s ease-in-out infinite; }
+.m-icon { font-size: clamp(36px,7vw,64px); margin-bottom: 4px; animation: iconPop 1.5s ease-in-out infinite; }
 @keyframes iconPop { 0%,100%{transform:scale(1) rotate(-3deg)} 50%{transform:scale(1.1) rotate(3deg)} }
-.m-title { font-family:'Courier New',monospace; font-size:clamp(32px,8vw,68px); font-weight:bold; color:#cc44ff; text-shadow:0 0 30px #cc44ff, 0 0 60px #8800ff; letter-spacing:4px; animation:glow 2s ease-in-out infinite; margin-bottom:6px; }
-.m-sub   { font-family:'Courier New',monospace; font-size:clamp(13px,2.5vw,20px); color:#dd88ff; margin-bottom:20px; opacity:0.85; }
+.m-title { font-family:'Courier New',monospace; font-size:clamp(28px,7vw,60px); font-weight:bold; color:#cc44ff; text-shadow:0 0 30px #cc44ff, 0 0 60px #8800ff; letter-spacing:4px; animation:glow 2s ease-in-out infinite; margin-bottom:4px; }
+.m-sub   { font-family:'Courier New',monospace; font-size:clamp(11px,2vw,16px); color:#dd88ff; margin-bottom:14px; opacity:0.85; }
 @keyframes glow { 0%,100%{text-shadow:0 0 30px #cc44ff,0 0 60px #8800ff} 50%{text-shadow:0 0 50px #dd66ff,0 0 100px #aa00ff,0 0 140px #cc44ff} }
 
 /* Song card */
 .song-card {
   background: linear-gradient(135deg, #1e0550 0%, #3a0070 100%);
-  border: 2px solid #cc44ff44;
-  border-radius: 16px; padding: 18px 36px; margin-bottom: 20px;
+  border: 2px solid #cc44ff44; border-radius: 16px; padding: 14px 32px; margin-bottom: 14px;
   box-shadow: 0 0 40px #cc44ff22;
 }
-.song-card-title { font-family:'Courier New',monospace; font-size:clamp(18px,4vw,30px); font-weight:bold; color:#ffffff; letter-spacing:2px; }
-.song-card-artist { font-family:'Courier New',monospace; font-size:clamp(12px,2.5vw,18px); color:#dd88ff; margin-top:4px; opacity:0.85; }
-.song-card-note { font-family:'Courier New',monospace; font-size:clamp(10px,1.8vw,13px); color:#886699; margin-top:6px; }
+.song-card-title  { font-family:'Courier New',monospace; font-size:clamp(16px,3.5vw,26px); font-weight:bold; color:#ffffff; letter-spacing:2px; }
+.song-card-artist { font-family:'Courier New',monospace; font-size:clamp(11px,2vw,16px); color:#dd88ff; margin-top:3px; opacity:0.85; }
+
+/* section title */
+.sec-title { font-family:'Courier New',monospace; font-size:clamp(10px,1.8vw,14px); color:#aa88cc; margin-bottom:8px; letter-spacing:2px; opacity:0.9; }
+.btn-row   { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:14px; }
 
 /* difficulty */
-.sec-title { font-family:'Courier New',monospace; font-size:clamp(11px,2vw,15px); color:#aa88cc; margin-bottom:10px; letter-spacing:2px; opacity:0.9; }
-.btn-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
-.diff-btn { font-family:'Courier New',monospace; font-size:clamp(12px,2vw,16px); padding:10px 20px; border:2px solid #888; color:#aaa; border-radius:8px; cursor:pointer; background:transparent; transition:all 0.1s; }
+.diff-btn { font-family:'Courier New',monospace; font-size:clamp(11px,1.8vw,15px); padding:9px 18px; border:2px solid #888; color:#aaa; border-radius:8px; cursor:pointer; background:transparent; transition:all 0.1s; }
 .diff-btn.sel { border-color:#cc44ff; color:#cc44ff; background:#cc44ff22; box-shadow:0 0 15px #cc44ff66; }
-.hand-btn { font-family:'Courier New',monospace; font-size:clamp(13px,2.2vw,18px); padding:12px 28px; border:2px solid #555; color:#888; border-radius:10px; cursor:pointer; background:transparent; transition:all 0.15s; min-width:clamp(120px,25vw,180px); }
-.hand-btn.sel-left  { border-color:#44aaff; color:#44aaff; background:#44aaff22; box-shadow:0 0 18px #44aaff66; }
-.hand-btn.sel-right { border-color:#ff8844; color:#ff8844; background:#ff884422; box-shadow:0 0 18px #ff884466; }
-.hand-keys { font-size:clamp(10px,1.6vw,13px); opacity:0.65; margin-top:3px; letter-spacing:1px; }
+
+/* hand/mode buttons */
+.hand-btn { font-family:'Courier New',monospace; font-size:clamp(11px,1.8vw,15px); padding:10px 20px; border:2px solid #555; color:#888; border-radius:10px; cursor:pointer; background:transparent; transition:all 0.15s; min-width:clamp(110px,20vw,160px); }
+.hand-keys { font-size:clamp(9px,1.3vw,11px); opacity:0.6; margin-top:2px; letter-spacing:1px; }
+.hand-btn.sel-left   { border-color:#44aaff; color:#44aaff; background:#44aaff22; box-shadow:0 0 18px #44aaff66; }
+.hand-btn.sel-right  { border-color:#ff8844; color:#ff8844; background:#ff884422; box-shadow:0 0 18px #ff884466; }
+.hand-btn.sel-both   { border-color:#44ffcc; color:#44ffcc; background:#44ffcc22; box-shadow:0 0 18px #44ffcc66; }
+.hand-btn.sel-expert { border-color:#ffcc00; color:#ffcc00; background:#ffcc0022; box-shadow:0 0 18px #ffcc0066; }
 
 /* Play button */
 .play-btn {
-  font-family:'Courier New',monospace; font-size:clamp(16px,3vw,22px); font-weight:bold;
+  font-family:'Courier New',monospace; font-size:clamp(14px,2.5vw,20px); font-weight:bold;
   background:linear-gradient(135deg,#8800ff,#ff0088); color:white; border:none;
-  padding:14px 52px; border-radius:50px; cursor:pointer; letter-spacing:3px;
+  padding:12px 46px; border-radius:50px; cursor:pointer; letter-spacing:3px;
   box-shadow:0 0 30px #cc44ff88; transition:transform 0.1s, box-shadow 0.1s;
 }
 .play-btn:hover { transform:scale(1.05); box-shadow:0 0 50px #cc44ffcc; }
@@ -59,40 +63,27 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
   background: rgba(0,0,0,0.92); display: none; flex-direction: column;
   align-items: center; justify-content: center; color: white; text-align: center; padding: 20px;
 }
-#res-title { font-family:'Courier New',monospace; font-size:clamp(28px,7vw,60px); font-weight:bold; margin-bottom:8px; }
-#res-stars { font-size:clamp(32px,7vw,56px); margin-bottom:16px; }
-#res-stats { font-family:'Courier New',monospace; font-size:clamp(13px,2.5vw,18px); color:#dd88ff; line-height:2.2; margin-bottom:28px; }
-#res-again { font-family:'Courier New',monospace; font-size:17px; background:linear-gradient(135deg,#8800ff,#ff0088); color:white; border:none; padding:12px 36px; border-radius:40px; cursor:pointer; letter-spacing:2px; margin:4px; }
-#res-menu  { font-family:'Courier New',monospace; font-size:16px; background:transparent; color:#aa88cc; border:2px solid #664499; padding:11px 30px; border-radius:40px; cursor:pointer; letter-spacing:2px; }
+#res-title { font-family:'Courier New',monospace; font-size:clamp(24px,6vw,52px); font-weight:bold; margin-bottom:8px; }
+#res-stars { font-size:clamp(28px,6vw,50px); margin-bottom:14px; }
+#res-stats { font-family:'Courier New',monospace; font-size:clamp(12px,2.2vw,17px); color:#dd88ff; line-height:2.2; margin-bottom:24px; }
+#res-again { font-family:'Courier New',monospace; font-size:16px; background:linear-gradient(135deg,#8800ff,#ff0088); color:white; border:none; padding:11px 32px; border-radius:40px; cursor:pointer; letter-spacing:2px; margin:4px; }
+#res-menu  { font-family:'Courier New',monospace; font-size:15px; background:transparent; color:#aa88cc; border:2px solid #664499; padding:10px 26px; border-radius:40px; cursor:pointer; letter-spacing:2px; }
 
-/* ---- HUD OVERLAY ---- */
-#hud {
-  position: fixed; top: 8px; left: 0; right: 0; z-index: 50; pointer-events: none;
-  display: none; align-items: flex-start; justify-content: space-between; padding: 0 14px;
-}
-#hud-combo  { font-family:'Courier New',monospace; font-size:clamp(14px,3vw,22px); color:#ffdd44; text-shadow:0 0 10px #ffdd44; }
-#hud-score  { font-family:'Courier New',monospace; font-size:clamp(14px,3vw,22px); color:#cc44ff; text-shadow:0 0 10px #cc44ff; }
-#hud-song   { font-family:'Courier New',monospace; font-size:clamp(10px,2vw,14px); color:#aa88cc; text-align:center; }
+/* ---- HUD ---- */
+#hud { position: fixed; top: 8px; left: 0; right: 0; z-index: 50; pointer-events: none; display: none; align-items: flex-start; justify-content: space-between; padding: 0 14px; }
+#hud-combo { font-family:'Courier New',monospace; font-size:clamp(13px,2.5vw,20px); color:#ffdd44; text-shadow:0 0 10px #ffdd44; }
+#hud-score { font-family:'Courier New',monospace; font-size:clamp(13px,2.5vw,20px); color:#cc44ff; text-shadow:0 0 10px #cc44ff; }
+#hud-song  { font-family:'Courier New',monospace; font-size:clamp(9px,1.6vw,13px); color:#aa88cc; text-align:center; }
 
 /* HP bar */
 #hp-wrap { position:fixed; bottom:0; left:0; right:0; height:4px; z-index:50; pointer-events:none; background:rgba(0,0,0,0.4); display:none; }
 #hp-bar  { height:100%; background:linear-gradient(90deg,#cc44ff,#ff44aa); transition:width 0.3s; }
 
-/* ---- Countdown ---- */
-#countdown {
-  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
-  z-index: 110; display: none; pointer-events: none;
-  font-family:'Courier New',monospace; font-size:clamp(60px,18vw,120px); font-weight:bold;
-  color:#cc44ff; text-shadow:0 0 60px #cc44ff;
-}
+/* Countdown */
+#countdown { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 110; display: none; pointer-events: none; font-family:'Courier New',monospace; font-size:clamp(60px,18vw,120px); font-weight:bold; color:#cc44ff; text-shadow:0 0 60px #cc44ff; }
 
-/* ---- Loading overlay ---- */
-#loading-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 200;
-  background: radial-gradient(ellipse at 50% 30%, #12003a 0%, #050010 80%);
-  display: none; flex-direction: column; align-items: center; justify-content: center;
-  color: white; text-align: center;
-}
+/* Loading */
+#loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 200; background: radial-gradient(ellipse at 50% 30%, #12003a 0%, #050010 80%); display: none; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center; }
 #loading-icon { font-size: 64px; animation: spin 1s linear infinite; }
 @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 #loading-text { font-family:'Courier New',monospace; font-size: 20px; color:#dd88ff; margin-top:16px; letter-spacing:3px; }
@@ -105,22 +96,26 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
 <div id="menu">
   <div class="m-icon">🎵</div>
   <div class="m-title">KEY HERO</div>
-  <div class="m-sub" id="m-sub-hint">Hit  A  S  D  F  as the notes reach the circles!</div>
+  <div class="m-sub" id="m-sub-hint">Hit the keys as notes reach the circles!</div>
 
   <div class="song-card">
     <div class="song-card-title">🎤 Shake It Off</div>
     <div class="song-card-artist">Taylor Swift · 160 BPM</div>
   </div>
 
-  <div class="sec-title">CHOOSE YOUR HAND</div>
+  <div class="sec-title">CHOOSE YOUR MODE</div>
   <div class="btn-row" id="hand-btns">
-    <button class="hand-btn sel-left" id="hand-left" onclick="selectHand(0)">
-      ✋ LEFT HAND
-      <div class="hand-keys">A &nbsp; S &nbsp; D &nbsp; F</div>
+    <button class="hand-btn sel-left" id="hand-left" onclick="selectMode(0)">
+      ✋ LEFT HAND<div class="hand-keys">A &nbsp; S &nbsp; D &nbsp; F</div>
     </button>
-    <button class="hand-btn" id="hand-right" onclick="selectHand(1)">
-      🤚 RIGHT HAND
-      <div class="hand-keys">J &nbsp; K &nbsp; L &nbsp; ;</div>
+    <button class="hand-btn" id="hand-right" onclick="selectMode(1)">
+      🤚 RIGHT HAND<div class="hand-keys">J &nbsp; K &nbsp; L &nbsp; ;</div>
+    </button>
+    <button class="hand-btn" id="hand-both" onclick="selectMode(2)">
+      🙌 BOTH HANDS<div class="hand-keys">A S D F + J K L ;</div>
+    </button>
+    <button class="hand-btn" id="hand-expert" onclick="selectMode(3)">
+      ⌨️ EXPERT<div class="hand-keys">QW·AS·ZX + UI·JK·NM</div>
     </button>
   </div>
 
@@ -131,7 +126,7 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
     <button class="diff-btn" onclick="selectDiff(2)">💀 HARD</button>
   </div>
 
-  <button class="play-btn" id="play-btn" onclick="startCountdown()">▶ PLAY</button>
+  <button class="play-btn" onclick="startCountdown()">▶ PLAY</button>
   <div id="loading-track" style="color:#aaa;font-size:13px;margin-top:8px;display:none">🎵 Loading audio…</div>
 </div>
 
@@ -165,428 +160,273 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
 <canvas id="c"></canvas>
 <script>
 // ============================================================
-// SONG — Shake It Off (Taylor Swift) — REAL note data extracted from onlinesequencer.net/186098
-// Key: D major · 160 BPM · 428 notes extracted via audio capture
-// Notes: [lane 0-3, beat (float), freq_hz]
-// Lane 0 = low (D6/E6), Lane 1 = mid-low (F#6/G6), Lane 2 = mid-high (A6), Lane 3 = high (B6/D7)
+// SONG — raw MIDI pitches from midis101.com track 10 (Alto Sax)
+// [midiPitch, beat] — lane computed at runtime based on selected mode
+// 360 notes · pitch 67-86 · beats 14.0-582.5 · 160 BPM
+// ============================================================
+const SONG = { title:'Shake It Off', artist:'Taylor Swift', bpm:160 };
+const SONG_PITCHES = [
+  [86,14.0],[83,14.5],[81,15.0],[79,15.5],[83,16.0],[74,21.5],[86,22.0],[83,22.5],
+  [81,23.0],[79,23.5],[83,24.0],[86,30.0],[83,30.5],[81,31.0],[79,31.5],[83,32.0],
+  [81,32.5],[79,33.0],[76,35.0],[74,36.0],[86,38.0],[83,38.5],[81,39.0],[79,39.5],
+  [83,40.0],[81,40.5],[79,41.0],[76,43.0],[74,44.0],[71,45.0],[74,45.5],[86,46.0],
+  [83,46.5],[81,47.0],[79,47.5],[83,48.0],[74,53.5],[86,54.0],[83,54.5],[81,55.0],
+  [79,55.5],[83,56.0],[74,60.5],[74,61.0],[86,62.0],[83,62.5],[81,63.0],[79,63.5],
+  [83,64.0],[81,64.5],[79,65.0],[76,67.0],[74,68.0],[86,70.0],[83,70.5],[81,71.0],
+  [79,71.5],[83,72.0],[81,72.5],[79,73.0],[76,75.0],[74,76.0],[83,77.0],[81,78.0],
+  [79,79.0],[81,80.0],[76,82.0],[81,84.0],[83,85.0],[81,86.0],[79,87.0],[81,88.0],
+  [76,90.0],[76,91.5],[81,92.0],[83,93.0],[81,94.0],[79,95.0],[81,96.0],[79,98.0],
+  [81,100.0],[83,101.0],[79,102.0],[76,103.0],[79,103.5],[81,104.0],[81,105.0],
+  [83,105.5],[81,106.0],[79,106.5],[79,107.5],[76,111.0],[79,111.5],[81,112.0],
+  [81,112.5],[81,113.0],[83,113.5],[79,114.0],[76,119.0],[79,119.5],[81,120.0],
+  [81,120.5],[81,121.0],[83,121.5],[79,122.0],[81,128.0],[81,128.5],[81,129.0],
+  [83,129.5],[79,130.0],[79,135.5],[81,136.0],[83,136.5],[79,137.0],[79,138.5],
+  [81,139.0],[83,139.5],[79,140.0],[79,143.0],[81,144.0],[81,144.5],[81,145.0],
+  [83,145.5],[79,146.0],[76,151.0],[79,151.5],[81,152.0],[81,152.5],[81,153.0],
+  [83,153.5],[79,154.0],[76,159.0],[79,159.5],[81,160.0],[81,160.5],[81,161.0],
+  [83,161.5],[79,162.0],[79,167.5],[81,168.0],[83,168.5],[79,169.0],[79,170.5],
+  [81,171.0],[83,171.5],[79,172.0],[74,173.5],[86,174.0],[83,174.5],[81,175.0],
+  [79,175.5],[83,176.0],[74,181.5],[86,182.0],[83,182.5],[81,183.0],[79,183.5],
+  [83,184.0],[74,189.5],[86,190.0],[83,190.5],[81,191.0],[79,191.5],[83,192.0],
+  [81,192.5],[79,193.0],[76,195.0],[74,196.0],[86,198.0],[83,198.5],[81,199.0],
+  [79,199.5],[83,200.0],[81,200.5],[79,201.0],[76,203.0],[74,204.0],[71,205.0],
+  [74,205.5],[86,206.0],[83,206.5],[81,207.0],[79,207.5],[83,208.0],[74,212.5],
+  [76,213.0],[74,213.5],[86,214.0],[83,214.5],[81,215.0],[79,215.5],[83,216.0],
+  [74,221.5],[86,222.0],[83,222.5],[81,223.0],[79,223.5],[83,224.0],[81,224.5],
+  [79,225.0],[76,227.0],[74,228.0],[86,230.0],[83,230.5],[81,231.0],[79,231.5],
+  [83,232.0],[81,232.5],[79,233.0],[76,235.0],[74,236.0],[83,237.0],[81,238.0],
+  [79,239.0],[81,240.0],[76,242.0],[81,244.0],[83,245.0],[81,246.0],[79,247.0],
+  [81,248.0],[76,250.0],[81,252.0],[83,253.0],[81,254.0],[79,255.0],[81,256.0],
+  [83,258.0],[81,260.0],[83,261.0],[79,262.0],[76,263.0],[79,263.5],[81,264.0],
+  [81,265.0],[83,265.5],[81,266.0],[79,266.5],[79,267.5],[76,271.0],[79,271.5],
+  [81,272.0],[81,272.5],[81,273.0],[83,273.5],[79,274.0],[76,279.0],[79,279.5],
+  [81,280.0],[81,280.5],[81,281.0],[83,281.5],[79,282.0],[81,288.0],[81,288.5],
+  [81,289.0],[83,289.5],[79,290.0],[79,295.5],[81,296.0],[83,296.5],[79,297.0],
+  [79,298.5],[81,299.0],[83,299.5],[79,300.0],[79,303.0],[81,304.0],[81,304.5],
+  [81,305.0],[83,305.5],[79,306.0],[76,311.0],[79,311.5],[81,312.0],[81,312.5],
+  [81,313.0],[83,313.5],[79,314.0],[76,319.0],[79,319.5],[81,320.0],[81,320.5],
+  [81,321.0],[83,321.5],[79,322.0],[79,327.5],[81,328.0],[83,328.5],[79,329.0],
+  [79,330.5],[81,331.0],[83,331.5],[79,332.0],[76,436.0],[79,436.5],[81,437.0],
+  [83,437.5],[81,438.5],[83,439.0],[84,439.5],[86,440.0],[84,445.5],[83,446.5],
+  [79,447.5],[81,452.0],[81,452.5],[81,453.0],[83,453.5],[79,454.0],[79,463.5],
+  [86,464.0],[86,464.5],[83,465.0],[79,466.5],[86,467.0],[86,467.5],[83,468.0],
+  [74,477.0],[81,477.5],[79,478.5],[79,483.5],[76,485.5],[71,487.5],[69,488.5],
+  [67,489.0],[79,495.5],[86,496.0],[86,496.5],[83,497.0],[79,498.5],[86,499.0],
+  [86,499.5],[83,500.0],[81,501.5],[79,502.5],[79,503.5],[81,504.0],[81,517.5],
+  [83,518.5],[79,519.5],[79,527.5],[86,528.0],[86,528.5],[83,529.0],[79,530.5],
+  [86,531.0],[86,531.5],[83,532.0],[81,533.5],[79,534.5],[79,535.5],[81,536.0],
+  [81,549.5],[83,550.5],[79,551.5],[86,561.0],[74,581.0],[81,581.5],[79,582.5]
+];
 
-const SONG = {
-  title: 'Shake It Off',
-  artist: 'Taylor Swift',
-  bpm: 160,
-  notes: [
-        [3,14.0,1174.66],
-        [3,14.5,987.77],
-        [2,15.0,880.0],
-        [1,15.5,783.99],
-        [3,16.0,987.77],
-        [0,21.5,587.33],
-        [3,22.0,1174.66],
-        [3,22.5,987.77],
-        [2,23.0,880.0],
-        [1,23.5,783.99],
-        [3,24.0,987.77],
-        [3,30.0,1174.66],
-        [3,30.5,987.77],
-        [2,31.0,880.0],
-        [1,31.5,783.99],
-        [3,32.0,987.77],
-        [2,32.5,880.0],
-        [1,33.0,783.99],
-        [0,35.0,659.26],
-        [0,36.0,587.33],
-        [3,38.0,1174.66],
-        [3,38.5,987.77],
-        [2,39.0,880.0],
-        [1,39.5,783.99],
-        [3,40.0,987.77],
-        [2,40.5,880.0],
-        [1,41.0,783.99],
-        [0,43.0,659.26],
-        [0,44.0,587.33],
-        [0,45.0,493.88],
-        [0,45.5,587.33],
-        [3,46.0,1174.66],
-        [3,46.5,987.77],
-        [2,47.0,880.0],
-        [1,47.5,783.99],
-        [3,48.0,987.77],
-        [0,53.5,587.33],
-        [3,54.0,1174.66],
-        [3,54.5,987.77],
-        [2,55.0,880.0],
-        [1,55.5,783.99],
-        [3,56.0,987.77],
-        [0,60.5,587.33],
-        [0,61.0,587.33],
-        [3,62.0,1174.66],
-        [3,62.5,987.77],
-        [2,63.0,880.0],
-        [1,63.5,783.99],
-        [3,64.0,987.77],
-        [2,64.5,880.0],
-        [1,65.0,783.99],
-        [0,67.0,659.26],
-        [0,68.0,587.33],
-        [3,70.0,1174.66],
-        [3,70.5,987.77],
-        [2,71.0,880.0],
-        [1,71.5,783.99],
-        [3,72.0,987.77],
-        [2,72.5,880.0],
-        [1,73.0,783.99],
-        [0,75.0,659.26],
-        [0,76.0,587.33],
-        [3,77.0,987.77],
-        [2,78.0,880.0],
-        [1,79.0,783.99],
-        [2,80.0,880.0],
-        [0,82.0,659.26],
-        [2,84.0,880.0],
-        [3,85.0,987.77],
-        [2,86.0,880.0],
-        [1,87.0,783.99],
-        [2,88.0,880.0],
-        [0,90.0,659.26],
-        [0,91.5,659.26],
-        [2,92.0,880.0],
-        [3,93.0,987.77],
-        [2,94.0,880.0],
-        [1,95.0,783.99],
-        [2,96.0,880.0],
-        [1,98.0,783.99],
-        [2,100.0,880.0],
-        [3,101.0,987.77],
-        [1,102.0,783.99],
-        [0,103.0,659.26],
-        [1,103.5,783.99],
-        [2,104.0,880.0],
-        [2,105.0,880.0],
-        [3,105.5,987.77],
-        [2,106.0,880.0],
-        [1,106.5,783.99],
-        [1,107.5,783.99],
-        [0,111.0,659.26],
-        [1,111.5,783.99],
-        [2,112.0,880.0],
-        [2,112.5,880.0],
-        [2,113.0,880.0],
-        [3,113.5,987.77],
-        [1,114.0,783.99],
-        [0,119.0,659.26],
-        [1,119.5,783.99],
-        [2,120.0,880.0],
-        [2,120.5,880.0],
-        [2,121.0,880.0],
-        [3,121.5,987.77],
-        [1,122.0,783.99],
-        [2,128.0,880.0],
-        [2,128.5,880.0],
-        [2,129.0,880.0],
-        [3,129.5,987.77],
-        [1,130.0,783.99],
-        [1,135.5,783.99],
-        [2,136.0,880.0],
-        [3,136.5,987.77],
-        [1,137.0,783.99],
-        [1,138.5,783.99],
-        [2,139.0,880.0],
-        [3,139.5,987.77],
-        [1,140.0,783.99],
-        [1,143.0,783.99],
-        [2,144.0,880.0],
-        [2,144.5,880.0],
-        [2,145.0,880.0],
-        [3,145.5,987.77],
-        [1,146.0,783.99],
-        [0,151.0,659.26],
-        [1,151.5,783.99],
-        [2,152.0,880.0],
-        [2,152.5,880.0],
-        [2,153.0,880.0],
-        [3,153.5,987.77],
-        [1,154.0,783.99],
-        [0,159.0,659.26],
-        [1,159.5,783.99],
-        [2,160.0,880.0],
-        [2,160.5,880.0],
-        [2,161.0,880.0],
-        [3,161.5,987.77],
-        [1,162.0,783.99],
-        [1,167.5,783.99],
-        [2,168.0,880.0],
-        [3,168.5,987.77],
-        [1,169.0,783.99],
-        [1,170.5,783.99],
-        [2,171.0,880.0],
-        [3,171.5,987.77],
-        [1,172.0,783.99],
-        [0,173.5,587.33],
-        [3,174.0,1174.66],
-        [3,174.5,987.77],
-        [2,175.0,880.0],
-        [1,175.5,783.99],
-        [3,176.0,987.77],
-        [0,181.5,587.33],
-        [3,182.0,1174.66],
-        [3,182.5,987.77],
-        [2,183.0,880.0],
-        [1,183.5,783.99],
-        [3,184.0,987.77],
-        [0,189.5,587.33],
-        [3,190.0,1174.66],
-        [3,190.5,987.77],
-        [2,191.0,880.0],
-        [1,191.5,783.99],
-        [3,192.0,987.77],
-        [2,192.5,880.0],
-        [1,193.0,783.99],
-        [0,195.0,659.26],
-        [0,196.0,587.33],
-        [3,198.0,1174.66],
-        [3,198.5,987.77],
-        [2,199.0,880.0],
-        [1,199.5,783.99],
-        [3,200.0,987.77],
-        [2,200.5,880.0],
-        [1,201.0,783.99],
-        [0,203.0,659.26],
-        [0,204.0,587.33],
-        [0,205.0,493.88],
-        [0,205.5,587.33],
-        [3,206.0,1174.66],
-        [3,206.5,987.77],
-        [2,207.0,880.0],
-        [1,207.5,783.99],
-        [3,208.0,987.77],
-        [0,212.5,587.33],
-        [0,213.0,659.26],
-        [0,213.5,587.33],
-        [3,214.0,1174.66],
-        [3,214.5,987.77],
-        [2,215.0,880.0],
-        [1,215.5,783.99],
-        [3,216.0,987.77],
-        [0,221.5,587.33],
-        [3,222.0,1174.66],
-        [3,222.5,987.77],
-        [2,223.0,880.0],
-        [1,223.5,783.99],
-        [3,224.0,987.77],
-        [2,224.5,880.0],
-        [1,225.0,783.99],
-        [0,227.0,659.26],
-        [0,228.0,587.33],
-        [3,230.0,1174.66],
-        [3,230.5,987.77],
-        [2,231.0,880.0],
-        [1,231.5,783.99],
-        [3,232.0,987.77],
-        [2,232.5,880.0],
-        [1,233.0,783.99],
-        [0,235.0,659.26],
-        [0,236.0,587.33],
-        [3,237.0,987.77],
-        [2,238.0,880.0],
-        [1,239.0,783.99],
-        [2,240.0,880.0],
-        [0,242.0,659.26],
-        [2,244.0,880.0],
-        [3,245.0,987.77],
-        [2,246.0,880.0],
-        [1,247.0,783.99],
-        [2,248.0,880.0],
-        [0,250.0,659.26],
-        [2,252.0,880.0],
-        [3,253.0,987.77],
-        [2,254.0,880.0],
-        [1,255.0,783.99],
-        [2,256.0,880.0],
-        [3,258.0,987.77],
-        [2,260.0,880.0],
-        [3,261.0,987.77],
-        [1,262.0,783.99],
-        [0,263.0,659.26],
-        [1,263.5,783.99],
-        [2,264.0,880.0],
-        [2,265.0,880.0],
-        [3,265.5,987.77],
-        [2,266.0,880.0],
-        [1,266.5,783.99],
-        [1,267.5,783.99],
-        [0,271.0,659.26],
-        [1,271.5,783.99],
-        [2,272.0,880.0],
-        [2,272.5,880.0],
-        [2,273.0,880.0],
-        [3,273.5,987.77],
-        [1,274.0,783.99],
-        [0,279.0,659.26],
-        [1,279.5,783.99],
-        [2,280.0,880.0],
-        [2,280.5,880.0],
-        [2,281.0,880.0],
-        [3,281.5,987.77],
-        [1,282.0,783.99],
-        [2,288.0,880.0],
-        [2,288.5,880.0],
-        [2,289.0,880.0],
-        [3,289.5,987.77],
-        [1,290.0,783.99],
-        [1,295.5,783.99],
-        [2,296.0,880.0],
-        [3,296.5,987.77],
-        [1,297.0,783.99],
-        [1,298.5,783.99],
-        [2,299.0,880.0],
-        [3,299.5,987.77],
-        [1,300.0,783.99],
-        [1,303.0,783.99],
-        [2,304.0,880.0],
-        [2,304.5,880.0],
-        [2,305.0,880.0],
-        [3,305.5,987.77],
-        [1,306.0,783.99],
-        [0,311.0,659.26],
-        [1,311.5,783.99],
-        [2,312.0,880.0],
-        [2,312.5,880.0],
-        [2,313.0,880.0],
-        [3,313.5,987.77],
-        [1,314.0,783.99],
-        [0,319.0,659.26],
-        [1,319.5,783.99],
-        [2,320.0,880.0],
-        [2,320.5,880.0],
-        [2,321.0,880.0],
-        [3,321.5,987.77],
-        [1,322.0,783.99],
-        [1,327.5,783.99],
-        [2,328.0,880.0],
-        [3,328.5,987.77],
-        [1,329.0,783.99],
-        [1,330.5,783.99],
-        [2,331.0,880.0],
-        [3,331.5,987.77],
-        [1,332.0,783.99],
-        [0,436.0,659.26],
-        [1,436.5,783.99],
-        [2,437.0,880.0],
-        [3,437.5,987.77],
-        [2,438.5,880.0],
-        [3,439.0,987.77],
-        [3,439.5,1046.5],
-        [3,440.0,1174.66],
-        [3,445.5,1046.5],
-        [3,446.5,987.77],
-        [1,447.5,783.99],
-        [2,452.0,880.0],
-        [2,452.5,880.0],
-        [2,453.0,880.0],
-        [3,453.5,987.77],
-        [1,454.0,783.99],
-        [1,463.5,783.99],
-        [3,464.0,1174.66],
-        [3,464.5,1174.66],
-        [3,465.0,987.77],
-        [1,466.5,783.99],
-        [3,467.0,1174.66],
-        [3,467.5,1174.66],
-        [3,468.0,987.77],
-        [0,477.0,587.33],
-        [2,477.5,880.0],
-        [1,478.5,783.99],
-        [1,483.5,783.99],
-        [0,485.5,659.26],
-        [0,487.5,493.88],
-        [0,488.5,440.0],
-        [0,489.0,392.0],
-        [1,495.5,783.99],
-        [3,496.0,1174.66],
-        [3,496.5,1174.66],
-        [3,497.0,987.77],
-        [1,498.5,783.99],
-        [3,499.0,1174.66],
-        [3,499.5,1174.66],
-        [3,500.0,987.77],
-        [2,501.5,880.0],
-        [1,502.5,783.99],
-        [1,503.5,783.99],
-        [2,504.0,880.0],
-        [2,517.5,880.0],
-        [3,518.5,987.77],
-        [1,519.5,783.99],
-        [1,527.5,783.99],
-        [3,528.0,1174.66],
-        [3,528.5,1174.66],
-        [3,529.0,987.77],
-        [1,530.5,783.99],
-        [3,531.0,1174.66],
-        [3,531.5,1174.66],
-        [3,532.0,987.77],
-        [2,533.5,880.0],
-        [1,534.5,783.99],
-        [1,535.5,783.99],
-        [2,536.0,880.0],
-        [2,549.5,880.0],
-        [3,550.5,987.77],
-        [1,551.5,783.99],
-        [3,561.0,1174.66],
-        [0,581.0,587.33],
-        [2,581.5,880.0],
-        [1,582.5,783.99]
-  ]
-};
+// Precompute quantile breakpoints for pitch→lane mapping
+const _sortedPitches = SONG_PITCHES.map(n => n[0]).sort((a,b) => a-b);
+function buildPitchBreaks(numLanes) {
+  const breaks = [];
+  for (let i = 1; i < numLanes; i++) {
+    const idx = Math.floor(i * _sortedPitches.length / numLanes);
+    breaks.push(_sortedPitches[idx]);
+  }
+  return breaks;
+}
+function pitchToLane(pitch, breaks) {
+  for (let i = 0; i < breaks.length; i++) { if (pitch < breaks[i]) return i; }
+  return breaks.length;
+}
 
 // ============================================================
-// CANVAS + AUDIO
+// CANVAS SETUP
 // ============================================================
 const canvas = document.getElementById('c');
 const ctx    = canvas.getContext('2d');
-let W, H, HIT_Y;
+let W = 0, H = 0, HIT_Y = 0;
 function resize() {
-  W = window.innerWidth; H = window.innerHeight;
-  canvas.width = W; canvas.height = H;
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
   canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
   HIT_Y = H * 0.80;
+  if (typeof buildLaneConfig === 'function') buildLaneConfig();
 }
 resize();
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 200));
 document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
-
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
 // ============================================================
-// AUDIO — OGG backing track + Web Audio API hit sounds
-// ──────────────────────────────────────────────────────────────────────────
-// Architecture:
-//   • Pre-rendered OGG (FluidSynth + FluidR3_GM) = melody + drums + bass
-//   • AudioBufferSourceNode plays the OGG — audioCtx.currentTime IS the clock
-//   • Hit sounds: synthVoice (correct note) or square buzz (wrong key)
-//   • No scheduling storm: zero lookahead nodes, just one AudioBufferSource
-// ──────────────────────────────────────────────────────────────────────────
-const _AudioCtx = window.AudioContext || window.webkitAudioContext;
+// LANE CONFIG SYSTEM
+// ============================================================
+// Mode 0=Left(ASDF) 1=Right(JKL;) 2=Both(8) 3=Expert(24)
+// Expert lane order: pitch low→high = lane 0→23
+// Left hand:  0-3=ZXCV(bottom) 4-7=ASDF(home) 8-11=QWER(top)
+// Right hand: 12-15=NM,.(bottom) 16-19=JKL;(home) 20-23=UIOP(top)
+const EXPERT_KEYS = [
+  {key:'Z',code:'KeyZ'},{key:'X',code:'KeyX'},{key:'C',code:'KeyC'},{key:'V',code:'KeyV'},
+  {key:'A',code:'KeyA'},{key:'S',code:'KeyS'},{key:'D',code:'KeyD'},{key:'F',code:'KeyF'},
+  {key:'Q',code:'KeyQ'},{key:'W',code:'KeyW'},{key:'E',code:'KeyE'},{key:'R',code:'KeyR'},
+  {key:'N',code:'KeyN'},{key:'M',code:'KeyM'},{key:',',code:'Comma'},{key:'.',code:'Period'},
+  {key:'J',code:'KeyJ'},{key:'K',code:'KeyK'},{key:'L',code:'KeyL'},{key:';',code:'Semicolon'},
+  {key:'U',code:'KeyU'},{key:'I',code:'KeyI'},{key:'O',code:'KeyO'},{key:'P',code:'KeyP'},
+];
+
+let selectedMode = 0;
+let NUM_LANES = 4;
+let LANE_CFG  = [];  // [{key,code,hitX,hitY,color,row,laneW}]
+let lanePressed = [false,false,false,false];
+let hitFlash    = [0,0,0,0];
+let nextPerLane = [];
+
+// 8-color rainbow for standard modes
+const RAINBOW8 = ['#ff4488','#ff8844','#ffcc00','#88ff44','#44ff88','#44ccff','#4488ff','#aa44ff'];
+
+function laneHue(i, total) { return Math.round((i / Math.max(total-1,1)) * 300); }
+
+function buildLaneConfig() {
+  LANE_CFG = [];
+  const HOME_Y    = HIT_Y;
+  const ROW_GAP   = Math.min(H * 0.095, 76);   // vertical distance between keyboard rows
+  const STAGGER   = Math.min(W * 0.016, 15);    // horizontal keyboard row stagger
+
+  if (selectedMode === 0 || selectedMode === 1) {
+    NUM_LANES = 4;
+    const keys  = selectedMode === 0 ? ['A','S','D','F'] : ['J','K','L',';'];
+    const codes = selectedMode === 0
+      ? ['KeyA','KeyS','KeyD','KeyF'] : ['KeyJ','KeyK','KeyL','Semicolon'];
+    const lw = W / 4;
+    for (let i = 0; i < 4; i++) {
+      LANE_CFG.push({ key:keys[i], code:codes[i],
+        hitX:(i+0.5)*lw, hitY:HOME_Y, color:RAINBOW8[i*2], row:1, laneW:lw });
+    }
+
+  } else if (selectedMode === 2) {
+    NUM_LANES = 8;
+    const keys  = ['A','S','D','F','J','K','L',';'];
+    const codes = ['KeyA','KeyS','KeyD','KeyF','KeyJ','KeyK','KeyL','Semicolon'];
+    const lw = W / 8;
+    for (let i = 0; i < 8; i++) {
+      LANE_CFG.push({ key:keys[i], code:codes[i],
+        hitX:(i+0.5)*lw, hitY:HOME_Y, color:RAINBOW8[i], row:1, laneW:lw });
+    }
+
+  } else {
+    // Expert: 24 lanes, staggered keyboard layout
+    NUM_LANES = 24;
+    const LH_W  = W * 0.44;           // left hand area width
+    const RH_X  = W * 0.56;           // right hand start x
+    const RH_W  = W * 0.44;           // right hand area width
+    const colW_L = LH_W / 4;
+    const colW_R = RH_W / 4;
+
+    for (let l = 0; l < 24; l++) {
+      const k       = EXPERT_KEYS[l];
+      const isRight = l >= 12;
+      const local   = isRight ? l - 12 : l;
+      const col     = local % 4;                    // 0-3 within the hand
+      const kRow    = Math.floor(local / 4);        // 0=bottom, 1=home, 2=top
+      const colW    = isRight ? colW_R : colW_L;
+      const startX  = isRight ? RH_X   : 0;
+      // Keyboard stagger: top row shifts left, bottom row shifts right
+      const sx      = kRow === 2 ? -STAGGER : kRow === 0 ? STAGGER : 0;
+      const hitX    = startX + (col + 0.5) * colW + sx;
+      const hitY    = HOME_Y + (kRow === 0 ? ROW_GAP : kRow === 2 ? -ROW_GAP : 0);
+      const color   = `hsl(${laneHue(l,24)},100%,62%)`;
+      LANE_CFG.push({ key:k.key, code:k.code, hitX, hitY, color, row:kRow, laneW:colW });
+    }
+  }
+
+  lanePressed = new Array(NUM_LANES).fill(false);
+  hitFlash    = new Array(NUM_LANES).fill(0);
+  nextPerLane = new Array(NUM_LANES).fill(null);
+}
+buildLaneConfig();
+
+// Build keyCode→lane lookup
+function buildKeyMap() {
+  const map = {};
+  LANE_CFG.forEach((cfg, i) => { map[cfg.code] = i; });
+  return map;
+}
+let KEY_MAP = buildKeyMap();
+
+// ── Note chart building ───────────────────────────────────────
+function firstInWindow(notes, windowBeats) {
+  const wins = {};
+  notes.forEach(n => {
+    const key = Math.floor(n[1] / windowBeats);
+    if (!(key in wins) || n[1] < wins[key][1]) wins[key] = n;
+  });
+  return Object.values(wins).sort((a,b) => a[1]-b[1]);
+}
+
+function varietyChart(notes, windowBeats) {
+  const wins = {};
+  notes.forEach(n => {
+    const key = Math.floor(n[1] / windowBeats);
+    if (!wins[key]) wins[key] = [];
+    wins[key].push(n);
+  });
+  const result = []; let prevLane = -1;
+  Object.keys(wins).map(Number).sort((a,b)=>a-b).forEach(key => {
+    const cands  = wins[key];
+    const diff   = cands.filter(n => n[0] !== prevLane);
+    const pool   = diff.length ? diff : cands;
+    const strong = pool.filter(n => Math.abs(n[1] - Math.round(n[1])) < 0.01);
+    const best   = (strong.length ? strong : pool).reduce((a,b) => b[1] < a[1] ? b : a);
+    result.push(best); prevLane = best[0];
+  });
+  return result;
+}
+
+function buildNoteChart() {
+  const breaks = buildPitchBreaks(NUM_LANES);
+  const mapped  = SONG_PITCHES.map(([pitch, beat]) => [pitchToLane(pitch, breaks), beat]);
+  let src;
+  if      (selectedDiff === 0) src = firstInWindow(mapped, 4.0);
+  else if (selectedDiff === 1) src = varietyChart(mapped, 2.0);
+  else                          src = mapped;
+  return src.map(([lane, beat]) => ({ lane, beat, state:'pending' }));
+}
+
+// ── selectMode / selectDiff ───────────────────────────────────
+const MODE_IDS    = ['hand-left','hand-right','hand-both','hand-expert'];
+const MODE_SELS   = ['sel-left','sel-right','sel-both','sel-expert'];
+const MODE_HINTS  = [
+  'Hit  A  S  D  F  as notes reach the circles!',
+  'Hit  J  K  L  ;  as notes reach the circles!',
+  'Hit  A S D F  +  J K L ;  as notes reach circles!',
+  'All keys active — hit the right key as notes reach each circle!',
+];
+function selectMode(m) {
+  selectedMode = m;
+  MODE_IDS.forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.className = 'hand-btn' + (i === m ? ' ' + MODE_SELS[i] : '');
+  });
+  document.getElementById('m-sub-hint').textContent = MODE_HINTS[m];
+  buildLaneConfig();
+  KEY_MAP = buildKeyMap();
+}
+
+let selectedDiff = 0;
+function selectDiff(d) {
+  selectedDiff = d;
+  document.querySelectorAll('.diff-btn').forEach((b,i) => b.classList.toggle('sel', i===d));
+}
+// ============================================================
+// AUDIO — OGG backing track + Web Audio hit sounds
+// ============================================================
+const _AudioCtx  = window.AudioContext || window.webkitAudioContext;
 let audioCtx     = null;
-let trackBuffer  = null;   // decoded OGG AudioBuffer
-let trackSource  = null;   // currently playing AudioBufferSourceNode
+let trackBuffer  = null;
+let trackSource  = null;
 let trackLoading = false;
 let trackLoaded  = false;
 
-// Decode the OGG once on page load (or first user gesture)
 function loadTrack() {
   if (trackLoading || trackLoaded) return;
   trackLoading = true;
   fetch('/games/shake-it-off.ogg')
     .then(r => r.arrayBuffer())
-    .then(ab => {
-      if (!audioCtx) audioCtx = new _AudioCtx();
-      return audioCtx.decodeAudioData(ab);
-    })
+    .then(ab => { if (!audioCtx) audioCtx = new _AudioCtx(); return audioCtx.decodeAudioData(ab); })
     .then(buf => {
-      trackBuffer  = buf;
-      trackLoaded  = true;
-      trackLoading = false;
-      // Hide loading indicator if shown
+      trackBuffer = buf; trackLoaded = true; trackLoading = false;
       const ldEl = document.getElementById('loading-track');
       if (ldEl) ldEl.style.display = 'none';
     })
@@ -596,181 +436,115 @@ function loadTrack() {
 function ensureAudio() {
   if (!audioCtx) audioCtx = new _AudioCtx();
   if (audioCtx.state === 'suspended') audioCtx.resume();
-  loadTrack();  // kick off fetch if not started
+  loadTrack();
 }
 
-// Countdown / UI beep
 function playNote(hz, vol, dur) {
   if (!audioCtx) return;
   const t = audioCtx.currentTime;
   const o = audioCtx.createOscillator(), g = audioCtx.createGain();
   o.type = 'triangle'; o.frequency.value = hz;
-  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.01);
-  g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-  o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + dur + 0.05);
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+  o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t+dur+0.05);
 }
 
-// Missed note thud
 function playMiss() {
   if (!audioCtx) return;
   const t = audioCtx.currentTime;
   const o = audioCtx.createOscillator(), g = audioCtx.createGain();
   o.type = 'square';
-  o.frequency.setValueAtTime(180, t); o.frequency.exponentialRampToValueAtTime(80, t + 0.15);
-  g.gain.setValueAtTime(0.10, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-  o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + 0.2);
+  o.frequency.setValueAtTime(180,t); o.frequency.exponentialRampToValueAtTime(80,t+0.15);
+  g.gain.setValueAtTime(0.10,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.18);
+  o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t+0.2);
 }
 
-// Perfect-hit sparkle
 function playPerfect() {
   if (!audioCtx) return;
   const t = audioCtx.currentTime;
-  [2200, 3300].forEach((freq, i) => {
+  [2200,3300].forEach((freq,i) => {
     const o = audioCtx.createOscillator(), g = audioCtx.createGain();
     o.type = 'sine'; o.frequency.value = freq;
-    g.gain.setValueAtTime(0, t + i*0.04); g.gain.linearRampToValueAtTime(0.06, t + i*0.04 + 0.01);
-    g.gain.exponentialRampToValueAtTime(0.001, t + i*0.04 + 0.12);
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start(t + i*0.04); o.stop(t + i*0.04 + 0.15);
+    g.gain.setValueAtTime(0,t+i*0.04); g.gain.linearRampToValueAtTime(0.06,t+i*0.04+0.01);
+    g.gain.exponentialRampToValueAtTime(0.001,t+i*0.04+0.12);
+    o.connect(g); g.connect(audioCtx.destination); o.start(t+i*0.04); o.stop(t+i*0.04+0.15);
   });
 }
 
-// ── Synth voice for HIT feedback only ─────────────────────────────────────
-// Correct hit = bright sawtooth chord at the note's exact frequency.
-// This IS the melody note — the OGG guide track plays softly beneath.
 function synthVoice(hz, t, dur, gain, cutoff) {
   if (!audioCtx) return;
   const filt = audioCtx.createBiquadFilter();
-  filt.type = 'lowpass'; filt.frequency.value = cutoff || 3000; filt.Q.value = 1.4;
+  filt.type = 'lowpass'; filt.frequency.value = cutoff||3000; filt.Q.value = 1.4;
   const mg = audioCtx.createGain();
-  mg.gain.setValueAtTime(0,          t);
-  mg.gain.linearRampToValueAtTime(gain,       t + 0.003);
-  mg.gain.exponentialRampToValueAtTime(gain*0.6, t + 0.08);
-  mg.gain.setValueAtTime(gain*0.6,   t + Math.max(dur - 0.08, 0.01));
-  mg.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  mg.gain.setValueAtTime(0,t); mg.gain.linearRampToValueAtTime(gain,t+0.003);
+  mg.gain.exponentialRampToValueAtTime(gain*0.6,t+0.08);
+  mg.gain.setValueAtTime(gain*0.6,t+Math.max(dur-0.08,0.01));
+  mg.gain.exponentialRampToValueAtTime(0.0001,t+dur);
   filt.connect(mg); mg.connect(audioCtx.destination);
-  [1.0, 1.004].forEach(det => {
+  [1.0,1.004].forEach(det => {
     const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-    o.type = 'sawtooth'; o.frequency.value = hz * det; g.gain.value = 0.5;
-    o.connect(g); g.connect(filt);
-    o.start(t); o.stop(t + dur + 0.05);
+    o.type = 'sawtooth'; o.frequency.value = hz*det; g.gain.value = 0.5;
+    o.connect(g); g.connect(filt); o.start(t); o.stop(t+dur+0.05);
   });
 }
 
-// Correct-lane hit → full-volume synth voice at that note's frequency
-function playHitNote(hz, isPerfect) {
+// pitch→hz for hit sound feedback
+function midiToHz(midi) { return 440 * Math.pow(2, (midi-69)/12); }
+
+function playHitNote(lane, isPerfect) {
   if (!audioCtx) return;
+  // play a note in the melody's register (use lane index to pick pitch)
+  const breaks = buildPitchBreaks(NUM_LANES);
+  const pitchIdx = Math.round((lane / (NUM_LANES-1)) * (_sortedPitches.length-1));
+  const hz = midiToHz(_sortedPitches[pitchIdx] || 81);
   synthVoice(hz, audioCtx.currentTime, 0.5, isPerfect ? 0.60 : 0.40, 4200);
 }
 
-// Wrong-lane press → detuned square buzz (clearly wrong)
-const LANE_HOME_HZ = [1174.66, 1567.98, 1760.0, 2093.0];
 function playWrongNote(lane) {
   if (!audioCtx) return;
   const now = audioCtx.currentTime;
+  const breaks = buildPitchBreaks(NUM_LANES);
+  const pitchIdx = Math.round((lane / Math.max(NUM_LANES-1,1)) * (_sortedPitches.length-1));
+  const hz = midiToHz((_sortedPitches[pitchIdx] || 81) - 1);
   const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-  o.type = 'square'; o.frequency.value = LANE_HOME_HZ[lane] * 0.97;
-  g.gain.setValueAtTime(0.07, now); g.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-  o.connect(g); g.connect(audioCtx.destination); o.start(now); o.stop(now + 0.25);
+  o.type = 'square'; o.frequency.value = hz * 0.97;
+  g.gain.setValueAtTime(0.07,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.22);
+  o.connect(g); g.connect(audioCtx.destination); o.start(now); o.stop(now+0.25);
 }
 
-// ── Backing track playback ─────────────────────────────────────────────────
-// scheduleMelody() now plays the OGG from the exact offset so it is
-// perfectly locked to songStartTime = audioCtx.currentTime + 0.5
-function scheduleMelody(song) {
+function scheduleMelody() {
   if (!audioCtx || !trackBuffer) return;
   if (trackSource) { try { trackSource.stop(); } catch(e){} }
   trackSource = audioCtx.createBufferSource();
   trackSource.buffer = trackBuffer;
-  // Lower the guide track volume so hit sounds stand out on top
-  const gainNode = audioCtx.createGain();
-  gainNode.gain.value = 0.55;
-  trackSource.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-  // songStartTime is set in startGame() just before this call.
-  // Start the source at songStartTime (scheduled, not immediate).
-  const delay = songStartTime - audioCtx.currentTime;
-  trackSource.start(songStartTime, 0);  // offset=0: play from beginning
+  const gainNode = audioCtx.createGain(); gainNode.gain.value = 0.55;
+  trackSource.connect(gainNode); gainNode.connect(audioCtx.destination);
+  trackSource.start(songStartTime, 0);
 }
 
 function stopMelody() {
-  if (trackSource) {
-    try { trackSource.stop(); } catch(e) {}
-    trackSource = null;
-  }
-  if (audioCtx) {
-    try { audioCtx.close(); } catch(e) {}
-    audioCtx = null;
-  }
-  trackLoaded  = false;
-  trackBuffer  = null;
-  trackLoading = false;
+  if (trackSource) { try { trackSource.stop(); } catch(e){} trackSource = null; }
+  if (audioCtx)    { try { audioCtx.close();   } catch(e){} audioCtx = null; }
+  trackLoaded = false; trackBuffer = null; trackLoading = false;
 }
-
-
-
 // ============================================================
 // GAME STATE
 // ============================================================
-const LANE_COLORS    = ['#ff4488', '#ffaa00', '#44ff88', '#4488ff'];
+const FALL_BEATS_BY_DIFF = [10.0, 5.5, 2.5];
+const HIT_PERFECT_BEATS  = [0.55, 0.28, 0.12];
+const HIT_GOOD_BEATS     = [0.85, 0.48, 0.22];
+let FALL_BEATS, HIT_PERFECT, HIT_GOOD;
 
-// ── Hand modes ─────────────────────────────────────────────────────────────
-const HAND_KEYS  = [
-  ['A','S','D','F'],          // 0 = Left hand
-  ['J','K','L',';'],          // 1 = Right hand
-];
-const HAND_CODES = [
-  ['KeyA','KeyS','KeyD','KeyF'],
-  ['KeyJ','KeyK','KeyL','Semicolon'],
-];
-let selectedHand = 0;  // 0=left(ASDF), 1=right(JKL;)
-let LANE_KEYS      = HAND_KEYS[0].slice();
-let LANE_KEY_CODES = HAND_CODES[0].slice();
-
-function selectHand(h) {
-  selectedHand    = h;
-  LANE_KEYS       = HAND_KEYS[h].slice();
-  LANE_KEY_CODES  = HAND_CODES[h].slice();
-  // Update button styles
-  document.getElementById('hand-left').className  = 'hand-btn' + (h === 0 ? ' sel-left'  : '');
-  document.getElementById('hand-right').className = 'hand-btn' + (h === 1 ? ' sel-right' : '');
-  // Update subtitle
-  const sub = document.getElementById('m-sub-hint');
-  if (sub) sub.textContent = h === 0
-    ? 'Hit  A  S  D  F  as the notes reach the circles!'
-    : 'Hit  J  K  L  ;  as the notes reach the circles!';
-}
-
-let selectedDiff  = 0;
-let gameActive    = false, songStartTime = 0;
+let gameActive = false, songStartTime = 0;
 let score = 0, combo = 0, maxCombo = 0, hp = 100;
 let perfects = 0, goods = 0, misses = 0;
-
-let noteQueue = [], particles = [], hitFlash = [0,0,0,0], floatingTexts = [];
+let noteQueue = [], particles = [], floatingTexts = [];
 let frameCount = 0;
-
-// Easy: very slow fall + half the notes. Medium: full chart. Hard: fast + all notes.
-// Easy: very wide windows (forgiving), Medium: normal, Hard: tight
-// At 160 BPM: 1 beat = 0.375s. Easy perfect=0.55 beats ≈ 0.21s each side.
-const FALL_BEATS_BY_DIFF  = [10.0, 5.5,  2.5];
-const HIT_PERFECT_BEATS   = [0.55, 0.28, 0.12];
-const HIT_GOOD_BEATS      = [0.85, 0.48, 0.22];
-let FALL_BEATS, HIT_PERFECT, HIT_GOOD;
 
 function getCurrentBeat() {
   if (!audioCtx || !gameActive) return 0;
   return (audioCtx.currentTime - songStartTime) * (SONG.bpm / 60);
 }
-
-// ============================================================
-// MENU
-// ============================================================
-function selectDiff(d) {
-  selectedDiff = d;
-  document.querySelectorAll('.diff-btn').forEach((b, i) => b.classList.toggle('sel', i === d));
-}
-
-// selectHand is defined above in LANE_KEYS block
 
 // ============================================================
 // GAME START / END
@@ -782,108 +556,46 @@ function startCountdown() {
   HIT_PERFECT = HIT_PERFECT_BEATS[selectedDiff];
   HIT_GOOD    = HIT_GOOD_BEATS[selectedDiff];
   document.getElementById('menu').style.display = 'none';
-
-
   const cdEl = document.getElementById('countdown');
-  cdEl.style.display = 'block';
-  let count = 3;
-  cdEl.textContent = count;
-  playNote(440, 0.15, 0.1);
+  cdEl.style.display = 'block'; let count = 3; cdEl.textContent = count; playNote(440,0.15,0.1);
   countdownTimer = setInterval(() => {
     count--;
-    if (count > 0) {
-      cdEl.textContent = count;
-      playNote(440, 0.15, 0.1);
-    } else {
-      clearInterval(countdownTimer);
-      cdEl.textContent = 'GO!';
-      setTimeout(() => { cdEl.style.display = 'none'; startGame(); }, 400);
-    }
+    if (count > 0) { cdEl.textContent = count; playNote(440,0.15,0.1); }
+    else { clearInterval(countdownTimer); cdEl.textContent = 'GO!'; setTimeout(() => { cdEl.style.display='none'; startGame(); }, 400); }
   }, 1000);
 }
 
 function startGame() {
   ensureAudio();
-
-  // If track not loaded yet, show loading state and wait
   if (!trackLoaded) {
     const ldEl = document.getElementById('loading-track');
-    if (ldEl) { ldEl.textContent = '🎵 Loading audio…'; ldEl.style.display = 'block'; }
+    if (ldEl) { ldEl.textContent='🎵 Loading audio…'; ldEl.style.display='block'; }
     document.getElementById('menu').style.display = 'flex';
-    // Retry once loaded
     const waitId = setInterval(() => {
-      if (trackLoaded) {
-        clearInterval(waitId);
-        if (ldEl) ldEl.style.display = 'none';
-        document.getElementById('menu').style.display = 'none';
-        startGame();
-      }
+      if (trackLoaded) { clearInterval(waitId); if (ldEl) ldEl.style.display='none'; document.getElementById('menu').style.display='none'; startGame(); }
     }, 200);
     return;
   }
+  score=0; combo=0; maxCombo=0; hp=100; perfects=0; goods=0; misses=0;
+  frameCount=0; particles=[]; floatingTexts=[];
+  hitFlash = new Array(NUM_LANES).fill(0);
+  nextPerLane = new Array(NUM_LANES).fill(null);
 
-  score = 0; combo = 0; maxCombo = 0; hp = 100;
-  perfects = 0; goods = 0; misses = 0;
-  frameCount = 0; particles = []; floatingTexts = []; hitFlash = [0,0,0,0];
+  buildLaneConfig();
+  KEY_MAP = buildKeyMap();
+  noteQueue = buildNoteChart();
 
-  // ── Chart selection (phrase-aware, research-backed) ────────────────────────
-  // Easy:   1 note per 4-beat measure — the FIRST note of each phrase.
-  //         72 hits @ 0.63 notes/sec.  Lane spread: A 22% / S 21% / D 35% / F 22%.
-  //         The phrase-opener is the melodic anchor — you hear it start each section.
-  // Medium: 1 note per 2 beats — variety-aware (avoids same lane twice in a row),
-  //         prefers integer-beat position. 130 hits @ 1.1 notes/sec.
-  //         Near-perfect 28/27/23/22% lane spread.
-  // Hard:   Full chart (all 428 notes).
-
-  function firstInWindow(windowBeats) {
-    const wins = {};
-    SONG.notes.forEach(n => {
-      const key = Math.floor(n[1] / windowBeats);
-      if (!(key in wins) || n[1] < wins[key][1]) wins[key] = n;
-    });
-    return Object.values(wins).sort((a, b) => a[1] - b[1]);
-  }
-
-  function varietyChart(windowBeats) {
-    const wins = {};
-    SONG.notes.forEach(n => {
-      const key = Math.floor(n[1] / windowBeats);
-      if (!wins[key]) wins[key] = [];
-      wins[key].push(n);
-    });
-    const result = [];
-    let prevLane = -1;
-    Object.keys(wins).map(Number).sort((a,b)=>a-b).forEach(key => {
-      const cands = wins[key];
-      const diff  = cands.filter(n => n[0] !== prevLane);
-      const pool  = diff.length ? diff : cands;
-      // prefer integer-beat onset within pool (most grounded rhythmically)
-      const strong = pool.filter(n => Math.abs(n[1] - Math.round(n[1])) < 0.01);
-      const best   = (strong.length ? strong : pool).reduce((a,b) => b[1] < a[1] ? b : a);
-      result.push(best);
-      prevLane = best[0];
-    });
-    return result;
-  }
-
-  const src = selectedDiff === 0 ? firstInWindow(4.0)
-            : selectedDiff === 1 ? varietyChart(2.0)
-            : SONG.notes;
-  noteQueue = src.map(n => ({ lane: n[0], beat: n[1], hz: n[2], state: 'pending' }));
-
-  songStartTime = audioCtx.currentTime + 0.5;  // 500ms lead-in
-  gameActive    = true;
+  songStartTime = audioCtx.currentTime + 0.5;
+  gameActive = true;
 
   document.getElementById('hud').style.display = 'flex';
   document.getElementById('hp-wrap').style.display = 'block';
   document.getElementById('results').style.display = 'none';
-  const handLabel = selectedHand === 0 ? '✋ A S D F' : '🤚 J K L ;';
-  document.getElementById('hud-song').textContent = SONG.title + '  ' + handLabel;
+  const modeLabel = ['✋ ASDF','🤚 JKL;','🙌 BOTH','⌨️ EXPERT'][selectedMode];
+  document.getElementById('hud-song').textContent = SONG.title + '  ' + modeLabel;
 
-  scheduleMelody(SONG);
-
-  // End song when music finishes
-  const totalBeats = Math.max(...SONG.notes.map(n => n[1])) + 4;
+  scheduleMelody();
+  const totalBeats = Math.max(...SONG_PITCHES.map(n=>n[1])) + 4;
   setTimeout(() => { if (gameActive) endGame(true); }, totalBeats * (60000 / SONG.bpm) + 2000);
 }
 
@@ -893,29 +605,22 @@ function endGame(completed) {
   document.getElementById('hud').style.display = 'none';
   document.getElementById('hp-wrap').style.display = 'none';
   const total    = perfects + goods + misses;
-  const accuracy = total > 0 ? Math.round(((perfects + goods * 0.5) / total) * 100) : 0;
-  const stars    = accuracy >= 95 ? '⭐⭐⭐' : accuracy >= 75 ? '⭐⭐' : accuracy >= 50 ? '⭐' : '💀';
-  document.getElementById('res-title').textContent = completed ? (accuracy >= 95 ? '🎉 PERFECT!' : '🎵 SONG CLEAR!') : '💀 GAME OVER';
-  document.getElementById('res-title').style.color = accuracy >= 75 ? '#cc44ff' : '#ff4444';
+  const accuracy = total > 0 ? Math.round(((perfects + goods*0.5)/total)*100) : 0;
+  const stars    = accuracy>=95?'⭐⭐⭐':accuracy>=75?'⭐⭐':accuracy>=50?'⭐':'💀';
+  document.getElementById('res-title').textContent = completed ? (accuracy>=95?'🎉 PERFECT!':'🎵 SONG CLEAR!') : '💀 GAME OVER';
+  document.getElementById('res-title').style.color = accuracy>=75?'#cc44ff':'#ff4444';
   document.getElementById('res-stars').textContent = stars;
   document.getElementById('res-stats').innerHTML =
-    `${SONG.title}<br><br>` +
-    `✨ Perfect: ${perfects}&nbsp;&nbsp;👍 Good: ${goods}&nbsp;&nbsp;❌ Miss: ${misses}<br><br>` +
-    `🎯 Accuracy: ${accuracy}%<br>🔥 Max Combo: ×${maxCombo}<br>⭐ Score: ${score}`;
+    `${SONG.title}<br><br>✨ Perfect: ${perfects}&nbsp;&nbsp;👍 Good: ${goods}&nbsp;&nbsp;❌ Miss: ${misses}<br><br>🎯 Accuracy: ${accuracy}%<br>🔥 Max Combo: ×${maxCombo}<br>⭐ Score: ${score}`;
   document.getElementById('results').style.display = 'flex';
 }
 
-function replayGame() {
-  document.getElementById('results').style.display = 'none';
-  startCountdown();
-}
+function replayGame() { document.getElementById('results').style.display='none'; startCountdown(); }
 function goMenu() {
-  document.getElementById('results').style.display = 'none';
-  document.getElementById('menu').style.display = 'flex';
-  gameActive = false; stopMelody();
-  currentInstrument = null;
-  // Re-apply hand selection visuals
-  selectHand(selectedHand);
+  document.getElementById('results').style.display='none';
+  document.getElementById('menu').style.display='flex';
+  gameActive=false; stopMelody();
+  selectMode(selectedMode);
 }
 
 // ============================================================
@@ -924,310 +629,404 @@ function goMenu() {
 function tryHit(lane) {
   if (!gameActive) return;
   const cb = getCurrentBeat();
-  let bestNote = null, bestDist = Infinity;
+  let bestNote=null, bestDist=Infinity;
   noteQueue.forEach(n => {
-    if (n.lane !== lane || n.state !== 'pending') return;
+    if (n.lane!==lane || n.state!=='pending') return;
     const dist = Math.abs(n.beat - cb);
-    if (dist < HIT_GOOD && dist < bestDist) { bestDist = dist; bestNote = n; }
+    if (dist < HIT_GOOD && dist < bestDist) { bestDist=dist; bestNote=n; }
   });
   if (bestNote) {
     const isPerfect = bestDist <= HIT_PERFECT;
     bestNote.state = 'hit';
     if (isPerfect) {
-      perfects++; combo++; if (combo > maxCombo) maxCombo = combo;
-      const mult = Math.min(4, 1 + Math.floor(combo / 5));
-      score += 100 * mult;
-      addFeedback(lane, '✨ PERFECT', '#cc44ff', 100 * mult);
-      playHitNote(bestNote.hz, true);   // perfect: full volume
-      playPerfect();                    // tiny sparkle ping on top (very quiet)
-      spawnParticles(lane, LANE_COLORS[lane], 18);
+      perfects++; combo++; if (combo>maxCombo) maxCombo=combo;
+      const mult = Math.min(4, 1+Math.floor(combo/5));
+      score += 100*mult;
+      addFeedback(lane,'✨ PERFECT','#cc44ff',100*mult);
+      playHitNote(lane, true); playPerfect();
+      spawnParticles(lane, LANE_CFG[lane].color, 18);
     } else {
-      goods++; combo++; if (combo > maxCombo) maxCombo = combo;
-      const mult = Math.min(4, 1 + Math.floor(combo / 5));
-      score += 50 * mult;
-      addFeedback(lane, '👍 GOOD', '#44ff88', 50 * mult);
-      playHitNote(bestNote.hz, false);  // good: slightly softer
-      spawnParticles(lane, LANE_COLORS[lane], 8);
+      goods++; combo++; if (combo>maxCombo) maxCombo=combo;
+      const mult = Math.min(4, 1+Math.floor(combo/5));
+      score += 50*mult;
+      addFeedback(lane,'👍 GOOD','#44ff88',50*mult);
+      playHitNote(lane, false);
+      spawnParticles(lane, LANE_CFG[lane].color, 8);
     }
     hitFlash[lane] = 1.0;
   } else {
     hitFlash[lane] = 0.4;
-    playWrongNote(lane);  // Guitar Hero: press = wrong note sound
+    playWrongNote(lane);
   }
 }
 
 function addFeedback(lane, text, color, pts) {
-  const lx = (lane + 0.5) * (W / 4);
-  floatingTexts.push({ x: lx, y: HIT_Y - 40, text, color, life: 55, vy: -1.2 });
-  if (pts) floatingTexts.push({ x: lx, y: HIT_Y - 60, text: '+' + pts, color: '#ffdd44', life: 45, vy: -0.8 });
+  const cfg = LANE_CFG[lane];
+  floatingTexts.push({ x:cfg.hitX, y:cfg.hitY-40, text, color, life:55, vy:-1.2 });
+  if (pts) floatingTexts.push({ x:cfg.hitX, y:cfg.hitY-60, text:'+'+pts, color:'#ffdd44', life:45, vy:-0.8 });
 }
 
 // ============================================================
 // PARTICLES
 // ============================================================
 function spawnParticles(lane, color, count) {
-  const lx = (lane + 0.5) * (W / 4);
-  for (let i = 0; i < count; i++) {
-    const a = Math.random() * Math.PI * 2, spd = 1 + Math.random() * 5;
-    const [r, g, b] = hexToRgb(color);
-    particles.push({ x: lx, y: HIT_Y, vx: Math.cos(a)*spd, vy: Math.sin(a)*spd - 2, life: 25 + Math.random()*20, maxLife: 45, r, g, b });
+  const cfg = LANE_CFG[lane];
+  for (let i=0; i<count; i++) {
+    const a=Math.random()*Math.PI*2, spd=1+Math.random()*5;
+    const [r,g,b] = hexToRgb(color);
+    particles.push({ x:cfg.hitX, y:cfg.hitY, vx:Math.cos(a)*spd, vy:Math.sin(a)*spd-2, life:25+Math.random()*20, maxLife:45, r,g,b });
   }
 }
 function hexToRgb(hex) {
-  return [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)];
+  if (hex.startsWith('hsl')) {
+    // convert hsl to rgb approximation using canvas
+    const tmp=document.createElement('canvas'); tmp.width=tmp.height=1;
+    const c=tmp.getContext('2d'); c.fillStyle=hex; c.fillRect(0,0,1,1);
+    const d=c.getImageData(0,0,1,1).data; return [d[0],d[1],d[2]];
+  }
+  if (hex.length===7) return [parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)];
+  return [200,100,255];
 }
-
 // ============================================================
 // UPDATE
 // ============================================================
 function update() {
   if (!gameActive) return;
   const cb = getCurrentBeat();
-
   noteQueue.forEach(n => {
-    if (n.state === 'pending' && cb > n.beat + HIT_GOOD + 0.05) {
-      n.state = 'missed';
-      misses++; combo = 0;
-      hp = Math.max(0, hp - 8);
-      addFeedback(n.lane, '❌ MISS', '#ff4444', 0);
+    if (n.state==='pending' && cb > n.beat + HIT_GOOD + 0.05) {
+      n.state='missed'; misses++; combo=0;
+      hp = Math.max(0, hp-8);
+      addFeedback(n.lane,'❌ MISS','#ff4444',0);
       playMiss();
-      if (hp <= 0) endGame(false);
+      if (hp<=0) endGame(false);
     }
   });
-  particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life--; });
-  particles     = particles.filter(p => p.life > 0);
-  floatingTexts.forEach(f => { f.y += f.vy; f.life--; });
-  floatingTexts = floatingTexts.filter(f => f.life > 0);
-  hitFlash      = hitFlash.map(f => Math.max(0, f - 0.08));
-
-  document.getElementById('hud-combo').textContent = combo >= 2 ? `🔥 ×${combo}` : `COMBO: ${combo}`;
+  particles.forEach(p => { p.x+=p.vx; p.y+=p.vy; p.vy+=0.15; p.life--; });
+  particles     = particles.filter(p=>p.life>0);
+  floatingTexts.forEach(f => { f.y+=f.vy; f.life--; });
+  floatingTexts = floatingTexts.filter(f=>f.life>0);
+  hitFlash      = hitFlash.map(f=>Math.max(0,f-0.08));
+  document.getElementById('hud-combo').textContent = combo>=2?`🔥 ×${combo}`:`COMBO: ${combo}`;
   document.getElementById('hud-score').textContent = score.toLocaleString();
-  document.getElementById('hp-bar').style.width    = hp + '%';
+  document.getElementById('hp-bar').style.width = hp+'%';
   document.getElementById('hp-bar').style.background =
-    hp > 50 ? 'linear-gradient(90deg,#cc44ff,#ff44aa)' :
-    hp > 25 ? 'linear-gradient(90deg,#ffcc00,#ff8800)' :
-              'linear-gradient(90deg,#ff4444,#cc0000)';
+    hp>50?'linear-gradient(90deg,#cc44ff,#ff44aa)':hp>25?'linear-gradient(90deg,#ffcc00,#ff8800)':'linear-gradient(90deg,#ff4444,#cc0000)';
 }
 
 // ============================================================
-// RENDERING
+// DRAW
 // ============================================================
 function draw() {
-  ctx.fillStyle = '#08001a';
-  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#08001a'; ctx.fillRect(0,0,W,H);
 
   // Floating bg music notes
   const bgChars = ['♩','♪','♫','♬'];
-  ctx.globalAlpha = 0.06; ctx.font = '28px Arial';
-  for (let i = 0; i < 12; i++) {
-    const x = ((i * 137 + frameCount * 0.3) % W);
-    const y = H - ((frameCount * 0.4 + i * 80) % H);
-    ctx.fillStyle = LANE_COLORS[i % 4];
-    ctx.fillText(bgChars[i % 4], x, y);
+  ctx.globalAlpha=0.05; ctx.font='24px Arial';
+  for (let i=0; i<16; i++) {
+    ctx.fillStyle=LANE_CFG[i%NUM_LANES].color;
+    ctx.fillText(bgChars[i%4], ((i*137+frameCount*0.3)%W), H-((frameCount*0.4+i*80)%H));
   }
-  ctx.globalAlpha = 1;
+  ctx.globalAlpha=1;
 
-  const laneW = W / 4;
-
-  // Lane backgrounds
-  for (let i = 0; i < 4; i++) {
-    const lx  = i * laneW;
-    const col = LANE_COLORS[i];
-    ctx.fillStyle   = col + '08';
-    ctx.fillRect(lx, 0, laneW, HIT_Y);
-    ctx.strokeStyle = col + '18'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(lx + laneW/2, 0); ctx.lineTo(lx + laneW/2, HIT_Y); ctx.stroke();
-    if (i > 0) {
-      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-      ctx.beginPath(); ctx.moveTo(lx, 0); ctx.lineTo(lx, H); ctx.stroke();
-    }
-  }
-
-  // Hit zone line
-  ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 2;
-  ctx.setLineDash([8,6]);
-  ctx.beginPath(); ctx.moveTo(0, HIT_Y); ctx.lineTo(W, HIT_Y); ctx.stroke();
-  ctx.setLineDash([]);
-
-  // Falling notes
-  if (gameActive) {
-    const cb    = getCurrentBeat();
-    const noteH = Math.min(44, H * 0.058);
-    const noteW = laneW * 0.72;
-
-    // "Anticipation glow" — find the next pending note per lane, pulse hit circle
-    const nextPerLane = [null, null, null, null];
-    noteQueue.forEach(note => {
-      if (note.state !== 'pending') return;
-      const bu = note.beat - cb;
-      if (bu < 0) return;
-      const l = note.lane;
-      if (!nextPerLane[l] || note.beat < nextPerLane[l].beat) nextPerLane[l] = note;
-    });
-    // Store for hit-zone draw below
-    window._nextPerLane = nextPerLane;
-
-    noteQueue.forEach(note => {
-      if (note.state === 'hit' || note.state === 'missed') return;
-      const bu = note.beat - cb;
-      if (bu > FALL_BEATS + 0.2 || bu < -0.5) return;
-      const progress = 1 - (bu / FALL_BEATS);
-      const ny    = progress * HIT_Y - noteH / 2;
-      const nx    = note.lane * laneW + (laneW - noteW) / 2;
-      const col   = LANE_COLORS[note.lane];
-      const alpha = Math.min(1, (1 - bu / FALL_BEATS) * 3);
-      // Pulse note when within 2 beats of the hit line
-      const closePulse = bu < 2.0 ? (1 - bu / 2.0) * 0.4 : 0;
-      ctx.globalAlpha = Math.max(0.12, alpha);
-      ctx.shadowColor = col; ctx.shadowBlur = 16 + closePulse * 20;
-      ctx.fillStyle = col;
-      ctx.beginPath();
-      ctx.roundRect ? ctx.roundRect(nx, ny, noteW, noteH, 8) : ctx.rect(nx, ny, noteW, noteH);
-      ctx.fill();
-      // Shine stripe
-      ctx.fillStyle = 'rgba(255,255,255,0.28)';
-      ctx.beginPath();
-      ctx.roundRect ? ctx.roundRect(nx + 4, ny + 4, noteW - 8, noteH * 0.38, 4) : ctx.rect(nx + 4, ny + 4, noteW - 8, noteH * 0.38);
-      ctx.fill();
-      // Lane key label on the note
-      ctx.globalAlpha = Math.max(0.4, alpha);
-      ctx.font = `bold ${Math.min(laneW * 0.18, 18)}px Courier New`;
-      ctx.fillStyle = 'rgba(255,255,255,0.75)';
-      ctx.textAlign = 'center';
-      ctx.fillText(LANE_KEYS[note.lane], nx + noteW / 2, ny + noteH * 0.68);
-      ctx.textAlign = 'left';
-      ctx.shadowBlur = 0; ctx.globalAlpha = 1;
-    });
-  }
-
-  // Hit zone circles — with anticipation pulse when note is close
-  for (let i = 0; i < 4; i++) {
-    const cx    = (i + 0.5) * laneW;
-    const col   = LANE_COLORS[i];
-    const flash = hitFlash[i];
-    const isP   = lanePressed[i];
-    const r     = Math.min(laneW * 0.32, 38);
-    // Anticipation: pulse when next note on this lane is within 2 beats
-    const nextN = window._nextPerLane && window._nextPerLane[i];
-    const cb2   = gameActive ? getCurrentBeat() : 0;
-    const beatsAway = nextN ? (nextN.beat - cb2) : 999;
-    const anticip = beatsAway < 2.0 && beatsAway > 0 ? (1 - beatsAway / 2.0) : 0;
-    const pulseR  = r + anticip * 8;
-    ctx.shadowColor = col; ctx.shadowBlur = 10 + flash * 30 + anticip * 18;
-    ctx.strokeStyle = col + (isP ? 'ff' : (anticip > 0.3 ? 'ee' : '88'));
-    ctx.lineWidth = 3 + anticip * 2;
-    ctx.beginPath(); ctx.arc(cx, HIT_Y, pulseR, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = col + Math.floor((0.08 + flash * 0.38 + anticip * 0.22 + (isP ? 0.28 : 0)) * 255).toString(16).padStart(2,'0');
-    ctx.beginPath(); ctx.arc(cx, HIT_Y, pulseR, 0, Math.PI * 2); ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.font = `bold ${Math.min(laneW * 0.22, 24)}px Courier New`;
-    ctx.fillStyle = 'rgba(255,255,255,' + (0.5 + flash * 0.5 + anticip * 0.3) + ')';
-    ctx.textAlign = 'center';
-    ctx.fillText(LANE_KEYS[i], cx, HIT_Y + 7);
-    ctx.textAlign = 'left';
+  if (selectedMode===3) {
+    drawExpert();
+  } else {
+    drawStandard();
   }
 
   // Particles
   particles.forEach(p => {
-    const lr = p.life / p.maxLife;
-    ctx.globalAlpha = lr;
-    ctx.fillStyle = `rgb(${p.r},${p.g},${p.b})`;
-    ctx.fillRect(p.x - 3, p.y - 3, 6 * lr, 6 * lr);
+    ctx.globalAlpha=p.life/p.maxLife;
+    ctx.fillStyle=`rgb(${p.r},${p.g},${p.b})`;
+    const sz=6*(p.life/p.maxLife);
+    ctx.fillRect(p.x-sz/2,p.y-sz/2,sz,sz);
   });
-  ctx.globalAlpha = 1;
+  ctx.globalAlpha=1;
 
   // Floating feedback texts
   floatingTexts.forEach(f => {
-    ctx.globalAlpha = Math.min(1, f.life / 30);
-    ctx.font = 'bold 16px Courier New'; ctx.fillStyle = f.color; ctx.textAlign = 'center';
-    ctx.fillText(f.text, f.x, f.y);
+    ctx.globalAlpha=Math.min(1,f.life/30);
+    ctx.font='bold 15px Courier New'; ctx.fillStyle=f.color; ctx.textAlign='center';
+    ctx.fillText(f.text,f.x,f.y);
   });
-  ctx.globalAlpha = 1; ctx.textAlign = 'left';
+  ctx.globalAlpha=1; ctx.textAlign='left';
 
-  // Combo burst center-top
-  if (gameActive && combo >= 3) {
-    const pulse = 1 + Math.sin(frameCount * 0.2) * 0.08;
-    ctx.save(); ctx.translate(W/2, 60); ctx.scale(pulse, pulse);
-    ctx.font = `bold ${Math.min(W * 0.05, 32)}px Courier New`;
-    ctx.fillStyle = '#ffdd44'; ctx.textAlign = 'center';
-    ctx.shadowColor = '#ffdd44'; ctx.shadowBlur = 15;
-    ctx.fillText(`🔥 COMBO ×${combo}`, 0, 0);
-    ctx.shadowBlur = 0;
-    ctx.restore(); ctx.textAlign = 'left';
+  // Combo burst
+  if (gameActive && combo>=3) {
+    const pulse=1+Math.sin(frameCount*0.2)*0.08;
+    ctx.save(); ctx.translate(W/2,55); ctx.scale(pulse,pulse);
+    ctx.font=`bold ${Math.min(W*0.045,28)}px Courier New`;
+    ctx.fillStyle='#ffdd44'; ctx.textAlign='center';
+    ctx.shadowColor='#ffdd44'; ctx.shadowBlur=15;
+    ctx.fillText(`🔥 COMBO ×${combo}`,0,0);
+    ctx.shadowBlur=0; ctx.restore(); ctx.textAlign='left';
   }
+}
+
+// ── Standard draw (4 or 8 lanes, flat hit line) ───────────────
+function drawStandard() {
+  const N = NUM_LANES;
+
+  // Compute "next note per lane" for anticipation
+  if (gameActive) {
+    const cb = getCurrentBeat();
+    nextPerLane = new Array(N).fill(null);
+    noteQueue.forEach(n => {
+      if (n.state!=='pending') return;
+      const bu=n.beat-cb; if (bu<0) return;
+      if (!nextPerLane[n.lane] || n.beat<nextPerLane[n.lane].beat) nextPerLane[n.lane]=n;
+    });
+  }
+
+  // Lane backgrounds + dividers
+  for (let i=0; i<N; i++) {
+    const cfg=LANE_CFG[i];
+    const lx=cfg.hitX-cfg.laneW/2;
+    ctx.fillStyle=cfg.color+'09'; ctx.fillRect(lx,0,cfg.laneW,HIT_Y);
+    if (i>0) { ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(lx,0); ctx.lineTo(lx,H); ctx.stroke(); }
+  }
+
+  // Hit line
+  ctx.strokeStyle='rgba(255,255,255,0.22)'; ctx.lineWidth=2; ctx.setLineDash([8,6]);
+  ctx.beginPath(); ctx.moveTo(0,HIT_Y); ctx.lineTo(W,HIT_Y); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Falling notes
+  if (gameActive) {
+    const cb=getCurrentBeat();
+    const FALL_DIST=HIT_Y+10;
+    const noteH=Math.min(44,H*0.058);
+    noteQueue.forEach(note => {
+      if (note.state==='hit'||note.state==='missed') return;
+      const bu=note.beat-cb;
+      if (bu>FALL_BEATS+0.2||bu<-0.5) return;
+      const cfg=LANE_CFG[note.lane];
+      const noteW=cfg.laneW*0.72;
+      const ny=cfg.hitY-(bu/FALL_BEATS)*FALL_DIST - noteH/2;
+      const nx=cfg.hitX-noteW/2;
+      const alpha=Math.min(1,(1-bu/FALL_BEATS)*3);
+      const pulse=bu<2?((1-bu/2)*0.4):0;
+      ctx.globalAlpha=Math.max(0.12,alpha);
+      ctx.shadowColor=cfg.color; ctx.shadowBlur=14+pulse*20;
+      ctx.fillStyle=cfg.color;
+      ctx.beginPath(); ctx.roundRect?ctx.roundRect(nx,ny,noteW,noteH,8):ctx.rect(nx,ny,noteW,noteH); ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,0.26)';
+      ctx.beginPath(); ctx.roundRect?ctx.roundRect(nx+4,ny+4,noteW-8,noteH*0.38,4):ctx.rect(nx+4,ny+4,noteW-8,noteH*0.38); ctx.fill();
+      ctx.globalAlpha=Math.max(0.4,alpha);
+      ctx.font=`bold ${Math.min(cfg.laneW*0.2,18)}px Courier New`;
+      ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.textAlign='center';
+      ctx.fillText(cfg.key,cfg.hitX,ny+noteH*0.7);
+      ctx.textAlign='left'; ctx.shadowBlur=0; ctx.globalAlpha=1;
+    });
+  }
+
+  // Hit circles
+  const cb2=gameActive?getCurrentBeat():0;
+  for (let i=0; i<N; i++) {
+    const cfg=LANE_CFG[i];
+    const flash=hitFlash[i], isP=lanePressed[i];
+    const r=Math.min(cfg.laneW*0.30,36);
+    const next=nextPerLane[i];
+    const ba=next?(next.beat-cb2):999;
+    const anticip=ba<2&&ba>0?(1-ba/2):0;
+    const pr=r+anticip*7;
+    ctx.shadowColor=cfg.color; ctx.shadowBlur=10+flash*28+anticip*16;
+    ctx.strokeStyle=cfg.color+(isP?'ff':(anticip>0.3?'ee':'88'));
+    ctx.lineWidth=3+anticip*2;
+    ctx.beginPath(); ctx.arc(cfg.hitX,cfg.hitY,pr,0,Math.PI*2); ctx.stroke();
+    const fval=Math.floor((0.07+flash*0.36+anticip*0.20+(isP?0.26:0))*255).toString(16).padStart(2,'0');
+    ctx.fillStyle=cfg.color+fval;
+    ctx.beginPath(); ctx.arc(cfg.hitX,cfg.hitY,pr,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.font=`bold ${Math.min(cfg.laneW*0.22,22)}px Courier New`;
+    ctx.fillStyle=`rgba(255,255,255,${0.5+flash*0.5+anticip*0.3})`;
+    ctx.textAlign='center'; ctx.fillText(cfg.key,cfg.hitX,cfg.hitY+7); ctx.textAlign='left';
+  }
+}
+
+// ── Expert draw (24 lanes, staggered keyboard) ────────────────
+function drawExpert() {
+  if (!gameActive) { drawExpertIdle(); return; }
+  const cb=getCurrentBeat();
+  const FALL_DIST=HIT_Y+10;
+  const ROW_GAP=Math.min(H*0.095,76);
+
+  // Compute next-per-lane
+  nextPerLane=new Array(24).fill(null);
+  noteQueue.forEach(n=>{
+    if (n.state!=='pending') return;
+    const bu=n.beat-cb; if(bu<0) return;
+    if(!nextPerLane[n.lane]||n.beat<nextPerLane[n.lane].beat) nextPerLane[n.lane]=n;
+  });
+
+  // Draw keyboard zone backgrounds (3 rows × 2 hands)
+  drawKeyboardFrame();
+
+  // Falling notes — fall straight down toward hitX, hitY
+  noteQueue.forEach(note=>{
+    if (note.state==='hit'||note.state==='missed') return;
+    const bu=note.beat-cb;
+    if (bu>FALL_BEATS+0.2||bu<-0.5) return;
+    const cfg=LANE_CFG[note.lane];
+    const noteW=Math.min(cfg.laneW*0.68,42);
+    const noteH=Math.min(H*0.05,38);
+    // note falls from above toward its hitY, landing at hitX
+    const ny=cfg.hitY-(bu/FALL_BEATS)*FALL_DIST - noteH/2;
+    const nx=cfg.hitX-noteW/2;
+    const alpha=Math.min(1,(1-bu/FALL_BEATS)*3);
+    const pulse=bu<2?((1-bu/2)*0.35):0;
+    ctx.globalAlpha=Math.max(0.1,alpha);
+    ctx.shadowColor=cfg.color; ctx.shadowBlur=12+pulse*16;
+    ctx.fillStyle=cfg.color;
+    ctx.beginPath(); ctx.roundRect?ctx.roundRect(nx,ny,noteW,noteH,6):ctx.rect(nx,ny,noteW,noteH); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.22)';
+    ctx.beginPath(); ctx.roundRect?ctx.roundRect(nx+3,ny+3,noteW-6,noteH*0.35,3):ctx.rect(nx+3,ny+3,noteW-6,noteH*0.35); ctx.fill();
+    ctx.globalAlpha=Math.max(0.5,alpha);
+    ctx.font=`bold ${Math.min(cfg.laneW*0.18,13)}px Courier New`;
+    ctx.fillStyle='rgba(255,255,255,0.85)'; ctx.textAlign='center';
+    ctx.fillText(cfg.key,cfg.hitX,ny+noteH*0.72);
+    ctx.textAlign='left'; ctx.shadowBlur=0; ctx.globalAlpha=1;
+  });
+
+  // Hit circles for expert
+  for (let i=0; i<24; i++) {
+    const cfg=LANE_CFG[i];
+    const flash=hitFlash[i], isP=lanePressed[i];
+    const r=Math.min(cfg.laneW*0.28,26);
+    const next=nextPerLane[i];
+    const ba=next?(next.beat-cb):999;
+    const anticip=ba<2&&ba>0?(1-ba/2):0;
+    const pr=r+anticip*5;
+    ctx.shadowColor=cfg.color; ctx.shadowBlur=8+flash*22+anticip*12;
+    ctx.strokeStyle=cfg.color+(isP?'ff':(anticip>0.3?'dd':'77'));
+    ctx.lineWidth=2+anticip;
+    ctx.beginPath(); ctx.arc(cfg.hitX,cfg.hitY,pr,0,Math.PI*2); ctx.stroke();
+    const fval=Math.floor((0.06+flash*0.32+anticip*0.18+(isP?0.22:0))*255).toString(16).padStart(2,'0');
+    ctx.fillStyle=cfg.color+fval;
+    ctx.beginPath(); ctx.arc(cfg.hitX,cfg.hitY,pr,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.font=`bold ${Math.min(cfg.laneW*0.2,12)}px Courier New`;
+    ctx.fillStyle=`rgba(255,255,255,${0.45+flash*0.5+anticip*0.3})`;
+    ctx.textAlign='center'; ctx.fillText(cfg.key,cfg.hitX,cfg.hitY+5); ctx.textAlign='left';
+  }
+}
+
+function drawExpertIdle() {
+  drawKeyboardFrame();
+  // Show idle hit circles
+  for (let i=0; i<24; i++) {
+    const cfg=LANE_CFG[i];
+    const r=Math.min(cfg.laneW*0.28,26);
+    ctx.strokeStyle=cfg.color+'55'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(cfg.hitX,cfg.hitY,r,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle=cfg.color+'11';
+    ctx.beginPath(); ctx.arc(cfg.hitX,cfg.hitY,r,0,Math.PI*2); ctx.fill();
+    ctx.font=`bold ${Math.min(cfg.laneW*0.2,12)}px Courier New`;
+    ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.textAlign='center';
+    ctx.fillText(cfg.key,cfg.hitX,cfg.hitY+5); ctx.textAlign='left';
+  }
+}
+
+function drawKeyboardFrame() {
+  const ROW_GAP=Math.min(H*0.095,76);
+  const STAGGER=Math.min(W*0.016,15);
+  const HOME_Y=HIT_Y;
+
+  // For each hand side, draw row connecting lines showing keyboard structure
+  [[0,W*0.44,0],[W*0.56,W,12]].forEach(([sx,ex,laneOff])=>{
+    // three row lines (dashed, very faint)
+    [HOME_Y-ROW_GAP-STAGGER, HOME_Y, HOME_Y+ROW_GAP+STAGGER].forEach((ry,ri)=>{
+      const rowCols = ['rgba(100,220,255,0.06)','rgba(180,80,255,0.06)','rgba(255,140,60,0.06)'];
+      ctx.fillStyle=rowCols[ri];
+      ctx.fillRect(sx, ry-ROW_GAP*0.5, ex-sx, ROW_GAP*0.9);
+    });
+  });
+
+  // Gap label
+  ctx.font=`${Math.min(W*0.014,13)}px Courier New`;
+  ctx.fillStyle='rgba(150,100,200,0.4)'; ctx.textAlign='center';
+  ctx.fillText('⌨', W/2, HOME_Y);
+  ctx.textAlign='left';
+
+  // Row labels (left side)
+  const rowLabels=[['Q W E R','top row'],['A S D F','home row'],['Z X C V','bottom row']];
+  rowLabels.forEach(([keys,label],ri)=>{
+    const ry=[HOME_Y-ROW_GAP,HOME_Y,HOME_Y+ROW_GAP][ri];
+    ctx.font=`${Math.min(W*0.01,10)}px Courier New`;
+    ctx.fillStyle='rgba(150,100,200,0.35)'; ctx.textAlign='right';
+    ctx.fillText(keys, W*0.43, ry-4);
+    ctx.textAlign='left';
+  });
 }
 
 // ============================================================
 // GAME LOOP
 // ============================================================
-function gameLoop() {
-  frameCount++;
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
-}
+function gameLoop() { frameCount++; update(); draw(); requestAnimationFrame(gameLoop); }
 
 // ============================================================
 // INPUT
 // ============================================================
-const lanePressed = [false, false, false, false];
 const keys = {};
 document.addEventListener('keydown', e => {
-  if (keys[e.code]) return;
-  keys[e.code] = true;
-  const li = LANE_KEY_CODES.indexOf(e.code);
-  if (li >= 0) { lanePressed[li] = true; tryHit(li); ensureAudio(); }
-  if (e.code === 'Space') e.preventDefault();
+  if (keys[e.code]) return; keys[e.code]=true;
+  const li=KEY_MAP[e.code];
+  if (li!==undefined) { lanePressed[li]=true; tryHit(li); ensureAudio(); }
+  if (e.code==='Space') e.preventDefault();
 });
 document.addEventListener('keyup', e => {
-  keys[e.code] = false;
-  const li = LANE_KEY_CODES.indexOf(e.code);
-  if (li >= 0) lanePressed[li] = false;
+  keys[e.code]=false;
+  const li=KEY_MAP[e.code];
+  if (li!==undefined) lanePressed[li]=false;
 });
 
-const activeTouches = new Map();
-canvas.addEventListener('touchstart', e => {
+// Touch: map x,y position to nearest lane circle
+const activeTouches=new Map();
+function touchToLane(cx,cy) {
+  let best=-1, bestDist=Infinity;
+  LANE_CFG.forEach((cfg,i)=>{
+    const d=Math.hypot(cx-cfg.hitX, cy-cfg.hitY);
+    if (d<bestDist) { bestDist=d; best=i; }
+  });
+  return bestDist < (W/NUM_LANES)*1.5 ? best : -1;
+}
+canvas.addEventListener('touchstart',e=>{
   e.preventDefault(); ensureAudio();
   for (const t of e.changedTouches) {
-    const lane = Math.floor(t.clientX / (W / 4));
-    if (lane >= 0 && lane < 4) { activeTouches.set(t.identifier, lane); lanePressed[lane] = true; tryHit(lane); }
+    const lane=touchToLane(t.clientX,t.clientY);
+    if (lane>=0) { activeTouches.set(t.identifier,lane); lanePressed[lane]=true; tryHit(lane); }
   }
-}, { passive: false });
-canvas.addEventListener('touchend', e => {
+},{passive:false});
+canvas.addEventListener('touchend',e=>{
   for (const t of e.changedTouches) {
-    const lane = activeTouches.get(t.identifier);
-    if (lane !== undefined) { lanePressed[lane] = false; activeTouches.delete(t.identifier); }
+    const lane=activeTouches.get(t.identifier);
+    if (lane!==undefined) { lanePressed[lane]=false; activeTouches.delete(t.identifier); }
   }
-}, { passive: false });
-canvas.addEventListener('mousedown', e => {
+},{passive:false});
+canvas.addEventListener('mousedown',e=>{
   ensureAudio();
-  const lane = Math.floor(e.clientX / (W / 4));
-  if (lane >= 0 && lane < 4) { lanePressed[lane] = true; tryHit(lane); }
+  const lane=touchToLane(e.clientX,e.clientY);
+  if (lane>=0) { lanePressed[lane]=true; tryHit(lane); }
 });
-canvas.addEventListener('mouseup', e => {
-  const lane = Math.floor(e.clientX / (W / 4));
-  if (lane >= 0 && lane < 4) lanePressed[lane] = false;
+canvas.addEventListener('mouseup',e=>{
+  const lane=touchToLane(e.clientX,e.clientY);
+  if (lane>=0) lanePressed[lane]=false;
 });
 
 // ============================================================
 // INIT
 // ============================================================
+selectMode(0);
 gameLoop();
 </script>
 <script>
-// Kick off OGG decode as soon as page loads (needs user gesture first on some browsers)
-document.addEventListener('click', function initAudio() {
-  document.removeEventListener('click', initAudio);
+document.addEventListener('click',function initAudio(){
+  document.removeEventListener('click',initAudio);
   ensureAudio();
-}, { once: true });
-// Also try immediately (works if autoplay policy allows)
-window.addEventListener('load', () => {
-  try {
-    if (!audioCtx) audioCtx = new _AudioCtx();
-    const ldEl = document.getElementById('loading-track');
-    if (ldEl) ldEl.style.display = 'block';
-    loadTrack();
-  } catch(e) {}
+},{once:true});
+window.addEventListener('load',()=>{
+  try { if (!audioCtx) audioCtx=new _AudioCtx(); document.getElementById('loading-track').style.display='block'; loadTrack(); } catch(e){}
 });
 </script>
 </body>
