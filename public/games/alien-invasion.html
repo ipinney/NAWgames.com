@@ -6,125 +6,103 @@
 <title>Alien Invasion</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #050510; overflow: hidden; touch-action: none; user-select: none; }
+body { background: #0d1a0d; overflow: hidden; touch-action: none; user-select: none; }
 canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
 
+/* ---- START SCREEN ---- */
 #start-screen {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 100;
-  background: radial-gradient(ellipse at 50% 30%, #0d1a3a 0%, #050510 70%);
+  background: radial-gradient(ellipse at 50% 40%, #0a2010 0%, #050c05 80%);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  color: white; text-align: center;
+  color: white; text-align: center; padding: 20px;
 }
-.start-ufo { font-size: clamp(50px,10vw,90px); margin-bottom: 8px; animation: ufoFloat 3s ease-in-out infinite; }
-@keyframes ufoFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
-.start-title {
-  font-family: 'Courier New', monospace; font-size: clamp(34px,8vw,70px); font-weight: bold;
-  color: #00ff88; text-shadow: 0 0 30px #00ff88, 0 0 60px #00cc66;
-  letter-spacing: 4px; animation: titlePulse 2s ease-in-out infinite; margin-bottom: 6px;
+.s-icon { font-size: clamp(44px,9vw,80px); animation: iconBob 2.5s ease-in-out infinite; margin-bottom:6px; }
+@keyframes iconBob { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-10px) rotate(3deg)} }
+.s-title {
+  font-family: 'Courier New', monospace; font-size: clamp(30px,7vw,64px); font-weight: bold;
+  color: #44ff88; text-shadow: 0 0 28px #44ff88, 0 0 56px #22cc66;
+  letter-spacing: 3px; animation: tpulse 2s ease-in-out infinite; margin-bottom: 6px;
 }
-.start-sub {
-  font-family: 'Courier New', monospace; font-size: clamp(14px,3vw,22px);
-  color: #88ffcc; margin-bottom: 22px; opacity: 0.85;
+.s-sub { font-family: 'Courier New', monospace; font-size: clamp(13px,2.5vw,20px); color: #88ffcc; margin-bottom: 20px; opacity: 0.85; }
+.s-story {
+  font-family: 'Courier New', monospace; font-size: clamp(11px,1.8vw,14px);
+  color: #aaffcc; max-width: 500px; margin: 0 auto 24px; line-height: 1.9; opacity: 0.95;
 }
-.start-story {
-  font-family: 'Courier New', monospace; font-size: clamp(11px,2vw,15px);
-  color: #aaffdd; max-width: 480px; margin: 0 auto 28px; line-height: 1.8; opacity: 0.95;
+.s-btn {
+  font-family: 'Courier New', monospace; font-size: clamp(15px,3vw,22px);
+  background: linear-gradient(135deg, #22aa55, #0066cc); color: white; border: none;
+  padding: 14px 44px; border-radius: 50px; cursor: pointer; letter-spacing: 2px;
+  box-shadow: 0 0 28px #22aa5588; animation: bpulse 1.5s ease-in-out infinite;
 }
-.start-btn {
-  font-family: 'Courier New', monospace; font-size: clamp(16px,3vw,24px);
-  background: linear-gradient(135deg, #00cc66, #0088ff); color: white; border: none;
-  padding: 16px 48px; border-radius: 50px; cursor: pointer; letter-spacing: 3px;
-  box-shadow: 0 0 30px #00cc6688; animation: btnPulse 1.5s ease-in-out infinite;
-}
-.start-btn:active { transform: scale(0.96); }
-.controls-hint {
-  font-family: 'Courier New', monospace; font-size: 12px; color: #66ddaa;
-  margin-top: 20px; opacity: 0.75; line-height: 1.8;
-}
-@keyframes titlePulse { 0%,100%{text-shadow:0 0 30px #00ff88,0 0 60px #00cc66} 50%{text-shadow:0 0 50px #00ff88,0 0 100px #00cc66,0 0 140px #00ff88} }
-@keyframes btnPulse { 0%,100%{box-shadow:0 0 30px #00cc6688} 50%{box-shadow:0 0 50px #00cc66cc} }
+.s-btn:active { transform: scale(0.95); }
+.s-hint { font-family: 'Courier New', monospace; font-size: 11px; color: #55cc88; margin-top: 18px; opacity: 0.7; line-height: 1.8; }
+@keyframes tpulse { 0%,100%{text-shadow:0 0 28px #44ff88,0 0 56px #22cc66} 50%{text-shadow:0 0 48px #44ff88,0 0 88px #22ff66,0 0 130px #44ff88} }
+@keyframes bpulse { 0%,100%{box-shadow:0 0 28px #22aa5588} 50%{box-shadow:0 0 48px #22aa55cc} }
 
-/* HUD */
+/* ---- HUD ---- */
 #hud {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50; pointer-events: none;
-  padding: 10px 14px; display: none; align-items: flex-start; justify-content: space-between; gap: 8px;
+  padding: 10px 14px; display: none; align-items: flex-start; justify-content: space-between; gap: 8px; flex-wrap: wrap;
 }
-#hp-wrap { background: rgba(0,0,0,0.65); border: 2px solid #00ff88; border-radius: 10px; padding: 4px; width: 150px; }
-#hp-bar { height: 13px; border-radius: 6px; background: linear-gradient(90deg,#00ff88,#00cc44); transition: width 0.25s; }
-#score-disp { font-family:'Courier New',monospace; font-size:17px; color:#00ff88; text-shadow:0 0 8px #00ff88; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:8px; }
-#phase-disp { font-family:'Courier New',monospace; font-size:13px; color:#88ffcc; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:8px; }
-#wave-disp { font-family:'Courier New',monospace; font-size:13px; color:#ffdd44; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:8px; }
+#hp-wrap { background: rgba(0,0,0,0.65); border: 2px solid #44ff88; border-radius: 10px; padding: 4px; width: 145px; }
+#hp-bar { height: 13px; border-radius: 6px; background: linear-gradient(90deg,#44ff88,#22cc44); transition: width 0.25s; }
+#score-disp { font-family:'Courier New',monospace; font-size:16px; color:#44ff88; text-shadow:0 0 8px #44ff88; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:8px; }
+#wave-disp  { font-family:'Courier New',monospace; font-size:14px; color:#ffdd44; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:8px; }
+#pad-disp   { font-family:'Courier New',monospace; font-size:13px; color:#44ccff; background:rgba(0,0,0,0.6); padding:4px 10px; border-radius:8px; }
 
-/* Phase banner */
-#phase-banner {
-  position: fixed; top: 38%; left: 50%; transform: translate(-50%,-50%);
-  z-index: 90; display: none; text-align: center; pointer-events: none;
+/* ---- Scan Announcement ---- */
+#scan-banner {
+  position: fixed; top: 28%; left: 50%; transform: translate(-50%,-50%);
+  z-index: 90; display: none; text-align: center; pointer-events: none; min-width: 260px;
 }
-#pbtext { font-family:'Courier New',monospace; font-size:clamp(22px,6vw,46px); color:#00ff88; text-shadow:0 0 40px #00ff88; font-weight:bold; letter-spacing:4px; }
-#pbsub { font-family:'Courier New',monospace; font-size:clamp(12px,2.5vw,18px); color:#88ffcc; margin-top:8px; }
+#scan-banner-text { font-family:'Courier New',monospace; font-size:clamp(20px,5vw,40px); font-weight:bold; letter-spacing:3px; text-shadow:0 0 30px currentColor; }
+#scan-banner-sub  { font-family:'Courier New',monospace; font-size:clamp(11px,2.5vw,16px); color:#88ffcc; margin-top:6px; }
 
-/* Teleport overlay */
-#tel-overlay { position:fixed; top:0; left:0; width:100%; height:100%; z-index:95; background:transparent; display:none; pointer-events:none; }
-
-/* King radar */
-#king-radar {
-  position:fixed; bottom:165px; left:50%; transform:translateX(-50%); z-index:50; display:none;
-  font-family:'Courier New',monospace; font-size:13px; color:#ff88ff;
-  background:rgba(0,0,0,0.75); padding:7px 14px; border-radius:8px; border:1px solid #ff88ff;
-  animation:kblink 1s ease-in-out infinite; white-space:nowrap;
-}
-@keyframes kblink { 0%,100%{opacity:1} 50%{opacity:0.35} }
-
-/* Rescue prompt */
-#rescue-prompt {
-  position:fixed; bottom:165px; right:16px; z-index:50; display:none;
-  font-family:'Courier New',monospace; font-size:13px; color:#44aaff;
-  background:rgba(0,0,0,0.75); padding:7px 13px; border-radius:8px; border:1px solid #44aaff;
+/* ---- Wave Banner ---- */
+#wave-banner {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  z-index: 88; display: none; text-align: center; pointer-events: none;
+  font-family:'Courier New',monospace; font-size:clamp(22px,5.5vw,44px); font-weight:bold;
+  color:#ffdd44; text-shadow:0 0 30px #ffaa00; letter-spacing:4px;
 }
 
-/* End screen */
+/* ---- End Screen ---- */
 #end-screen {
-  position:fixed; top:0; left:0; width:100%; height:100%; z-index:100;
-  background:rgba(0,0,0,0.88); display:none; flex-direction:column;
-  align-items:center; justify-content:center; color:white; text-align:center;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 100;
+  background: rgba(0,0,0,0.9); display: none; flex-direction: column;
+  align-items: center; justify-content: center; color: white; text-align: center; padding: 20px;
 }
-#end-title { font-family:'Courier New',monospace; font-size:clamp(30px,7vw,58px); font-weight:bold; margin-bottom:18px; }
-#end-stats { font-family:'Courier New',monospace; font-size:clamp(13px,2.5vw,18px); color:#88ffcc; line-height:2.2; margin-bottom:30px; }
-#replay-btn {
-  font-family:'Courier New',monospace; font-size:18px;
-  background:linear-gradient(135deg,#00cc66,#0088ff); color:white;
-  border:none; padding:14px 40px; border-radius:40px; cursor:pointer; letter-spacing:2px;
-}
+#end-title { font-family:'Courier New',monospace; font-size:clamp(28px,7vw,56px); font-weight:bold; margin-bottom:16px; }
+#end-stats { font-family:'Courier New',monospace; font-size:clamp(12px,2.5vw,17px); color:#88ffcc; line-height:2.1; margin-bottom:28px; }
+#replay-btn { font-family:'Courier New',monospace; font-size:17px; background:linear-gradient(135deg,#22aa55,#0066cc); color:white; border:none; padding:13px 38px; border-radius:40px; cursor:pointer; letter-spacing:2px; }
 
-/* Mobile controls */
+/* ---- Mobile Controls ---- */
 #joy-base {
-  position:fixed; bottom:24px; left:24px; z-index:40;
-  width:112px; height:112px; border-radius:50%;
-  background:rgba(0,255,136,0.13); border:2px solid rgba(0,255,136,0.38);
-  display:none; touch-action:none;
+  position: fixed; bottom: 22px; left: 22px; z-index: 40;
+  width: 110px; height: 110px; border-radius: 50%;
+  background: rgba(68,255,136,0.12); border: 2px solid rgba(68,255,136,0.36);
+  display: none; touch-action: none;
 }
 #joy-knob {
-  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  width:46px; height:46px; border-radius:50%;
-  background:rgba(0,255,136,0.58); pointer-events:none;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(68,255,136,0.55); pointer-events: none;
 }
 #fire-btn {
-  position:fixed; bottom:38px; right:32px; z-index:40;
-  width:78px; height:78px; border-radius:50%;
-  background:radial-gradient(circle,#ff4444,#cc0000);
-  border:3px solid #ff8888; font-family:'Courier New',monospace;
-  font-size:12px; color:white; font-weight:bold; cursor:pointer;
-  display:none; align-items:center; justify-content:center; touch-action:none; user-select:none;
-  flex-direction:column; gap:2px;
+  position: fixed; bottom: 36px; right: 30px; z-index: 40;
+  width: 76px; height: 76px; border-radius: 50%;
+  background: radial-gradient(circle,#ff4444,#cc0000); border: 3px solid #ff8888;
+  font-family:'Courier New',monospace; font-size: 11px; color: white; font-weight: bold;
+  display: none; align-items: center; justify-content: center; flex-direction: column; gap: 2px;
+  touch-action: none; cursor: pointer;
 }
-#rescue-btn {
-  position:fixed; bottom:42px; right:126px; z-index:40;
-  width:68px; height:68px; border-radius:50%;
-  background:radial-gradient(circle,#0088ff,#004499);
-  border:3px solid #44aaff; font-family:'Courier New',monospace;
-  font-size:11px; color:white; font-weight:bold; cursor:pointer;
-  display:none; align-items:center; justify-content:center; touch-action:none; user-select:none;
-  flex-direction:column; gap:2px;
+#scan-btn {
+  position: fixed; bottom: 40px; right: 122px; z-index: 40;
+  width: 70px; height: 70px; border-radius: 50%;
+  background: radial-gradient(circle,#0088ff,#004499); border: 3px solid #44aaff;
+  font-family:'Courier New',monospace; font-size: 11px; color: white; font-weight: bold;
+  display: none; align-items: center; justify-content: center; flex-direction: column; gap: 2px;
+  touch-action: none; cursor: pointer;
 }
 </style>
 </head>
@@ -132,46 +110,44 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
 
 <!-- START SCREEN -->
 <div id="start-screen">
-  <div class="start-ufo">🛸</div>
-  <div class="start-title">ALIEN INVASION</div>
-  <div class="start-sub">✨ A Game for Addie ✨</div>
-  <div class="start-story">
-    Aliens have invaded Earth! 🌍<br>
-    Shoot the alien scouts &amp; warriors.<br>
-    Find the <span style="color:#ff88ff;font-weight:bold">👑 Alien King</span> — when you get close,<br>
-    he'll teleport you both to the <span style="color:#44ccff">🛸 UFO</span>!<br>
-    Rescue humans trapped in <span style="color:#00ff88">💚 green juice</span> pods<br>
-    and defeat the King to save everyone!
+  <div class="s-icon">🔬</div>
+  <div class="s-title">ALIEN INVASION</div>
+  <div class="s-sub">✨ A Game for Addie ✨</div>
+  <div class="s-story">
+    Aliens have invaded Earth — but they're in <span style="color:#ff88ff">disguise</span>! 🕵️<br>
+    They look just like normal humans walking around town.<br><br>
+    Use your <span style="color:#44ccff">📱 X-Ray Pad</span> to scan people.<br>
+    If they're an alien, they'll <span style="color:#ff6666">PANIC and RUN</span>!<br>
+    Then use <span style="color:#ffdd44">auto-aim</span> to shoot them before they escape!<br><br>
+    But <span style="color:#ff4444">DON'T shoot innocent humans</span> — you'll lose points!<br>
+    Find the disguised <span style="color:#ffaa00">👑 Alien King</span> to win!
   </div>
-  <button class="start-btn" id="start-btn">▶ START GAME</button>
-  <div class="controls-hint">
-    🖥️ WASD move · Mouse aim · Click/Space shoot · E rescue<br>
-    📱 Joystick move · FIRE button shoot · SAVE button rescue
+  <button class="s-btn" id="start-btn">▶ START GAME</button>
+  <div class="s-hint">
+    🖥️ WASD move · E scan nearest person · Click/Space shoot<br>
+    📱 Joystick move · SCAN button · FIRE button
   </div>
 </div>
 
 <!-- HUD -->
 <div id="hud">
   <div>
-    <div style="font-family:'Courier New',monospace;font-size:10px;color:#00ff88;margin-bottom:2px;opacity:0.8">HEALTH</div>
+    <div style="font-family:'Courier New',monospace;font-size:10px;color:#44ff88;margin-bottom:2px;opacity:0.8">HEALTH</div>
     <div id="hp-wrap"><div id="hp-bar" style="width:100%"></div></div>
   </div>
-  <div id="phase-disp">PHASE 1: EARTH 🌍</div>
-  <div id="score-disp">SCORE: 0</div>
   <div id="wave-disp">WAVE 1</div>
+  <div id="score-disp">SCORE: 0</div>
+  <div id="pad-disp">📱 X-RAY: READY</div>
 </div>
 
-<!-- Phase Banner -->
-<div id="phase-banner"><div id="pbtext">TELEPORTING!</div><div id="pbsub">The Alien King is dragging you to the UFO...</div></div>
+<!-- Scan Banner -->
+<div id="scan-banner">
+  <div id="scan-banner-text">HUMAN ✅</div>
+  <div id="scan-banner-sub">No alien detected</div>
+</div>
 
-<!-- Teleport overlay -->
-<div id="tel-overlay"></div>
-
-<!-- King Radar -->
-<div id="king-radar">👑 ALIEN KING DETECTED!</div>
-
-<!-- Rescue Prompt -->
-<div id="rescue-prompt">Press E / SAVE to rescue!</div>
+<!-- Wave Banner -->
+<div id="wave-banner">WAVE 1</div>
 
 <!-- End Screen -->
 <div id="end-screen">
@@ -183,7 +159,7 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
 <!-- Mobile Controls -->
 <div id="joy-base"><div id="joy-knob"></div></div>
 <div id="fire-btn">🔫<span>FIRE</span></div>
-<div id="rescue-btn">💚<span>SAVE</span></div>
+<div id="scan-btn">📱<span>SCAN</span></div>
 
 <canvas id="c"></canvas>
 <script>
@@ -201,124 +177,147 @@ function playSound(type) {
   const t = audioCtx.currentTime;
   const master = audioCtx.createGain();
   master.connect(audioCtx.destination);
-  if (type === 'shoot') {
+
+  if (type === 'scan_start') {
+    // Rising whirr
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(400, t); o.frequency.exponentialRampToValueAtTime(1200, t+1.5);
+    g.gain.setValueAtTime(0.08, t); g.gain.linearRampToValueAtTime(0.15, t+0.5); g.gain.exponentialRampToValueAtTime(0.001, t+1.5);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+1.5);
+    master.gain.setValueAtTime(0.4, t);
+  } else if (type === 'human_found') {
+    // Friendly two-tone chime
+    [660, 880].forEach((f,i) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t+i*0.12); g.gain.linearRampToValueAtTime(0.18, t+i*0.12+0.04);
+      g.gain.linearRampToValueAtTime(0, t+i*0.12+0.35);
+      o.connect(g); g.connect(master); o.start(t+i*0.12); o.stop(t+i*0.12+0.4);
+    });
+    master.gain.setValueAtTime(0.5, t);
+  } else if (type === 'alien_found') {
+    // Dramatic sting — descending scare hit
     const o = audioCtx.createOscillator(), g = audioCtx.createGain();
     o.type = 'sawtooth';
-    o.frequency.setValueAtTime(550, t); o.frequency.exponentialRampToValueAtTime(90, t+0.13);
-    g.gain.setValueAtTime(0.22, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.16);
-    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.16);
-    master.gain.setValueAtTime(0.3, t);
-  } else if (type === 'alien_shoot') {
+    o.frequency.setValueAtTime(900, t); o.frequency.exponentialRampToValueAtTime(120, t+0.6);
+    g.gain.setValueAtTime(0.35, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.7);
+    o.connect(g); g.connect(master);
+    const o2 = audioCtx.createOscillator(), g2 = audioCtx.createGain();
+    o2.type = 'square'; o2.frequency.setValueAtTime(120, t+0.1); o2.frequency.exponentialRampToValueAtTime(60, t+0.7);
+    g2.gain.setValueAtTime(0.2, t+0.1); g2.gain.exponentialRampToValueAtTime(0.001, t+0.8);
+    o2.connect(g2); g2.connect(master);
+    o.start(t); o.stop(t+0.7); o2.start(t+0.1); o2.stop(t+0.8);
+    master.gain.setValueAtTime(0.55, t);
+  } else if (type === 'shoot') {
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(600, t); o.frequency.exponentialRampToValueAtTime(90, t+0.14);
+    g.gain.setValueAtTime(0.24, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.17);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.17);
+    master.gain.setValueAtTime(0.32, t);
+  } else if (type === 'hit_alien') {
     const o = audioCtx.createOscillator(), g = audioCtx.createGain();
     o.type = 'square';
-    o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(80, t+0.22);
-    g.gain.setValueAtTime(0.13, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.28);
+    o.frequency.setValueAtTime(200, t); o.frequency.exponentialRampToValueAtTime(60, t+0.22);
+    g.gain.setValueAtTime(0.28, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.28);
     o.connect(g); g.connect(master); o.start(t); o.stop(t+0.28);
-    master.gain.setValueAtTime(0.18, t);
-  } else if (type === 'hit') {
-    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-    o.type = 'square';
-    o.frequency.setValueAtTime(170, t); o.frequency.exponentialRampToValueAtTime(45, t+0.2);
-    g.gain.setValueAtTime(0.28, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.25);
-    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.25);
     master.gain.setValueAtTime(0.35, t);
   } else if (type === 'explosion') {
     const o = audioCtx.createOscillator(), g = audioCtx.createGain();
     o.type = 'sawtooth';
-    o.frequency.setValueAtTime(75, t); o.frequency.exponentialRampToValueAtTime(10, t+0.75);
-    g.gain.setValueAtTime(0.38, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.85);
+    o.frequency.setValueAtTime(80, t); o.frequency.exponentialRampToValueAtTime(10, t+0.8);
+    g.gain.setValueAtTime(0.4, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.9);
     o.connect(g); g.connect(master);
-    const buf = audioCtx.createBuffer(1, audioCtx.sampleRate*0.75, audioCtx.sampleRate);
-    const d = buf.getChannelData(0);
-    for (let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.12));
+    const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*0.8,audioCtx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.12));
     const ns=audioCtx.createBufferSource(); ns.buffer=buf;
-    const ng=audioCtx.createGain(); ng.gain.setValueAtTime(0.38,t); ng.gain.exponentialRampToValueAtTime(0.001,t+0.85);
+    const ng=audioCtx.createGain(); ng.gain.setValueAtTime(0.38,t); ng.gain.exponentialRampToValueAtTime(0.001,t+0.9);
     ns.connect(ng); ng.connect(master);
-    o.start(t); o.stop(t+0.85); ns.start(t); ns.stop(t+0.85);
+    o.start(t); o.stop(t+0.9); ns.start(t); ns.stop(t+0.9);
     master.gain.setValueAtTime(0.55, t);
-  } else if (type === 'teleport') {
-    [200,400,800,1600,3200].forEach((f,i)=>{
-      const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-      o.type='sine'; o.frequency.setValueAtTime(f,t+i*0.07);
-      g.gain.setValueAtTime(0,t+i*0.07); g.gain.linearRampToValueAtTime(0.18,t+i*0.07+0.04);
-      g.gain.linearRampToValueAtTime(0,t+i*0.07+0.2);
-      o.connect(g); g.connect(master); o.start(t+i*0.07); o.stop(t+i*0.07+0.25);
+  } else if (type === 'wrong_shot') {
+    // Sad penalty sound
+    [440, 330, 220].forEach((f,i) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.18, t+i*0.1); g.gain.exponentialRampToValueAtTime(0.001, t+i*0.1+0.28);
+      o.connect(g); g.connect(master); o.start(t+i*0.1); o.stop(t+i*0.1+0.32);
     });
-    master.gain.setValueAtTime(0.55, t);
-  } else if (type === 'rescue') {
-    [523,659,784,1047,1319].forEach((f,i)=>{
-      const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-      o.type='triangle'; o.frequency.value=f;
-      g.gain.setValueAtTime(0,t+i*0.09); g.gain.linearRampToValueAtTime(0.16,t+i*0.09+0.04);
-      g.gain.linearRampToValueAtTime(0,t+i*0.09+0.38);
-      o.connect(g); g.connect(master); o.start(t+i*0.09); o.stop(t+i*0.09+0.42);
-    });
-    master.gain.setValueAtTime(0.5, t);
-  } else if (type === 'powerup') {
-    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.type='sine'; o.frequency.setValueAtTime(400,t); o.frequency.exponentialRampToValueAtTime(900,t+0.25);
-    g.gain.setValueAtTime(0.2,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.35);
-    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.35);
+    master.gain.setValueAtTime(0.45, t);
+  } else if (type === 'escape') {
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(600, t); o.frequency.exponentialRampToValueAtTime(200, t+0.6);
+    g.gain.setValueAtTime(0.2, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.7);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.7);
     master.gain.setValueAtTime(0.35, t);
   } else if (type === 'victory') {
-    [523,659,784,1047,784,1047,1319].forEach((f,i)=>{
-      const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-      o.type='triangle'; o.frequency.value=f;
-      g.gain.setValueAtTime(0,t+i*0.12); g.gain.linearRampToValueAtTime(0.14,t+i*0.12+0.05);
-      g.gain.linearRampToValueAtTime(0,t+i*0.12+0.5);
-      o.connect(g); g.connect(master); o.start(t+i*0.12); o.stop(t+i*0.12+0.55);
+    [523,659,784,1047,784,1047,1319].forEach((f,i) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t+i*0.11); g.gain.linearRampToValueAtTime(0.15, t+i*0.11+0.05);
+      g.gain.linearRampToValueAtTime(0, t+i*0.11+0.45);
+      o.connect(g); g.connect(master); o.start(t+i*0.11); o.stop(t+i*0.11+0.5);
     });
     master.gain.setValueAtTime(0.5, t);
   } else if (type === 'gameover') {
-    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.type='sawtooth'; o.frequency.setValueAtTime(300,t); o.frequency.exponentialRampToValueAtTime(80,t+1.2);
-    g.gain.setValueAtTime(0.24,t); g.gain.linearRampToValueAtTime(0,t+1.5);
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(280, t); o.frequency.exponentialRampToValueAtTime(70, t+1.3);
+    g.gain.setValueAtTime(0.24, t); g.gain.linearRampToValueAtTime(0, t+1.5);
     o.connect(g); g.connect(master); o.start(t); o.stop(t+1.5);
-    master.gain.setValueAtTime(0.4, t);
-  } else if (type === 'king_alert') {
-    [200,260,200,160,200].forEach((f,i)=>{
-      const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-      o.type='sawtooth'; o.frequency.value=f;
-      g.gain.setValueAtTime(0.15,t+i*0.1); g.gain.linearRampToValueAtTime(0,t+i*0.1+0.12);
-      o.connect(g); g.connect(master); o.start(t+i*0.1); o.stop(t+i*0.1+0.14);
+    master.gain.setValueAtTime(0.38, t);
+  } else if (type === 'king_reveal') {
+    [200,260,320,260,200,150,100].forEach((f,i) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'sawtooth'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.22, t+i*0.08); g.gain.exponentialRampToValueAtTime(0.001, t+i*0.08+0.12);
+      o.connect(g); g.connect(master); o.start(t+i*0.08); o.stop(t+i*0.08+0.14);
     });
     master.gain.setValueAtTime(0.5, t);
+  } else if (type === 'hit_player') {
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = 'square';
+    o.frequency.setValueAtTime(160, t); o.frequency.exponentialRampToValueAtTime(40, t+0.2);
+    g.gain.setValueAtTime(0.3, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.25);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.25);
+    master.gain.setValueAtTime(0.35, t);
   } else if (type === 'wave_start') {
-    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.type='square'; o.frequency.setValueAtTime(300,t); o.frequency.linearRampToValueAtTime(500,t+0.3);
-    g.gain.setValueAtTime(0.15,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.5);
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = 'square';
+    o.frequency.setValueAtTime(300, t); o.frequency.linearRampToValueAtTime(500, t+0.3);
+    g.gain.setValueAtTime(0.15, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.5);
     o.connect(g); g.connect(master); o.start(t); o.stop(t+0.5);
     master.gain.setValueAtTime(0.3, t);
   }
 }
 
 let ambientNode = null, ambientStarted = false;
-function startAmbient(phase) {
-  if (!audioCtx) return;
-  if (ambientNode) { try{ambientNode.stop();}catch(e){} ambientNode=null; ambientStarted=false; }
-  if (ambientStarted) return;
+function startAmbient() {
+  if (!audioCtx || ambientStarted) return;
   ambientStarted = true;
   const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*4,audioCtx.sampleRate);
   const d=buf.getChannelData(0);
   for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1);
   const ns=audioCtx.createBufferSource(); ns.buffer=buf; ns.loop=true;
-  const filt=audioCtx.createBiquadFilter();
-  filt.type='lowpass'; filt.frequency.value=phase===2?110:170;
-  const g=audioCtx.createGain(); g.gain.value=phase===2?0.05:0.03;
+  const filt=audioCtx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=200;
+  const g=audioCtx.createGain(); g.gain.value=0.025;
   ns.connect(filt); filt.connect(g); g.connect(audioCtx.destination);
   ns.start(); ambientNode=ns;
 }
 
 // ============================================================
-// CANVAS SETUP
+// CANVAS
 // ============================================================
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 let W, H;
 function resize() {
-  W = window.innerWidth; H = window.innerHeight;
-  canvas.width = W; canvas.height = H;
-  canvas.style.width = W+'px'; canvas.style.height = H+'px';
+  W=window.innerWidth; H=window.innerHeight;
+  canvas.width=W; canvas.height=H;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
 }
 resize();
 window.addEventListener('resize', resize);
@@ -328,106 +327,76 @@ document.addEventListener('touchmove', e=>e.preventDefault(), {passive:false});
 // ============================================================
 // GAME STATE
 // ============================================================
-let gameRunning=false, gamePhase=1, score=0;
-let alienKillCount=0, humansRescued=0, wavesCompleted=0;
-let camX=0, camY=0, camShake=0;
-let teleporting=false, gameOver=false;
-let frameCount=0;
-const WORLD_W=2000, WORLD_H=2000;
+let gameRunning=false, score=0, waveNumber=1;
+let aliensKilled=0, humansShot=0, aliensEscaped=0, kingDefeated=false;
+let camX=0, camY=0, camShake=0, frameCount=0;
+let waveActive=false, waveComplete=false, waveCompleteTimer=0;
+let kingSpawned=false, gameWon=false;
+const WORLD_W=2400, WORLD_H=2400;
 
 const player = {
-  x:1000, y:1000, angle:0, hp:100, maxHp:100,
-  speed:0, maxSpeed:4.8, accel:0.42, drag:0.87,
-  size:22, invincible:0, flashTimer:0,
-  shootCooldown:0, shootRate:10,
-  isMoving:false
+  x:1200, y:1200, angle:0, hp:100, maxHp:100,
+  speed:0, maxSpeed:4.5, accel:0.4, drag:0.87,
+  size:20, invincible:0, flashTimer:0,
+  shootCooldown:0, shootRate:12,
 };
 
-let playerBullets=[], alienBullets=[];
-let aliens=[], alienKing=null;
-let pickups=[], particles=[], floatingTexts=[];
-let greenPods=[], earthDecor=[], ufoDecor=[], bgStars=[];
-let waveNumber=1, waveTimer=0, waveActive=false;
-let nearPod=null;
-let waveAnnounceTimer=0, waveAnnounceText='';
+// Scan state
+const scan = {
+  active: false,      // is a scan in progress?
+  progress: 0,        // 0-1
+  SCAN_TIME: 90,      // frames to complete scan
+  cooldown: 0,
+  COOLDOWN_TIME: 80,
+  target: null,       // NPC being scanned
+};
 
-// ============================================================
-// INPUT
-// ============================================================
-const keys={};
-let mouseX=0, mouseY=0, mouseDown=false;
-let joyActive=false, joyX=0, joyY=0;
-let fireActive=false, rescueActive=false;
+let npcs = [];
+let bullets = [];
+let alienBullets = [];
+let particles = [], floatingTexts = [];
+let earthDecor = [], bgStars = [];
 
 // ============================================================
 // PARTICLES
 // ============================================================
 function addParticle(x,y,type,count) {
   for(let i=0;i<count;i++){
-    const angle=Math.random()*Math.PI*2;
-    const spd=0.6+Math.random()*3.8;
+    const angle=Math.random()*Math.PI*2, spd=0.5+Math.random()*4;
     let life,r,g,b,size;
-    if(type==='explosion'){
-      life=32+Math.random()*36; const rnd=Math.random();
-      r=255; g=Math.floor(70+rnd*170); b=Math.floor(rnd*40); size=3+Math.random()*6;
-    } else if(type==='green_exp'){
-      life=28+Math.random()*28;
-      r=30+Math.floor(Math.random()*50); g=180+Math.floor(Math.random()*75); b=60+Math.floor(Math.random()*80); size=3+Math.random()*7;
-    } else if(type==='sparkle'){
-      life=14+Math.random()*14; r=255; g=220; b=50; size=2+Math.random()*4;
-    } else if(type==='rescue'){
-      life=38+Math.random()*28;
-      r=0; g=200+Math.floor(Math.random()*55); b=220+Math.floor(Math.random()*35); size=3+Math.random()*5;
-    } else if(type==='teleport'){
-      life=45+Math.random()*40;
-      r=0; g=200+Math.floor(Math.random()*55); b=150+Math.floor(Math.random()*105); size=4+Math.random()*8;
-    } else if(type==='smoke'){
-      life=45+Math.random()*30; const v=55+Math.floor(Math.random()*45);
-      r=v; g=v; b=v; size=4+Math.random()*9;
-    } else if(type==='blood_green'){
-      life=22+Math.random()*18;
-      r=10; g=170+Math.floor(Math.random()*85); b=40; size=2+Math.random()*4;
-    } else if(type==='king_hit'){
-      life=25+Math.random()*20; r=255; g=140+Math.floor(Math.random()*80); b=0; size=4+Math.random()*6;
-    } else {
-      life=20; r=200; g=200; b=200; size=3;
-    }
+    if(type==='explosion'){ life=30+Math.random()*35; const rnd=Math.random(); r=255; g=Math.floor(70+rnd*170); b=Math.floor(rnd*40); size=3+Math.random()*6; }
+    else if(type==='green_exp'){ life=28+Math.random()*28; r=20; g=180+Math.floor(Math.random()*75); b=50; size=3+Math.random()*7; }
+    else if(type==='scan_ring'){ life=30+Math.random()*20; r=68; g=200+Math.floor(Math.random()*55); b=255; size=3+Math.random()*4; }
+    else if(type==='sparkle'){ life=14+Math.random()*14; r=255; g=220; b=50; size=2+Math.random()*4; }
+    else if(type==='smoke'){ life=40+Math.random()*30; const v=55+Math.floor(Math.random()*45); r=v;g=v;b=v;size=4+Math.random()*9; }
+    else if(type==='xray_hit'){ life=20+Math.random()*15; r=100;g=220;b=255;size=2+Math.random()*4; }
+    else if(type==='human_ok'){ life=25+Math.random()*20; r=100;g=255;b=130;size=3+Math.random()*4; }
+    else { life=20; r=200;g=200;b=200;size=3; }
     particles.push({x,y,vx:Math.cos(angle)*spd,vy:Math.sin(angle)*spd,life,maxLife:life,r,g,b,size,type});
   }
 }
-function addFloatText(x,y,text,color){ floatingTexts.push({x,y,text,color,life:60,vy:-1.4}); }
+function addFloatText(x,y,text,color){ floatingTexts.push({x,y,text,color,life:65,vy:-1.3}); }
 function updateParticles(){
-  particles.forEach(p=>{
-    p.x+=p.vx; p.y+=p.vy;
-    p.vx*=0.96; p.vy*=0.96;
-    if(p.type==='smoke') p.vy-=0.03;
-    p.life--;
-  });
+  particles.forEach(p=>{ p.x+=p.vx;p.y+=p.vy;p.vx*=0.96;p.vy*=0.96; if(p.type==='smoke')p.vy-=0.03; p.life--; });
   particles=particles.filter(p=>p.life>0);
-  floatingTexts.forEach(f=>{f.y+=f.vy; f.life--;});
+  floatingTexts.forEach(f=>{f.y+=f.vy;f.life--;});
   floatingTexts=floatingTexts.filter(f=>f.life>0);
 }
 function drawParticles(){
   particles.forEach(p=>{
-    const sx=p.x-camX, sy=p.y-camY;
+    const sx=p.x-camX,sy=p.y-camY;
     if(sx<-20||sx>W+20||sy<-20||sy>H+20) return;
     const lr=p.life/p.maxLife;
     ctx.globalAlpha=lr*0.88;
     ctx.fillStyle=`rgb(${p.r},${p.g},${p.b})`;
-    if(p.type==='smoke'){
-      ctx.beginPath(); ctx.arc(sx,sy,p.size*(2-lr),0,Math.PI*2); ctx.fill();
-    } else {
-      const s=p.size*lr;
-      ctx.fillRect(sx-s/2,sy-s/2,s,s);
-    }
+    if(p.type==='smoke'){ ctx.beginPath();ctx.arc(sx,sy,p.size*(2-lr),0,Math.PI*2);ctx.fill(); }
+    else { const s=p.size*lr; ctx.fillRect(sx-s/2,sy-s/2,s,s); }
   });
   ctx.globalAlpha=1;
   floatingTexts.forEach(f=>{
     const sx=f.x-camX, sy=f.y-camY;
-    ctx.globalAlpha=f.life/60;
-    ctx.font='bold 15px Courier New';
-    ctx.fillStyle=f.color;
-    ctx.textAlign='center';
+    ctx.globalAlpha=Math.min(1,f.life/40);
+    ctx.font='bold 15px Courier New'; ctx.fillStyle=f.color; ctx.textAlign='center';
     ctx.fillText(f.text,sx,sy);
   });
   ctx.globalAlpha=1; ctx.textAlign='left';
@@ -438,107 +407,119 @@ function drawParticles(){
 // ============================================================
 function generateBgStars(){
   bgStars=[];
-  for(let i=0;i<180;i++) bgStars.push({x:Math.random()*W,y:Math.random()*H,r:0.5+Math.random()*1.5,tw:Math.random()*Math.PI*2});
+  for(let i=0;i<160;i++) bgStars.push({x:Math.random()*W,y:Math.random()*H,r:0.5+Math.random()*1.5,tw:Math.random()*Math.PI*2});
 }
 function generateEarth(){
   earthDecor=[];
   // Trees
-  for(let i=0;i<110;i++){
+  for(let i=0;i<130;i++){
     let x,y,att=0;
     do{ x=80+Math.random()*(WORLD_W-160); y=80+Math.random()*(WORLD_H-160); att++; }
-    while(Math.sqrt((x-player.x)**2+(y-player.y)**2)<200 && att<25);
-    earthDecor.push({type:'tree',x,y,r:16+Math.random()*14,color:`hsl(${100+Math.random()*50},${45+Math.random()*30}%,${18+Math.random()*14}%)`});
+    while(Math.sqrt((x-player.x)**2+(y-player.y)**2)<220 && att<25);
+    earthDecor.push({type:'tree',x,y,r:14+Math.random()*16,col:`hsl(${105+Math.random()*55},${45+Math.random()*30}%,${17+Math.random()*14}%)`});
   }
-  // Rocks
-  for(let i=0;i<55;i++)
-    earthDecor.push({type:'rock',x:60+Math.random()*(WORLD_W-120),y:60+Math.random()*(WORLD_H-120),r:7+Math.random()*12});
+  // Benches / lamp posts
+  for(let i=0;i<40;i++)
+    earthDecor.push({type:'bench',x:100+Math.random()*(WORLD_W-200),y:100+Math.random()*(WORLD_H-200)});
   // Houses
-  for(let i=0;i<22;i++)
-    earthDecor.push({type:'house',x:120+Math.random()*(WORLD_W-240),y:120+Math.random()*(WORLD_H-240),w:50+Math.random()*35,h:38+Math.random()*22,col:`hsl(${110+Math.random()*30},${20+Math.random()*20}%,${14+Math.random()*10}%)`});
-  // Roads (simple lines for atmosphere)
-  for(let i=0;i<6;i++)
-    earthDecor.push({type:'road',x:Math.random()*WORLD_W,y:Math.random()*WORLD_H,horiz:Math.random()<0.5,len:200+Math.random()*400});
-}
-function generateUFODecor(){
-  ufoDecor=[];
-  for(let i=0;i<42;i++)
-    ufoDecor.push({type:'panel',x:80+Math.random()*(WORLD_W-160),y:80+Math.random()*(WORLD_H-160),w:28+Math.random()*44,h:18+Math.random()*32,seed:Math.random()*1000});
-  for(let i=0;i<28;i++){
-    let x,y,att=0;
-    do{ x=100+Math.random()*(WORLD_W-200); y=100+Math.random()*(WORLD_H-200); att++; }
-    while(Math.sqrt((x-player.x)**2+(y-player.y)**2)<180 && att<25);
-    ufoDecor.push({type:'pillar',x,y,r:12+Math.random()*10});
-  }
-}
-function generateGreenPods(count){
-  greenPods=[];
-  for(let i=0;i<count;i++){
-    let x,y,att=0;
-    do{ x=200+Math.random()*(WORLD_W-400); y=200+Math.random()*(WORLD_H-400); att++; }
-    while(Math.sqrt((x-player.x)**2+(y-player.y)**2)<220 && att<30);
-    greenPods.push({x,y,rescued:false,glowPhase:Math.random()*Math.PI*2});
-  }
+  for(let i=0;i<25;i++)
+    earthDecor.push({type:'house',x:150+Math.random()*(WORLD_W-300),y:150+Math.random()*(WORLD_H-300),w:55+Math.random()*40,h:40+Math.random()*25,col:`hsl(${100+Math.random()*40},${18+Math.random()*18}%,${14+Math.random()*10}%)`});
+  // Paths
+  for(let i=0;i<8;i++)
+    earthDecor.push({type:'path',x:Math.random()*WORLD_W,y:Math.random()*WORLD_H,horiz:Math.random()<0.5,len:180+Math.random()*500});
 }
 
 // ============================================================
-// ALIENS
+// NPC FACTORY
 // ============================================================
-function makeAlien(x,y,type){
-  const T={
-    scout:  {hp:3,  size:13,spd:1.3,col:'#44ff44',sr:130,score:10,det:270},
-    warrior:{hp:9,  size:18,spd:1.1,col:'#aa44ff',sr:85, score:28,det:360},
-    elite:  {hp:16, size:20,spd:0.95,col:'#ff4488',sr:62, score:55,det:420},
-    guard:  {hp:7,  size:15,spd:1.25,col:'#44aaff',sr:95, score:18,det:310},
-  };
-  const t=T[type]||T.scout;
+const SKIN_COLS  = ['#ffcc88','#f0a070','#c68a5e','#8b5e3c','#ffe0b0'];
+const CLOTH_COLS = ['#4488cc','#cc4444','#44aa44','#aa44cc','#cc8844','#888899','#dd6644','#5599bb'];
+const HAIR_COLS  = ['#2a1a0a','#443322','#ffdd44','#886644','#cc4444','#111111'];
+
+function makeNPC(x, y, type) {
+  const isKing = type === 'king';
   return {
-    x,y,type,angle:Math.random()*Math.PI*2,
-    hp:t.hp,maxHp:t.hp,size:t.size,speed:t.spd+Math.random()*0.3,
-    color:t.col,shootCooldown:Math.random()*t.sr,shootRate:t.sr,
-    score:t.score,detRange:t.det,
-    flashTimer:0,dead:false,vx:0,vy:0,
-    patrolAngle:Math.random()*Math.PI*2,patrolTimer:0,
-  };
-}
-function makeKing(x,y){
-  return {
-    x,y,type:'king',angle:0,hp:60,maxHp:60,size:30,speed:1.8,
-    color:'#ffaa00',flashTimer:0,dead:false,
-    shootCooldown:0,shootRate:35,
-    phase:1,teleported:false,orbitAngle:0,detRange:600,score:500
+    x, y, type,          // 'human' | 'alien' | 'king'
+    state: 'wandering',  // 'wandering' | 'fleeing' | 'attacking' | 'dead' | 'escaped'
+    angle: Math.random()*Math.PI*2,
+    walkSpeed: isKing ? 0.7 : 0.4+Math.random()*0.5,
+    fleeSpeed: isKing ? 0 : 3.0+Math.random()*0.8, // king doesn't flee, attacks
+    size: isKing ? 24 : 16,
+    hp: isKing ? 60 : 6,
+    maxHp: isKing ? 60 : 6,
+    // Visual
+    skin:  SKIN_COLS [Math.floor(Math.random()*SKIN_COLS.length)],
+    cloth: CLOTH_COLS[Math.floor(Math.random()*CLOTH_COLS.length)],
+    hair:  HAIR_COLS [Math.floor(Math.random()*HAIR_COLS.length)],
+    // Scan state
+    beingScanned: false,
+    scanBar: 0,
+    // Animation
+    walkTimer: Math.random()*100,
+    changeDirTimer: 60+Math.random()*120,
+    // Alien glow after reveal
+    flashTimer: 0,
+    revealGlow: 0,
+    // Tell — aliens occasionally shimmer (subtle hint)
+    tellTimer: isKing ? 0 : (type!=='human' ? Math.random()*180 : 9999),
+    tellActive: false,
+    // King attacks
+    shootCooldown: 45,
+    // Score
+    score: isKing ? 500 : 60,
   };
 }
 
 // ============================================================
-// WAVES
+// WAVE SYSTEM
 // ============================================================
-function spawnWave(){
-  waveNumber++; wavesCompleted++;
-  const count=5+waveNumber*2;
-  const types=gamePhase===1
-    ?(waveNumber<=2?['scout']:waveNumber<=4?['scout','warrior']:['scout','warrior','elite'])
-    :['guard','warrior','elite'];
-  for(let i=0;i<count;i++){
+const WAVE_CONFIG = [
+  { total:5,  aliens:2, king:false },   // Wave 1
+  { total:7,  aliens:3, king:false },   // Wave 2
+  { total:9,  aliens:4, king:false },   // Wave 3
+  { total:11, aliens:5, king:false },   // Wave 4
+  { total:8,  aliens:4, king:true  },   // Wave 5 — King appears!
+  { total:12, aliens:7, king:true  },   // Wave 6
+];
+function getWaveConfig(n){ return WAVE_CONFIG[Math.min(n-1, WAVE_CONFIG.length-1)]; }
+
+function spawnWave(n){
+  npcs=[];
+  const cfg = getWaveConfig(n);
+  const totalNPCs = cfg.total;
+  const alienCount = cfg.aliens;
+  kingSpawned = false;
+
+  // Decide which indices are aliens
+  const alienIndices = new Set();
+  while(alienIndices.size < alienCount) alienIndices.add(Math.floor(Math.random()*totalNPCs));
+
+  for(let i=0;i<totalNPCs;i++){
     let x,y,att=0;
-    do{ x=100+Math.random()*(WORLD_W-200); y=100+Math.random()*(WORLD_H-200); att++; }
+    do{ x=150+Math.random()*(WORLD_W-300); y=150+Math.random()*(WORLD_H-300); att++; }
     while(Math.sqrt((x-player.x)**2+(y-player.y)**2)<320 && att<30);
-    aliens.push(makeAlien(x,y,types[Math.floor(Math.random()*types.length)]));
+    const type = alienIndices.has(i) ? 'alien' : 'human';
+    npcs.push(makeNPC(x,y,type));
   }
-  waveTimer=0; waveActive=true;
-  waveAnnounceText='⚠️ WAVE '+waveNumber+'!';
-  waveAnnounceTimer=150;
+
+  // Spawn king if wave has one
+  if(cfg.king){
+    let kx,ky,att=0;
+    do{ kx=300+Math.random()*(WORLD_W-600); ky=300+Math.random()*(WORLD_H-600); att++; }
+    while(Math.sqrt((kx-player.x)**2+(ky-player.y)**2)<400 && att<30);
+    npcs.push(makeNPC(kx,ky,'king'));
+    kingSpawned=true;
+  }
+
+  waveActive=true; waveComplete=false;
+  document.getElementById('wave-disp').textContent='WAVE '+n;
+  showWaveBanner('⚠️ WAVE '+n);
   playSound('wave_start');
-  document.getElementById('wave-disp').textContent='WAVE '+waveNumber;
 }
-function initWave1(){
-  waveNumber=1; waveActive=true;
-  for(let i=0;i<6;i++){
-    let x,y,att=0;
-    do{ x=100+Math.random()*(WORLD_W-200); y=100+Math.random()*(WORLD_H-200); att++; }
-    while(Math.sqrt((x-player.x)**2+(y-player.y)**2)<320 && att<30);
-    aliens.push(makeAlien(x,y,'scout'));
-  }
-  document.getElementById('wave-disp').textContent='WAVE 1';
+function showWaveBanner(text){
+  const el=document.getElementById('wave-banner');
+  el.textContent=text; el.style.display='block';
+  setTimeout(()=>el.style.display='none',1800);
 }
 
 // ============================================================
@@ -547,44 +528,130 @@ function initWave1(){
 function firePlayerBullet(){
   if(player.shootCooldown>0) return;
   player.shootCooldown=player.shootRate;
-  // Auto-aim
+  // Auto-aim at nearest REVEALED (fleeing or attacking) alien/king
   let aimAngle=player.angle;
   let nearest=null, nearDist=Infinity;
-  [...aliens,alienKing].filter(a=>a&&!a.dead).forEach(a=>{
-    const dx=a.x-player.x, dy=a.y-player.y;
+  npcs.filter(n=>n.state==='fleeing'||n.state==='attacking').forEach(n=>{
+    const dx=n.x-player.x, dy=n.y-player.y;
     const d=Math.sqrt(dx*dx+dy*dy);
-    if(d<nearDist&&d<820){ nearDist=d; nearest=a; }
+    if(d<nearDist&&d<900){ nearDist=d; nearest=n; }
   });
-  if(nearest) aimAngle=Math.atan2(nearest.y-player.y,nearest.x-player.x);
-  else if(!joyActive) aimAngle=Math.atan2((mouseY+camY)-player.y,(mouseX+camX)-player.x);
-  aimAngle+=(Math.random()-0.5)*0.05;
-  playerBullets.push({
-    x:player.x+Math.cos(aimAngle)*26,
-    y:player.y+Math.sin(aimAngle)*26,
-    vx:Math.cos(aimAngle)*12,
-    vy:Math.sin(aimAngle)*12,
-    life:72, size:6, color:'#00ff88'
+  if(nearest){
+    // Lead the target a bit
+    const speed=11;
+    const dist=Math.sqrt((nearest.x-player.x)**2+(nearest.y-player.y)**2);
+    const leadTime=dist/speed;
+    const tx=nearest.x+Math.cos(nearest.angle)*nearest.fleeSpeed*leadTime*0.4;
+    const ty=nearest.y+Math.sin(nearest.angle)*nearest.fleeSpeed*leadTime*0.4;
+    aimAngle=Math.atan2(ty-player.y,tx-player.x);
+  } else if(!joyActive){
+    aimAngle=Math.atan2((mouseY+camY)-player.y,(mouseX+camX)-player.x);
+  }
+  aimAngle+=(Math.random()-0.5)*0.04;
+  bullets.push({
+    x:player.x+Math.cos(aimAngle)*24, y:player.y+Math.sin(aimAngle)*24,
+    vx:Math.cos(aimAngle)*12, vy:Math.sin(aimAngle)*12,
+    life:80, size:6, color:'#44ff88'
   });
   playSound('shoot');
-  addParticle(player.x+Math.cos(aimAngle)*26,player.y+Math.sin(aimAngle)*26,'sparkle',4);
+  addParticle(player.x+Math.cos(aimAngle)*24,player.y+Math.sin(aimAngle)*24,'sparkle',4);
 }
-function fireAlienBullet(alien){
-  const aa=Math.atan2(player.y-alien.y,player.x-alien.x)+(Math.random()-0.5)*0.28;
-  alienBullets.push({
-    x:alien.x, y:alien.y,
-    vx:Math.cos(aa)*(alien.type==='king'?7:5),
-    vy:Math.sin(aa)*(alien.type==='king'?7:5),
-    life:85, size:alien.type==='king'?8:5,
-    color:alien.type==='king'?'#ff8800':'#ff4444'
-  });
-  if(Math.random()<0.2) playSound('alien_shoot');
+function fireKingBullet(king){
+  const aa=Math.atan2(player.y-king.y,player.x-king.x)+(Math.random()-0.5)*0.2;
+  alienBullets.push({x:king.x,y:king.y,vx:Math.cos(aa)*6,vy:Math.sin(aa)*6,life:90,size:8,color:'#ffaa00'});
 }
 
 // ============================================================
-// UPDATE
+// SCAN MECHANIC
+// ============================================================
+function startScan(){
+  if(scan.active||scan.cooldown>0) return;
+  // Find nearest NPC within scan range
+  let target=null, nearDist=Infinity;
+  npcs.filter(n=>n.state==='wandering').forEach(n=>{
+    const dx=n.x-player.x, dy=n.y-player.y;
+    const d=Math.sqrt(dx*dx+dy*dy);
+    if(d<100&&d<nearDist){ nearDist=d; target=n; }
+  });
+  if(!target) return; // nobody to scan
+  scan.active=true; scan.progress=0; scan.target=target;
+  target.beingScanned=true; target.scanBar=0;
+  playSound('scan_start');
+}
+function updateScan(){
+  if(scan.cooldown>0) scan.cooldown--;
+  if(!scan.active||!scan.target) return;
+  const target=scan.target;
+  // Cancel if target moved out of range
+  const dx=target.x-player.x, dy=target.y-player.y;
+  if(Math.sqrt(dx*dx+dy*dy)>140||target.state!=='wandering'){
+    cancelScan(); return;
+  }
+  scan.progress+=1/scan.SCAN_TIME;
+  target.scanBar=scan.progress;
+  if(scan.progress>=1){
+    completeScan(target);
+  }
+  // Update pad display
+  const pct=Math.floor(scan.progress*100);
+  document.getElementById('pad-disp').textContent=`📱 SCANNING... ${pct}%`;
+}
+function cancelScan(){
+  if(scan.target) scan.target.beingScanned=false;
+  scan.active=false; scan.target=null; scan.progress=0;
+  document.getElementById('pad-disp').textContent='📱 X-RAY: READY';
+}
+function completeScan(target){
+  scan.active=false; scan.target=null; scan.progress=0;
+  scan.cooldown=scan.COOLDOWN_TIME;
+  target.beingScanned=false; target.scanBar=0;
+  if(target.type==='human'){
+    // It's a real human!
+    playSound('human_found');
+    addParticle(target.x,target.y,'human_ok',16);
+    addFloatText(target.x,target.y-30,'✅ HUMAN!','#44ff88');
+    showScanBanner('HUMAN ✅','No alien — safe!','#44ff88');
+    camShake=3;
+  } else {
+    // ALIEN (or king) revealed!
+    target.state = target.type==='king' ? 'attacking' : 'fleeing';
+    target.revealGlow=1;
+    target.flashTimer=20;
+    // Set flee/attack direction
+    if(target.type==='king'){
+      playSound('king_reveal');
+      target.angle=Math.atan2(player.y-target.y,player.x-target.x); // toward player
+      addParticle(target.x,target.y,'explosion',30);
+      addFloatText(target.x,target.y-40,'👑 ALIEN KING!','#ffaa00');
+      showScanBanner('👑 ALIEN KING!','He does NOT flee - he ATTACKS!','#ffaa00');
+      camShake=20;
+    } else {
+      playSound('alien_found');
+      target.angle=Math.atan2(target.y-player.y,target.x-player.x); // away from player
+      addParticle(target.x,target.y,'scan_ring',18);
+      addFloatText(target.x,target.y-30,'👽 ALIEN!','#ff4444');
+      showScanBanner('👽 ALIEN DETECTED!','Shoot it before it escapes!','#ff4444');
+      camShake=12;
+      score+=10;
+    }
+  }
+  // Brief cooldown indicator
+  setTimeout(()=>document.getElementById('pad-disp').textContent='📱 X-RAY: READY',scan.COOLDOWN_TIME*1000/60);
+}
+let scanBannerTimer=0;
+function showScanBanner(title,sub,color){
+  const el=document.getElementById('scan-banner');
+  document.getElementById('scan-banner-text').textContent=title;
+  document.getElementById('scan-banner-text').style.color=color;
+  document.getElementById('scan-banner-sub').textContent=sub;
+  el.style.display='block'; scanBannerTimer=120;
+}
+
+// ============================================================
+// UPDATE PLAYER
 // ============================================================
 function updatePlayer(){
-  let inputX=0, inputY=0;
+  let inputX=0,inputY=0;
   if(joyActive){ inputX=joyX; inputY=joyY; }
   else {
     if(keys['KeyW']||keys['ArrowUp'])    inputY-=1;
@@ -595,15 +662,12 @@ function updatePlayer(){
     if(m>0){ inputX/=m; inputY/=m; }
   }
   const hasInput=Math.abs(inputX)>0.05||Math.abs(inputY)>0.05;
-  player.isMoving=hasInput;
   if(hasInput){
     const ta=Math.atan2(inputY,inputX);
     let diff=ta-player.angle;
-    while(diff>Math.PI) diff-=Math.PI*2;
-    while(diff<-Math.PI) diff+=Math.PI*2;
-    player.angle+=Math.sign(diff)*Math.min(Math.abs(diff),0.2);
-    const mag=Math.min(1,Math.sqrt(inputX*inputX+inputY*inputY));
-    player.speed=Math.min(player.speed+player.accel,player.maxSpeed*mag);
+    while(diff>Math.PI)diff-=Math.PI*2; while(diff<-Math.PI)diff+=Math.PI*2;
+    player.angle+=Math.sign(diff)*Math.min(Math.abs(diff),0.22);
+    player.speed=Math.min(player.speed+player.accel,player.maxSpeed*Math.min(1,Math.sqrt(inputX*inputX+inputY*inputY)));
   } else {
     player.speed*=player.drag;
     if(Math.abs(player.speed)<0.01) player.speed=0;
@@ -617,176 +681,182 @@ function updatePlayer(){
   if(player.flashTimer>0) player.flashTimer--;
   const firePressed=mouseDown||keys['Space']||fireActive;
   if(firePressed) firePlayerBullet();
-  if(hasInput&&frameCount%3===0) addParticle(player.x,player.y,gamePhase===1?'smoke':'teleport',1);
+  if(hasInput&&frameCount%4===0) addParticle(player.x,player.y,'smoke',1);
 }
-function updateBullets(){
-  playerBullets.forEach(b=>{b.x+=b.vx; b.y+=b.vy; b.life--;});
-  playerBullets=playerBullets.filter(b=>b.life>0);
-  alienBullets.forEach(b=>{b.x+=b.vx; b.y+=b.vy; b.life--;});
-  alienBullets=alienBullets.filter(b=>b.life>0);
-}
-function updateAliens(){
-  const all=[...aliens,alienKing].filter(a=>a&&!a.dead);
-  all.forEach(alien=>{
-    const dx=player.x-alien.x, dy=player.y-alien.y;
-    const dist=Math.sqrt(dx*dx+dy*dy);
-    if(alien.flashTimer>0) alien.flashTimer--;
-    if(dist<alien.detRange){
-      alien.angle=Math.atan2(dy,dx);
-      if(alien.type==='king'&&alien.phase===2){
-        alien.orbitAngle+=0.022;
-        alien.x+=Math.cos(alien.angle)*alien.speed*0.65+Math.cos(alien.orbitAngle)*1.0;
-        alien.y+=Math.sin(alien.angle)*alien.speed*0.65+Math.sin(alien.orbitAngle)*1.0;
-      } else {
-        alien.x+=Math.cos(alien.angle)*alien.speed;
-        alien.y+=Math.sin(alien.angle)*alien.speed;
+
+// ============================================================
+// UPDATE NPCs
+// ============================================================
+function updateNPCs(){
+  npcs.forEach(npc=>{
+    if(npc.state==='dead'||npc.state==='escaped') return;
+    if(npc.flashTimer>0) npc.flashTimer--;
+    npc.walkTimer++;
+    const dx=player.x-npc.x, dy=player.y-npc.y;
+    const distToPlayer=Math.sqrt(dx*dx+dy*dy);
+
+    if(npc.state==='wandering'){
+      // Change direction occasionally
+      npc.changeDirTimer--;
+      if(npc.changeDirTimer<=0){
+        npc.angle=Math.random()*Math.PI*2;
+        npc.changeDirTimer=60+Math.random()*120;
       }
-      alien.shootCooldown--;
-      if(alien.shootCooldown<=0){
-        if(dist<640) fireAlienBullet(alien);
-        alien.shootCooldown=alien.shootRate+Math.floor(Math.random()*22);
+      npc.x+=Math.cos(npc.angle)*npc.walkSpeed;
+      npc.y+=Math.sin(npc.angle)*npc.walkSpeed;
+      npc.x=Math.max(60,Math.min(WORLD_W-60,npc.x));
+      npc.y=Math.max(60,Math.min(WORLD_H-60,npc.y));
+      // Bounce off walls
+      if(npc.x<=60||npc.x>=WORLD_W-60||npc.y<=60||npc.y>=WORLD_H-60)
+        npc.angle+=Math.PI+((Math.random()-0.5)*0.5);
+      // Alien tell
+      if(npc.type!=='human'&&npc.type!=='king'){
+        npc.tellTimer--;
+        if(npc.tellTimer<=0){
+          npc.tellActive=true;
+          setTimeout(()=>{npc.tellActive=false; npc.tellTimer=180+Math.random()*300;},300);
+          npc.tellTimer=9999;
+        }
       }
-    } else {
-      alien.patrolTimer--;
-      if(alien.patrolTimer<=0){ alien.patrolAngle=Math.random()*Math.PI*2; alien.patrolTimer=55+Math.floor(Math.random()*75); }
-      alien.x+=Math.cos(alien.patrolAngle)*alien.speed*0.45;
-      alien.y+=Math.sin(alien.patrolAngle)*alien.speed*0.45;
-    }
-    alien.x=Math.max(20,Math.min(WORLD_W-20,alien.x));
-    alien.y=Math.max(20,Math.min(WORLD_H-20,alien.y));
-    // King trigger: approach on phase 1
-    if(alien.type==='king'&&alien.phase===1&&!alien.teleported&&dist<210&&!teleporting){
-      triggerTeleport();
+    } else if(npc.state==='fleeing'){
+      // Run away from player
+      const fleeAng=Math.atan2(npc.y-player.y,npc.x-player.x);
+      npc.angle=fleeAng;
+      npc.x+=Math.cos(fleeAng)*npc.fleeSpeed;
+      npc.y+=Math.sin(fleeAng)*npc.fleeSpeed;
+      // Fade out glow
+      if(npc.revealGlow>0) npc.revealGlow=Math.max(0,npc.revealGlow-0.015);
+      // Escape if off map or very far from player
+      if(npc.x<-60||npc.x>WORLD_W+60||npc.y<-60||npc.y>WORLD_H+60||distToPlayer>1000){
+        npc.state='escaped';
+        aliensEscaped++;
+        score=Math.max(0,score-30);
+        addFloatText(npc.x<W/2?npc.x+40:npc.x-40, npc.y,'💨 ESCAPED! -30','#ff8844');
+        playSound('escape');
+        camShake=4;
+      }
+    } else if(npc.state==='attacking'){
+      // King: move toward player and shoot
+      npc.angle=Math.atan2(player.y-npc.y,player.x-npc.x);
+      const spd=1.8+waveNumber*0.12;
+      npc.x+=Math.cos(npc.angle)*spd;
+      npc.y+=Math.sin(npc.angle)*spd;
+      npc.shootCooldown--;
+      if(npc.shootCooldown<=0&&distToPlayer<600){
+        fireKingBullet(npc);
+        npc.shootCooldown=30+Math.floor(Math.random()*20);
+      }
+      if(npc.revealGlow>0) npc.revealGlow=Math.max(0,npc.revealGlow-0.01);
     }
   });
+  // Remove fully dead
+  npcs=npcs.filter(n=>n.state!=='dead'||n.hp>0);
 }
+
+// ============================================================
+// COLLISION DETECTION
+// ============================================================
 function checkCollisions(){
-  // Player bullets vs aliens
-  for(let bi=playerBullets.length-1;bi>=0;bi--){
-    const b=playerBullets[bi];
+  // Player bullets vs NPCs
+  for(let bi=bullets.length-1;bi>=0;bi--){
+    const b=bullets[bi];
     let hit=false;
-    [...aliens,alienKing].filter(a=>a&&!a.dead).forEach(alien=>{
-      if(hit) return;
-      const dx=b.x-alien.x, dy=b.y-alien.y;
-      if(Math.sqrt(dx*dx+dy*dy)<alien.size+b.size*0.5){
-        alien.hp--;
-        alien.flashTimer=6;
-        addParticle(alien.x,alien.y,alien.type==='king'?'king_hit':'blood_green',5);
-        addFloatText(alien.x,alien.y-22,'-1','#ff6666');
-        camShake=3; hit=true;
-        if(alien.hp<=0) killAlien(alien);
+    for(let ni=0;ni<npcs.length;ni++){
+      const npc=npcs[ni];
+      if(npc.state==='dead'||npc.state==='escaped') continue;
+      const dx=b.x-npc.x,dy=b.y-npc.y;
+      if(Math.sqrt(dx*dx+dy*dy)<npc.size+b.size*0.5){
+        hit=true;
+        if(npc.state==='wandering'){
+          // Shooting a wandering NPC — likely human!
+          if(npc.type==='human'){
+            // Penalty — shot a human
+            humansShot++;
+            score=Math.max(0,score-80);
+            player.hp=Math.max(1,player.hp-15); // small self-damage from karma
+            addParticle(npc.x,npc.y,'human_ok',12);
+            addFloatText(npc.x,npc.y-30,'❌ HUMAN! -80','#ff4444');
+            playSound('wrong_shot');
+            camShake=10;
+            npc.flashTimer=20;
+            // NPC runs away scared
+            npc.state='escaped'; npc.type='human'; // gone
+          } else {
+            // Reveal and damage
+            npc.state=npc.type==='king'?'attacking':'fleeing';
+            npc.flashTimer=15; npc.revealGlow=1;
+            npc.angle=npc.type==='king'?Math.atan2(player.y-npc.y,player.x-npc.x):Math.atan2(npc.y-player.y,npc.x-player.x);
+            npc.hp-=2;
+            if(npc.hp<=0){ killNPC(npc); }
+          }
+        } else if(npc.state==='fleeing'||npc.state==='attacking'){
+          npc.hp--;
+          npc.flashTimer=5;
+          addParticle(npc.x,npc.y,'xray_hit',6);
+          addFloatText(npc.x,npc.y-22,'-1','#ff6666');
+          camShake=4; playSound('hit_alien');
+          if(npc.hp<=0) killNPC(npc);
+        }
+        break;
       }
-    });
-    if(hit) playerBullets.splice(bi,1);
+    }
+    if(hit) bullets.splice(bi,1);
   }
-  // Alien bullets vs player
+  // Alien bullets (king) vs player
   if(player.invincible===0){
     for(let bi=alienBullets.length-1;bi>=0;bi--){
       const b=alienBullets[bi];
-      const dx=b.x-player.x, dy=b.y-player.y;
+      const dx=b.x-player.x,dy=b.y-player.y;
       if(Math.sqrt(dx*dx+dy*dy)<player.size+b.size*0.5){
-        const dmg=b.size===8?14:9;
-        player.hp-=dmg;
-        player.invincible=42; player.flashTimer=10;
+        const dmg=14;
+        player.hp-=dmg; player.invincible=40; player.flashTimer=10;
         addParticle(player.x,player.y,'explosion',8);
-        camShake=9; playSound('hit');
+        camShake=10; playSound('hit_player');
         addFloatText(player.x,player.y-32,'-'+dmg,'#ff4444');
         alienBullets.splice(bi,1);
         if(player.hp<=0){ endGame(false); return; }
       }
     }
   }
-  // Pickups
-  for(let pi=pickups.length-1;pi>=0;pi--){
-    const p=pickups[pi];
-    if(Math.sqrt((p.x-player.x)**2+(p.y-player.y)**2)<p.r+player.size){
-      if(p.type==='health'){ player.hp=Math.min(player.maxHp,player.hp+30); addFloatText(player.x,player.y-32,'+30 HP','#00ff88'); }
-      else { score+=75; addFloatText(player.x,player.y-32,'+75','#ffdd44'); }
-      addParticle(p.x,p.y,'sparkle',14); playSound('powerup'); pickups.splice(pi,1);
-    }
-  }
-  // Pod rescue
-  nearPod=null;
-  if(gamePhase===2){
-    greenPods.filter(p=>!p.rescued).forEach(p=>{
-      if(Math.sqrt((p.x-player.x)**2+(p.y-player.y)**2)<85) nearPod=p;
-    });
-    document.getElementById('rescue-prompt').style.display=nearPod?'block':'none';
-    if((keys['KeyE']||rescueActive)&&nearPod) doRescue(nearPod);
-  }
 }
-function doRescue(pod){
-  if(pod.rescued) return;
-  pod.rescued=true; humansRescued++; score+=120;
-  addParticle(pod.x,pod.y,'rescue',22);
-  addFloatText(pod.x,pod.y-44,'💚 RESCUED! +120','#00ffcc');
-  playSound('rescue'); camShake=5;
-}
-function killAlien(alien){
-  alien.dead=true; alienKillCount++; score+=alien.score||10;
-  const pt=alien.type==='king'?'explosion':'green_exp';
-  addParticle(alien.x,alien.y,pt,22);
-  addParticle(alien.x,alien.y,'smoke',8);
-  playSound('explosion'); camShake=alien.type==='king'?22:9;
-  if(Math.random()<0.38) pickups.push({x:alien.x,y:alien.y,type:Math.random()<0.6?'health':'score',r:12,timer:0});
-  if(alien.type==='king'){ setTimeout(()=>endGame(true),1200); return; }
-  aliens=aliens.filter(a=>!a.dead);
-  const alive=aliens.filter(a=>!a.dead).length+(alienKing&&!alienKing.dead?1:0);
-  if(alive===0){ waveTimer=200; waveActive=false; }
+function killNPC(npc){
+  npc.state='dead'; npc.hp=0;
+  const isKing=npc.type==='king';
+  addParticle(npc.x,npc.y,isKing?'explosion':'green_exp',isKing?30:18);
+  addParticle(npc.x,npc.y,'smoke',8);
+  playSound(isKing?'explosion':'explosion');
+  camShake=isKing?22:8;
+  score+=npc.score||(isKing?500:60);
+  aliensKilled++;
+  addFloatText(npc.x,npc.y-36,isKing?'👑 KING DOWN! +500':'+60','#ffdd44');
+  if(isKing){ kingDefeated=true; setTimeout(()=>endGame(true),1500); }
 }
 
 // ============================================================
-// TELEPORT TO UFO
+// WAVE CHECK
 // ============================================================
-function triggerTeleport(){
-  if(teleporting) return;
-  teleporting=true;
-  if(alienKing) alienKing.teleported=true;
-  playSound('teleport'); playSound('king_alert');
-  document.getElementById('pbtext').textContent='🛸 TELEPORTING!';
-  document.getElementById('pbsub').textContent='The Alien King is taking you to their UFO...';
-  document.getElementById('phase-banner').style.display='block';
-  camShake=28;
-  let fc=0;
-  const overlay=document.getElementById('tel-overlay');
-  overlay.style.display='block';
-  const iv=setInterval(()=>{
-    fc++;
-    overlay.style.background=fc%2===0?'rgba(0,255,136,0.28)':'rgba(0,100,220,0.22)';
-    addParticle(player.x,player.y,'teleport',18);
-    playSound('teleport');
-    if(fc>=7){
-      clearInterval(iv);
-      setTimeout(()=>{ overlay.style.display='none'; document.getElementById('phase-banner').style.display='none'; switchPhase2(); },300);
-    }
-  },200);
-}
-function switchPhase2(){
-  gamePhase=2;
-  player.x=300; player.y=1000;
-  player.hp=Math.min(player.maxHp,player.hp+25);
-  generateUFODecor(); generateGreenPods(8);
-  aliens=[];
-  for(let i=0;i<12;i++){
-    let x,y,att=0;
-    do{ x=200+Math.random()*(WORLD_W-400); y=200+Math.random()*(WORLD_H-400); att++; }
-    while(Math.sqrt((x-player.x)**2+(y-player.y)**2)<320 && att<30);
-    aliens.push(makeAlien(x,y,Math.random()<0.5?'guard':'warrior'));
+function checkWaveComplete(){
+  if(!waveActive) return;
+  const alive=npcs.filter(n=>n.state!=='dead'&&n.state!=='escaped');
+  // Wave done when all aliens/king gone (humans can still be around)
+  const threats=alive.filter(n=>n.type==='alien'||n.type==='king');
+  if(threats.length===0){
+    waveActive=false; waveComplete=true; waveCompleteTimer=150;
+    showWaveBanner('✅ WAVE CLEAR!');
+    playSound('wave_start');
+    score+=200;
+    addFloatText(player.x,player.y-50,'+200 WAVE CLEAR','#ffdd44');
   }
-  alienBullets=[]; playerBullets=[]; pickups=[];
-  alienKing=makeKing(WORLD_W*0.65,WORLD_H*0.65);
-  alienKing.phase=2; alienKing.hp=70; alienKing.maxHp=70;
-  alienKing.speed=2.4; alienKing.shootRate=28;
-  document.getElementById('phase-disp').textContent='PHASE 2: UFO 🛸';
-  document.getElementById('wave-disp').textContent='BOSS!';
-  document.getElementById('rescue-btn').style.display='flex';
-  startAmbient(2);
-  document.getElementById('pbtext').textContent='🛸 ABOARD THE UFO!';
-  document.getElementById('pbsub').textContent='Rescue the humans! Defeat the Alien King!';
-  document.getElementById('phase-banner').style.display='block';
-  setTimeout(()=>document.getElementById('phase-banner').style.display='none',2600);
-  teleporting=false; waveActive=true;
-  camX=player.x-W/2; camY=player.y-H/2;
+}
+function checkNextWave(){
+  if(!waveComplete) return;
+  waveCompleteTimer--;
+  if(waveCompleteTimer<=0){
+    waveComplete=false;
+    waveNumber++;
+    if(waveNumber>6){ endGame(true); return; }
+    spawnWave(waveNumber);
+  }
 }
 
 // ============================================================
@@ -797,265 +867,252 @@ function updateCamera(){
   camX+=(tx-camX)*0.1; camY+=(ty-camY)*0.1;
   camX=Math.max(0,Math.min(WORLD_W-W,camX));
   camY=Math.max(0,Math.min(WORLD_H-H,camY));
-  if(camShake>0.1) camShake*=0.83; else camShake=0;
+  if(camShake>0.1) camShake*=0.82; else camShake=0;
 }
 function updateHUD(){
   const hp=Math.max(0,player.hp);
   document.getElementById('hp-bar').style.width=(hp/player.maxHp*100)+'%';
-  document.getElementById('hp-bar').style.background=hp>50?'linear-gradient(90deg,#00ff88,#00cc44)':hp>25?'linear-gradient(90deg,#ffcc00,#ff8800)':'linear-gradient(90deg,#ff4444,#cc0000)';
+  document.getElementById('hp-bar').style.background=hp>50?'linear-gradient(90deg,#44ff88,#22cc44)':hp>25?'linear-gradient(90deg,#ffcc00,#ff8800)':'linear-gradient(90deg,#ff4444,#cc0000)';
   document.getElementById('score-disp').textContent='SCORE: '+score;
-  // King radar
-  const kr=document.getElementById('king-radar');
-  if(gamePhase===1&&alienKing&&!alienKing.teleported&&waveNumber>=2){
-    kr.style.display='block';
-    const dist=Math.sqrt((alienKing.x-player.x)**2+(alienKing.y-player.y)**2);
-    kr.textContent=dist<400?'👑 KING IS CLOSE! APPROACH!':'👑 ALIEN KING DETECTED!';
-  } else { kr.style.display='none'; }
-  // Wave logic
-  if(!waveActive&&!teleporting&&gamePhase===1){ waveTimer--; if(waveTimer<=0) spawnWave(); }
+  // Pad status
+  if(!scan.active&&scan.cooldown===0)
+    document.getElementById('pad-disp').textContent='📱 X-RAY: READY';
+  else if(scan.cooldown>0)
+    document.getElementById('pad-disp').textContent=`📱 COOLDOWN: ${Math.ceil(scan.cooldown/60*1000/60)}s`;
+  // Hide scan banner
+  if(scanBannerTimer>0){ scanBannerTimer--; }
+  else document.getElementById('scan-banner').style.display='none';
 }
 
 // ============================================================
 // RENDERING
 // ============================================================
-function drawEarth(){
-  // Sky gradient
-  ctx.fillStyle='#08110a'; ctx.fillRect(0,0,W,H);
-  // Stars
-  bgStars.forEach(s=>{ s.tw+=0.04; ctx.globalAlpha=0.25+Math.sin(s.tw)*0.25; ctx.fillStyle='#aaffcc'; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill(); });
-  ctx.globalAlpha=1;
+function drawWorld(){
+  // Sky/grass background
+  ctx.fillStyle='#0c1c0c'; ctx.fillRect(0,0,W,H);
+  bgStars.forEach(s=>{ s.tw+=0.03; ctx.globalAlpha=0.18+Math.sin(s.tw)*0.15; ctx.fillStyle='#aaffcc'; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill(); }); ctx.globalAlpha=1;
   // Grass tiles
   const gsx=Math.floor(camX/80)*80, gsy=Math.floor(camY/80)*80;
-  for(let tx=gsx;tx<camX+W+80;tx+=80){
-    for(let ty=gsy;ty<camY+H+80;ty+=80){
-      ctx.fillStyle=((Math.floor(tx/80)+Math.floor(ty/80))%2===0)?'#0c1e0c':'#09180a';
-      ctx.fillRect(tx-camX,ty-camY,80,80);
-    }
+  for(let tx=gsx;tx<camX+W+80;tx+=80) for(let ty=gsy;ty<camY+H+80;ty+=80){
+    ctx.fillStyle=((Math.floor(tx/80)+Math.floor(ty/80))%2===0)?'#0d200e':'#0a1a0b';
+    ctx.fillRect(tx-camX,ty-camY,80,80);
   }
   // Decor
   earthDecor.forEach(d=>{
-    const sx=d.x-camX, sy=d.y-camY;
+    const sx=d.x-camX,sy=d.y-camY;
     if(sx<-80||sx>W+80||sy<-80||sy>H+80) return;
     if(d.type==='tree'){
       ctx.fillStyle='#2a1a0a'; ctx.fillRect(sx-4,sy,8,22);
-      ctx.fillStyle=d.color; ctx.beginPath(); ctx.arc(sx,sy,d.r,0,Math.PI*2); ctx.fill();
-    } else if(d.type==='rock'){
-      ctx.fillStyle='#2f3d2f'; ctx.beginPath(); ctx.arc(sx,sy,d.r,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle=d.col; ctx.beginPath(); ctx.arc(sx,sy,d.r,0,Math.PI*2); ctx.fill();
+    } else if(d.type==='bench'){
+      ctx.fillStyle='#3a2a1a'; ctx.fillRect(sx-10,sy-4,20,8); ctx.fillRect(sx-12,sy+4,6,6); ctx.fillRect(sx+6,sy+4,6,6);
     } else if(d.type==='house'){
       ctx.fillStyle=d.col; ctx.fillRect(sx-d.w/2,sy-d.h/2,d.w,d.h);
-      ctx.strokeStyle='#2a4a2a'; ctx.lineWidth=1.5; ctx.strokeRect(sx-d.w/2,sy-d.h/2,d.w,d.h);
-      ctx.fillStyle='#111a11'; ctx.beginPath(); ctx.moveTo(sx-d.w/2-4,sy-d.h/2); ctx.lineTo(sx,sy-d.h/2-14); ctx.lineTo(sx+d.w/2+4,sy-d.h/2); ctx.closePath(); ctx.fill();
-      // Lit window
-      ctx.fillStyle=`rgba(255,200,0,${0.4+Math.sin(frameCount*0.03+d.x)*0.15})`; ctx.fillRect(sx-5,sy-6,10,8);
-    } else if(d.type==='road'){
-      ctx.fillStyle='#111a11'; ctx.globalAlpha=0.6;
-      if(d.horiz) ctx.fillRect(d.x-camX,d.y-camY-6,d.len,12);
-      else ctx.fillRect(d.x-camX-6,d.y-camY,12,d.len);
+      ctx.strokeStyle='#1a3a1a'; ctx.lineWidth=1.5; ctx.strokeRect(sx-d.w/2,sy-d.h/2,d.w,d.h);
+      ctx.fillStyle='#0c150c'; ctx.beginPath(); ctx.moveTo(sx-d.w/2-4,sy-d.h/2); ctx.lineTo(sx,sy-d.h/2-14); ctx.lineTo(sx+d.w/2+4,sy-d.h/2); ctx.closePath(); ctx.fill();
+      ctx.fillStyle=`rgba(255,200,0,${0.3+Math.sin(frameCount*0.04+d.x)*0.15})`; ctx.fillRect(sx-5,sy-5,10,8);
+    } else if(d.type==='path'){
+      ctx.fillStyle='#111a11'; ctx.globalAlpha=0.5;
+      if(d.horiz) ctx.fillRect(d.x-camX,d.y-camY-5,d.len,10);
+      else ctx.fillRect(d.x-camX-5,d.y-camY,10,d.len);
       ctx.globalAlpha=1;
     }
   });
 }
-function drawUFO(){
-  ctx.fillStyle='#040410'; ctx.fillRect(0,0,W,H);
-  // Metal floor tiles
-  const gsx=Math.floor(camX/60)*60, gsy=Math.floor(camY/60)*60;
-  for(let tx=gsx;tx<camX+W+60;tx+=60){
-    for(let ty=gsy;ty<camY+H+60;ty+=60){
-      ctx.fillStyle=((Math.floor(tx/60)+Math.floor(ty/60))%2===0)?'#080820':'#0a0a28';
-      ctx.fillRect(tx-camX,ty-camY,60,60);
-      ctx.strokeStyle='#14143a'; ctx.lineWidth=0.5; ctx.strokeRect(tx-camX,ty-camY,60,60);
-    }
+function drawScanRange(){
+  if(!gameRunning) return;
+  // Draw subtle scan range circle around player
+  const sx=player.x-camX,sy=player.y-camY;
+  const alpha=scan.active?0.25:0.08;
+  const ringColor=scan.active?'#44ccff':'#44ff88';
+  ctx.strokeStyle=ringColor; ctx.globalAlpha=alpha;
+  ctx.lineWidth=2; ctx.setLineDash([6,6]);
+  ctx.beginPath(); ctx.arc(sx,sy,100,0,Math.PI*2); ctx.stroke();
+  ctx.setLineDash([]); ctx.globalAlpha=1;
+
+  // If scan active: draw beam to target
+  if(scan.active&&scan.target){
+    const tx2=scan.target.x-camX, ty2=scan.target.y-camY;
+    const grad=ctx.createLinearGradient(sx,sy,tx2,ty2);
+    grad.addColorStop(0,'rgba(68,200,255,0.5)');
+    grad.addColorStop(1,'rgba(68,200,255,0.1)');
+    ctx.strokeStyle=grad; ctx.lineWidth=3; ctx.globalAlpha=0.7;
+    ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(tx2,ty2); ctx.stroke();
+    ctx.globalAlpha=1;
+    // Scan progress arc on target
+    const prog=scan.progress*Math.PI*2;
+    ctx.strokeStyle='#44ccff'; ctx.lineWidth=3; ctx.globalAlpha=0.9;
+    ctx.beginPath(); ctx.arc(tx2,ty2,scan.target.size+8,-Math.PI/2,-Math.PI/2+prog); ctx.stroke();
+    ctx.globalAlpha=1;
+    // X-ray shimmer on target
+    const shimmer=Math.sin(frameCount*0.3)*0.3+0.4;
+    ctx.globalAlpha=shimmer*scan.progress*0.5;
+    ctx.fillStyle='#44ccff';
+    ctx.beginPath(); ctx.arc(tx2,ty2,scan.target.size+6,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha=1;
   }
-  // Neon veins
-  for(let tx=gsx;tx<camX+W+60;tx+=120){
-    ctx.strokeStyle=`rgba(0,80,255,${0.08+Math.sin(frameCount*0.02+tx)*0.04})`; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(tx-camX,0); ctx.lineTo(tx-camX,H); ctx.stroke();
-  }
-  // UFO decor
-  ufoDecor.forEach(d=>{
-    const sx=d.x-camX, sy=d.y-camY;
-    if(sx<-80||sx>W+80||sy<-80||sy>H+80) return;
-    if(d.type==='panel'){
-      const hue=180+Math.sin(frameCount*0.04+d.seed)*30;
-      ctx.fillStyle='#0a1530'; ctx.fillRect(sx-d.w/2,sy-d.h/2,d.w,d.h);
-      ctx.strokeStyle=`hsl(${hue},80%,${28+Math.sin(frameCount*0.06+d.seed)*8}%)`; ctx.lineWidth=2; ctx.strokeRect(sx-d.w/2,sy-d.h/2,d.w,d.h);
-      ctx.fillStyle=frameCount%50<25?'#00aaff':'#003366'; ctx.fillRect(sx-d.w/2+4,sy-d.h/2+4,5,5);
-    } else if(d.type==='pillar'){
-      ctx.fillStyle='#0e0e30'; ctx.beginPath(); ctx.arc(sx,sy,d.r,0,Math.PI*2); ctx.fill();
-      ctx.strokeStyle='#1a3088'; ctx.lineWidth=2; ctx.stroke();
-      ctx.shadowColor='#2244ff'; ctx.shadowBlur=8;
-      ctx.strokeStyle='#2244ff66'; ctx.lineWidth=1; ctx.stroke();
+}
+function drawNPCs(){
+  npcs.forEach(npc=>{
+    if(npc.state==='dead') return;
+    const sx=npc.x-camX,sy=npc.y-camY;
+    if(sx<-60||sx>W+60||sy<-60||sy>H+60) return;
+    const flash=npc.flashTimer>0&&Math.floor(frameCount/3)%2===0;
+    const isRevealed=npc.state==='fleeing'||npc.state==='attacking';
+    const leg=Math.sin(npc.walkTimer*0.2)*6;
+
+    ctx.save(); ctx.translate(sx,sy);
+
+    if(isRevealed){
+      // ---- REVEALED ALIEN FORM ----
+      const glow=0.6+npc.revealGlow*0.4+Math.sin(frameCount*0.15)*0.2;
+      const alienCol=npc.type==='king'?'#ffaa00':'#44ff44';
+      ctx.shadowColor=flash?'#fff':alienCol; ctx.shadowBlur=18*glow;
+      // Body (alien form)
+      ctx.fillStyle=flash?'#fff':alienCol;
+      if(npc.type==='king'){
+        // King: big imposing alien with crown
+        ctx.beginPath(); ctx.moveTo(0,-npc.size); ctx.lineTo(-npc.size*0.8,npc.size*0.5); ctx.lineTo(0,npc.size*0.5); ctx.lineTo(npc.size*0.8,npc.size*0.5); ctx.closePath(); ctx.fill();
+        // Crown
+        ctx.fillStyle=flash?'#fff':'#ffdd00';
+        ctx.beginPath(); ctx.moveTo(-npc.size*0.6,-npc.size); ctx.lineTo(-npc.size*0.3,-npc.size-10); ctx.lineTo(0,-npc.size-6); ctx.lineTo(npc.size*0.3,-npc.size-10); ctx.lineTo(npc.size*0.6,-npc.size); ctx.closePath(); ctx.fill();
+        // Red eyes
+        ctx.fillStyle='#ff0000'; ctx.shadowColor='#ff0000'; ctx.shadowBlur=10;
+        ctx.beginPath(); ctx.arc(-8,-npc.size*0.3,5,0,Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(8,-npc.size*0.3,5,0,Math.PI*2); ctx.fill();
+      } else {
+        // Regular alien: blob with spindly legs running
+        ctx.beginPath(); ctx.ellipse(0,-npc.size*0.2,npc.size*0.7,npc.size*0.9,0,0,Math.PI*2); ctx.fill();
+        // Running legs
+        ctx.strokeStyle=flash?'#fff':alienCol; ctx.lineWidth=2; ctx.shadowBlur=6;
+        ctx.beginPath(); ctx.moveTo(-npc.size*0.4,npc.size*0.5); ctx.lineTo(-npc.size*0.6,npc.size*1.1+leg); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(npc.size*0.4,npc.size*0.5); ctx.lineTo(npc.size*0.6,npc.size*1.1-leg); ctx.stroke();
+        // Alien eyes
+        ctx.fillStyle='#ff2222'; ctx.shadowColor='#ff0000'; ctx.shadowBlur=8;
+        ctx.beginPath(); ctx.arc(-npc.size*0.28,-npc.size*0.4,4,0,Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(npc.size*0.28,-npc.size*0.4,4,0,Math.PI*2); ctx.fill();
+        // Antennae
+        ctx.strokeStyle=flash?'#fff':'#44ff44'; ctx.lineWidth=1.5; ctx.shadowBlur=4;
+        ctx.beginPath(); ctx.moveTo(-npc.size*0.2,-npc.size*1.0); ctx.lineTo(-npc.size*0.35,-npc.size*1.5); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(npc.size*0.2,-npc.size*1.0); ctx.lineTo(npc.size*0.35,-npc.size*1.5); ctx.stroke();
+      }
+      ctx.shadowBlur=0;
+    } else {
+      // ---- HUMAN DISGUISE FORM ----
+      // Subtle green shimmer if alien "tell" is active
+      if(npc.tellActive&&(npc.type==='alien'||npc.type==='king')){
+        ctx.shadowColor='#44ff44'; ctx.shadowBlur=12;
+      }
+      // Legs (walking animation)
+      ctx.fillStyle=npc.cloth; ctx.strokeStyle=npc.cloth; ctx.lineWidth=5;
+      ctx.beginPath(); ctx.moveTo(-5,npc.size*0.4); ctx.lineTo(-7,npc.size+leg); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(5,npc.size*0.4); ctx.lineTo(7,npc.size-leg); ctx.stroke();
+      // Body
+      ctx.fillStyle=npc.cloth;
+      ctx.beginPath(); ctx.ellipse(0,0,npc.size*0.6,npc.size*0.7,0,0,Math.PI*2); ctx.fill();
+      // Arms (swinging)
+      ctx.strokeStyle=npc.skin; ctx.lineWidth=4;
+      ctx.beginPath(); ctx.moveTo(-npc.size*0.5,0); ctx.lineTo(-npc.size*0.9+leg*0.5,-npc.size*0.4); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(npc.size*0.5,0); ctx.lineTo(npc.size*0.9-leg*0.5,-npc.size*0.4); ctx.stroke();
+      // Head
+      ctx.fillStyle=flash?'#ffffff':npc.skin;
+      ctx.beginPath(); ctx.arc(0,-npc.size*0.9,npc.size*0.52,0,Math.PI*2); ctx.fill();
+      // Hair
+      ctx.fillStyle=npc.hair;
+      ctx.beginPath(); ctx.ellipse(0,-npc.size*0.9-4,npc.size*0.45,npc.size*0.25,0,Math.PI,0); ctx.fill();
+      // Eyes
+      ctx.fillStyle=flash?'#fff':'#333';
+      ctx.beginPath(); ctx.arc(-npc.size*0.22,-npc.size*0.85,2.5,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(npc.size*0.22,-npc.size*0.85,2.5,0,Math.PI*2); ctx.fill();
       ctx.shadowBlur=0;
     }
-  });
-  // Green pods
-  greenPods.forEach(pod=>{
-    if(pod.rescued) return;
-    const sx=pod.x-camX, sy=pod.y-camY;
-    if(sx<-70||sx>W+70||sy<-70||sy>H+70) return;
-    pod.glowPhase+=0.07;
-    const gv=0.6+Math.sin(pod.glowPhase)*0.4;
-    ctx.shadowColor='#00ff88'; ctx.shadowBlur=20*gv;
-    // Tank
-    ctx.fillStyle=`rgba(0,${Math.floor(140+80*gv)},${Math.floor(70+50*gv)},0.88)`;
-    ctx.beginPath();
-    ctx.roundRect ? ctx.roundRect(sx-20,sy-32,40,62,8) : ctx.rect(sx-20,sy-32,40,62);
-    ctx.fill();
-    ctx.strokeStyle=`rgba(0,255,136,${gv})`; ctx.lineWidth=2; ctx.stroke();
-    ctx.shadowBlur=0;
-    // Human inside
-    ctx.fillStyle=`rgba(255,${140+Math.floor(60*gv)},40,0.85)`;
-    ctx.beginPath(); ctx.arc(sx,sy-12,8,0,Math.PI*2); ctx.fill();
-    ctx.fillRect(sx-7,sy+1,14,18);
-    // Arms
-    ctx.fillRect(sx-17,sy+4,10,5); ctx.fillRect(sx+7,sy+4,10,5);
-    // Label
-    ctx.shadowColor='#00ff88'; ctx.shadowBlur=6;
-    ctx.fillStyle='#00ff88'; ctx.font='bold 9px Courier New'; ctx.textAlign='center';
-    ctx.fillText('RESCUE',sx,sy+38);
-    ctx.shadowBlur=0; ctx.textAlign='left';
-  });
-  // Rescued pods (empty)
-  greenPods.filter(p=>p.rescued).forEach(pod=>{
-    const sx=pod.x-camX, sy=pod.y-camY;
-    if(sx<-70||sx>W+70) return;
-    ctx.fillStyle='rgba(0,50,20,0.4)'; ctx.strokeStyle='#006622'; ctx.lineWidth=1;
-    ctx.beginPath();
-    ctx.roundRect ? ctx.roundRect(sx-20,sy-32,40,62,8) : ctx.rect(sx-20,sy-32,40,62);
-    ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#00aa44'; ctx.font='9px Courier New'; ctx.textAlign='center'; ctx.fillText('FREED!',sx,sy+38); ctx.textAlign='left';
-  });
-}
-function drawPickups(){
-  pickups.forEach(p=>{
-    const sx=p.x-camX, sy=p.y-camY;
-    if(sx<-20||sx>W+20||sy<-20||sy>H+20) return;
-    p.timer=(p.timer||0)+1;
-    const bob=Math.sin(p.timer*0.1)*5;
-    ctx.font='20px Arial'; ctx.textAlign='center';
-    ctx.fillText(p.type==='health'?'💊':'⭐',sx,sy+bob+8);
-    ctx.textAlign='left';
+    ctx.restore();
+
+    // Scan progress bar above NPC
+    if(npc.beingScanned&&npc.scanBar>0){
+      const bw=44, bx=sx-bw/2, by=sy-npc.size-28;
+      ctx.fillStyle='#222'; ctx.fillRect(bx,by,bw,6);
+      ctx.fillStyle='#44ccff'; ctx.fillRect(bx,by,bw*npc.scanBar,6);
+      ctx.strokeStyle='#44ccff'; ctx.lineWidth=1; ctx.strokeRect(bx,by,bw,6);
+      ctx.font='8px Courier New'; ctx.fillStyle='#44ccff'; ctx.textAlign='center';
+      ctx.fillText('SCANNING',sx,by-2); ctx.textAlign='left';
+    }
+
+    // HP bar for king
+    if(npc.type==='king'&&npc.state==='attacking'){
+      const bw=56, bx=sx-bw/2, by=sy-npc.size-32;
+      const hpPct=npc.hp/npc.maxHp;
+      ctx.fillStyle='#333'; ctx.fillRect(bx,by,bw,7);
+      ctx.fillStyle=hpPct>0.5?'#ffaa00':hpPct>0.25?'#ffcc00':'#ff4444';
+      ctx.fillRect(bx,by,bw*hpPct,7);
+      ctx.strokeStyle='#ffaa00'; ctx.lineWidth=1; ctx.strokeRect(bx,by,bw,7);
+    }
   });
 }
 function drawBullets(){
-  playerBullets.forEach(b=>{
-    const sx=b.x-camX, sy=b.y-camY;
+  bullets.forEach(b=>{
+    const sx=b.x-camX,sy=b.y-camY;
     if(sx<-10||sx>W+10||sy<-10||sy>H+10) return;
     ctx.shadowColor=b.color; ctx.shadowBlur=10;
     ctx.fillStyle=b.color; ctx.beginPath(); ctx.arc(sx,sy,b.size/2,0,Math.PI*2); ctx.fill();
     ctx.shadowBlur=0;
   });
   alienBullets.forEach(b=>{
-    const sx=b.x-camX, sy=b.y-camY;
+    const sx=b.x-camX,sy=b.y-camY;
     if(sx<-12||sx>W+12||sy<-12||sy>H+12) return;
-    ctx.shadowColor=b.color; ctx.shadowBlur=8;
-    ctx.fillStyle=b.color; ctx.beginPath(); ctx.arc(sx,sy,b.size/2,0,Math.PI*2); ctx.fill();
+    ctx.shadowColor='#ffaa00'; ctx.shadowBlur=8;
+    ctx.fillStyle='#ffaa00'; ctx.beginPath(); ctx.arc(sx,sy,b.size/2,0,Math.PI*2); ctx.fill();
     ctx.shadowBlur=0;
   });
 }
 function drawPlayer(){
-  const shakeX=camShake>0?(Math.random()-0.5)*camShake:0;
-  const shakeY=camShake>0?(Math.random()-0.5)*camShake:0;
-  const sx=player.x-camX+shakeX, sy=player.y-camY+shakeY;
+  const shX=camShake>0?(Math.random()-0.5)*camShake:0;
+  const shY=camShake>0?(Math.random()-0.5)*camShake:0;
+  const sx=player.x-camX+shX, sy=player.y-camY+shY;
   if(player.flashTimer>0&&Math.floor(frameCount/3)%2===0) return;
   ctx.save(); ctx.translate(sx,sy); ctx.rotate(player.angle+Math.PI/2);
-  // Suit body
-  ctx.fillStyle='#2266cc';
-  ctx.beginPath(); ctx.moveTo(0,-player.size); ctx.lineTo(-player.size*0.6,player.size*0.5); ctx.lineTo(0,player.size*0.22); ctx.lineTo(player.size*0.6,player.size*0.5); ctx.closePath(); ctx.fill();
-  // Helmet/head
-  ctx.fillStyle='#ffcc88'; ctx.beginPath(); ctx.arc(0,-player.size*0.72,7,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='rgba(0,200,255,0.5)'; ctx.beginPath(); ctx.arc(0,-player.size*0.72,7,Math.PI,0); ctx.fill();
-  // Weapon glow
-  ctx.shadowColor='#00ff88'; ctx.shadowBlur=10;
-  ctx.fillStyle='#00ff88'; ctx.fillRect(-3,player.size*0.05,6,player.size*0.55);
+  const leg=Math.sin(frameCount*0.18)*7*(player.speed>0.2?1:0);
+  // Legs
+  ctx.strokeStyle='#2255aa'; ctx.lineWidth=5;
+  ctx.beginPath(); ctx.moveTo(-5,player.size*0.4); ctx.lineTo(-7,player.size+leg); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(5,player.size*0.4); ctx.lineTo(7,player.size-leg); ctx.stroke();
+  // Detective coat
+  ctx.fillStyle='#334466';
+  ctx.beginPath(); ctx.ellipse(0,0,player.size*0.7,player.size*0.8,0,0,Math.PI*2); ctx.fill();
+  // Arms
+  ctx.strokeStyle='#ffcc88'; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.moveTo(-player.size*0.6,0); ctx.lineTo(-player.size,-player.size*0.3+leg*0.4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(player.size*0.6,0); ctx.lineTo(player.size,-player.size*0.3-leg*0.4); ctx.stroke();
+  // X-ray pad held in hand
+  ctx.shadowColor='#44ccff'; ctx.shadowBlur=14;
+  ctx.fillStyle='#44ccff'; ctx.fillRect(player.size-4,-(player.size+2),8,12);
+  ctx.fillStyle='rgba(0,200,255,0.6)'; ctx.fillRect(player.size-3,-player.size,6,8);
   ctx.shadowBlur=0;
+  // Head
+  ctx.fillStyle='#ffcc88'; ctx.beginPath(); ctx.arc(0,-player.size*0.9,9,0,Math.PI*2); ctx.fill();
+  // Hat
+  ctx.fillStyle='#223355'; ctx.fillRect(-9,-player.size*0.9-12,18,8); ctx.fillRect(-6,-player.size*0.9-18,12,8);
   ctx.restore();
-  // Glow ring
-  ctx.shadowColor='#4488ff'; ctx.shadowBlur=18;
-  ctx.strokeStyle='rgba(68,136,255,0.4)'; ctx.lineWidth=2;
+  // Glow
+  ctx.shadowColor='#4488ff'; ctx.shadowBlur=16;
+  ctx.strokeStyle='rgba(68,136,255,0.35)'; ctx.lineWidth=2;
   ctx.beginPath(); ctx.arc(sx,sy,player.size+5,0,Math.PI*2); ctx.stroke();
   ctx.shadowBlur=0;
 }
-function drawAliens(){
-  [...aliens,alienKing].filter(a=>a&&!a.dead).forEach(alien=>{
-    const sx=alien.x-camX, sy=alien.y-camY;
-    if(sx<-70||sx>W+70||sy<-70||sy>H+70) return;
-    const flash=alien.flashTimer>0&&Math.floor(frameCount/2)%2===0;
-    const fc=alien.color;
-    ctx.save(); ctx.translate(sx,sy); ctx.rotate(alien.angle+Math.PI/2);
-    if(alien.type==='king'){
-      const pulse=1+Math.sin(frameCount*0.1)*0.18;
-      ctx.shadowColor=flash?'#fff':'#ffaa00'; ctx.shadowBlur=22*pulse;
-      // Crown
-      ctx.fillStyle=flash?'#fff':'#ffdd00';
-      ctx.beginPath(); ctx.moveTo(0,-alien.size-14); ctx.lineTo(-8,-alien.size-4); ctx.lineTo(-14,-alien.size-13); ctx.lineTo(-10,-alien.size); ctx.lineTo(0,-alien.size-7); ctx.lineTo(10,-alien.size); ctx.lineTo(14,-alien.size-13); ctx.lineTo(8,-alien.size-4); ctx.closePath(); ctx.fill();
-      // Body
-      ctx.fillStyle=flash?'#fff':'#cc8800';
-      ctx.beginPath(); ctx.moveTo(0,-alien.size); ctx.lineTo(-alien.size*0.8,alien.size*0.4); ctx.lineTo(0,alien.size*0.6); ctx.lineTo(alien.size*0.8,alien.size*0.4); ctx.closePath(); ctx.fill();
-      // Cloak
-      ctx.fillStyle=flash?'#fff':'#883300'; ctx.globalAlpha=0.6;
-      ctx.beginPath(); ctx.moveTo(-alien.size*0.8,alien.size*0.4); ctx.lineTo(-alien.size*1.1,alien.size); ctx.lineTo(alien.size*1.1,alien.size); ctx.lineTo(alien.size*0.8,alien.size*0.4); ctx.fill();
-      ctx.globalAlpha=1;
-      // Eyes
-      ctx.fillStyle='#ff0000'; ctx.shadowColor='#ff0000'; ctx.shadowBlur=10;
-      ctx.beginPath(); ctx.arc(-8,-alien.size*0.4,5,0,Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(8,-alien.size*0.4,5,0,Math.PI*2); ctx.fill();
-      ctx.shadowBlur=0;
-    } else {
-      ctx.shadowColor=flash?'#fff':fc; ctx.shadowBlur=8;
-      ctx.fillStyle=flash?'#fff':fc;
-      if(alien.type==='warrior'||alien.type==='elite'||alien.type==='guard'){
-        ctx.beginPath(); ctx.moveTo(0,-alien.size); ctx.lineTo(-alien.size*0.75,alien.size*0.5); ctx.lineTo(0,alien.size*0.3); ctx.lineTo(alien.size*0.75,alien.size*0.5); ctx.closePath(); ctx.fill();
-        // Armor plates
-        const aCol=flash?'#fff':(alien.type==='elite'?'#ff8888':alien.type==='guard'?'#88ccff':'#aa66ff');
-        ctx.fillStyle=aCol; ctx.fillRect(-alien.size*0.9,0,alien.size*0.38,alien.size*0.38); ctx.fillRect(alien.size*0.52,0,alien.size*0.38,alien.size*0.38);
-      } else {
-        ctx.beginPath(); ctx.ellipse(0,0,alien.size*0.65,alien.size,0,0,Math.PI*2); ctx.fill();
-      }
-      ctx.fillStyle=flash?'#fff':'#ff2222'; ctx.shadowColor='#ff0000'; ctx.shadowBlur=5;
-      ctx.beginPath(); ctx.arc(-5,-alien.size*0.32,3,0,Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(5,-alien.size*0.32,3,0,Math.PI*2); ctx.fill();
-      ctx.shadowBlur=0;
-    }
-    ctx.restore();
-    // HP bar
-    const hpPct=alien.hp/alien.maxHp;
-    const barW=alien.type==='king'?56:32;
-    const barH=alien.type==='king'?8:4;
-    const barY=sy-alien.size-(alien.type==='king'?42:18);
-    ctx.fillStyle='#222'; ctx.fillRect(sx-barW/2,barY,barW,barH);
-    ctx.fillStyle=hpPct>0.5?(alien.type==='king'?'#ffaa00':alien.color):hpPct>0.25?'#ffcc00':'#ff3300';
-    ctx.fillRect(sx-barW/2,barY,barW*hpPct,barH);
-    if(alien.type==='king'){ ctx.strokeStyle='#ffaa00'; ctx.lineWidth=1; ctx.strokeRect(sx-barW/2,barY,barW,barH); }
-  });
-}
 function drawMinimap(){
-  const mw=116, mh=116, mx=W-mw-10, my=10;
+  const mw=112,mh=112,mx=W-mw-10,my=10;
   ctx.fillStyle='rgba(0,0,0,0.65)'; ctx.fillRect(mx,my,mw,mh);
-  ctx.strokeStyle='#00ff88'; ctx.lineWidth=1.5; ctx.strokeRect(mx,my,mw,mh);
-  // Entities
-  [...aliens,alienKing].filter(a=>a&&!a.dead).forEach(a=>{
-    ctx.fillStyle=a.type==='king'?'#ffaa00':'#ff4444';
-    ctx.fillRect(mx+a.x/WORLD_W*mw-1.5,my+a.y/WORLD_H*mh-1.5,3,3);
-  });
-  if(gamePhase===2) greenPods.filter(p=>!p.rescued).forEach(p=>{
-    ctx.fillStyle='#00ff88'; ctx.fillRect(mx+p.x/WORLD_W*mw-1,my+p.y/WORLD_H*mh-1,2.5,2.5);
+  ctx.strokeStyle='#44ff88'; ctx.lineWidth=1.5; ctx.strokeRect(mx,my,mw,mh);
+  // NPCs
+  npcs.filter(n=>n.state!=='dead'&&n.state!=='escaped').forEach(n=>{
+    const nx=mx+n.x/WORLD_W*mw, ny=my+n.y/WORLD_H*mh;
+    const isRevealed=n.state==='fleeing'||n.state==='attacking';
+    ctx.fillStyle=isRevealed?(n.type==='king'?'#ffaa00':'#ff4444'):'#aaaaaa';
+    ctx.fillRect(nx-1.5,ny-1.5,3,3);
   });
   // Player
-  ctx.fillStyle='#4488ff'; ctx.beginPath(); ctx.arc(mx+player.x/WORLD_W*mw,my+player.y/WORLD_H*mh,3.5,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.font='8px Courier New'; ctx.fillText('MAP',mx+4,my+mh-4);
-}
-function drawWaveAnnounce(){
-  if(waveAnnounceTimer>0){
-    waveAnnounceTimer--;
-    const alpha=Math.min(1,waveAnnounceTimer/30);
-    ctx.globalAlpha=alpha;
-    ctx.font='bold clamp(24px,5vw,44px) Courier New';
-    ctx.fillStyle='#ffdd44'; ctx.textAlign='center';
-    ctx.shadowColor='#ffaa00'; ctx.shadowBlur=20;
-    ctx.fillText(waveAnnounceText,W/2,H/2-30);
-    ctx.shadowBlur=0; ctx.globalAlpha=1; ctx.textAlign='left';
-  }
+  ctx.fillStyle='#4488ff'; ctx.beginPath(); ctx.arc(mx+player.x/WORLD_W*mw,my+player.y/WORLD_H*mw,3.5,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.65)'; ctx.font='7px Courier New'; ctx.fillText('MAP',mx+4,my+mh-4);
 }
 
 // ============================================================
@@ -1065,43 +1122,50 @@ function gameLoop(){
   try {
     frameCount++;
     if(!gameRunning){
-      // Render attractive preview background even on start screen
-      camX = Math.max(0, Math.min(WORLD_W-W, 1000 - W/2));
-      camY = Math.max(0, Math.min(WORLD_H-H, 1000 - H/2));
-      drawEarth();
-      // Animated alien scouts wandering
+      // Preview background
+      camX=Math.max(0,Math.min(WORLD_W-W,1200-W/2));
+      camY=Math.max(0,Math.min(WORLD_H-H,1200-H/2));
+      drawWorld();
+      // Wandering demo NPCs
       ctx.save();
-      const t = frameCount * 0.015;
-      for(let i=0;i<6;i++){
-        const ax = (Math.sin(t*0.7+i*1.1)*0.4+0.5)*W;
-        const ay = (Math.cos(t*0.5+i*0.9)*0.4+0.5)*H;
-        ctx.shadowColor='#44ff44'; ctx.shadowBlur=12;
-        ctx.fillStyle='#44ff44';
-        ctx.beginPath(); ctx.ellipse(ax,ay,10,14,t+i,0,Math.PI*2); ctx.fill();
-        ctx.fillStyle='#ff2222'; ctx.beginPath(); ctx.arc(ax-4,ay-4,3,0,Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.arc(ax+4,ay-4,3,0,Math.PI*2); ctx.fill();
+      const t=frameCount*0.012;
+      for(let i=0;i<8;i++){
+        const px=(Math.sin(t*0.6+i*0.85)*0.4+0.5)*W;
+        const py=(Math.cos(t*0.45+i*0.75)*0.4+0.5)*H;
+        const leg2=Math.sin(t*6+i)*7;
+        // Simple human silhouette
+        ctx.fillStyle=['#4488cc','#cc4444','#44aa44','#aa44cc','#cc8844','#888899','#dd6644','#5599bb'][i];
+        ctx.beginPath(); ctx.ellipse(px,py,9,11,0,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle='#ffcc88'; ctx.beginPath(); ctx.arc(px,py-14,7,0,Math.PI*2); ctx.fill();
+        ctx.strokeStyle='#333'; ctx.lineWidth=4;
+        ctx.beginPath(); ctx.moveTo(px-4,py+11); ctx.lineTo(px-6,py+22+leg2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(px+4,py+11); ctx.lineTo(px+6,py+22-leg2); ctx.stroke();
+        // One of them is secretly an alien (green shimmer)
+        if(i===3||i===6){ ctx.shadowColor='#44ff44'; ctx.shadowBlur=8; ctx.strokeStyle='rgba(68,255,68,0.3)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(px,py,16,0,Math.PI*2); ctx.stroke(); ctx.shadowBlur=0; }
       }
-      ctx.restore(); ctx.shadowBlur=0;
+      ctx.restore();
       requestAnimationFrame(gameLoop); return;
     }
     updatePlayer();
-    if(!teleporting){
-      updateBullets();
-      updateAliens();
-      checkCollisions();
-      updateParticles();
-      updateCamera();
-      updateHUD();
-    }
-    if(gamePhase===1) drawEarth();
-    else drawUFO();
-    drawPickups();
+    updateNPCs();
+    updateScan();
+    bullets.forEach(b=>{b.x+=b.vx;b.y+=b.vy;b.life--;});
+    bullets=bullets.filter(b=>b.life>0);
+    alienBullets.forEach(b=>{b.x+=b.vx;b.y+=b.vy;b.life--;});
+    alienBullets=alienBullets.filter(b=>b.life>0);
+    checkCollisions();
+    updateParticles();
+    updateCamera();
+    updateHUD();
+    checkWaveComplete();
+    checkNextWave();
+    drawWorld();
+    drawScanRange();
     drawParticles();
     drawBullets();
-    drawAliens();
+    drawNPCs();
     drawPlayer();
     drawMinimap();
-    drawWaveAnnounce();
   } catch(e){ console.error('game loop error:',e); }
   requestAnimationFrame(gameLoop);
 }
@@ -1111,55 +1175,52 @@ function gameLoop(){
 // ============================================================
 function startGame(){
   ensureAudio();
-  gameRunning=true; gamePhase=1; score=0;
-  alienKillCount=0; humansRescued=0; wavesCompleted=0;
-  frameCount=0; camShake=0; teleporting=false; gameOver=false;
-  nearPod=null; waveAnnounceTimer=0;
-  player.x=1000; player.y=1000; player.hp=100; player.angle=0;
+  gameRunning=true; score=0; waveNumber=1;
+  aliensKilled=0; humansShot=0; aliensEscaped=0; kingDefeated=false; gameWon=false;
+  frameCount=0; camShake=0;
+  scan.active=false; scan.progress=0; scan.cooldown=0; scan.target=null;
+  player.x=1200; player.y=1200; player.hp=100; player.angle=0;
   player.speed=0; player.invincible=0; player.flashTimer=0; player.shootCooldown=0;
   generateEarth(); generateBgStars();
-  aliens=[]; alienBullets=[]; playerBullets=[]; pickups=[]; particles=[]; floatingTexts=[]; greenPods=[];
-  alienKing=makeKing(1680,1680);
-  initWave1();
+  npcs=[]; bullets=[]; alienBullets=[]; particles=[]; floatingTexts=[];
   resize();
   document.getElementById('start-screen').style.display='none';
   document.getElementById('end-screen').style.display='none';
   document.getElementById('hud').style.display='flex';
-  document.getElementById('rescue-btn').style.display='none';
-  document.getElementById('rescue-prompt').style.display='none';
-  document.getElementById('phase-disp').textContent='PHASE 1: EARTH 🌍';
-  document.getElementById('wave-disp').textContent='WAVE 1';
+  document.getElementById('scan-banner').style.display='none';
   const isMobile='ontouchstart' in window||navigator.maxTouchPoints>0;
   document.getElementById('joy-base').style.display=isMobile?'block':'none';
   document.getElementById('fire-btn').style.display=isMobile?'flex':'none';
-  startAmbient(1);
+  document.getElementById('scan-btn').style.display=isMobile?'flex':'none';
+  startAmbient();
   camX=player.x-W/2; camY=player.y-H/2;
+  spawnWave(1);
 }
 function endGame(won){
   gameRunning=false;
   document.getElementById('hud').style.display='none';
-  document.getElementById('rescue-prompt').style.display='none';
-  document.getElementById('king-radar').style.display='none';
   const es=document.getElementById('end-screen');
   es.style.display='flex';
-  if(won){
+  if(won||kingDefeated){
     document.getElementById('end-title').textContent='🎉 YOU WIN!';
-    document.getElementById('end-title').style.color='#00ff88';
+    document.getElementById('end-title').style.color='#44ff88';
     playSound('victory');
     document.getElementById('end-stats').innerHTML=
-      `Amazing job, Addie! You saved everyone! 🌟<br><br>`+
-      `👽 Aliens Defeated: ${alienKillCount}<br>`+
-      `💚 Humans Rescued: ${humansRescued}<br>`+
+      `Amazing detective work, Addie! 🌟<br><br>`+
+      `👽 Aliens Caught: ${aliensKilled}<br>`+
+      `💔 Humans Accidentally Shot: ${humansShot}<br>`+
+      `💨 Aliens Escaped: ${aliensEscaped}<br>`+
       `⭐ Final Score: ${score}<br>`+
-      `🏆 The Alien King has been defeated!`;
+      `${kingDefeated?'👑 The Alien King is defeated! Earth is saved!':'🏆 All waves cleared!'}`;
   } else {
     document.getElementById('end-title').textContent='💀 GAME OVER';
     document.getElementById('end-title').style.color='#ff4444';
     playSound('gameover');
     document.getElementById('end-stats').innerHTML=
-      `The aliens were too strong... try again! 💪<br><br>`+
-      `👽 Aliens Defeated: ${alienKillCount}<br>`+
-      `💚 Humans Rescued: ${humansRescued}<br>`+
+      `The aliens won this time... try again! 💪<br><br>`+
+      `👽 Aliens Caught: ${aliensKilled}<br>`+
+      `💔 Humans Accidentally Shot: ${humansShot}<br>`+
+      `💨 Aliens Escaped: ${aliensEscaped}<br>`+
       `⭐ Score: ${score}`;
   }
 }
@@ -1167,16 +1228,24 @@ function endGame(won){
 // ============================================================
 // INPUT HANDLERS
 // ============================================================
-document.addEventListener('keydown',e=>{keys[e.code]=true; if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();});
-document.addEventListener('keyup',e=>{keys[e.code]=false;});
-canvas.addEventListener('mousemove',e=>{mouseX=e.clientX; mouseY=e.clientY;});
-canvas.addEventListener('mousedown',e=>{if(e.button===0){mouseDown=true; ensureAudio();}});
-canvas.addEventListener('mouseup',e=>{if(e.button===0) mouseDown=false;});
+const keys={};
+let mouseX=0,mouseY=0,mouseDown=false;
+let joyActive=false,joyX=0,joyY=0,fireActive=false,scanActive=false;
+
+document.addEventListener('keydown',e=>{
+  keys[e.code]=true;
+  if(e.code==='KeyE') startScan();
+  if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();
+});
+document.addEventListener('keyup',e=>keys[e.code]=false);
+canvas.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
+canvas.addEventListener('mousedown',e=>{if(e.button===0){mouseDown=true;ensureAudio();}});
+canvas.addEventListener('mouseup',e=>{if(e.button===0)mouseDown=false;});
 
 // Joystick
 const joyBase=document.getElementById('joy-base');
 const joyKnob=document.getElementById('joy-knob');
-let joyTouchId=null, joyBaseX=0, joyBaseY=0;
+let joyTouchId=null,joyBaseX=0,joyBaseY=0;
 const JOY_R=50;
 joyBase.addEventListener('touchstart',e=>{
   e.preventDefault();
@@ -1189,37 +1258,33 @@ document.addEventListener('touchmove',e=>{
   if(joyTouchId==null) return;
   for(const t of e.changedTouches){
     if(t.identifier===joyTouchId){
-      let dx=t.clientX-joyBaseX, dy=t.clientY-joyBaseY;
+      let dx=t.clientX-joyBaseX,dy=t.clientY-joyBaseY;
       const d=Math.sqrt(dx*dx+dy*dy);
-      if(d>JOY_R){ dx=dx/d*JOY_R; dy=dy/d*JOY_R; }
-      joyX=dx/JOY_R; joyY=dy/JOY_R;
-      joyKnob.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+      if(d>JOY_R){dx=dx/d*JOY_R;dy=dy/d*JOY_R;}
+      joyX=dx/JOY_R;joyY=dy/JOY_R;
+      joyKnob.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
     }
   }
 },{passive:false});
 document.addEventListener('touchend',e=>{
-  for(const t of e.changedTouches){
-    if(t.identifier===joyTouchId){ joyActive=false; joyX=0; joyY=0; joyTouchId=null; joyKnob.style.transform='translate(-50%,-50%)'; }
-  }
+  for(const t of e.changedTouches) if(t.identifier===joyTouchId){joyActive=false;joyX=0;joyY=0;joyTouchId=null;joyKnob.style.transform='translate(-50%,-50%)';}
 });
-// Fire btn
+
 const fireBtn=document.getElementById('fire-btn');
 fireBtn.addEventListener('touchstart',e=>{e.preventDefault();fireActive=true;ensureAudio();},{passive:false});
 fireBtn.addEventListener('touchend',e=>{e.preventDefault();fireActive=false;},{passive:false});
-// Rescue btn
-const rescueBtn=document.getElementById('rescue-btn');
-rescueBtn.addEventListener('touchstart',e=>{e.preventDefault();rescueActive=true;ensureAudio();},{passive:false});
-rescueBtn.addEventListener('touchend',e=>{e.preventDefault();rescueActive=false;},{passive:false});
+
+const scanBtn=document.getElementById('scan-btn');
+scanBtn.addEventListener('touchstart',e=>{e.preventDefault();startScan();ensureAudio();},{passive:false});
 
 document.getElementById('start-btn').addEventListener('click',startGame);
 document.getElementById('replay-btn').addEventListener('click',startGame);
 
 // ============================================================
-// INIT — pre-render background so canvas is never blank
+// INIT
 // ============================================================
 generateBgStars();
 generateEarth();
-// Kick off the loop — renders background even before game starts
 gameLoop();
 </script>
 </body>
