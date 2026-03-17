@@ -375,8 +375,10 @@ function varietyChart(notes, windowBeats) {
 }
 
 function buildNoteChart() {
-  const breaks = buildPitchBreaks(NUM_LANES);
-  const mapped  = SONG_PITCHES.map(([pitch, beat]) => [pitchToLane(pitch, breaks), beat]);
+  const maxBeat = SONG_MAX_BEAT[selectedDiff];
+  const breaks  = buildPitchBreaks(NUM_LANES);
+  const clipped = SONG_PITCHES.filter(([, beat]) => beat <= maxBeat);
+  const mapped  = clipped.map(([pitch, beat]) => [pitchToLane(pitch, breaks), beat]);
   let src;
   if      (selectedDiff === 0) src = firstInWindow(mapped, 4.0);
   else if (selectedDiff === 1) src = varietyChart(mapped, 2.0);
@@ -530,7 +532,9 @@ function stopMelody() {
 // ============================================================
 // GAME STATE
 // ============================================================
-const FALL_BEATS_BY_DIFF = [10.0, 5.5, 2.5];
+// Song length by difficulty: Easy=~55s, Medium=~96s, Hard/Expert=~2min (avoids 40s dead zone beats 332-436)
+const SONG_MAX_BEAT       = [160,  256,  332];
+const FALL_BEATS_BY_DIFF  = [10.0, 5.5,  2.5];
 const HIT_PERFECT_BEATS  = [0.55, 0.28, 0.12];
 const HIT_GOOD_BEATS     = [0.85, 0.48, 0.22];
 let FALL_BEATS, HIT_PERFECT, HIT_GOOD;
@@ -595,7 +599,7 @@ function startGame() {
   document.getElementById('hud-song').textContent = SONG.title + '  ' + modeLabel;
 
   scheduleMelody();
-  const totalBeats = Math.max(...SONG_PITCHES.map(n=>n[1])) + 4;
+  const totalBeats = SONG_MAX_BEAT[selectedDiff] + 4;
   setTimeout(() => { if (gameActive) endGame(true); }, totalBeats * (60000 / SONG.bpm) + 2000);
 }
 
