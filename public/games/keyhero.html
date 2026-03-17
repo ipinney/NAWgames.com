@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>KeyHero</title>
-<script src="https://cdn.jsdelivr.net/npm/soundfont-player@0.12.0/dist/soundfont-player.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: #08001a; overflow: hidden; touch-action: none; user-select: none; }
@@ -609,12 +609,17 @@ window.addEventListener('orientationchange', () => setTimeout(resize, 200));
 document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let audioCtx;
+// ============================================================
+// AUDIO — Tone.js: Transport clock, synth drums, melody synth
+// ============================================================
+let audioCtx = null;
+
 function ensureAudio() {
-  if (!audioCtx) audioCtx = new AudioCtx();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
+  Tone.start();
+  if (!audioCtx) audioCtx = Tone.context.rawContext;
 }
 
+// Countdown beep
 function playNote(hz, vol, dur) {
   if (!audioCtx) return;
   const t = audioCtx.currentTime;
@@ -626,6 +631,8 @@ function playNote(hz, vol, dur) {
   o.connect(g); g.connect(audioCtx.destination);
   o.start(t); o.stop(t + dur + 0.05);
 }
+
+// Missed note thud
 function playMiss() {
   if (!audioCtx) return;
   const t = audioCtx.currentTime;
@@ -634,8 +641,9 @@ function playMiss() {
   g.gain.setValueAtTime(0.1, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
   o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + 0.2);
 }
+
+// Sparkle ping on perfect hit
 function playPerfect() {
-  // Sparkle chime — two quick high pings that aren't a melody note (just feedback)
   if (!audioCtx) return;
   const t = audioCtx.currentTime;
   [2200, 3300].forEach((freq, i) => {
@@ -649,161 +657,141 @@ function playPerfect() {
   });
 }
 
-// Play a note via soundfont at hit time — syncs with the background melody
-function playHitNote(hz, gain) {
-  if (!audioCtx) return;
-  const now  = audioCtx.currentTime;
-  const midi = freqToMidi(hz);
-  if (currentInstrument) {
-    const node = currentInstrument.play(midi, now, { duration: 0.45, gain: gain || 5.0 });
-    if (node) melodyNodes.push(node);
-  } else {
-    // Oscillator fallback — same hz as the melody note
-    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-    o.type = 'triangle'; o.frequency.value = hz;
-    g.gain.setValueAtTime(0, now);
-    g.gain.linearRampToValueAtTime((gain || 5.0) * 0.06, now + 0.01);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start(now); o.stop(now + 0.5);
-  }
-}
-
-// ============================================================
-// SOUNDFONT INSTRUMENT
-// ============================================================
-let currentInstrument = null;
-let melodyNodes       = [];
+// ── Synth instruments ─────────────────────────────────────────────────────
+let kick = null, snare = null, hihat = null;
+let melodySynth = null, hitSynth = null;
+let drumsReady  = false;
+let melodyNodes = [];   // kept for API compat (unused with Tone.Transport)
 
 function freqToMidi(hz) {
   return Math.round(69 + 12 * Math.log2(hz / 440));
 }
-
-async function loadInstrument() {
-  ensureAudio();
-  document.getElementById('loading-overlay').style.display = 'flex';
-  document.getElementById('loading-sub').textContent = 'Loading piano samples...';
-  try {
-    currentInstrument = await Soundfont.instrument(audioCtx, 'electric_piano_1', {
-      soundfont: 'FluidR3_GM',
-      gain: 4.0
-    });
-  } catch(e) {
-    console.warn('Soundfont failed, using oscillator fallback', e);
-    currentInstrument = null;
-  }
-  document.getElementById('loading-overlay').style.display = 'none';
+function freqToNote(hz) {
+  return Tone.Frequency(freqToMidi(hz), 'midi').toNote();
 }
 
-function scheduleMelody(song) {
-  melodyNodes = [];
+function initSynths() {
+  if (drumsReady) return;
+
+  // Kick — deep, punchy thump
+  kick = new Tone.MembraneSynth({
+    pitchDecay : 0.05,
+    octaves    : 10,
+    envelope   : { attack: 0.001, decay: 0.30, sustain: 0, release: 1.0 }
+  }).toDestination();
+  kick.volume.value = -4;
+
+  // Snare — crisp white-noise burst
+  snare = new Tone.NoiseSynth({
+    noise    : { type: 'white' },
+    envelope : { attack: 0.001, decay: 0.13, sustain: 0, release: 0.1 }
+  }).toDestination();
+  snare.volume.value = -6;
+
+  // Hi-hat — short metallic click
+  hihat = new Tone.MetalSynth({
+    frequency      : 400,
+    envelope       : { attack: 0.001, decay: 0.035, release: 0.01 },
+    harmonicity    : 5.1,
+    modulationIndex: 32,
+    resonance      : 4000,
+    octaves        : 1.5
+  }).toDestination();
+  hihat.volume.value = -16;
+
+  // Background melody guide (soft, so player's hits pop out)
+  // Triangle wave sounds like a music-box / glockenspiel at these high freqs
+  melodySynth = new Tone.PolySynth(Tone.Synth, {
+    oscillator: { type: 'triangle' },
+    envelope  : { attack: 0.02, decay: 0.15, sustain: 0.4, release: 0.5 }
+  }).toDestination();
+  melodySynth.volume.value = -14;   // quiet guide track
+
+  // Hit synth — same timbre but loud. Correct hit = THIS IS the music
+  hitSynth = new Tone.PolySynth(Tone.Synth, {
+    oscillator: { type: 'triangle' },
+    envelope  : { attack: 0.005, decay: 0.1, sustain: 0.6, release: 0.4 }
+  }).toDestination();
+  hitSynth.volume.value = -2;       // foreground
+
+  drumsReady = true;
+}
+
+// Correct-lane hit — the full note
+function playHitNote(hz, isPerfect) {
+  if (!hitSynth) return;
+  hitSynth.volume.value = isPerfect ? -2 : -5;
+  hitSynth.triggerAttackRelease(freqToNote(hz), 0.45, Tone.now());
+}
+
+// Guitar Hero wrong-key press — plays a slightly flat/dissonant version of
+// that lane's home note. It clashes with the guide melody = clear "wrong" signal.
+const LANE_HOME_HZ = [1174.66, 1567.98, 1760.0, 2093.0]; // D6 G6 A6 C7
+function playWrongNote(lane) {
   if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  const hz  = LANE_HOME_HZ[lane] * 0.97; // ~50 cents flat = dissonant
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = 'square'; o.frequency.value = hz;
+  g.gain.setValueAtTime(0.07, now);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(now); o.stop(now + 0.25);
+}
+
+// ── Schedule melody + drums using Tone.Transport (perfect sync) ─────────────
+function scheduleMelody(song) {
+  if (!audioCtx) return;
+  initSynths();
+  melodyNodes = [];
+
   const beatDur    = 60 / song.bpm;
   const totalBeats = Math.max(...song.notes.map(n => n[1])) + 8;
 
-  // ── MELODY: deduplicate — one note per beat (highest pitch = the melody line)
-  // This keeps the audio clean and recognizable instead of muddy chords
+  Tone.Transport.bpm.value = song.bpm;
+  Tone.Transport.cancel(0);   // wipe previous schedule
+
+  // Melody: one note per beat (highest pitch = melodic lead line)
   const perBeat = {};
   song.notes.forEach(([lane, beat, hz]) => {
     if (!perBeat[beat] || hz > perBeat[beat]) perBeat[beat] = hz;
   });
-
   Object.entries(perBeat).forEach(([beatStr, hz]) => {
     const beat = parseFloat(beatStr);
-    const t    = songStartTime + beat * beatDur;
-    if (t <= audioCtx.currentTime) return;
+    const note = freqToNote(hz);
     const dur  = Math.min(beatDur * 0.85, 0.45);
-    const midi = freqToMidi(hz);
-
-    if (currentInstrument) {
-      // Low gain = background guide track. Player hits reinforce it at full volume.
-      const node = currentInstrument.play(midi, t, { duration: dur, gain: 1.6 });
-      if (node) melodyNodes.push(node);
-    } else {
-      // Fallback oscillator if CDN failed
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-      o.type = 'triangle'; o.frequency.value = hz;
-      g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(0.20, t + 0.015);
-      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-      o.connect(g); g.connect(audioCtx.destination);
-      o.start(t); o.stop(t + dur + 0.05);
-      melodyNodes.push(o);
-    }
+    Tone.Transport.schedule(time => {
+      melodySynth.triggerAttackRelease(note, dur, time);
+    }, beat * beatDur);
   });
 
-  // ── RHYTHM: kick on 1&3, snare on 2&4, 8th-note hi-hat throughout ─────
-  // Step 0.5 beats so we can fire hi-hats on every 8th note.
-  // This gives Shake It Off its characteristic driving 8th-note groove.
+  // Drums: kick on 1&3, snare on 2&4, hi-hat every 8th note
   for (let beat = 0; beat < totalBeats; beat += 0.5) {
-    const t  = songStartTime + beat * beatDur;
-    if (t <= audioCtx.currentTime) continue;
-    const b4   = beat % 4;        // position within 4-beat measure
-    const is8th = (beat % 1) !== 0; // half-beats (the "and" of each beat)
+    const b4    = beat % 4;
+    const is8th = (beat % 1) !== 0;
+    const t     = beat * beatDur;
 
-    // ── Kick drum: beats 1 & 3 (b4 === 0 and b4 === 2) ──
-    if (!is8th && (b4 === 0 || b4 === 2)) {
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-      o.type = 'sine';
-      o.frequency.setValueAtTime(150, t);
-      o.frequency.exponentialRampToValueAtTime(38, t + 0.08);
-      g.gain.setValueAtTime(0.50, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
-      o.connect(g); g.connect(audioCtx.destination);
-      o.start(t); o.stop(t + 0.14);
-      melodyNodes.push(o);
+    if (!is8th) {
+      if (b4 === 0 || b4 === 2) {
+        Tone.Transport.schedule(time => { kick.triggerAttackRelease('C1', '8n', time); }, t);
+      }
+      if (b4 === 1 || b4 === 3) {
+        Tone.Transport.schedule(time => { snare.triggerAttackRelease('8n', time); }, t);
+      }
     }
-
-    // ── Snare / clap: beats 2 & 4 (b4 === 1 and b4 === 3) ──
-    if (!is8th && (b4 === 1 || b4 === 3)) {
-      // Noise burst (sharp clap quality)
-      const bufLen = Math.floor(audioCtx.sampleRate * 0.08);
-      const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
-      const d   = buf.getChannelData(0);
-      for (let i = 0; i < bufLen; i++) d[i] = (Math.random()*2-1) * Math.exp(-i/(bufLen*0.12));
-      const ns = audioCtx.createBufferSource(), ng = audioCtx.createGain();
-      ns.buffer = buf;
-      ng.gain.setValueAtTime(0.28, t);
-      ng.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
-      ns.connect(ng); ng.connect(audioCtx.destination);
-      ns.start(t);
-      melodyNodes.push(ns);
-      // Snare body crack
-      const o2 = audioCtx.createOscillator(), g2 = audioCtx.createGain();
-      o2.type = 'triangle';
-      o2.frequency.setValueAtTime(320, t);
-      o2.frequency.exponentialRampToValueAtTime(100, t + 0.05);
-      g2.gain.setValueAtTime(0.14, t);
-      g2.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
-      o2.connect(g2); g2.connect(audioCtx.destination); o2.start(t); o2.stop(t + 0.07);
-      melodyNodes.push(o2);
-    }
-
-    // ── Hi-hat: every 8th note, quieter on the "and" beats ──
-    {
-      const hhGain = is8th ? 0.10 : 0.14;  // on-beat slightly louder
-      const hhLen  = Math.floor(audioCtx.sampleRate * 0.025);
-      const hhBuf  = audioCtx.createBuffer(1, hhLen, audioCtx.sampleRate);
-      const hhD    = hhBuf.getChannelData(0);
-      for (let i = 0; i < hhLen; i++) hhD[i] = (Math.random()*2-1) * Math.exp(-i/(hhLen*0.3));
-      const hhSrc  = audioCtx.createBufferSource();
-      hhSrc.buffer = hhBuf;
-      const hhFilt = audioCtx.createBiquadFilter();
-      hhFilt.type  = 'highpass'; hhFilt.frequency.value = 7000;
-      const hhG    = audioCtx.createGain();
-      hhG.gain.setValueAtTime(hhGain, t);
-      hhG.gain.exponentialRampToValueAtTime(0.001, t + 0.025);
-      hhSrc.connect(hhFilt); hhFilt.connect(hhG); hhG.connect(audioCtx.destination);
-      hhSrc.start(t);
-      melodyNodes.push(hhSrc);
-    }
+    const hhVel = is8th ? 0.4 : 0.7;
+    Tone.Transport.schedule(time => { hihat.triggerAttackRelease('16n', time, hhVel); }, t);
   }
+
+  // Start Transport — '+0.15' gives a tiny buffer just like old songStartTime
+  Tone.Transport.start('+0.15');
 }
 
 function stopMelody() {
-  const now = audioCtx ? audioCtx.currentTime : 0;
-  melodyNodes.forEach(n => { try { n.stop(now + 0.04); } catch(e) {} });
+  Tone.Transport.stop();
+  Tone.Transport.cancel(0);
   melodyNodes = [];
+}
 }
 
 // ============================================================
@@ -828,8 +816,8 @@ const HIT_GOOD_BEATS      = [0.65, 0.42, 0.22];
 let FALL_BEATS, HIT_PERFECT, HIT_GOOD;
 
 function getCurrentBeat() {
-  if (!audioCtx || !gameActive) return 0;
-  return (audioCtx.currentTime - songStartTime) * (SONG.bpm / 60);
+  if (!gameActive) return 0;
+  return Tone.Transport.seconds * (SONG.bpm / 60);
 }
 
 // ============================================================
@@ -844,15 +832,15 @@ function selectDiff(d) {
 // GAME START / END
 // ============================================================
 let countdownTimer = null;
-async function startCountdown() {
+function startCountdown() {
   ensureAudio();
   FALL_BEATS  = FALL_BEATS_BY_DIFF[selectedDiff];
   HIT_PERFECT = HIT_PERFECT_BEATS[selectedDiff];
   HIT_GOOD    = HIT_GOOD_BEATS[selectedDiff];
   document.getElementById('menu').style.display = 'none';
 
-  // Load electric piano samples (shows loading overlay)
-  await loadInstrument();
+  // Synths are instant — no loading needed
+  initSynths();
 
   const cdEl = document.getElementById('countdown');
   cdEl.style.display = 'block';
@@ -950,7 +938,7 @@ function tryHit(lane) {
       const mult = Math.min(4, 1 + Math.floor(combo / 5));
       score += 100 * mult;
       addFeedback(lane, '✨ PERFECT', '#cc44ff', 100 * mult);
-      playHitNote(bestNote.hz, 6.0);   // soundfont at full volume — IS the music
+      playHitNote(bestNote.hz, true);   // perfect: full volume
       playPerfect();                    // tiny sparkle ping on top (very quiet)
       spawnParticles(lane, LANE_COLORS[lane], 18);
     } else {
@@ -958,14 +946,14 @@ function tryHit(lane) {
       const mult = Math.min(4, 1 + Math.floor(combo / 5));
       score += 50 * mult;
       addFeedback(lane, '👍 GOOD', '#44ff88', 50 * mult);
-      playHitNote(bestNote.hz, 4.5);   // soundfont — slightly softer than perfect
+      playHitNote(bestNote.hz, false);  // good: slightly softer
       spawnParticles(lane, LANE_COLORS[lane], 8);
     }
     hitFlash[lane] = 1.0;
     // (no extra oscillator call — the soundfont hit above IS the note)
   } else {
     hitFlash[lane] = 0.4;
-    playMiss();  // short thud — no note sound since nothing was close
+    playWrongNote(lane);  // Guitar Hero: press = wrong note sound
   }
 }
 
