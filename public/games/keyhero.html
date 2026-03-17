@@ -246,7 +246,6 @@ function resize() {
   HIT_Y = H * 0.80;
   if (typeof buildLaneConfig === 'function') buildLaneConfig();
 }
-resize();
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 200));
 document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
@@ -1021,6 +1020,7 @@ canvas.addEventListener('mouseup',e=>{
 // ============================================================
 // INIT
 // ============================================================
+resize();
 selectMode(0);
 gameLoop();
 </script>
