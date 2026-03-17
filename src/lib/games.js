@@ -65,6 +65,15 @@ const GAMES = [
     thumbnail: '/images/island-attack-preview.png',
     color: 'from-green-500 to-blue-700',
   },
+  {
+    slug: 'alien-invasion',
+    title: 'Alien Invasion',
+    creator: 'Addie',
+    description: 'Aliens have invaded Earth! Shoot alien scouts and warriors, then track down the Alien King — get close and he teleports you both to his secret UFO! Rescue humans trapped in glowing green juice pods and defeat the King to save everyone!',
+    createdAt: '2026-03-17',
+    thumbnail: '/images/alien-invasion-preview.png',
+    color: 'from-green-400 to-purple-700',
+  },
 ];
 
 export function getAllGames() {
