@@ -89,30 +89,60 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
 #loading-text { font-family:'Courier New',monospace; font-size: 20px; color:#dd88ff; margin-top:16px; letter-spacing:3px; }
 #loading-sub  { font-family:'Courier New',monospace; font-size: 14px; color:#886699; margin-top:8px; }
 
-/* Song picker */
-#song-picker {
-  display: flex; gap: 10px; overflow-x: auto; width: 100%; max-width: 940px;
-  padding: 4px 4px 12px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-  margin-bottom: 16px; justify-content: flex-start;
+/* ── Phase nav ── */
+#phase-mode { display:flex; flex-direction:column; align-items:center; width:100%; }
+#phase-song { display:none; flex-direction:column; align-items:center; width:100%; max-width:900px; }
+
+/* "Pick a Song" CTA */
+.pick-song-btn {
+  font-family:'Courier New',monospace; font-size:clamp(14px,2.5vw,20px); font-weight:bold;
+  background:linear-gradient(135deg,#330088,#880033); color:white; border:2px solid #cc44ff88;
+  padding:13px 48px; border-radius:50px; cursor:pointer; letter-spacing:3px; margin-top:6px;
+  box-shadow:0 0 24px #8800ff66; transition:transform 0.1s, box-shadow 0.1s;
 }
-#song-picker::-webkit-scrollbar { display: none; }
+.pick-song-btn:hover { transform:scale(1.05); box-shadow:0 0 44px #cc44ffaa; }
+.pick-song-btn:active { transform:scale(0.96); }
+
+/* Song grid */
+#song-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-height: 58vh;
+  overflow-y: auto;
+  padding: 4px 2px 4px;
+  margin-bottom: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: #cc44ff44 transparent;
+}
+#song-grid::-webkit-scrollbar { width: 4px; }
+#song-grid::-webkit-scrollbar-thumb { background: #cc44ff44; border-radius: 4px; }
+
+/* Song card */
 .s-card {
-  flex: 0 0 auto; width: clamp(120px,18vw,150px); border-radius: 12px;
-  padding: 10px 10px 8px; cursor: pointer; border: 2px solid rgba(255,255,255,0.1);
-  text-align: left; transition: all 0.15s; position: relative; overflow: hidden;
+  border-radius: 14px; padding: 14px 12px 10px; cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.1); text-align: left;
+  transition: all 0.15s; position: relative; overflow: hidden;
+  min-height: 110px; display: flex; flex-direction: column; justify-content: flex-end;
 }
-.s-card:hover { transform: scale(1.04); border-color: rgba(255,255,255,0.35); }
-.s-card.sel {
-  border-color: white !important; box-shadow: 0 0 18px rgba(255,255,255,0.4);
-  transform: scale(1.07);
-}
-.s-card .s-check {
-  position: absolute; top: 6px; right: 8px; font-size: 13px; display: none;
-}
+.s-card:hover  { transform: scale(1.04); border-color: rgba(255,255,255,0.35); }
+.s-card.sel    { border-color: white !important; box-shadow: 0 0 22px rgba(255,255,255,0.45); transform: scale(1.07); }
+.s-check       { position: absolute; top: 7px; right: 9px; font-size: 14px; display: none; }
 .s-card.sel .s-check { display: block; }
-.s-card-emoji  { font-size: 22px; margin-bottom: 5px; }
-.s-card-title  { font-family:'Courier New',monospace; font-size: clamp(9px,1.5vw,12px); font-weight: bold; color: #fff; line-height: 1.2; }
-.s-card-artist { font-family:'Courier New',monospace; font-size: clamp(8px,1.2vw,10px); color: rgba(255,255,255,0.65); margin-top: 3px; }
+.s-card-emoji  { font-size: 28px; margin-bottom: 8px; }
+.s-card-title  { font-family:'Courier New',monospace; font-size:clamp(9px,1.6vw,12px); font-weight:bold; color:#fff; line-height:1.25; }
+.s-card-artist { font-family:'Courier New',monospace; font-size:clamp(8px,1.2vw,10px); color:rgba(255,255,255,0.6); margin-top:3px; }
+
+/* Bottom bar on song screen */
+.song-nav { display:flex; gap:12px; justify-content:center; align-items:center; margin-top:2px; }
+.back-btn {
+  font-family:'Courier New',monospace; font-size:clamp(12px,2vw,16px);
+  background:transparent; color:#aa88cc; border:2px solid #664499;
+  padding:10px 24px; border-radius:40px; cursor:pointer; letter-spacing:2px;
+  transition:all 0.15s;
+}
+.back-btn:hover { background:#44224433; }
 </style>
 </head>
 <body>
@@ -121,36 +151,47 @@ canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; heigh
 <div id="menu">
   <div class="m-icon">🎵</div>
   <div class="m-title">KEY HERO</div>
-  <div class="m-sub" id="m-sub-hint">Hit the keys as notes reach the circles!</div>
 
-  <div class="sec-title">🎵 CHOOSE YOUR SONG</div>
-  <div id="song-picker"></div>
+  <!-- ── STEP 1: Mode selection ── -->
+  <div id="phase-mode">
+    <div class="m-sub" id="m-sub-hint">Hit the keys as notes reach the circles!</div>
 
-  <div class="sec-title">CHOOSE YOUR MODE</div>
-  <div class="btn-row" id="hand-btns">
-    <button class="hand-btn sel-left" id="hand-left" onclick="selectMode(0)">
-      ✋ LEFT HAND<div class="hand-keys">A &nbsp; S &nbsp; D &nbsp; F</div>
-    </button>
-    <button class="hand-btn" id="hand-right" onclick="selectMode(1)">
-      🤚 RIGHT HAND<div class="hand-keys">J &nbsp; K &nbsp; L &nbsp; ;</div>
-    </button>
-    <button class="hand-btn" id="hand-both" onclick="selectMode(2)">
-      🙌 BOTH HANDS<div class="hand-keys">A S D F + J K L ;</div>
-    </button>
-    <button class="hand-btn" id="hand-expert" onclick="selectMode(3)">
-      ⌨️ EXPERT<div class="hand-keys">QW·AS·ZX + UI·JK·NM</div>
-    </button>
+    <div class="sec-title">DIFFICULTY</div>
+    <div class="btn-row" id="diff-btns">
+      <button class="diff-btn sel" onclick="selectDiff(0)">😊 EASY</button>
+      <button class="diff-btn" onclick="selectDiff(1)">😤 MEDIUM</button>
+      <button class="diff-btn" onclick="selectDiff(2)">💀 HARD</button>
+    </div>
+
+    <div class="sec-title">HAND MODE</div>
+    <div class="btn-row" id="hand-btns">
+      <button class="hand-btn sel-left" id="hand-left" onclick="selectMode(0)">
+        ✋ LEFT HAND<div class="hand-keys">A &nbsp; S &nbsp; D &nbsp; F</div>
+      </button>
+      <button class="hand-btn" id="hand-right" onclick="selectMode(1)">
+        🤚 RIGHT HAND<div class="hand-keys">J &nbsp; K &nbsp; L &nbsp; ;</div>
+      </button>
+      <button class="hand-btn" id="hand-both" onclick="selectMode(2)">
+        🙌 BOTH HANDS<div class="hand-keys">A S D F + J K L ;</div>
+      </button>
+      <button class="hand-btn" id="hand-expert" onclick="selectMode(3)">
+        ⌨️ EXPERT<div class="hand-keys">QW·AS·ZX + UI·JK·NM</div>
+      </button>
+    </div>
+
+    <button class="pick-song-btn" onclick="showSongPicker()">🎵 PICK A SONG →</button>
   </div>
 
-  <div class="sec-title">DIFFICULTY</div>
-  <div class="btn-row" id="diff-btns">
-    <button class="diff-btn sel" onclick="selectDiff(0)">😊 EASY</button>
-    <button class="diff-btn" onclick="selectDiff(1)">😤 MEDIUM</button>
-    <button class="diff-btn" onclick="selectDiff(2)">💀 HARD</button>
+  <!-- ── STEP 2: Song picker ── -->
+  <div id="phase-song">
+    <div class="sec-title" style="margin-bottom:10px">CHOOSE YOUR SONG</div>
+    <div id="song-grid"></div>
+    <div class="song-nav">
+      <button class="back-btn" onclick="showModePicker()">← BACK</button>
+      <button class="play-btn" onclick="startCountdown()">▶ PLAY</button>
+    </div>
+    <div id="loading-track" style="color:#aaa;font-size:13px;margin-top:8px;display:none">🎵 Loading audio…</div>
   </div>
-
-  <button class="play-btn" onclick="startCountdown()">▶ PLAY</button>
-  <div id="loading-track" style="color:#aaa;font-size:13px;margin-top:8px;display:none">🎵 Loading audio…</div>
 </div>
 
 <!-- HUD -->
@@ -437,15 +478,27 @@ function selectSong(idx) {
 }
 
 function buildSongPicker() {
-  const el = document.getElementById('song-picker');
+  const el = document.getElementById('song-grid');
   el.innerHTML = SONGS.map((s,i) => `
-    <div class="s-card${i===0?' sel':''}" onclick="selectSong(${i})"
+    <div class="s-card${i===selectedSong?' sel':''}" onclick="selectSong(${i})"
          style="background:${s.color}">
       <div class="s-check">✓</div>
       <div class="s-card-emoji">${s.emoji}</div>
       <div class="s-card-title">${s.title}</div>
       <div class="s-card-artist">${s.artist}</div>
     </div>`).join('');
+}
+
+function showSongPicker() {
+  document.getElementById('phase-mode').style.display = 'none';
+  const sp = document.getElementById('phase-song');
+  sp.style.display = 'flex';
+  buildSongPicker();
+}
+
+function showModePicker() {
+  document.getElementById('phase-song').style.display = 'none';
+  document.getElementById('phase-mode').style.display = 'flex';
 }
 // ============================================================
 // AUDIO — OGG backing track + Web Audio hit sounds
@@ -1056,7 +1109,6 @@ canvas.addEventListener('mouseup',e=>{
 // INIT
 // ============================================================
 resize();
-buildSongPicker();
 selectMode(0);
 gameLoop();
 </script>
