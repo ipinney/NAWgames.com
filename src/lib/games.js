@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'cake-decorating',
+    title: 'Cake Decorating Studio',
+    creator: 'Addie',
+    description: 'Decorate cakes, cupcakes, cookies and donuts with colorful icing, sprinkles and toppings! Pick your treat, make it beautiful, then show the judges to win prizes. 6 treat shapes, 25 icing colors, 10 toppings, and unlimited creativity!',
+    createdAt: '2026-03-20',
+    thumbnail: '/images/cake-decorating-preview.png',
+    color: 'from-pink-400 to-purple-500',
+  },
+  {
     slug: 'keyhero',
     title: 'KeyHero',
     creator: 'Ivan',

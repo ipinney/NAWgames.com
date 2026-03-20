@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cake Decorating Studio</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #fce4ec; overflow: hidden; touch-action: none; user-select: none; font-family: 'Segoe UI', Arial, sans-serif; }
+canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+
+#startScreen {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 100;
+  background: linear-gradient(135deg, #f8bbd0, #e1bee7, #b3e5fc, #c8e6c9);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+}
+#startScreen h1 {
+  font-size: min(12vw, 64px); color: #ad1457; text-shadow: 3px 3px 0 #f48fb1;
+  margin-bottom: 10px; font-family: 'Segoe UI', Arial, sans-serif; font-weight: 900;
+}
+#startScreen .subtitle {
+  font-size: min(5vw, 24px); color: #6a1b9a; margin-bottom: 30px;
+}
+#startScreen .playBtn {
+  background: linear-gradient(135deg, #e91e63, #9c27b0);
+  color: white; border: none; padding: 18px 50px; font-size: min(6vw, 28px);
+  border-radius: 50px; cursor: pointer; font-weight: bold;
+  box-shadow: 0 6px 20px rgba(233,30,99,0.4);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+#startScreen .controls {
+  margin-top: 20px; font-size: min(3.5vw, 16px); color: #7b1fa2; max-width: 400px;
+  line-height: 1.6;
+}
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+
+#gameOver {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 100;
+  background: rgba(0,0,0,0.7); display: none; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+}
+#gameOver .panel {
+  background: linear-gradient(135deg, #fff9c4, #f8bbd0);
+  border-radius: 30px; padding: 40px; max-width: 420px; width: 90%;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+#gameOver h2 { font-size: min(8vw, 40px); color: #ad1457; margin-bottom: 10px; }
+#gameOver .stars { font-size: min(10vw, 50px); margin: 15px 0; }
+#gameOver .score-text { font-size: min(5vw, 24px); color: #6a1b9a; margin: 10px 0; }
+#gameOver .prize { font-size: min(6vw, 28px); color: #e65100; font-weight: bold; margin: 10px 0; }
+#gameOver .stats { font-size: min(3.5vw, 16px); color: #4a148c; line-height: 1.8; margin: 10px 0; }
+#gameOver .playBtn {
+  background: linear-gradient(135deg, #e91e63, #9c27b0);
+  color: white; border: none; padding: 14px 40px; font-size: min(5vw, 22px);
+  border-radius: 50px; cursor: pointer; font-weight: bold; margin-top: 15px;
+  box-shadow: 0 4px 15px rgba(233,30,99,0.4);
+}
+
+#pickScreen {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 90;
+  background: linear-gradient(135deg, #fff3e0, #fce4ec);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+}
+#pickScreen h2 { font-size: min(7vw, 36px); color: #ad1457; margin-bottom: 25px; }
+#pickScreen .items { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+#pickScreen .item-btn {
+  width: min(30vw, 140px); height: min(30vw, 140px); border-radius: 20px;
+  border: 4px solid #e1bee7; background: white; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: min(3.5vw, 16px); color: #6a1b9a; font-weight: bold;
+  transition: transform 0.2s, border-color 0.2s;
+}
+#pickScreen .item-btn:hover { transform: scale(1.08); border-color: #e91e63; }
+#pickScreen .item-btn .emoji { font-size: min(12vw, 60px); margin-bottom: 5px; }
+
+#toolbar {
+  position: fixed; bottom: 0; left: 0; width: 100vw; z-index: 50;
+  background: linear-gradient(0deg, rgba(248,187,208,0.95), rgba(248,187,208,0.8));
+  padding: 8px; display: none; backdrop-filter: blur(5px);
+}
+#toolbar .row { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin: 3px 0; }
+#toolbar .tool-btn {
+  width: min(12vw, 52px); height: min(12vw, 52px); border-radius: 14px;
+  border: 3px solid transparent; background: white; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: min(6vw, 26px); transition: transform 0.15s;
+}
+#toolbar .tool-btn.active { border-color: #e91e63; transform: scale(1.1); background: #fce4ec; }
+#toolbar .color-dot {
+  width: min(9vw, 38px); height: min(9vw, 38px); border-radius: 50%;
+  border: 3px solid transparent; cursor: pointer; transition: transform 0.15s;
+}
+#toolbar .color-dot.active { border-color: #fff; transform: scale(1.2); box-shadow: 0 0 8px rgba(0,0,0,0.3); }
+#toolbar .action-btn {
+  padding: 8px 16px; border-radius: 20px; border: none; cursor: pointer;
+  font-size: min(3.5vw, 15px); font-weight: bold; color: white;
+}
+
+#hud {
+  position: fixed; top: 10px; left: 10px; z-index: 50;
+  display: none; font-size: min(4vw, 18px); color: #ad1457;
+  background: rgba(255,255,255,0.85); padding: 8px 14px; border-radius: 15px;
+  backdrop-filter: blur(5px);
+}
+
+#brushSize {
+  position: fixed; top: 10px; right: 10px; z-index: 50; display: none;
+  background: rgba(255,255,255,0.85); padding: 8px 14px; border-radius: 15px;
+  backdrop-filter: blur(5px); color: #ad1457; font-size: min(3.5vw, 15px);
+}
+#brushSize input { width: 80px; }
+</style>
+</head>
+<body>
+
+<div id="startScreen">
+  <h1>Cake Studio</h1>
+  <div class="subtitle">Decorate & Win Prizes!</div>
+  <button class="playBtn" onclick="showPickScreen()">Let's Bake!</button>
+  <div class="controls">Pick a treat, decorate it with icing, sprinkles & toppings, then show the judges!</div>
+</div>
+
+<div id="pickScreen">
+  <h2>Pick Your Treat!</h2>
+  <div class="items">
+    <div class="item-btn" onclick="startGame('round')"><div class="emoji">🎂</div>Round Cake</div>
+    <div class="item-btn" onclick="startGame('square')"><div class="emoji">🍰</div>Square Cake</div>
+    <div class="item-btn" onclick="startGame('cupcake')"><div class="emoji">🧁</div>Cupcake</div>
+    <div class="item-btn" onclick="startGame('cookie')"><div class="emoji">🍪</div>Cookie</div>
+    <div class="item-btn" onclick="startGame('donut')"><div class="emoji">🍩</div>Donut</div>
+    <div class="item-btn" onclick="startGame('heart')"><div class="emoji">💖</div>Heart Cake</div>
+  </div>
+</div>
+
+<div id="gameOver">
+  <div class="panel">
+    <h2 id="goTitle">Amazing!</h2>
+    <div class="stars" id="goStars"></div>
+    <div class="score-text" id="goScore"></div>
+    <div class="prize" id="goPrize"></div>
+    <div class="stats" id="goStats"></div>
+    <button class="playBtn" onclick="showPickScreen()">Decorate Again!</button>
+  </div>
+</div>
+
+<div id="hud">
+  <span id="hudRound">Round 1</span> &nbsp;|&nbsp; <span id="hudScore">Score: 0</span>
+</div>
+
+<div id="brushSize">
+  Brush: <input type="range" min="4" max="40" value="16" id="brushSlider" oninput="brushR=+this.value">
+</div>
+
+<div id="toolbar">
+  <div class="row" id="toolRow"></div>
+  <div class="row" id="colorRow"></div>
+  <div class="row" id="actionRow"></div>
+</div>
+
+<canvas id="c"></canvas>
+
+<script>
+// ==================== AUDIO ENGINE ====================
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+function ensureAudio() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playSound(type) {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime;
+  const master = audioCtx.createGain();
+  master.connect(audioCtx.destination);
+
+  if (type === 'icing') {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(300 + Math.random() * 200, t);
+    o.frequency.exponentialRampToValueAtTime(200, t + 0.1);
+    g.gain.setValueAtTime(0.08, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + 0.12);
+    master.gain.setValueAtTime(0.3, t);
+  }
+  else if (type === 'sprinkle') {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(800 + Math.random() * 600, t);
+    o.frequency.exponentialRampToValueAtTime(1400, t + 0.08);
+    g.gain.setValueAtTime(0.12, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + 0.1);
+    master.gain.setValueAtTime(0.25, t);
+  }
+  else if (type === 'stamp') {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(500, t);
+    o.frequency.exponentialRampToValueAtTime(700, t + 0.05);
+    o.frequency.exponentialRampToValueAtTime(400, t + 0.15);
+    g.gain.setValueAtTime(0.15, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + 0.2);
+    master.gain.setValueAtTime(0.3, t);
+  }
+  else if (type === 'undo') {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sawtooth';
+    o.frequency.setValueAtTime(300, t);
+    o.frequency.exponentialRampToValueAtTime(150, t + 0.15);
+    g.gain.setValueAtTime(0.1, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + 0.2);
+    master.gain.setValueAtTime(0.25, t);
+  }
+  else if (type === 'victory') {
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((f, i) => {
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t + i * 0.15);
+      g.gain.linearRampToValueAtTime(0.15, t + i * 0.15 + 0.05);
+      g.gain.linearRampToValueAtTime(0, t + i * 0.15 + 0.5);
+      o.connect(g); g.connect(master);
+      o.start(t + i * 0.15); o.stop(t + i * 0.15 + 0.5);
+    });
+    master.gain.setValueAtTime(0.5, t);
+  }
+  else if (type === 'fanfare') {
+    const notes = [392, 494, 587, 659, 784, 880, 1047];
+    notes.forEach((f, i) => {
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t + i * 0.12);
+      g.gain.linearRampToValueAtTime(0.12, t + i * 0.12 + 0.04);
+      g.gain.linearRampToValueAtTime(0, t + i * 0.12 + 0.4);
+      o.connect(g); g.connect(master);
+      o.start(t + i * 0.12); o.stop(t + i * 0.12 + 0.4);
+    });
+    master.gain.setValueAtTime(0.5, t);
+  }
+  else if (type === 'judge') {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(350, t);
+    o.frequency.linearRampToValueAtTime(600, t + 0.3);
+    g.gain.setValueAtTime(0.1, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + 0.4);
+    master.gain.setValueAtTime(0.3, t);
+  }
+  else if (type === 'click') {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(600, t);
+    g.gain.setValueAtTime(0.1, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + 0.06);
+    master.gain.setValueAtTime(0.2, t);
+  }
+}
+
+// ==================== PARTICLE SYSTEM ====================
+let particles = [];
+function addParticle(x, y, type, count) {
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 0.5 + Math.random() * 3;
+    let life, r, g, b, size;
+    if (type === 'sparkle') {
+      life = 25 + Math.random() * 25;
+      const colors = [[255,215,0],[255,105,180],[138,43,226],[0,191,255],[50,205,50]];
+      const c = colors[Math.floor(Math.random() * colors.length)];
+      r = c[0]; g = c[1]; b = c[2];
+      size = 2 + Math.random() * 4;
+    } else if (type === 'confetti') {
+      life = 60 + Math.random() * 60;
+      r = Math.floor(Math.random() * 256);
+      g = Math.floor(Math.random() * 256);
+      b = Math.floor(Math.random() * 256);
+      size = 3 + Math.random() * 5;
+    } else if (type === 'sprinkle_fall') {
+      life = 15 + Math.random() * 10;
+      const colors = [[255,0,100],[255,200,0],[0,200,255],[100,255,100],[200,100,255]];
+      const c = colors[Math.floor(Math.random() * colors.length)];
+      r = c[0]; g = c[1]; b = c[2];
+      size = 2 + Math.random() * 2;
+    } else if (type === 'star_burst') {
+      life = 40 + Math.random() * 30;
+      r = 255; g = 215; b = 0;
+      size = 3 + Math.random() * 5;
+    }
+    particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - (type==='confetti'?2:0),
+      life, maxLife: life, r, g, b, size, type, rot: Math.random() * Math.PI * 2 });
+  }
+}
+
+function updateParticles() {
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.05;
+    p.vx *= 0.98;
+    p.rot += 0.1;
+    p.life--;
+  });
+  particles = particles.filter(p => p.life > 0);
+}
+
+function drawParticles(ctx) {
+  particles.forEach(p => {
+    const lr = p.life / p.maxLife;
+    ctx.globalAlpha = lr;
+    ctx.fillStyle = `rgb(${p.r},${p.g},${p.b})`;
+    if (p.type === 'confetti') {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      ctx.fillRect(-p.size/2, -p.size/4, p.size, p.size/2);
+      ctx.restore();
+    } else if (p.type === 'sparkle' || p.type === 'star_burst') {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      drawStar(ctx, 0, 0, 4, p.size * lr, p.size * lr * 0.4);
+      ctx.restore();
+    } else {
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size * lr, 0, Math.PI * 2); ctx.fill();
+    }
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawStar(ctx, cx, cy, spikes, outerR, innerR) {
+  let rot = Math.PI / 2 * 3, step = Math.PI / spikes;
+  ctx.beginPath(); ctx.moveTo(cx, cy - outerR);
+  for (let i = 0; i < spikes; i++) {
+    ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR); rot += step;
+    ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR); rot += step;
+  }
+  ctx.lineTo(cx, cy - outerR); ctx.closePath(); ctx.fill();
+}
+
+// ==================== SCREEN SHAKE ====================
+let camShake = 0;
+
+// ==================== CANVAS SETUP ====================
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() {
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width = W; canvas.height = H;
+}
+resize();
+window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => setTimeout(resize, 200));
+document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+
+// ==================== GAME STATE ====================
+let gameState = 'start'; // start, pick, decorating, judging, gameover
+let cakeType = 'round';
+let currentTool = 'icing'; // icing, sprinkles, topping, eraser
+let currentColor = '#ff69b4';
+let brushR = 16;
+let round = 1;
+let totalScore = 0;
+
+// Decoration data
+let icingStrokes = []; // { points: [{x,y}], color, radius }
+let currentStroke = null;
+let sprinkles = []; // { x, y, color, rot, shape }
+let toppings = []; // { x, y, type }
+let undoStack = []; // snapshots
+
+// Colors palette
+const COLORS = [
+  '#ff69b4','#ff1493','#e91e63','#ff0000','#ff6347',
+  '#ff8c00','#ffa500','#ffd700','#ffff00','#adff2f',
+  '#00ff00','#2e8b57','#00ced1','#1e90ff','#4169e1',
+  '#8a2be2','#9932cc','#ff00ff','#ffffff','#8b4513',
+  '#000000','#808080','#c0c0c0','#ffe4e1','#e6e6fa'
+];
+
+// Toppings
+const TOPPING_TYPES = [
+  { emoji: '🍓', name: 'Strawberry' },
+  { emoji: '🍒', name: 'Cherry' },
+  { emoji: '🫐', name: 'Blueberry' },
+  { emoji: '🌸', name: 'Flower' },
+  { emoji: '🕯️', name: 'Candle' },
+  { emoji: '⭐', name: 'Star' },
+  { emoji: '💎', name: 'Gem' },
+  { emoji: '🦋', name: 'Butterfly' },
+  { emoji: '🌈', name: 'Rainbow' },
+  { emoji: '❤️', name: 'Heart' },
+];
+let currentTopping = 0;
+
+// Sprinkle shapes
+const SPRINKLE_COLORS = ['#ff0066','#ff6600','#ffcc00','#00cc66','#0099ff','#9933ff','#ff33cc','#fff'];
+
+// Cake geometry (set during startGame)
+let cakeX, cakeY, cakeW, cakeH;
+
+// ==================== UI SETUP ====================
+function buildToolbar() {
+  const toolRow = document.getElementById('toolRow');
+  const colorRow = document.getElementById('colorRow');
+  const actionRow = document.getElementById('actionRow');
+  toolRow.innerHTML = ''; colorRow.innerHTML = ''; actionRow.innerHTML = '';
+
+  const tools = [
+    { id: 'icing', emoji: '🖌️' },
+    { id: 'sprinkles', emoji: '✨' },
+    { id: 'topping', emoji: '🍓' },
+    { id: 'eraser', emoji: '🧹' },
+  ];
+  tools.forEach(t => {
+    const btn = document.createElement('div');
+    btn.className = 'tool-btn' + (currentTool === t.id ? ' active' : '');
+    btn.innerHTML = t.emoji;
+    btn.onclick = () => { ensureAudio(); playSound('click'); currentTool = t.id; buildToolbar(); };
+    toolRow.appendChild(btn);
+  });
+
+  // Topping selector when topping tool active
+  if (currentTool === 'topping') {
+    TOPPING_TYPES.forEach((t, i) => {
+      const btn = document.createElement('div');
+      btn.className = 'tool-btn' + (currentTopping === i ? ' active' : '');
+      btn.innerHTML = t.emoji;
+      btn.style.fontSize = 'min(5vw, 22px)';
+      btn.onclick = () => { ensureAudio(); playSound('click'); currentTopping = i; buildToolbar(); };
+      toolRow.appendChild(btn);
+    });
+  }
+
+  // Colors (only for icing)
+  if (currentTool === 'icing') {
+    COLORS.forEach(c => {
+      const dot = document.createElement('div');
+      dot.className = 'color-dot' + (currentColor === c ? ' active' : '');
+      dot.style.background = c;
+      if (c === '#ffffff') dot.style.border = '3px solid #ccc';
+      dot.onclick = () => { ensureAudio(); playSound('click'); currentColor = c; buildToolbar(); };
+      colorRow.appendChild(dot);
+    });
+  }
+
+  // Sprinkle colors
+  if (currentTool === 'sprinkles') {
+    const note = document.createElement('span');
+    note.style.cssText = 'font-size:min(3vw,14px);color:#ad1457;';
+    note.textContent = 'Tap on the cake to add sprinkles!';
+    colorRow.appendChild(note);
+  }
+
+  // Action buttons
+  const undoBtn = document.createElement('button');
+  undoBtn.className = 'action-btn';
+  undoBtn.style.background = '#78909c';
+  undoBtn.textContent = '↩ Undo';
+  undoBtn.onclick = doUndo;
+  actionRow.appendChild(undoBtn);
+
+  const clearBtn = document.createElement('button');
+  clearBtn.className = 'action-btn';
+  clearBtn.style.background = '#ef5350';
+  clearBtn.textContent = '🗑 Clear';
+  clearBtn.onclick = doClear;
+  actionRow.appendChild(clearBtn);
+
+  const submitBtn = document.createElement('button');
+  submitBtn.className = 'action-btn';
+  submitBtn.style.background = 'linear-gradient(135deg, #e91e63, #9c27b0)';
+  submitBtn.textContent = '⭐ Show Judges!';
+  submitBtn.onclick = submitToJudges;
+  actionRow.appendChild(submitBtn);
+}
+
+// ==================== CAKE SHAPES ====================
+function getCakePath(ctx, type, x, y, w, h) {
+  ctx.beginPath();
+  if (type === 'round') {
+    ctx.ellipse(x, y, w/2, h/2, 0, 0, Math.PI * 2);
+  } else if (type === 'square') {
+    const r = 15;
+    ctx.roundRect(x - w/2, y - h/2, w, h, r);
+  } else if (type === 'cupcake') {
+    // Cupcake top (dome)
+    ctx.ellipse(x, y - h*0.15, w/2, h*0.4, 0, 0, Math.PI * 2);
+  } else if (type === 'cookie') {
+    // Scalloped circle
+    const steps = 16, outerR = w/2, innerR = w/2 - 8;
+    for (let i = 0; i <= steps; i++) {
+      const a = (i / steps) * Math.PI * 2;
+      const r = (i % 2 === 0) ? outerR : innerR;
+      const px = x + Math.cos(a) * r, py = y + Math.sin(a) * r;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+  } else if (type === 'donut') {
+    ctx.ellipse(x, y, w/2, h/2, 0, 0, Math.PI * 2);
+  } else if (type === 'heart') {
+    const s = w / 2;
+    ctx.moveTo(x, y + s * 0.7);
+    ctx.bezierCurveTo(x, y + s * 0.3, x - s, y - s * 0.1, x - s, y - s * 0.4);
+    ctx.bezierCurveTo(x - s, y - s * 0.9, x - s * 0.3, y - s, x, y - s * 0.5);
+    ctx.bezierCurveTo(x + s * 0.3, y - s, x + s, y - s * 0.9, x + s, y - s * 0.4);
+    ctx.bezierCurveTo(x + s, y - s * 0.1, x, y + s * 0.3, x, y + s * 0.7);
+    ctx.closePath();
+  }
+}
+
+function isOnCake(px, py) {
+  // Use the offscreen test canvas for hit testing
+  const tc = document.createElement('canvas');
+  tc.width = W; tc.height = H;
+  const tctx = tc.getContext('2d');
+  getCakePath(tctx, cakeType, cakeX, cakeY, cakeW, cakeH);
+  if (cakeType === 'donut') {
+    // Exclude donut hole
+    const inOuter = tctx.isPointInPath(px, py);
+    tctx.beginPath();
+    tctx.ellipse(cakeX, cakeY, cakeW * 0.22, cakeH * 0.22, 0, 0, Math.PI * 2);
+    const inHole = tctx.isPointInPath(px, py);
+    return inOuter && !inHole;
+  }
+  return tctx.isPointInPath(px, py);
+}
+
+// ==================== DRAW FUNCTIONS ====================
+function drawBackground() {
+  // Kitchen background
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#fff8e1');
+  grad.addColorStop(0.6, '#ffecb3');
+  grad.addColorStop(1, '#ffe0b2');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Counter
+  ctx.fillStyle = '#8d6e63';
+  ctx.fillRect(0, H * 0.7, W, H * 0.3);
+  ctx.fillStyle = '#a1887f';
+  ctx.fillRect(0, H * 0.7, W, 6);
+
+  // Checkered tablecloth pattern
+  const tileSize = 20;
+  for (let gx = 0; gx < W; gx += tileSize) {
+    for (let gy = Math.floor(H * 0.7); gy < H; gy += tileSize) {
+      if ((Math.floor(gx / tileSize) + Math.floor(gy / tileSize)) % 2 === 0) {
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        ctx.fillRect(gx, gy, tileSize, tileSize);
+      }
+    }
+  }
+}
+
+function drawPlate() {
+  // Plate shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.1)';
+  ctx.beginPath();
+  ctx.ellipse(cakeX + 4, cakeY + cakeH/2 + 24, cakeW/2 + 40, 18, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // Plate
+  ctx.fillStyle = '#f5f5f5';
+  ctx.beginPath();
+  ctx.ellipse(cakeX, cakeY + cakeH/2 + 20, cakeW/2 + 38, 16, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#e0e0e0';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#fafafa';
+  ctx.beginPath();
+  ctx.ellipse(cakeX, cakeY + cakeH/2 + 20, cakeW/2 + 20, 10, 0, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawCakeBase() {
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.12)';
+  ctx.beginPath();
+  if (cakeType === 'cupcake') {
+    // Cupcake wrapper
+    ctx.moveTo(cakeX - cakeW * 0.35, cakeY + cakeH * 0.05);
+    ctx.lineTo(cakeX - cakeW * 0.25, cakeY + cakeH * 0.55);
+    ctx.lineTo(cakeX + cakeW * 0.25, cakeY + cakeH * 0.55);
+    ctx.lineTo(cakeX + cakeW * 0.35, cakeY + cakeH * 0.05);
+    ctx.closePath();
+    ctx.fillStyle = '#e8a0bf';
+    ctx.fill();
+    ctx.strokeStyle = '#d4819e';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Wrapper ridges
+    for (let i = -4; i <= 4; i++) {
+      const lx = cakeX + i * cakeW * 0.07;
+      ctx.strokeStyle = 'rgba(212,129,158,0.3)';
+      ctx.beginPath();
+      ctx.moveTo(lx - 2, cakeY + cakeH * 0.05);
+      ctx.lineTo(lx, cakeY + cakeH * 0.55);
+      ctx.stroke();
+    }
+  }
+
+  // Cake body
+  let bodyColor, bodyStroke;
+  if (cakeType === 'cookie') {
+    bodyColor = '#deb887'; bodyStroke = '#c6984a';
+  } else if (cakeType === 'donut') {
+    bodyColor = '#deb887'; bodyStroke = '#c6984a';
+  } else {
+    bodyColor = '#fff3e0'; bodyStroke = '#ffe0b2';
+  }
+
+  ctx.fillStyle = bodyColor;
+  getCakePath(ctx, cakeType, cakeX, cakeY, cakeW, cakeH);
+  ctx.fill();
+  ctx.strokeStyle = bodyStroke;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Donut hole
+  if (cakeType === 'donut') {
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(cakeX, cakeY, cakeW * 0.22, cakeH * 0.22, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffecb3';
+    ctx.fill();
+    ctx.strokeStyle = '#c6984a';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Cake layers for round/square/heart
+  if (['round', 'square', 'heart'].includes(cakeType)) {
+    ctx.strokeStyle = 'rgba(200,170,130,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cakeX - cakeW/2 + 10, cakeY);
+    ctx.lineTo(cakeX + cakeW/2 - 10, cakeY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cakeX - cakeW/2 + 10, cakeY + cakeH * 0.15);
+    ctx.lineTo(cakeX + cakeW/2 - 10, cakeY + cakeH * 0.15);
+    ctx.stroke();
+  }
+
+  // Cookie dots
+  if (cakeType === 'cookie') {
+    ctx.fillStyle = '#8B4513';
+    for (let i = 0; i < 12; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const r = Math.random() * cakeW * 0.35;
+      const dx = cakeX + Math.cos(a) * r;
+      const dy = cakeY + Math.sin(a) * r;
+      ctx.beginPath(); ctx.arc(dx, dy, 4, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+}
+
+function drawIcingStrokes() {
+  icingStrokes.forEach(stroke => {
+    if (stroke.points.length < 2) return;
+    ctx.strokeStyle = stroke.color;
+    ctx.lineWidth = stroke.radius * 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+    for (let i = 1; i < stroke.points.length; i++) {
+      ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
+    }
+    ctx.stroke();
+  });
+  // Current stroke
+  if (currentStroke && currentStroke.points.length >= 2) {
+    ctx.strokeStyle = currentStroke.color;
+    ctx.lineWidth = currentStroke.radius * 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(currentStroke.points[0].x, currentStroke.points[0].y);
+    for (let i = 1; i < currentStroke.points.length; i++) {
+      ctx.lineTo(currentStroke.points[i].x, currentStroke.points[i].y);
+    }
+    ctx.stroke();
+  }
+}
+
+function drawSprinkles() {
+  sprinkles.forEach(s => {
+    ctx.save();
+    ctx.translate(s.x, s.y);
+    ctx.rotate(s.rot);
+    ctx.fillStyle = s.color;
+    if (s.shape === 'rod') {
+      ctx.fillRect(-6, -2, 12, 4);
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.fillRect(-6, -2, 12, 1.5);
+    } else if (s.shape === 'circle') {
+      ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.beginPath(); ctx.arc(-1, -1, 1.5, 0, Math.PI * 2); ctx.fill();
+    } else { // star
+      drawStar(ctx, 0, 0, 5, 5, 2.5);
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      drawStar(ctx, -0.5, -0.5, 5, 3, 1.5);
+    }
+    ctx.restore();
+  });
+}
+
+function drawToppings() {
+  toppings.forEach(t => {
+    ctx.font = `${Math.floor(Math.min(W, H) * 0.05)}px serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(t.emoji, t.x, t.y);
+  });
+}
+
+// ==================== GAME ACTIONS ====================
+function saveUndo() {
+  undoStack.push({
+    icingStrokes: JSON.parse(JSON.stringify(icingStrokes)),
+    sprinkles: JSON.parse(JSON.stringify(sprinkles)),
+    toppings: JSON.parse(JSON.stringify(toppings)),
+  });
+  if (undoStack.length > 30) undoStack.shift();
+}
+
+function doUndo() {
+  ensureAudio(); playSound('undo');
+  if (undoStack.length > 0) {
+    const snap = undoStack.pop();
+    icingStrokes = snap.icingStrokes;
+    sprinkles = snap.sprinkles;
+    toppings = snap.toppings;
+  }
+}
+
+function doClear() {
+  ensureAudio(); playSound('undo');
+  saveUndo();
+  icingStrokes = []; sprinkles = []; toppings = [];
+}
+
+function submitToJudges() {
+  if (gameState !== 'decorating') return;
+  ensureAudio(); playSound('judge');
+  gameState = 'judging';
+  setTimeout(showResults, 1500);
+}
+
+function showResults() {
+  // Score calculation
+  let colorSet = new Set();
+  icingStrokes.forEach(s => colorSet.add(s.color));
+  const colorScore = Math.min(colorSet.size * 12, 30);
+  const strokeScore = Math.min(icingStrokes.length * 4, 25);
+  const sprinkleScore = Math.min(sprinkles.length * 0.8, 20);
+  const toppingScore = Math.min(toppings.length * 5, 25);
+
+  const rawScore = colorScore + strokeScore + sprinkleScore + toppingScore;
+  const score = Math.min(Math.round(rawScore), 100);
+
+  let stars, title, prize;
+  if (score >= 90) { stars = '⭐⭐⭐⭐⭐'; title = 'MASTERPIECE!'; prize = '🏆 Grand Prize Trophy!'; }
+  else if (score >= 75) { stars = '⭐⭐⭐⭐'; title = 'Amazing!'; prize = '🥇 Gold Medal!'; }
+  else if (score >= 55) { stars = '⭐⭐⭐'; title = 'Great Job!'; prize = '🥈 Silver Medal!'; }
+  else if (score >= 35) { stars = '⭐⭐'; title = 'Nice Try!'; prize = '🥉 Bronze Medal!'; }
+  else { stars = '⭐'; title = 'Keep Practicing!'; prize = '🎀 Participation Ribbon!'; }
+
+  totalScore += score;
+  round++;
+
+  playSound(score >= 75 ? 'fanfare' : 'victory');
+  camShake = score >= 75 ? 20 : 8;
+
+  // Confetti for high scores
+  if (score >= 55) {
+    for (let i = 0; i < 60; i++) {
+      addParticle(W/2 + (Math.random()-0.5)*W*0.8, H*0.3, 'confetti', 1);
+    }
+  }
+  for (let i = 0; i < 20; i++) {
+    addParticle(W/2 + (Math.random()-0.5)*200, H*0.4, 'star_burst', 1);
+  }
+
+  document.getElementById('goTitle').textContent = title;
+  document.getElementById('goStars').textContent = stars;
+  document.getElementById('goScore').textContent = `Score: ${score}/100`;
+  document.getElementById('goPrize').textContent = prize;
+  document.getElementById('goStats').innerHTML =
+    `Colors used: ${colorSet.size}<br>` +
+    `Icing strokes: ${icingStrokes.length}<br>` +
+    `Sprinkles: ${sprinkles.length}<br>` +
+    `Toppings: ${toppings.length}<br>` +
+    `Total score: ${totalScore}`;
+
+  document.getElementById('gameOver').style.display = 'flex';
+  document.getElementById('toolbar').style.display = 'none';
+  document.getElementById('hud').style.display = 'none';
+  document.getElementById('brushSize').style.display = 'none';
+  gameState = 'gameover';
+}
+
+// ==================== INPUT HANDLING ====================
+let isDrawing = false;
+let icingSoundTimer = 0;
+
+function getPos(e) {
+  if (e.touches) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  return { x: e.clientX, y: e.clientY };
+}
+
+function onDown(e) {
+  if (gameState !== 'decorating') return;
+  const p = getPos(e);
+  if (!isOnCake(p.x, p.y)) return;
+  isDrawing = true;
+
+  if (currentTool === 'icing') {
+    saveUndo();
+    currentStroke = { points: [{ x: p.x, y: p.y }], color: currentColor, radius: brushR };
+    playSound('icing');
+  } else if (currentTool === 'eraser') {
+    saveUndo();
+    currentStroke = { points: [{ x: p.x, y: p.y }], color: '#fff3e0', radius: brushR * 1.5 };
+  } else if (currentTool === 'sprinkles') {
+    saveUndo();
+    addSprinklesAt(p.x, p.y);
+    playSound('sprinkle');
+  } else if (currentTool === 'topping') {
+    saveUndo();
+    toppings.push({ x: p.x, y: p.y, emoji: TOPPING_TYPES[currentTopping].emoji });
+    playSound('stamp');
+    addParticle(p.x, p.y, 'sparkle', 8);
+  }
+}
+
+function onMove(e) {
+  if (!isDrawing || gameState !== 'decorating') return;
+  const p = getPos(e);
+
+  if ((currentTool === 'icing' || currentTool === 'eraser') && currentStroke) {
+    if (isOnCake(p.x, p.y)) {
+      currentStroke.points.push({ x: p.x, y: p.y });
+      icingSoundTimer++;
+      if (icingSoundTimer % 8 === 0) playSound('icing');
+    }
+  } else if (currentTool === 'sprinkles') {
+    if (isOnCake(p.x, p.y) && Math.random() < 0.3) {
+      addSprinklesAt(p.x, p.y);
+      if (icingSoundTimer % 5 === 0) playSound('sprinkle');
+      icingSoundTimer++;
+    }
+  }
+}
+
+function onUp(e) {
+  if (!isDrawing) return;
+  isDrawing = false;
+  if (currentStroke) {
+    icingStrokes.push(currentStroke);
+    currentStroke = null;
+  }
+  icingSoundTimer = 0;
+}
+
+function addSprinklesAt(x, y) {
+  const count = 3 + Math.floor(Math.random() * 5);
+  for (let i = 0; i < count; i++) {
+    const sx = x + (Math.random() - 0.5) * 30;
+    const sy = y + (Math.random() - 0.5) * 30;
+    if (isOnCake(sx, sy)) {
+      const shapes = ['rod', 'circle', 'star'];
+      sprinkles.push({
+        x: sx, y: sy,
+        color: SPRINKLE_COLORS[Math.floor(Math.random() * SPRINKLE_COLORS.length)],
+        rot: Math.random() * Math.PI * 2,
+        shape: shapes[Math.floor(Math.random() * shapes.length)],
+      });
+      addParticle(sx, sy, 'sprinkle_fall', 1);
+    }
+  }
+}
+
+canvas.addEventListener('mousedown', onDown);
+canvas.addEventListener('mousemove', onMove);
+canvas.addEventListener('mouseup', onUp);
+canvas.addEventListener('mouseleave', onUp);
+canvas.addEventListener('touchstart', e => { e.preventDefault(); onDown(e); }, { passive: false });
+canvas.addEventListener('touchmove', e => { e.preventDefault(); onMove(e); }, { passive: false });
+canvas.addEventListener('touchend', e => { e.preventDefault(); onUp(e); }, { passive: false });
+
+// ==================== GAME FLOW ====================
+function showPickScreen() {
+  ensureAudio();
+  playSound('click');
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('gameOver').style.display = 'none';
+  document.getElementById('pickScreen').style.display = 'flex';
+  gameState = 'pick';
+}
+
+function startGame(type) {
+  ensureAudio(); playSound('click');
+  cakeType = type;
+  document.getElementById('pickScreen').style.display = 'none';
+  document.getElementById('toolbar').style.display = 'block';
+  document.getElementById('hud').style.display = 'block';
+  document.getElementById('brushSize').style.display = 'block';
+  document.getElementById('hudRound').textContent = `Round ${round}`;
+  document.getElementById('hudScore').textContent = `Score: ${totalScore}`;
+
+  resize();
+
+  // Set cake dimensions based on type
+  const minDim = Math.min(W, H);
+  cakeX = W / 2;
+  cakeY = H * 0.38;
+  if (type === 'round' || type === 'heart') {
+    cakeW = minDim * 0.45; cakeH = minDim * 0.38;
+  } else if (type === 'square') {
+    cakeW = minDim * 0.42; cakeH = minDim * 0.38;
+  } else if (type === 'cupcake') {
+    cakeW = minDim * 0.38; cakeH = minDim * 0.35;
+  } else if (type === 'cookie') {
+    cakeW = minDim * 0.4; cakeH = minDim * 0.4;
+  } else if (type === 'donut') {
+    cakeW = minDim * 0.42; cakeH = minDim * 0.38;
+  }
+
+  // Reset decorations
+  icingStrokes = []; sprinkles = []; toppings = [];
+  currentStroke = null; undoStack = [];
+  currentTool = 'icing';
+  buildToolbar();
+  gameState = 'decorating';
+}
+
+// ==================== ANIMATION LOOP ====================
+let animFrame = 0;
+function loop() {
+  try {
+    animFrame++;
+    camShake *= 0.92;
+    const shakeX = (Math.random() - 0.5) * camShake;
+    const shakeY = (Math.random() - 0.5) * camShake;
+
+    ctx.save();
+    ctx.translate(shakeX, shakeY);
+
+    if (gameState === 'decorating' || gameState === 'judging' || gameState === 'gameover') {
+      drawBackground();
+      drawPlate();
+      drawCakeBase();
+      drawIcingStrokes();
+      drawSprinkles();
+      drawToppings();
+
+      // Ambient sparkle on decorations
+      if (gameState === 'decorating' && animFrame % 20 === 0 && icingStrokes.length > 0) {
+        const rs = icingStrokes[Math.floor(Math.random() * icingStrokes.length)];
+        if (rs.points.length > 0) {
+          const rp = rs.points[Math.floor(Math.random() * rs.points.length)];
+          addParticle(rp.x, rp.y, 'sparkle', 1);
+        }
+      }
+    } else {
+      // start/pick screens - just draw a subtle animated bg
+      const grad = ctx.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, '#f8bbd0');
+      grad.addColorStop(0.5, '#e1bee7');
+      grad.addColorStop(1, '#b3e5fc');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // Judging animation
+    if (gameState === 'judging') {
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#fff';
+      ctx.font = `bold ${Math.floor(Math.min(W, H) * 0.08)}px sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const judgeEmojis = ['👨‍🍳', '👩‍🍳', '🧑‍🍳'];
+      const e = judgeEmojis[Math.floor(animFrame / 15) % 3];
+      ctx.font = `${Math.floor(Math.min(W, H) * 0.15)}px serif`;
+      ctx.fillText(e, W/2, H/2 - 30);
+      ctx.font = `bold ${Math.floor(Math.min(W, H) * 0.05)}px sans-serif`;
+      ctx.fillText('Judging...', W/2, H/2 + 50);
+    }
+
+    updateParticles();
+    drawParticles(ctx);
+
+    ctx.restore();
+  } catch (err) {
+    console.error('Game loop error:', err);
+  }
+  requestAnimationFrame(loop);
+}
+
+// ==================== INIT ====================
+particles = [];
+loop();
+</script>
+</body>
+</html>
