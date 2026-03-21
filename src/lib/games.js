@@ -3,6 +3,24 @@
 
 const GAMES = [
   {
+    slug: 'dog-simulator',
+    title: 'Dog Simulator',
+    creator: 'Addie',
+    description: 'Be a dog! Run around an open world, fight cougars, cows, wolves and bears. Find girl dogs to make puppy friends who help you fight! Survive waves of wild animals and raise the biggest puppy pack.',
+    createdAt: '2026-03-21',
+    thumbnail: '/images/dog-simulator-preview.png',
+    color: 'from-amber-400 to-green-600',
+  },
+  {
+    slug: 'mincraft',
+    title: 'Mincraft',
+    creator: 'Addie',
+    description: 'Build houses and shelters in a blocky world! Place and break blocks, build homes for your animals, and survive the night when zombies attack. Everything is a square — just like the real thing!',
+    createdAt: '2026-03-21',
+    thumbnail: '/images/mincraft-preview.png',
+    color: 'from-green-500 to-emerald-700',
+  },
+  {
     slug: 'cake-decorating',
     title: 'Cake Decorating Studio',
     creator: 'Addie',

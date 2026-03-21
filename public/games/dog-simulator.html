@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dog Simulator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#2d5a1e;overflow:hidden;touch-action:none;user-select:none;font-family:'Segoe UI',Arial,sans-serif}
+canvas#c{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1}
+#startScreen{position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a4a0e 0%,#2d5a1e 50%,#1a3a10 100%)}
+#startScreen h1{font-size:clamp(36px,8vw,72px);color:#f5d442;text-shadow:3px 3px 0 #8B4513,0 0 20px rgba(245,212,66,0.5);margin-bottom:10px;letter-spacing:2px}
+#startScreen .subtitle{font-size:clamp(14px,3vw,22px);color:#90EE90;margin-bottom:30px;text-align:center;padding:0 20px}
+#startScreen .controls-info{background:rgba(0,0,0,0.4);border-radius:12px;padding:15px 25px;margin-bottom:25px;color:#ddd;font-size:clamp(12px,2.5vw,16px);text-align:center;line-height:1.6}
+#startScreen .controls-info b{color:#f5d442}
+#playBtn{background:linear-gradient(135deg,#f5d442,#e6a817);color:#333;border:none;padding:18px 50px;font-size:clamp(20px,4vw,32px);border-radius:50px;cursor:pointer;font-weight:bold;box-shadow:0 4px 15px rgba(0,0,0,0.3);transition:transform 0.2s}
+#playBtn:hover{transform:scale(1.05)}
+#gameOver{position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.8)}
+#gameOver h1{font-size:clamp(30px,7vw,60px);color:#ff6b6b;margin-bottom:10px}
+#gameOver .stats{color:#ddd;font-size:clamp(14px,3vw,20px);text-align:center;line-height:2;margin-bottom:25px}
+#gameOver .stats span{color:#f5d442;font-weight:bold}
+#replayBtn{background:linear-gradient(135deg,#4ecdc4,#44a08d);color:#fff;border:none;padding:15px 40px;font-size:clamp(18px,3.5vw,28px);border-radius:50px;cursor:pointer;font-weight:bold;box-shadow:0 4px 15px rgba(0,0,0,0.3)}
+#hud{position:fixed;top:10px;left:10px;z-index:50;color:#fff;font-size:14px;pointer-events:none}
+.hud-bar{background:rgba(0,0,0,0.5);border-radius:8px;padding:6px 12px;margin-bottom:5px;display:inline-block}
+#minimapCanvas{position:fixed;bottom:10px;right:10px;z-index:45;border:2px solid rgba(255,255,255,0.3);border-radius:8px;background:rgba(0,0,0,0.4)}
+#joystickZone{position:fixed;bottom:20px;left:20px;width:140px;height:140px;z-index:40;display:none}
+#joystickBase{width:120px;height:120px;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.3);border-radius:50%;position:absolute;top:10px;left:10px}
+#joystickKnob{width:50px;height:50px;background:rgba(255,255,255,0.5);border-radius:50%;position:absolute;top:45px;left:45px;pointer-events:none}
+#attackBtn{position:fixed;bottom:50px;right:30px;z-index:40;width:70px;height:70px;background:rgba(255,60,60,0.6);border:2px solid rgba(255,100,100,0.8);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:24px;color:#fff;font-weight:bold}
+#barkBtn{position:fixed;bottom:130px;right:30px;z-index:40;width:55px;height:55px;background:rgba(60,160,255,0.6);border:2px solid rgba(100,180,255,0.8);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:bold}
+</style>
+</head>
+<body>
+<div id="startScreen">
+<h1>Dog Simulator</h1>
+<div class="subtitle">Be a dog! Fight wild animals, find friends, and raise puppies!</div>
+<div class="controls-info">
+<b>Move:</b> WASD or Joystick<br>
+<b>Attack:</b> Space / Click / Tap Attack Button<br>
+<b>Bark:</b> B key / Bark Button<br>
+Find <b style="color:#ff69b4">girl dogs</b> to get <b style="color:#ffa500">puppies</b> that help you fight!
+</div>
+<button id="playBtn">Play!</button>
+</div>
+<div id="gameOver">
+<h1>Game Over!</h1>
+<div class="stats" id="goStats"></div>
+<button id="replayBtn">Play Again</button>
+</div>
+<div id="hud">
+<div class="hud-bar" id="healthBar">❤️ Health: 100</div><br>
+<div class="hud-bar" id="scoreBar">⭐ Score: 0</div><br>
+<div class="hud-bar" id="puppyBar">🐶 Puppies: 0</div><br>
+<div class="hud-bar" id="waveBar">🌊 Wave: 1</div>
+</div>
+<canvas id="minimapCanvas" width="150" height="150"></canvas>
+<div id="joystickZone"><div id="joystickBase"></div><div id="joystickKnob"></div></div>
+<div id="attackBtn">⚔️</div>
+<div id="barkBtn">BARK</div>
+<canvas id="c"></canvas>
+<script>
+// === AUDIO ENGINE ===
+const AudioCtx=window.AudioContext||window.webkitAudioContext;
+let audioCtx;
+function ensureAudio(){if(!audioCtx)audioCtx=new AudioCtx();if(audioCtx.state==='suspended')audioCtx.resume()}
+function playSound(type){
+if(!audioCtx)return;
+const t=audioCtx.currentTime;const master=audioCtx.createGain();master.connect(audioCtx.destination);
+if(type==='bark'){
+const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+o.type='sawtooth';o.frequency.setValueAtTime(300,t);o.frequency.exponentialRampToValueAtTime(500,t+0.05);o.frequency.exponentialRampToValueAtTime(200,t+0.15);
+g.gain.setValueAtTime(0.3,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.2);
+o.connect(g);g.connect(master);o.start(t);o.stop(t+0.2);master.gain.setValueAtTime(0.4,t);
+}else if(type==='bite'){
+const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+o.type='square';o.frequency.setValueAtTime(250,t);o.frequency.exponentialRampToValueAtTime(80,t+0.12);
+g.gain.setValueAtTime(0.3,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.15);
+o.connect(g);g.connect(master);o.start(t);o.stop(t+0.15);master.gain.setValueAtTime(0.35,t);
+}else if(type==='hit'){
+const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+o.type='square';o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(40,t+0.2);
+g.gain.setValueAtTime(0.3,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.25);
+o.connect(g);g.connect(master);o.start(t);o.stop(t+0.25);master.gain.setValueAtTime(0.35,t);
+}else if(type==='whimper'){
+const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+o.type='sine';o.frequency.setValueAtTime(800,t);o.frequency.exponentialRampToValueAtTime(400,t+0.3);
+g.gain.setValueAtTime(0.15,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.4);
+o.connect(g);g.connect(master);o.start(t);o.stop(t+0.4);master.gain.setValueAtTime(0.3,t);
+}else if(type==='love'){
+const notes=[523,659,784,880];
+notes.forEach((f,i)=>{const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+o.type='sine';o.frequency.value=f;
+g.gain.setValueAtTime(0,t+i*0.1);g.gain.linearRampToValueAtTime(0.15,t+i*0.1+0.03);g.gain.linearRampToValueAtTime(0,t+i*0.1+0.25);
+o.connect(g);g.connect(master);o.start(t+i*0.1);o.stop(t+i*0.1+0.25);});
+master.gain.setValueAtTime(0.4,t);
+}else if(type==='collect'){
+const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+o.type='sine';o.frequency.setValueAtTime(600,t);o.frequency.exponentialRampToValueAtTime(1200,t+0.15);
+g.gain.setValueAtTime(0.2,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.3);
+o.connect(g);g.connect(master);o.start(t);o.stop(t+0.3);master.gain.setValueAtTime(0.3,t);
+}else if(type==='kill'){
+const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+o.type='sawtooth';o.frequency.setValueAtTime(200,t);o.frequency.exponentialRampToValueAtTime(60,t+0.4);
+g.gain.setValueAtTime(0.4,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.5);
+o.connect(g);g.connect(master);o.start(t);o.stop(t+0.5);
+const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*0.3,audioCtx.sampleRate);
+const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.2));
+const ns=audioCtx.createBufferSource();ns.buffer=buf;const ng=audioCtx.createGain();
+ng.gain.setValueAtTime(0.3,t);ng.gain.exponentialRampToValueAtTime(0.001,t+0.4);
+ns.connect(ng);ng.connect(master);ns.start(t);ns.stop(t+0.4);
+master.gain.setValueAtTime(0.5,t);
+}else if(type==='gameover'){
+const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+o.type='sine';o.frequency.setValueAtTime(400,t);o.frequency.exponentialRampToValueAtTime(100,t+1.0);
+g.gain.setValueAtTime(0.2,t);g.gain.linearRampToValueAtTime(0,t+1.2);
+o.connect(g);g.connect(master);o.start(t);o.stop(t+1.2);master.gain.setValueAtTime(0.4,t);
+}else if(type==='puppy'){
+const notes=[660,880,1100];
+notes.forEach((f,i)=>{const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+o.type='triangle';o.frequency.value=f;
+g.gain.setValueAtTime(0,t+i*0.12);g.gain.linearRampToValueAtTime(0.12,t+i*0.12+0.03);g.gain.linearRampToValueAtTime(0,t+i*0.12+0.3);
+o.connect(g);g.connect(master);o.start(t+i*0.12);o.stop(t+i*0.12+0.3);});
+master.gain.setValueAtTime(0.35,t);
+}else if(type==='waveStart'){
+const notes=[440,554,659];
+notes.forEach((f,i)=>{const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+o.type='triangle';o.frequency.value=f;
+g.gain.setValueAtTime(0,t+i*0.15);g.gain.linearRampToValueAtTime(0.15,t+i*0.15+0.05);g.gain.linearRampToValueAtTime(0,t+i*0.15+0.4);
+o.connect(g);g.connect(master);o.start(t+i*0.15);o.stop(t+i*0.15+0.4);});
+master.gain.setValueAtTime(0.4,t);
+}}
+let ambientStarted=false;
+function startAmbient(){
+if(ambientStarted||!audioCtx)return;ambientStarted=true;
+const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*4,audioCtx.sampleRate);
+const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1);
+const ns=audioCtx.createBufferSource();ns.buffer=buf;ns.loop=true;
+const filt=audioCtx.createBiquadFilter();filt.type='lowpass';filt.frequency.value=150;
+const g=audioCtx.createGain();g.gain.value=0.03;
+ns.connect(filt);filt.connect(g);g.connect(audioCtx.destination);ns.start();
+// Bird chirps
+setInterval(()=>{if(!audioCtx)return;
+const t2=audioCtx.currentTime;const o=audioCtx.createOscillator();const g2=audioCtx.createGain();
+o.type='sine';o.frequency.setValueAtTime(2000+Math.random()*1000,t2);
+o.frequency.exponentialRampToValueAtTime(1500+Math.random()*500,t2+0.1);
+g2.gain.setValueAtTime(0.03,t2);g2.gain.exponentialRampToValueAtTime(0.001,t2+0.15);
+o.connect(g2);g2.connect(audioCtx.destination);o.start(t2);o.stop(t2+0.15);
+},3000+Math.random()*4000);
+}
+
+// === CANVAS SETUP ===
+const canvas=document.getElementById('c');const ctx=canvas.getContext('2d');
+const miniCanvas=document.getElementById('minimapCanvas');const mctx=miniCanvas.getContext('2d');
+let W,H;
+function resize(){W=window.innerWidth;H=window.innerHeight;canvas.width=W;canvas.height=H}
+resize();window.addEventListener('resize',resize);
+window.addEventListener('orientationchange',()=>setTimeout(resize,200));
+document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+
+// === CONSTANTS ===
+const WORLD=1800;
+const TILE=40;
+
+// === GAME STATE ===
+let gameRunning=false;let gameTime=0;let score=0;let wave=1;let waveTimer=0;let waveDuration=600;
+let enemiesKilled=0;let barkCooldown=0;let attackCooldown=0;let camShake=0;
+let waveBanner=0;let waveBannerText='';
+
+// === WORLD GENERATION ===
+let trees=[];let rocks=[];let flowers=[];let waters=[];let bushes=[];
+
+function genWorld(){
+trees=[];rocks=[];flowers=[];waters=[];bushes=[];
+// Pond
+const px=400+Math.random()*(WORLD-800);const py=400+Math.random()*(WORLD-800);
+for(let i=0;i<12;i++){waters.push({x:px+Math.random()*200-100,y:py+Math.random()*200-100,r:30+Math.random()*40})}
+// Trees
+for(let i=0;i<60;i++){const x=50+Math.random()*(WORLD-100);const y=50+Math.random()*(WORLD-100);
+let ok=true;waters.forEach(w=>{if(Math.hypot(x-w.x,y-w.y)<80)ok=false});
+if(ok)trees.push({x,y,r:15+Math.random()*10,h:30+Math.random()*20,green:Math.floor(80+Math.random()*60)})}
+// Rocks
+for(let i=0;i<30;i++){const x=50+Math.random()*(WORLD-100);const y=50+Math.random()*(WORLD-100);
+rocks.push({x,y,r:8+Math.random()*12})}
+// Flowers
+for(let i=0;i<80;i++){flowers.push({x:Math.random()*WORLD,y:Math.random()*WORLD,
+color:['#ff6b6b','#ffd93d','#6bcbff','#ff9ff3','#fff'][Math.floor(Math.random()*5)],size:3+Math.random()*3})}
+// Bushes
+for(let i=0;i<40;i++){bushes.push({x:Math.random()*WORLD,y:Math.random()*WORLD,r:10+Math.random()*8})}
+}
+
+// === PLAYER ===
+let player={x:900,y:900,angle:0,speed:0,maxSpeed:3.5,hp:100,maxHp:100,
+attackRange:45,damage:15,invuln:0,tailWag:0,blinkTimer:0,mouthOpen:0};
+
+// === ENTITIES ===
+let enemies=[];let girlDogs=[];let puppies=[];let items=[];let particles=[];let messages=[];let damageNums=[];
+
+// === ENEMY TYPES ===
+const ENEMY_TYPES={
+cougar:{name:'Cougar',hp:40,speed:2.5,damage:12,size:16,color:'#c4813a',score:30,
+draw(ctx,e,flash){
+ctx.fillStyle=flash?'#fff':e.color;
+ctx.beginPath();ctx.ellipse(0,0,e.size,e.size*0.6,e.angle,0,Math.PI*2);ctx.fill();
+ctx.fillStyle=flash?'#fff':'#a06828';
+const hx=Math.cos(e.angle)*e.size;const hy=Math.sin(e.angle)*e.size;
+ctx.beginPath();ctx.arc(hx,hy,7,0,Math.PI*2);ctx.fill();
+// Ears
+ctx.fillStyle=flash?'#fff':'#8B5E3C';
+ctx.beginPath();ctx.arc(hx-4,hy-6,3,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(hx+4,hy-6,3,0,Math.PI*2);ctx.fill();
+// Tail
+const tx=Math.cos(e.angle+Math.PI)*e.size*1.1;const ty=Math.sin(e.angle+Math.PI)*e.size*1.1;
+ctx.strokeStyle=flash?'#fff':'#a06828';ctx.lineWidth=3;
+ctx.beginPath();ctx.moveTo(tx*0.7,ty*0.7);ctx.lineTo(tx,ty);ctx.stroke();
+}},
+cow:{name:'Cow',hp:80,speed:1.0,damage:18,size:22,color:'#f5f5f5',score:20,
+draw(ctx,e,flash){
+ctx.fillStyle=flash?'#fff':e.color;
+ctx.beginPath();ctx.ellipse(0,0,e.size,e.size*0.7,e.angle,0,Math.PI*2);ctx.fill();
+// Spots
+if(!flash){ctx.fillStyle='#333';
+for(let i=0;i<3;i++){const a=e.angle+i*2.1;ctx.beginPath();ctx.arc(Math.cos(a)*8,Math.sin(a)*6,5,0,Math.PI*2);ctx.fill()}}
+const hx=Math.cos(e.angle)*e.size;const hy=Math.sin(e.angle)*e.size;
+ctx.fillStyle=flash?'#fff':'#f0ddd0';
+ctx.beginPath();ctx.arc(hx,hy,9,0,Math.PI*2);ctx.fill();
+// Horns
+if(!flash){ctx.strokeStyle='#c9b896';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(hx-5,hy-7);ctx.lineTo(hx-8,hy-13);ctx.stroke();
+ctx.beginPath();ctx.moveTo(hx+5,hy-7);ctx.lineTo(hx+8,hy-13);ctx.stroke()}
+}},
+wolf:{name:'Wolf',hp:55,speed:2.2,damage:15,size:15,color:'#808080',score:40,
+draw(ctx,e,flash){
+ctx.fillStyle=flash?'#fff':e.color;
+ctx.beginPath();ctx.ellipse(0,0,e.size,e.size*0.55,e.angle,0,Math.PI*2);ctx.fill();
+const hx=Math.cos(e.angle)*e.size;const hy=Math.sin(e.angle)*e.size;
+ctx.fillStyle=flash?'#fff':'#666';
+ctx.beginPath();ctx.arc(hx,hy,7,0,Math.PI*2);ctx.fill();
+// Ears
+ctx.fillStyle=flash?'#fff':'#555';
+ctx.beginPath();ctx.moveTo(hx-4,hy-5);ctx.lineTo(hx-6,hy-12);ctx.lineTo(hx-1,hy-6);ctx.fill();
+ctx.beginPath();ctx.moveTo(hx+4,hy-5);ctx.lineTo(hx+6,hy-12);ctx.lineTo(hx+1,hy-6);ctx.fill();
+// Snout
+ctx.fillStyle=flash?'#fff':'#444';
+const sx=Math.cos(e.angle)*e.size*1.15;const sy=Math.sin(e.angle)*e.size*1.15;
+ctx.beginPath();ctx.arc(sx,sy,4,0,Math.PI*2);ctx.fill();
+}},
+bear:{name:'Bear',hp:120,speed:1.3,damage:25,size:24,color:'#5C3317',score:60,
+draw(ctx,e,flash){
+ctx.fillStyle=flash?'#fff':e.color;
+ctx.beginPath();ctx.ellipse(0,0,e.size,e.size*0.8,e.angle,0,Math.PI*2);ctx.fill();
+const hx=Math.cos(e.angle)*e.size*0.8;const hy=Math.sin(e.angle)*e.size*0.8;
+ctx.fillStyle=flash?'#fff':'#4a2810';
+ctx.beginPath();ctx.arc(hx,hy,10,0,Math.PI*2);ctx.fill();
+// Ears
+ctx.beginPath();ctx.arc(hx-8,hy-8,5,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(hx+8,hy-8,5,0,Math.PI*2);ctx.fill();
+ctx.fillStyle=flash?'#fff':'#7a4420';
+ctx.beginPath();ctx.arc(hx-8,hy-8,3,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(hx+8,hy-8,3,0,Math.PI*2);ctx.fill();
+// Snout
+ctx.fillStyle=flash?'#fff':'#8B6914';
+const sx=Math.cos(e.angle)*(e.size*0.8+8);const sy=Math.sin(e.angle)*(e.size*0.8+8);
+ctx.beginPath();ctx.ellipse(sx,sy,5,3,e.angle,0,Math.PI*2);ctx.fill();
+}}
+};
+
+// === PARTICLE SYSTEM ===
+function addParticle(x,y,type,count){
+for(let i=0;i<count;i++){
+const angle=Math.random()*Math.PI*2;const speed=0.5+Math.random()*3;
+let life,r,g,b,size;
+if(type==='dust'){life=20+Math.random()*15;r=160;g=140;b=100;size=2+Math.random()*3}
+else if(type==='blood'){life=25+Math.random()*20;r=200+Math.floor(Math.random()*55);g=30;b=30;size=2+Math.random()*4}
+else if(type==='heart'){life=40+Math.random()*20;r=255;g=100;b=150;size=4+Math.random()*4}
+else if(type==='sparkle'){life=20+Math.random()*15;r=255;g=220;b=50;size=2+Math.random()*3}
+else if(type==='smoke'){life=40+Math.random()*20;const v=60+Math.floor(Math.random()*40);r=v;g=v;b=v;size=3+Math.random()*5}
+else if(type==='grass'){life=15+Math.random()*10;r=50+Math.floor(Math.random()*50);g=150+Math.floor(Math.random()*80);b=30;size=2+Math.random()*2}
+else if(type==='star'){life=30+Math.random()*20;r=255;g=255;b=100+Math.floor(Math.random()*155);size=3+Math.random()*3}
+particles.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life,maxLife:life,r,g,b,size,type});
+}}
+function updateParticles(){
+particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vx*=0.96;p.vy*=0.96;
+if(p.type==='heart')p.vy-=0.05;if(p.type==='smoke')p.vy-=0.02;p.life--});
+particles=particles.filter(p=>p.life>0);
+}
+function drawParticles(camX,camY){
+particles.forEach(p=>{const sx=p.x-camX,sy=p.y-camY;if(sx<-50||sx>W+50||sy<-50||sy>H+50)return;
+const lr=p.life/p.maxLife;ctx.globalAlpha=lr;
+if(p.type==='heart'){ctx.fillStyle=`rgb(${p.r},${p.g},${p.b})`;
+ctx.font=`${Math.floor(p.size*3)}px serif`;ctx.fillText('❤',sx,sy)}
+else if(p.type==='star'){ctx.fillStyle=`rgb(${p.r},${p.g},${p.b})`;
+ctx.font=`${Math.floor(p.size*2)}px serif`;ctx.fillText('⭐',sx,sy)}
+else{ctx.fillStyle=`rgb(${p.r},${p.g},${p.b})`;
+if(p.type==='smoke'){ctx.beginPath();ctx.arc(sx,sy,p.size*(2-lr),0,Math.PI*2);ctx.fill()}
+else{ctx.fillRect(sx-p.size/2,sy-p.size/2,p.size*lr,p.size*lr)}}});
+ctx.globalAlpha=1;
+}
+
+// === DAMAGE NUMBERS ===
+function addDamageNum(x,y,val,color){damageNums.push({x,y,val,color,life:40,vy:-2})}
+function updateDamageNums(){damageNums.forEach(d=>{d.y+=d.vy;d.vy*=0.95;d.life--});damageNums=damageNums.filter(d=>d.life>0)}
+function drawDamageNums(camX,camY){damageNums.forEach(d=>{
+const sx=d.x-camX,sy=d.y-camY;ctx.globalAlpha=d.life/40;
+ctx.fillStyle=d.color;ctx.font='bold 16px Arial';ctx.textAlign='center';ctx.fillText(d.val,sx,sy);
+});ctx.globalAlpha=1;ctx.textAlign='left'}
+
+// === FLOATING MESSAGES ===
+function addMessage(x,y,text,color){messages.push({x,y,text,color,life:80,vy:-1})}
+function updateMessages(){messages.forEach(m=>{m.y+=m.vy;m.vy*=0.98;m.life--});messages=messages.filter(m=>m.life>0)}
+function drawMessages(camX,camY){messages.forEach(m=>{
+const sx=m.x-camX,sy=m.y-camY;ctx.globalAlpha=Math.min(1,m.life/30);
+ctx.fillStyle=m.color;ctx.font='bold 18px Arial';ctx.textAlign='center';ctx.fillText(m.text,sx,sy);
+});ctx.globalAlpha=1;ctx.textAlign='left'}
+
+// === DRAW PLAYER (DOG) ===
+function drawPlayer(camX,camY){
+const sx=player.x-camX,sy=player.y-camY;
+ctx.save();ctx.translate(sx,sy);ctx.rotate(player.angle);
+// Tail wag
+player.tailWag+=0.15;
+const tailAngle=Math.sin(player.tailWag)*0.5;
+ctx.save();ctx.rotate(Math.PI+tailAngle);
+ctx.fillStyle='#d4a030';ctx.beginPath();
+ctx.ellipse(18,0,8,4,0,0,Math.PI*2);ctx.fill();
+ctx.restore();
+// Body
+if(player.invuln>0&&Math.floor(player.invuln/3)%2===0){ctx.globalAlpha=0.5}
+ctx.fillStyle='#d4a030';
+ctx.beginPath();ctx.ellipse(0,0,18,12,0,0,Math.PI*2);ctx.fill();
+// Head
+ctx.fillStyle='#c49428';
+ctx.beginPath();ctx.arc(16,0,10,0,Math.PI*2);ctx.fill();
+// Ears
+ctx.fillStyle='#a07820';
+ctx.beginPath();ctx.ellipse(14,-9,5,7,0.3,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(14,9,5,7,-0.3,0,Math.PI*2);ctx.fill();
+// Eyes
+player.blinkTimer++;
+if(player.blinkTimer%120<5){ctx.fillStyle='#c49428'}else{ctx.fillStyle='#222'}
+ctx.beginPath();ctx.arc(20,-4,2.5,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(20,4,2.5,0,Math.PI*2);ctx.fill();
+// Nose
+ctx.fillStyle='#333';ctx.beginPath();ctx.arc(25,0,2.5,0,Math.PI*2);ctx.fill();
+// Mouth (open when attacking)
+if(player.mouthOpen>0){
+ctx.fillStyle='#c0392b';ctx.beginPath();
+ctx.moveTo(23,0);ctx.lineTo(28,-3);ctx.lineTo(28,3);ctx.closePath();ctx.fill();
+player.mouthOpen--;
+}
+// Legs
+ctx.fillStyle='#b88a25';
+const legPhase=gameTime*0.2;
+const legOff=player.speed>0.5?Math.sin(legPhase)*4:0;
+ctx.fillRect(-8-legOff,-14,5,5);ctx.fillRect(-8+legOff,9,5,5);
+ctx.fillRect(6+legOff,-14,5,5);ctx.fillRect(6-legOff,9,5,5);
+ctx.globalAlpha=1;
+ctx.restore();
+// Health bar above dog
+if(player.hp<player.maxHp){
+const bw=36,bh=4;
+ctx.fillStyle='#333';ctx.fillRect(sx-bw/2,sy-26,bw,bh);
+ctx.fillStyle=player.hp>50?'#2ecc71':player.hp>25?'#f39c12':'#e74c3c';
+ctx.fillRect(sx-bw/2,sy-26,bw*(player.hp/player.maxHp),bh);
+}}
+
+// === DRAW GIRL DOG ===
+function drawGirlDog(g,camX,camY){
+const sx=g.x-camX,sy=g.y-camY;
+if(sx<-50||sx>W+50||sy<-50||sy>H+50)return;
+ctx.save();ctx.translate(sx,sy);ctx.rotate(g.angle);
+// Body (pink-ish)
+ctx.fillStyle='#e8a0b0';
+ctx.beginPath();ctx.ellipse(0,0,14,9,0,0,Math.PI*2);ctx.fill();
+// Head
+ctx.fillStyle='#d88898';ctx.beginPath();ctx.arc(12,0,8,0,Math.PI*2);ctx.fill();
+// Ears with bows
+ctx.fillStyle='#c87888';
+ctx.beginPath();ctx.ellipse(10,-7,4,6,0.3,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(10,7,4,6,-0.3,0,Math.PI*2);ctx.fill();
+// Bow
+ctx.fillStyle='#ff69b4';
+ctx.beginPath();ctx.moveTo(10,-10);ctx.lineTo(6,-15);ctx.lineTo(14,-15);ctx.closePath();ctx.fill();
+ctx.beginPath();ctx.moveTo(10,-10);ctx.lineTo(6,-5);ctx.lineTo(14,-5);ctx.closePath();ctx.fill();
+// Eyes
+ctx.fillStyle='#222';ctx.beginPath();ctx.arc(16,-3,2,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(16,3,2,0,Math.PI*2);ctx.fill();
+// Eyelashes
+ctx.strokeStyle='#222';ctx.lineWidth=1;
+ctx.beginPath();ctx.moveTo(17,-5);ctx.lineTo(19,-7);ctx.stroke();
+ctx.beginPath();ctx.moveTo(17,5);ctx.lineTo(19,7);ctx.stroke();
+// Nose
+ctx.fillStyle='#ff69b4';ctx.beginPath();ctx.arc(19,0,2,0,Math.PI*2);ctx.fill();
+// Tail
+ctx.fillStyle='#d88898';
+const tw=Math.sin(gameTime*0.1)*0.4;
+ctx.save();ctx.rotate(Math.PI+tw);
+ctx.beginPath();ctx.ellipse(14,0,7,3,0,0,Math.PI*2);ctx.fill();
+ctx.restore();
+ctx.restore();
+// Heart indicator
+ctx.fillStyle='#ff69b4';ctx.font='16px serif';ctx.textAlign='center';
+ctx.fillText('💕',sx,sy-22);ctx.textAlign='left';
+}
+
+// === DRAW PUPPY ===
+function drawPuppy(p,camX,camY){
+const sx=p.x-camX,sy=p.y-camY;
+if(sx<-60||sx>W+60||sy<-60||sy>H+60)return;
+ctx.save();ctx.translate(sx,sy);ctx.rotate(p.angle);
+// Tiny body
+ctx.fillStyle=p.color;
+ctx.beginPath();ctx.ellipse(0,0,9,6,0,0,Math.PI*2);ctx.fill();
+// Head
+ctx.fillStyle=p.darkColor;ctx.beginPath();ctx.arc(8,0,5,0,Math.PI*2);ctx.fill();
+// Ears
+ctx.fillStyle=p.earColor;
+ctx.beginPath();ctx.ellipse(7,-5,3,4,0.3,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.ellipse(7,5,3,4,-0.3,0,Math.PI*2);ctx.fill();
+// Eyes
+ctx.fillStyle='#222';ctx.beginPath();ctx.arc(10,-2,1.5,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(10,2,1.5,0,Math.PI*2);ctx.fill();
+// Nose
+ctx.fillStyle='#333';ctx.beginPath();ctx.arc(12,0,1.5,0,Math.PI*2);ctx.fill();
+// Tail wag (fast for puppies!)
+const tw2=Math.sin(gameTime*0.3+p.tailPhase)*0.7;
+ctx.save();ctx.rotate(Math.PI+tw2);
+ctx.fillStyle=p.color;ctx.beginPath();ctx.ellipse(10,0,5,2.5,0,0,Math.PI*2);ctx.fill();
+ctx.restore();
+ctx.restore();
+}
+
+// === DRAW ENEMY ===
+function drawEnemy(e,camX,camY){
+const sx=e.x-camX,sy=e.y-camY;
+if(sx<-50||sx>W+50||sy<-50||sy>H+50)return;
+const flash=e.flashTimer>0;
+ctx.save();ctx.translate(sx,sy);
+e.type.draw(ctx,e,flash);
+ctx.restore();
+// Health bar
+if(e.hp<e.type.hp){
+const bw=e.type.size*2,bh=3;
+ctx.fillStyle='#333';ctx.fillRect(sx-bw/2,sy-e.type.size-10,bw,bh);
+ctx.fillStyle='#e74c3c';ctx.fillRect(sx-bw/2,sy-e.type.size-10,bw*(e.hp/e.type.hp),bh);
+}
+// Name tag
+if(!flash){ctx.fillStyle='rgba(255,255,255,0.6)';ctx.font='10px Arial';ctx.textAlign='center';
+ctx.fillText(e.type.name,sx,sy-e.type.size-14);ctx.textAlign='left'}
+}
+
+// === DRAW ITEM ===
+function drawItem(item,camX,camY){
+const sx=item.x-camX,sy=item.y-camY;
+if(sx<-30||sx>W+30||sy<-30||sy>H+30)return;
+const bob=Math.sin(gameTime*0.08+item.phase)*3;
+ctx.font='20px serif';ctx.textAlign='center';
+if(item.kind==='bone')ctx.fillText('🦴',sx,sy+bob);
+else if(item.kind==='meat')ctx.fillText('🍖',sx,sy+bob);
+else if(item.kind==='star')ctx.fillText('⭐',sx,sy+bob);
+ctx.textAlign='left';
+// Glow
+ctx.globalAlpha=0.3+Math.sin(gameTime*0.1)*0.15;
+ctx.fillStyle=item.kind==='bone'?'#fff':item.kind==='meat'?'#ff6b6b':'#ffd700';
+ctx.beginPath();ctx.arc(sx,sy+bob,12,0,Math.PI*2);ctx.fill();
+ctx.globalAlpha=1;
+}
+
+// === SPAWN SYSTEMS ===
+function spawnEnemy(){
+const types=['cougar','cow','wolf','bear'];
+const weights=[30,25,20+wave*2,5+wave*3];
+const total=weights.reduce((a,b)=>a+b);let r=Math.random()*total;
+let typeKey='cougar';
+for(let i=0;i<types.length;i++){r-=weights[i];if(r<=0){typeKey=types[i];break}}
+const type=ENEMY_TYPES[typeKey];
+// Spawn at edge
+let x,y;const side=Math.floor(Math.random()*4);
+if(side===0){x=Math.random()*WORLD;y=-30}
+else if(side===1){x=WORLD+30;y=Math.random()*WORLD}
+else if(side===2){x=Math.random()*WORLD;y=WORLD+30}
+else{x=-30;y=Math.random()*WORLD}
+enemies.push({x,y,angle:Math.atan2(player.y-y,player.x-x),hp:type.hp,type,
+speed:type.speed*(0.9+Math.random()*0.2),color:type.color,flashTimer:0,
+attackCd:0,aggroRange:250+wave*10,wanderAngle:Math.random()*Math.PI*2,wanderTimer:0});
+}
+
+function spawnGirlDog(){
+const x=100+Math.random()*(WORLD-200);const y=100+Math.random()*(WORLD-200);
+girlDogs.push({x,y,angle:Math.random()*Math.PI*2,wanderAngle:Math.random()*Math.PI*2,
+wanderTimer:0,speed:0.8});
+}
+
+function spawnItem(x,y){
+const kinds=['bone','meat','star'];const kind=kinds[Math.floor(Math.random()*kinds.length)];
+items.push({x,y,kind,phase:Math.random()*100});
+}
+
+function makePuppy(x,y){
+const colors=['#d4a030','#e8a0b0','#c49428','#b88a25','#ddb060','#f0c878'];
+const c=colors[Math.floor(Math.random()*colors.length)];
+puppies.push({x,y,angle:Math.random()*Math.PI*2,color:c,
+darkColor:shadeColor(c,-20),earColor:shadeColor(c,-35),
+speed:2.8,attackCd:0,tailPhase:Math.random()*100,damage:5+wave*2});
+playSound('puppy');addMessage(x,y-20,'New puppy!','#ff69b4');
+addParticle(x,y,'heart',8);
+}
+
+function shadeColor(col,percent){
+let num=parseInt(col.replace('#',''),16);
+let r=(num>>16)+percent;let g=((num>>8)&0x00FF)+percent;let b=(num&0x0000FF)+percent;
+r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b));
+return '#'+(r<<16|g<<8|b).toString(16).padStart(6,'0');
+}
+
+// === INPUT ===
+let keys={};let inputX=0,inputY=0;let attacking=false;let barking=false;
+let mouseDown=false;let isMobile=false;let joystickActive=false;let joystickId=null;
+let joyBaseX=0,joyBaseY=0;
+
+window.addEventListener('keydown',e=>{keys[e.code]=true;
+if(e.code==='Space'){attacking=true;e.preventDefault()}
+if(e.code==='KeyB'){barking=true}});
+window.addEventListener('keyup',e=>{keys[e.code]=false;
+if(e.code==='Space')attacking=false;if(e.code==='KeyB')barking=false});
+canvas.addEventListener('mousedown',()=>{mouseDown=true;attacking=true});
+canvas.addEventListener('mouseup',()=>{mouseDown=false;attacking=false});
+
+// Mobile detection
+function checkMobile(){isMobile='ontouchstart' in window||navigator.maxTouchPoints>0;
+if(isMobile){document.getElementById('joystickZone').style.display='block';
+document.getElementById('attackBtn').style.display='flex';
+document.getElementById('barkBtn').style.display='flex'}}
+
+// Joystick touch
+const jZone=document.getElementById('joystickZone');
+const jKnob=document.getElementById('joystickKnob');
+jZone.addEventListener('touchstart',e=>{e.preventDefault();const t=e.changedTouches[0];
+joystickActive=true;joystickId=t.identifier;
+const rect=jZone.getBoundingClientRect();joyBaseX=rect.left+70;joyBaseY=rect.top+70;
+handleJoystick(t.clientX,t.clientY)});
+jZone.addEventListener('touchmove',e=>{e.preventDefault();
+for(let t of e.changedTouches){if(t.identifier===joystickId)handleJoystick(t.clientX,t.clientY)}});
+jZone.addEventListener('touchend',e=>{for(let t of e.changedTouches){
+if(t.identifier===joystickId){joystickActive=false;inputX=0;inputY=0;
+jKnob.style.left='45px';jKnob.style.top='45px'}}});
+
+function handleJoystick(tx,ty){
+let dx=tx-joyBaseX,dy=ty-joyBaseY;
+const dist=Math.sqrt(dx*dx+dy*dy);const maxR=50;
+if(dist>maxR){dx=dx/dist*maxR;dy=dy/dist*maxR}
+inputX=dx/maxR;inputY=dy/maxR;
+jKnob.style.left=(45+dx)+'px';jKnob.style.top=(45+dy)+'px';
+}
+
+// Attack button
+const atkBtn=document.getElementById('attackBtn');
+atkBtn.addEventListener('touchstart',e=>{e.preventDefault();attacking=true});
+atkBtn.addEventListener('touchend',e=>{e.preventDefault();attacking=false});
+// Bark button
+const brkBtn=document.getElementById('barkBtn');
+brkBtn.addEventListener('touchstart',e=>{e.preventDefault();barking=true});
+brkBtn.addEventListener('touchend',e=>{e.preventDefault();barking=false});
+
+// Keyboard input
+function updateKeyboardInput(){
+let kx=0,ky=0;
+if(keys['KeyW']||keys['ArrowUp'])ky=-1;
+if(keys['KeyS']||keys['ArrowDown'])ky=1;
+if(keys['KeyA']||keys['ArrowLeft'])kx=-1;
+if(keys['KeyD']||keys['ArrowRight'])kx=1;
+if(kx!==0||ky!==0){const m=Math.sqrt(kx*kx+ky*ky);inputX=kx/m;inputY=ky/m}
+else if(!joystickActive){inputX=0;inputY=0}
+}
+
+// === FIND NEAREST ENEMY (auto-aim) ===
+function findNearestEnemy(){
+let nearest=null,nd=Infinity;
+enemies.forEach(e=>{const d=Math.hypot(e.x-player.x,e.y-player.y);
+if(d<nd&&d<player.attackRange+30){nd=d;nearest=e}});
+return nearest;
+}
+
+// === UPDATE ===
+function update(){
+if(!gameRunning)return;
+gameTime++;waveTimer++;
+updateKeyboardInput();
+
+// Wave system
+if(waveTimer>=waveDuration){
+wave++;waveTimer=0;waveBanner=120;waveBannerText=`Wave ${wave}!`;
+playSound('waveStart');
+// Spawn more enemies each wave
+const count=3+wave*2;
+for(let i=0;i<count;i++)setTimeout(()=>spawnEnemy(),i*200);
+// Chance for girl dog
+if(Math.random()<0.4)spawnGirlDog();
+// Increase player max hp slightly
+player.maxHp=100+wave*5;player.hp=Math.min(player.hp+20,player.maxHp);
+}
+
+// Passive enemy spawning
+if(gameTime%120===0&&enemies.length<8+wave*3)spawnEnemy();
+// Occasional girl dog
+if(gameTime%900===0&&girlDogs.length<2)spawnGirlDog();
+
+// Move player
+const hasInput=Math.abs(inputX)>0.05||Math.abs(inputY)>0.05;
+if(hasInput){
+const targetAngle=Math.atan2(inputY,inputX);
+let ad=targetAngle-player.angle;
+while(ad>Math.PI)ad-=Math.PI*2;while(ad<-Math.PI)ad+=Math.PI*2;
+player.angle+=Math.sign(ad)*Math.min(Math.abs(ad),0.2);
+const mag=Math.min(1,Math.sqrt(inputX*inputX+inputY*inputY));
+player.speed=Math.min(player.speed+0.3,player.maxSpeed*mag);
+if(gameTime%8===0)addParticle(player.x-Math.cos(player.angle)*15,player.y-Math.sin(player.angle)*15,'dust',1);
+}else{player.speed*=0.85;if(player.speed<0.05)player.speed=0}
+player.x+=Math.cos(player.angle)*player.speed;
+player.y+=Math.sin(player.angle)*player.speed;
+player.x=Math.max(15,Math.min(WORLD-15,player.x));
+player.y=Math.max(15,Math.min(WORLD-15,player.y));
+if(player.invuln>0)player.invuln--;
+
+// Player attack
+if(attacking&&attackCooldown<=0){
+attackCooldown=15;player.mouthOpen=10;
+const target=findNearestEnemy();
+if(target){
+const d=Math.hypot(target.x-player.x,target.y-player.y);
+if(d<player.attackRange+target.type.size){
+target.hp-=player.damage;target.flashTimer=6;
+playSound('bite');addParticle(target.x,target.y,'blood',5);
+addDamageNum(target.x,target.y-10,player.damage,'#ff4444');
+camShake=Math.max(camShake,4);
+}else{playSound('bark')}
+}else{playSound('bark')}
+}
+if(attackCooldown>0)attackCooldown--;
+
+// Bark (scares enemies briefly, rallies puppies)
+if(barking&&barkCooldown<=0){
+barkCooldown=60;playSound('bark');
+addParticle(player.x,player.y,'dust',10);
+addMessage(player.x,player.y-25,'WOOF!','#f5d442');
+enemies.forEach(e=>{const d=Math.hypot(e.x-player.x,e.y-player.y);
+if(d<200){const a=Math.atan2(e.y-player.y,e.x-player.x);
+e.x+=Math.cos(a)*30;e.y+=Math.sin(a)*30;e.wanderTimer=60}});
+}
+if(barkCooldown>0)barkCooldown--;
+
+// Update enemies
+enemies.forEach(e=>{
+const dx=player.x-e.x,dy=player.y-e.y;const dist=Math.hypot(dx,dy);
+if(e.flashTimer>0)e.flashTimer--;
+if(e.attackCd>0)e.attackCd--;
+if(e.wanderTimer>0){
+// Wandering (scared or idle)
+e.wanderTimer--;
+e.x+=Math.cos(e.wanderAngle)*e.speed*0.5;
+e.y+=Math.sin(e.wanderAngle)*e.speed*0.5;
+if(e.wanderTimer%40===0)e.wanderAngle+=Math.random()*2-1;
+}else if(dist<e.aggroRange){
+// Chase player
+const targetAngle=Math.atan2(dy,dx);
+let ad=targetAngle-e.angle;
+while(ad>Math.PI)ad-=Math.PI*2;while(ad<-Math.PI)ad+=Math.PI*2;
+e.angle+=Math.sign(ad)*Math.min(Math.abs(ad),0.1);
+e.x+=Math.cos(e.angle)*e.speed;e.y+=Math.sin(e.angle)*e.speed;
+// Attack player
+if(dist<e.type.size+18&&e.attackCd<=0){
+e.attackCd=40;
+const dmg=e.type.damage;player.hp-=dmg;player.invuln=20;
+playSound('hit');addParticle(player.x,player.y,'blood',4);
+addDamageNum(player.x,player.y-15,dmg,'#ff0000');camShake=Math.max(camShake,6);
+if(player.hp<=0){endGame();return}
+}
+}else{
+// Wander
+e.wanderTimer=0;
+e.x+=Math.cos(e.wanderAngle)*e.speed*0.3;
+e.y+=Math.sin(e.wanderAngle)*e.speed*0.3;
+if(Math.random()<0.02)e.wanderAngle=Math.random()*Math.PI*2;
+}
+// Avoid trees
+trees.forEach(t=>{const td=Math.hypot(e.x-t.x,e.y-t.y);
+if(td<t.r+e.type.size){const a=Math.atan2(e.y-t.y,e.x-t.x);e.x+=Math.cos(a)*2;e.y+=Math.sin(a)*2}});
+e.x=Math.max(5,Math.min(WORLD-5,e.x));e.y=Math.max(5,Math.min(WORLD-5,e.y));
+});
+
+// Check dead enemies
+enemies=enemies.filter(e=>{
+if(e.hp<=0){score+=e.type.score;enemiesKilled++;
+playSound('kill');addParticle(e.x,e.y,'smoke',8);addParticle(e.x,e.y,'sparkle',5);
+camShake=Math.max(camShake,8);
+addMessage(e.x,e.y-15,`+${e.type.score}`,'#ffd700');
+if(Math.random()<0.4)spawnItem(e.x,e.y);return false}return true});
+
+// Update girl dogs
+girlDogs.forEach(g=>{
+const dx=player.x-g.x,dy=player.y-g.y;const dist=Math.hypot(dx,dy);
+if(dist<35){
+// Met! Make puppies!
+playSound('love');addParticle(g.x,g.y,'heart',15);
+addMessage(g.x,g.y-25,'New friend!','#ff69b4');
+const pCount=1+Math.floor(Math.random()*2);
+for(let i=0;i<pCount;i++){
+setTimeout(()=>makePuppy(g.x+(Math.random()-0.5)*30,g.y+(Math.random()-0.5)*30),i*300);
+}
+g.remove=true;
+}else{
+// Wander
+g.wanderTimer++;
+if(g.wanderTimer>80){g.wanderAngle=Math.random()*Math.PI*2;g.wanderTimer=0}
+g.x+=Math.cos(g.wanderAngle)*g.speed*0.4;
+g.y+=Math.sin(g.wanderAngle)*g.speed*0.4;
+g.angle=g.wanderAngle;
+g.x=Math.max(20,Math.min(WORLD-20,g.x));g.y=Math.max(20,Math.min(WORLD-20,g.y));
+}});
+girlDogs=girlDogs.filter(g=>!g.remove);
+
+// Update puppies
+puppies.forEach(p=>{
+// Follow player loosely
+const dx=player.x-p.x,dy=player.y-p.y;const dist=Math.hypot(dx,dy);
+if(dist>50){
+const a=Math.atan2(dy,dx);p.angle=a;
+p.x+=Math.cos(a)*p.speed*(dist>100?1:0.5);
+p.y+=Math.sin(a)*p.speed*(dist>100?1:0.5);
+}else{
+// Look for enemies to attack
+let nearestE=null,nd=Infinity;
+enemies.forEach(e=>{const d=Math.hypot(e.x-p.x,e.y-p.y);if(d<nd&&d<150){nd=d;nearestE=e}});
+if(nearestE&&p.attackCd<=0){
+const a=Math.atan2(nearestE.y-p.y,nearestE.x-p.x);p.angle=a;
+p.x+=Math.cos(a)*p.speed;p.y+=Math.sin(a)*p.speed;
+if(nd<20){nearestE.hp-=p.damage;nearestE.flashTimer=4;p.attackCd=25;
+addParticle(nearestE.x,nearestE.y,'sparkle',2);addDamageNum(nearestE.x,nearestE.y-5,p.damage,'#ffa500')}
+}else if(!nearestE){
+// Idle wander near player
+if(Math.random()<0.03)p.angle+=Math.random()*2-1;
+p.x+=Math.cos(p.angle)*0.3;p.y+=Math.sin(p.angle)*0.3;
+}
+}
+if(p.attackCd>0)p.attackCd--;
+p.x=Math.max(10,Math.min(WORLD-10,p.x));p.y=Math.max(10,Math.min(WORLD-10,p.y));
+});
+
+// Collect items
+items=items.filter(it=>{
+const d=Math.hypot(it.x-player.x,it.y-player.y);
+if(d<25){
+if(it.kind==='bone'){player.hp=Math.min(player.hp+15,player.maxHp);addMessage(it.x,it.y-10,'+15 HP','#2ecc71')}
+else if(it.kind==='meat'){player.hp=Math.min(player.hp+30,player.maxHp);addMessage(it.x,it.y-10,'+30 HP','#2ecc71')}
+else if(it.kind==='star'){score+=50;addMessage(it.x,it.y-10,'+50','#ffd700')}
+playSound('collect');addParticle(it.x,it.y,'sparkle',6);return false}return true});
+
+// Player collide with trees
+trees.forEach(t=>{const d=Math.hypot(player.x-t.x,player.y-t.y);
+if(d<t.r+12){const a=Math.atan2(player.y-t.y,player.x-t.x);
+player.x=t.x+Math.cos(a)*(t.r+12);player.y=t.y+Math.sin(a)*(t.r+12)}});
+
+// Cam shake decay
+camShake*=0.9;if(camShake<0.5)camShake=0;
+if(waveBanner>0)waveBanner--;
+
+updateParticles();updateDamageNums();updateMessages();
+updateHUD();
+}
+
+// === RENDER ===
+function render(){
+const targetCX=player.x-W/2;const targetCY=player.y-H/2;
+const camX=targetCX+(Math.random()-0.5)*camShake;
+const camY=targetCY+(Math.random()-0.5)*camShake;
+
+// Background
+ctx.fillStyle='#3a7a28';ctx.fillRect(0,0,W,H);
+
+// Grid lines (subtle)
+ctx.strokeStyle='rgba(50,100,30,0.3)';ctx.lineWidth=1;
+const startX=-(camX%TILE);const startY=-(camY%TILE);
+for(let x=startX;x<W;x+=TILE){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+for(let y=startY;y<H;y+=TILE){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+
+// Water
+waters.forEach(w=>{const sx=w.x-camX,sy=w.y-camY;
+if(sx<-60||sx>W+60||sy<-60||sy>H+60)return;
+ctx.fillStyle='rgba(30,120,200,0.6)';ctx.beginPath();ctx.arc(sx,sy,w.r,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='rgba(100,180,255,0.3)';ctx.beginPath();ctx.arc(sx-w.r*0.2,sy-w.r*0.2,w.r*0.4,0,Math.PI*2);ctx.fill()});
+
+// Flowers
+flowers.forEach(f=>{const sx=f.x-camX,sy=f.y-camY;
+if(sx<-10||sx>W+10||sy<-10||sy>H+10)return;
+ctx.fillStyle=f.color;ctx.beginPath();ctx.arc(sx,sy,f.size,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#fff700';ctx.beginPath();ctx.arc(sx,sy,f.size*0.4,0,Math.PI*2);ctx.fill()});
+
+// Bushes
+bushes.forEach(b=>{const sx=b.x-camX,sy=b.y-camY;
+if(sx<-20||sx>W+20||sy<-20||sy>H+20)return;
+ctx.fillStyle='#2d6b1a';ctx.beginPath();ctx.arc(sx,sy,b.r,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#3a8a25';ctx.beginPath();ctx.arc(sx-2,sy-2,b.r*0.7,0,Math.PI*2);ctx.fill()});
+
+// Tree shadows
+trees.forEach(t=>{const sx=t.x-camX,sy=t.y-camY;
+if(sx<-40||sx>W+40||sy<-40||sy>H+40)return;
+ctx.fillStyle='rgba(0,0,0,0.15)';ctx.beginPath();ctx.ellipse(sx+5,sy+5,t.r+5,t.r+2,0,0,Math.PI*2);ctx.fill()});
+
+// Rocks
+rocks.forEach(r=>{const sx=r.x-camX,sy=r.y-camY;
+if(sx<-20||sx>W+20||sy<-20||sy>H+20)return;
+ctx.fillStyle='#888';ctx.beginPath();ctx.arc(sx,sy,r.r,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#aaa';ctx.beginPath();ctx.arc(sx-r.r*0.2,sy-r.r*0.2,r.r*0.5,0,Math.PI*2);ctx.fill()});
+
+// Items
+items.forEach(it=>drawItem(it,camX,camY));
+
+// Girl dogs
+girlDogs.forEach(g=>drawGirlDog(g,camX,camY));
+
+// Enemies
+enemies.forEach(e=>drawEnemy(e,camX,camY));
+
+// Puppies
+puppies.forEach(p=>drawPuppy(p,camX,camY));
+
+// Player
+drawPlayer(camX,camY);
+
+// Particles on top
+drawParticles(camX,camY);
+drawDamageNums(camX,camY);
+drawMessages(camX,camY);
+
+// Tree canopies (drawn on top for depth)
+trees.forEach(t=>{const sx=t.x-camX,sy=t.y-camY;
+if(sx<-40||sx>W+40||sy<-40||sy>H+40)return;
+ctx.fillStyle=`rgb(30,${t.green},25)`;ctx.beginPath();ctx.arc(sx,sy-t.h*0.3,t.r+3,0,Math.PI*2);ctx.fill();
+ctx.fillStyle=`rgb(40,${t.green+20},35)`;ctx.beginPath();ctx.arc(sx-3,sy-t.h*0.3-3,t.r*0.6,0,Math.PI*2);ctx.fill();
+// Trunk
+ctx.fillStyle='#5a3a1a';ctx.fillRect(sx-3,sy-5,6,10)});
+
+// World boundary warning
+if(player.x<80||player.x>WORLD-80||player.y<80||player.y>WORLD-80){
+ctx.fillStyle='rgba(255,0,0,0.15)';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#ff4444';ctx.font='bold 18px Arial';ctx.textAlign='center';
+ctx.fillText('⚠ Edge of the world!',W/2,40);ctx.textAlign='left'}
+
+// Wave banner
+if(waveBanner>0){
+ctx.globalAlpha=Math.min(1,waveBanner/30);
+ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,H/2-40,W,80);
+ctx.fillStyle='#f5d442';ctx.font='bold 36px Arial';ctx.textAlign='center';
+ctx.fillText(waveBannerText,W/2,H/2+12);ctx.textAlign='left';ctx.globalAlpha=1}
+
+// Minimap
+drawMinimap(camX,camY);
+}
+
+function drawMinimap(camX,camY){
+const mw=150,mh=150;const scale=mw/WORLD;
+mctx.fillStyle='#1a3a10';mctx.fillRect(0,0,mw,mh);
+// Water
+mctx.fillStyle='#2080c8';waters.forEach(w=>{mctx.beginPath();mctx.arc(w.x*scale,w.y*scale,w.r*scale,0,Math.PI*2);mctx.fill()});
+// Trees
+mctx.fillStyle='#1a5a10';trees.forEach(t=>{mctx.fillRect(t.x*scale-1,t.y*scale-1,2,2)});
+// Enemies
+mctx.fillStyle='#ff4444';enemies.forEach(e=>{mctx.fillRect(e.x*scale-1.5,e.y*scale-1.5,3,3)});
+// Girl dogs
+mctx.fillStyle='#ff69b4';girlDogs.forEach(g=>{mctx.fillRect(g.x*scale-2,g.y*scale-2,4,4)});
+// Items
+mctx.fillStyle='#ffd700';items.forEach(it=>{mctx.fillRect(it.x*scale-1,it.y*scale-1,2,2)});
+// Puppies
+mctx.fillStyle='#ffa500';puppies.forEach(p=>{mctx.fillRect(p.x*scale-1,p.y*scale-1,2,2)});
+// Player
+mctx.fillStyle='#00ff00';mctx.fillRect(player.x*scale-2,player.y*scale-2,4,4);
+// Viewport box
+const vx=(player.x-W/2)*scale,vy=(player.y-H/2)*scale;
+mctx.strokeStyle='rgba(255,255,255,0.4)';mctx.lineWidth=1;
+mctx.strokeRect(Math.max(0,vx),Math.max(0,vy),W*scale,H*scale);
+}
+
+function updateHUD(){
+document.getElementById('healthBar').textContent=`❤️ Health: ${Math.max(0,Math.floor(player.hp))}/${player.maxHp}`;
+document.getElementById('scoreBar').textContent=`⭐ Score: ${score}`;
+document.getElementById('puppyBar').textContent=`🐶 Puppies: ${puppies.length}`;
+document.getElementById('waveBar').textContent=`🌊 Wave: ${wave}`;
+}
+
+// === GAME LOOP ===
+function gameLoop(){
+try{update();render()}catch(err){console.error('Game loop error:',err)}
+if(gameRunning)requestAnimationFrame(gameLoop);
+}
+
+// === START / END ===
+function startGame(){
+ensureAudio();startAmbient();resize();
+player={x:WORLD/2,y:WORLD/2,angle:0,speed:0,maxSpeed:3.5,hp:100,maxHp:100,
+attackRange:45,damage:15,invuln:0,tailWag:0,blinkTimer:0,mouthOpen:0};
+enemies=[];girlDogs=[];puppies=[];items=[];particles=[];messages=[];damageNums=[];
+trees=[];rocks=[];flowers=[];waters=[];bushes=[];
+score=0;wave=1;waveTimer=0;gameTime=0;enemiesKilled=0;camShake=0;waveBanner=0;
+attackCooldown=0;barkCooldown=0;
+genWorld();
+// Initial enemies
+for(let i=0;i<5;i++)spawnEnemy();
+// One girl dog to start
+spawnGirlDog();
+gameRunning=true;
+document.getElementById('startScreen').style.display='none';
+document.getElementById('gameOver').style.display='none';
+gameLoop();
+}
+
+function endGame(){
+gameRunning=false;playSound('gameover');playSound('whimper');
+document.getElementById('gameOver').style.display='flex';
+document.getElementById('goStats').innerHTML=
+`You survived <span>${wave}</span> waves<br>
+Score: <span>${score}</span><br>
+Enemies defeated: <span>${enemiesKilled}</span><br>
+Puppies raised: <span>${puppies.length}</span>`;
+}
+
+// === ATTRACT MODE (renders world behind start screen) ===
+function attractMode(){
+genWorld();
+// Place player in center for camera
+player.x=WORLD/2;player.y=WORLD/2;
+// Add some demo enemies
+for(let i=0;i<8;i++)spawnEnemy();
+spawnGirlDog();
+function attractLoop(){
+if(gameRunning)return;
+gameTime++;
+// Slowly pan camera
+player.x=WORLD/2+Math.sin(gameTime*0.005)*200;
+player.y=WORLD/2+Math.cos(gameTime*0.007)*200;
+player.angle=gameTime*0.01;
+// Move demo enemies slightly
+enemies.forEach(e=>{e.x+=Math.cos(e.wanderAngle)*0.5;e.y+=Math.sin(e.wanderAngle)*0.5;
+if(Math.random()<0.01)e.wanderAngle=Math.random()*Math.PI*2;
+e.x=Math.max(20,Math.min(WORLD-20,e.x));e.y=Math.max(20,Math.min(WORLD-20,e.y))});
+girlDogs.forEach(g=>{g.x+=Math.cos(g.wanderAngle)*0.3;g.y+=Math.sin(g.wanderAngle)*0.3;
+if(Math.random()<0.02)g.wanderAngle=Math.random()*Math.PI*2});
+try{render()}catch(e){}
+requestAnimationFrame(attractLoop);
+}
+attractLoop();
+}
+attractMode();
+
+// === EVENT LISTENERS ===
+document.getElementById('playBtn').addEventListener('click',startGame);
+document.getElementById('replayBtn').addEventListener('click',startGame);
+checkMobile();
+</script>
+</body>
+</html>
