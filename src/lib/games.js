@@ -3,6 +3,42 @@
 
 const GAMES = [
   {
+    slug: 'capybara-press',
+    title: 'Capybara Press',
+    creator: 'Addie',
+    description: 'Tap the capybara to earn coins! Buy upgrades like auto-clickers, capybara friends, flower gardens and spas. Catch golden capybaras for huge bonuses. Complete 5 challenges to reach $5,000 and win!',
+    createdAt: '2026-03-22',
+    thumbnail: '/images/capybara-press-preview.png',
+    color: 'from-amber-400 to-green-500',
+  },
+  {
+    slug: 'singing-hero',
+    title: 'Singing Hero',
+    creator: 'Addie',
+    description: 'Hit the stage and compose your own song by tapping colorful note buttons! Then perform it back from memory for the judges. Simon, Katy and Bruno score your accuracy, rhythm and style. Can you get a perfect 100?',
+    createdAt: '2026-03-22',
+    thumbnail: '/images/singing-hero-preview.png',
+    color: 'from-pink-500 to-amber-400',
+  },
+  {
+    slug: 'snake',
+    title: 'Snake Designer',
+    creator: 'Wyatt',
+    description: 'Design your own snake with custom colors and patterns — solid, striped, rainbow or spots! Then play classic snake with a twist: AI computer snakes compete for pellets. Collect power-ups like shields and speed boosts!',
+    createdAt: '2026-03-22',
+    thumbnail: '/images/snake-preview.png',
+    color: 'from-emerald-400 to-cyan-500',
+  },
+  {
+    slug: 'f1-racing',
+    title: 'F1 Racing',
+    creator: 'Nolan',
+    description: 'Race against MAX, LEWIS, CHARLES, LANDO and CARLOS on a winding Grand Prix track! Collect boost, shield and repair power-ups. Complete 3 laps to finish — can you take 1st place?',
+    createdAt: '2026-03-22',
+    thumbnail: '/images/f1-racing-preview.png',
+    color: 'from-red-500 to-amber-500',
+  },
+  {
     slug: 'dog-simulator',
     title: 'Dog Simulator',
     creator: 'Addie',

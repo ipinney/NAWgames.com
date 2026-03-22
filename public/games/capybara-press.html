@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Capybara Press</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#2d5a27;overflow:hidden;touch-action:none;user-select:none;font-family:'Segoe UI',sans-serif}
+canvas#c{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1}
+#startScreen{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#1a4a12 0%,#2d5a27 50%,#4a7a3a 100%)}
+#startScreen h1{font-size:clamp(2rem,6vw,4rem);color:#ffd700;text-shadow:3px 3px 0 #8b6914,0 0 20px rgba(255,215,0,0.5);margin-bottom:10px;letter-spacing:2px}
+#startScreen p{color:#a8d5a0;font-size:clamp(0.9rem,2.5vw,1.2rem);margin-bottom:30px;text-align:center;padding:0 20px}
+#startScreen .subtitle{color:#ffd700;font-size:clamp(0.8rem,2vw,1rem);margin-bottom:20px}
+#playBtn{background:linear-gradient(180deg,#ffd700,#f0a500);color:#4a2800;border:none;padding:18px 50px;font-size:clamp(1.2rem,3vw,1.8rem);border-radius:50px;cursor:pointer;font-weight:bold;box-shadow:0 6px 0 #b87800,0 10px 20px rgba(0,0,0,0.3);transition:transform 0.1s}
+#playBtn:active{transform:translateY(4px);box-shadow:0 2px 0 #b87800}
+#hud{position:fixed;top:0;left:0;right:0;z-index:50;padding:10px 15px;display:none;pointer-events:none}
+#coinDisplay{font-size:clamp(1.5rem,4vw,2.5rem);color:#ffd700;text-shadow:2px 2px 0 #333;font-weight:bold;text-align:center}
+#cpsDisplay{font-size:clamp(0.7rem,2vw,1rem);color:#a8d5a0;text-align:center;margin-top:2px}
+#challengeBar{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:50;width:clamp(200px,60vw,400px);display:none}
+#challengeLabel{color:#fff;font-size:clamp(0.7rem,1.8vw,0.9rem);text-align:center;margin-bottom:4px}
+#challengeOuter{background:rgba(0,0,0,0.4);border-radius:10px;height:16px;overflow:hidden;border:2px solid rgba(255,215,0,0.3)}
+#challengeInner{background:linear-gradient(90deg,#ffd700,#ff8c00);height:100%;width:0%;border-radius:8px;transition:width 0.3s}
+#shopBtn{position:fixed;bottom:15px;right:15px;z-index:60;background:linear-gradient(180deg,#7c3aed,#5b21b6);color:#fff;border:none;padding:12px 20px;border-radius:15px;font-size:clamp(0.9rem,2.5vw,1.1rem);cursor:pointer;display:none;box-shadow:0 4px 0 #3b0e8a;font-weight:bold}
+#shop{position:fixed;bottom:0;left:0;right:0;z-index:80;background:linear-gradient(180deg,#1a1330,#0f0b1a);border-top:3px solid #7c3aed;padding:15px;display:none;max-height:55vh;overflow-y:auto}
+#shop h2{color:#ffd700;font-size:1.2rem;margin-bottom:10px;text-align:center}
+.shopItem{background:rgba(124,58,237,0.15);border:2px solid rgba(124,58,237,0.3);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:background 0.2s}
+.shopItem:active,.shopItem:hover{background:rgba(124,58,237,0.3)}
+.shopItem.locked{opacity:0.4;cursor:not-allowed}
+.shopName{color:#fff;font-weight:bold;font-size:0.95rem}
+.shopDesc{color:#a0a0c0;font-size:0.75rem;margin-top:2px}
+.shopCost{color:#ffd700;font-weight:bold;font-size:1rem;white-space:nowrap}
+#closeShop{background:#ef4444;color:#fff;border:none;padding:8px 20px;border-radius:10px;font-size:0.9rem;cursor:pointer;display:block;margin:10px auto 0}
+#victoryScreen{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.85)}
+#victoryScreen h1{font-size:clamp(2rem,6vw,3.5rem);color:#ffd700;text-shadow:0 0 30px rgba(255,215,0,0.6);margin-bottom:10px}
+#victoryScreen p{color:#a8d5a0;font-size:1.1rem;margin-bottom:5px}
+#victoryScreen button{margin-top:20px;background:linear-gradient(180deg,#ffd700,#f0a500);color:#4a2800;border:none;padding:15px 40px;font-size:1.3rem;border-radius:50px;cursor:pointer;font-weight:bold;box-shadow:0 5px 0 #b87800}
+</style>
+</head>
+<body>
+<div id="startScreen">
+  <h1>🦫 Capybara Press</h1>
+  <p class="subtitle">Addie's Idle Clicker</p>
+  <p>Tap the capybara to earn coins!<br>Buy upgrades and reach the $5,000 challenge!</p>
+  <button id="playBtn">TAP TO PLAY</button>
+</div>
+<div id="hud">
+  <div id="coinDisplay">$0</div>
+  <div id="cpsDisplay">0 coins/sec</div>
+</div>
+<div id="challengeBar">
+  <div id="challengeLabel">Challenge: Reach $500</div>
+  <div id="challengeOuter"><div id="challengeInner"></div></div>
+</div>
+<button id="shopBtn">🛒 Shop</button>
+<div id="shop">
+  <h2>🛒 Upgrade Shop</h2>
+  <div id="shopItems"></div>
+  <button id="closeShop">Close</button>
+</div>
+<div id="victoryScreen">
+  <h1>🎉 YOU WIN! 🎉</h1>
+  <p id="victoryStats"></p>
+  <p id="victoryTime"></p>
+  <button id="replayBtn">Play Again</button>
+</div>
+<canvas id="c"></canvas>
+<script>
+// === AUDIO ENGINE ===
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+function ensureAudio(){if(!audioCtx)audioCtx=new AudioCtx();if(audioCtx.state==='suspended')audioCtx.resume()}
+function playSound(type){
+  if(!audioCtx)return;
+  const t=audioCtx.currentTime;
+  const master=audioCtx.createGain();
+  master.connect(audioCtx.destination);
+  if(type==='tap'){
+    const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+    o.type='sine';o.frequency.setValueAtTime(800+Math.random()*400,t);
+    o.frequency.exponentialRampToValueAtTime(400,t+0.1);
+    g.gain.setValueAtTime(0.15,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.15);
+    o.connect(g);g.connect(master);o.start(t);o.stop(t+0.15);master.gain.setValueAtTime(0.5,t);
+  } else if(type==='coin'){
+    const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+    o.type='sine';o.frequency.setValueAtTime(1200,t);o.frequency.exponentialRampToValueAtTime(1800,t+0.1);
+    g.gain.setValueAtTime(0.1,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.2);
+    o.connect(g);g.connect(master);o.start(t);o.stop(t+0.2);master.gain.setValueAtTime(0.3,t);
+  } else if(type==='upgrade'){
+    const notes=[523,659,784];
+    notes.forEach((f,i)=>{
+      const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+      o.type='triangle';o.frequency.value=f;
+      g.gain.setValueAtTime(0,t+i*0.08);g.gain.linearRampToValueAtTime(0.12,t+i*0.08+0.03);
+      g.gain.linearRampToValueAtTime(0,t+i*0.08+0.2);
+      o.connect(g);g.connect(master);o.start(t+i*0.08);o.stop(t+i*0.08+0.2);
+    });master.gain.setValueAtTime(0.5,t);
+  } else if(type==='challenge'){
+    const notes=[523,659,784,1047];
+    notes.forEach((f,i)=>{
+      const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+      o.type='triangle';o.frequency.value=f;
+      g.gain.setValueAtTime(0,t+i*0.12);g.gain.linearRampToValueAtTime(0.15,t+i*0.12+0.04);
+      g.gain.linearRampToValueAtTime(0,t+i*0.12+0.4);
+      o.connect(g);g.connect(master);o.start(t+i*0.12);o.stop(t+i*0.12+0.4);
+    });master.gain.setValueAtTime(0.6,t);
+  } else if(type==='victory'){
+    const notes=[523,659,784,1047,1319];
+    notes.forEach((f,i)=>{
+      const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+      o.type='triangle';o.frequency.value=f;
+      g.gain.setValueAtTime(0,t+i*0.15);g.gain.linearRampToValueAtTime(0.2,t+i*0.15+0.05);
+      g.gain.linearRampToValueAtTime(0,t+i*0.15+0.6);
+      o.connect(g);g.connect(master);o.start(t+i*0.15);o.stop(t+i*0.15+0.6);
+    });master.gain.setValueAtTime(0.7,t);
+  } else if(type==='whoosh'){
+    const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*0.15,audioCtx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.3));
+    const ns=audioCtx.createBufferSource();ns.buffer=buf;
+    const filt=audioCtx.createBiquadFilter();filt.type='bandpass';filt.frequency.value=2000;filt.Q.value=2;
+    const g=audioCtx.createGain();g.gain.setValueAtTime(0.08,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.15);
+    ns.connect(filt);filt.connect(g);g.connect(master);ns.start(t);ns.stop(t+0.15);
+  }
+}
+let ambientStarted=false;
+function startAmbient(){
+  if(ambientStarted||!audioCtx)return;ambientStarted=true;
+  // Gentle nature ambient
+  const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*4,audioCtx.sampleRate);
+  const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1);
+  const ns=audioCtx.createBufferSource();ns.buffer=buf;ns.loop=true;
+  const filt=audioCtx.createBiquadFilter();filt.type='lowpass';filt.frequency.value=300;
+  const g=audioCtx.createGain();g.gain.value=0.02;
+  ns.connect(filt);filt.connect(g);g.connect(audioCtx.destination);ns.start();
+  // Bird chirps every few seconds
+  setInterval(()=>{
+    if(!audioCtx||audioCtx.state!=='running')return;
+    const tt=audioCtx.currentTime;
+    const o=audioCtx.createOscillator();const gg=audioCtx.createGain();
+    o.type='sine';o.frequency.setValueAtTime(2000+Math.random()*1000,tt);
+    o.frequency.exponentialRampToValueAtTime(1500+Math.random()*500,tt+0.1);
+    gg.gain.setValueAtTime(0.02,tt);gg.gain.exponentialRampToValueAtTime(0.001,tt+0.15);
+    o.connect(gg);gg.connect(audioCtx.destination);o.start(tt);o.stop(tt+0.15);
+  },3000+Math.random()*5000);
+}
+
+// === CANVAS ===
+const canvas=document.getElementById('c');const ctx=canvas.getContext('2d');
+let W,H;
+function resize(){W=window.innerWidth;H=window.innerHeight;canvas.width=W;canvas.height=H;canvas.style.width=W+'px';canvas.style.height=H+'px'}
+resize();window.addEventListener('resize',resize);
+window.addEventListener('orientationchange',()=>setTimeout(resize,200));
+document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+
+// === GAME STATE ===
+let coins=0, totalCoins=0, totalTaps=0, coinsPerTap=1, coinsPerSec=0;
+let gameStartTime=0, gameRunning=false, gameWon=false;
+let camShake=0;
+let capyX=0, capyY=0, capyScale=1, capyTargetScale=1;
+let capyBob=0, capyEmotion='happy';
+let shopOpen=false;
+
+// Challenges
+const challenges=[
+  {target:500,label:'Reach $500',reward:50},
+  {target:1000,label:'Reach $1,000',reward:100},
+  {target:2000,label:'Reach $2,000',reward:200},
+  {target:3500,label:'Reach $3,500',reward:300},
+  {target:5000,label:'Reach $5,000!',reward:0}
+];
+let currentChallenge=0;
+
+// Upgrades
+const upgrades=[
+  {id:'bigTap',name:'Big Tap',desc:'+1 coin per tap',baseCost:50,costMult:1.8,effect:'tap',value:1,count:0,icon:'👆'},
+  {id:'autoClick',name:'Auto Clicker',desc:'+1 coin/sec',baseCost:100,costMult:2.0,effect:'cps',value:1,count:0,icon:'🤖'},
+  {id:'friend',name:'Capybara Friend',desc:'+5 coins/sec',baseCost:500,costMult:2.2,effect:'cps',value:5,count:0,icon:'🦫'},
+  {id:'goldenTap',name:'Golden Tap',desc:'+5 coins per tap',baseCost:300,costMult:2.0,effect:'tap',value:5,count:0,icon:'✨'},
+  {id:'garden',name:'Flower Garden',desc:'+15 coins/sec',baseCost:1200,costMult:2.5,effect:'cps',value:15,count:0,icon:'🌸'},
+  {id:'spa',name:'Capybara Spa',desc:'+50 coins/sec',baseCost:3000,costMult:3.0,effect:'cps',value:50,count:0,icon:'🧖'},
+  {id:'crown',name:'Golden Crown',desc:'+20 coins per tap',baseCost:2000,costMult:2.5,effect:'tap',value:20,count:0,icon:'👑'},
+  {id:'empire',name:'Capy Empire',desc:'+200 coins/sec',baseCost:4000,costMult:3.5,effect:'cps',value:200,count:0,icon:'🏰'}
+];
+
+function getUpgradeCost(u){return Math.floor(u.baseCost*Math.pow(u.costMult,u.count))}
+
+// Particles
+let particles=[];
+function addParticle(x,y,type,count){
+  for(let i=0;i<count;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=1+Math.random()*4;
+    let life,r,g,b,size,text=null;
+    if(type==='coin'){
+      life=40+Math.random()*30;r=255;g=215;b=0;size=3+Math.random()*4;
+      if(Math.random()<0.3)text='$';
+    } else if(type==='sparkle'){
+      life=20+Math.random()*20;r=255;g=255;b=100+Math.random()*155;size=2+Math.random()*3;
+    } else if(type==='heart'){
+      life=50+Math.random()*30;r=255;g=100+Math.random()*100;b=150;size=4+Math.random()*4;text='♥';
+    } else if(type==='star'){
+      life=60+Math.random()*40;r=255;g=215;b=0;size=5+Math.random()*5;text='★';
+    } else if(type==='confetti'){
+      life=80+Math.random()*60;
+      const colors=[[255,100,100],[100,255,100],[100,100,255],[255,255,100],[255,100,255]];
+      const c=colors[Math.floor(Math.random()*colors.length)];
+      r=c[0];g=c[1];b=c[2];size=3+Math.random()*5;
+    }
+    particles.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed-2,
+      life,maxLife:life,r,g,b,size,type,text,rot:Math.random()*Math.PI*2,rotSpeed:(Math.random()-0.5)*0.2});
+  }
+}
+
+function updateParticles(){
+  particles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.vy+=0.05;// gravity
+    p.vx*=0.98;p.life--;p.rot+=p.rotSpeed;
+  });
+  particles=particles.filter(p=>p.life>0);
+}
+
+function drawParticles(){
+  particles.forEach(p=>{
+    const lifeRatio=p.life/p.maxLife;
+    ctx.globalAlpha=lifeRatio;
+    if(p.text){
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+      ctx.font=`${p.size*3}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillStyle=`rgb(${p.r},${p.g},${p.b})`;ctx.fillText(p.text,0,0);
+      ctx.restore();
+    } else {
+      ctx.fillStyle=`rgb(${p.r},${p.g},${p.b})`;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size*lifeRatio,0,Math.PI*2);ctx.fill();
+    }
+  });
+  ctx.globalAlpha=1;
+}
+
+// Floating text
+let floatingTexts=[];
+function addFloatingText(x,y,text,color='#ffd700',size=24){
+  floatingTexts.push({x,y,text,color,size,life:60,maxLife:60});
+}
+function updateFloatingTexts(){
+  floatingTexts.forEach(ft=>{ft.y-=1.5;ft.life--});
+  floatingTexts=floatingTexts.filter(ft=>ft.life>0);
+}
+function drawFloatingTexts(){
+  floatingTexts.forEach(ft=>{
+    const lifeRatio=ft.life/ft.maxLife;
+    ctx.globalAlpha=lifeRatio;
+    ctx.font=`bold ${ft.size}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle=ft.color;ctx.shadowColor=ft.color;ctx.shadowBlur=10;
+    ctx.fillText(ft.text,ft.x,ft.y);ctx.shadowBlur=0;
+  });
+  ctx.globalAlpha=1;
+}
+
+// Background elements
+let bgFlowers=[],bgClouds=[],bgButterflies=[];
+function initBackground(){
+  bgFlowers=[];bgClouds=[];bgButterflies=[];
+  for(let i=0;i<20;i++){
+    bgFlowers.push({x:Math.random()*2000-500,y:H*0.7+Math.random()*H*0.3,
+      size:8+Math.random()*15,color:`hsl(${Math.random()*60+300},80%,70%)`,phase:Math.random()*Math.PI*2});
+  }
+  for(let i=0;i<6;i++){
+    bgClouds.push({x:Math.random()*W*2-W*0.5,y:20+Math.random()*H*0.2,
+      w:80+Math.random()*120,h:30+Math.random()*40,speed:0.2+Math.random()*0.3});
+  }
+  for(let i=0;i<5;i++){
+    bgButterflies.push({x:Math.random()*W,y:H*0.3+Math.random()*H*0.3,
+      phase:Math.random()*Math.PI*2,speed:0.5+Math.random()*1,
+      color:`hsl(${Math.random()*360},80%,60%)`,size:4+Math.random()*4});
+  }
+}
+
+// Capybara friends (from upgrades)
+let capyFriends=[];
+function addCapyFriend(){
+  const side=Math.random()<0.5?-1:1;
+  capyFriends.push({
+    offsetX:side*(60+Math.random()*80),offsetY:20+Math.random()*40,
+    scale:0.4+Math.random()*0.3,bob:Math.random()*Math.PI*2
+  });
+}
+
+// === DRAW CAPYBARA ===
+function drawCapybara(x,y,scale,emotion){
+  ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
+  // Body
+  ctx.fillStyle='#8B6914';
+  ctx.beginPath();ctx.ellipse(0,10,55,40,0,0,Math.PI*2);ctx.fill();
+  // Head
+  ctx.fillStyle='#9B7924';
+  ctx.beginPath();ctx.ellipse(0,-30,40,35,0,0,Math.PI*2);ctx.fill();
+  // Snout
+  ctx.fillStyle='#BFA050';
+  ctx.beginPath();ctx.ellipse(0,-15,20,12,0,0,Math.PI*2);ctx.fill();
+  // Nose
+  ctx.fillStyle='#333';
+  ctx.beginPath();ctx.ellipse(0,-20,6,4,0,0,Math.PI*2);ctx.fill();
+  // Eyes
+  const eyeY=-35;
+  ctx.fillStyle='#111';
+  ctx.beginPath();ctx.arc(-14,eyeY,5,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(14,eyeY,5,0,Math.PI*2);ctx.fill();
+  // Eye shine
+  ctx.fillStyle='#fff';
+  ctx.beginPath();ctx.arc(-12,eyeY-2,2,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(16,eyeY-2,2,0,Math.PI*2);ctx.fill();
+  // Ears
+  ctx.fillStyle='#7A5A10';
+  ctx.beginPath();ctx.ellipse(-28,-52,8,6,-.3,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(28,-52,8,6,.3,0,Math.PI*2);ctx.fill();
+  // Inner ears
+  ctx.fillStyle='#BFA050';
+  ctx.beginPath();ctx.ellipse(-28,-52,5,3.5,-.3,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(28,-52,5,3.5,.3,0,Math.PI*2);ctx.fill();
+  // Mouth / emotion
+  if(emotion==='happy'){
+    ctx.strokeStyle='#333';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(0,-10,10,0.1*Math.PI,0.9*Math.PI);ctx.stroke();
+  } else if(emotion==='excited'){
+    ctx.fillStyle='#333';
+    ctx.beginPath();ctx.ellipse(0,-8,8,6,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#ff6b6b';
+    ctx.beginPath();ctx.ellipse(0,-5,6,3,0,0,Math.PI);ctx.fill();
+  } else if(emotion==='love'){
+    ctx.strokeStyle='#333';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(0,-10,10,0.1*Math.PI,0.9*Math.PI);ctx.stroke();
+    // Blush
+    ctx.fillStyle='rgba(255,150,150,0.4)';
+    ctx.beginPath();ctx.ellipse(-22,-22,10,6,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(22,-22,10,6,0,0,Math.PI*2);ctx.fill();
+  }
+  // Feet
+  ctx.fillStyle='#7A5A10';
+  ctx.beginPath();ctx.ellipse(-30,48,12,6,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(30,48,12,6,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(-15,50,10,5,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(15,50,10,5,0,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+// === DRAW BACKGROUND ===
+let tick=0;
+function drawBackground(){
+  // Sky gradient
+  const skyGrad=ctx.createLinearGradient(0,0,0,H);
+  skyGrad.addColorStop(0,'#87CEEB');skyGrad.addColorStop(0.5,'#B0E0E6');skyGrad.addColorStop(1,'#90EE90');
+  ctx.fillStyle=skyGrad;ctx.fillRect(0,0,W,H);
+  // Sun
+  ctx.fillStyle='#FFD700';ctx.shadowColor='#FFD700';ctx.shadowBlur=40;
+  ctx.beginPath();ctx.arc(W*0.85,H*0.12,35,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  // Clouds
+  bgClouds.forEach(c=>{
+    c.x+=c.speed;if(c.x>W+200)c.x=-200;
+    ctx.fillStyle='rgba(255,255,255,0.7)';
+    ctx.beginPath();ctx.ellipse(c.x,c.y,c.w/2,c.h/2,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(c.x-c.w*0.3,c.y+5,c.w*0.3,c.h*0.35,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.ellipse(c.x+c.w*0.3,c.y+3,c.w*0.25,c.h*0.3,0,0,Math.PI*2);ctx.fill();
+  });
+  // Ground
+  ctx.fillStyle='#4a8c3f';ctx.fillRect(0,H*0.65,W,H*0.35);
+  ctx.fillStyle='#3d7a34';
+  for(let i=0;i<W;i+=60){
+    ctx.beginPath();ctx.ellipse(i,H*0.65,40,8,0,Math.PI,Math.PI*2);ctx.fill();
+  }
+  // Flowers
+  bgFlowers.forEach(f=>{
+    const sway=Math.sin(tick*0.02+f.phase)*3;
+    ctx.fillStyle=f.color;
+    for(let p=0;p<5;p++){
+      const a=p*Math.PI*2/5+tick*0.01;
+      ctx.beginPath();ctx.arc(f.x+sway+Math.cos(a)*f.size*0.5,f.y+Math.sin(a)*f.size*0.5,f.size*0.35,0,Math.PI*2);ctx.fill();
+    }
+    ctx.fillStyle='#FFD700';
+    ctx.beginPath();ctx.arc(f.x+sway,f.y,f.size*0.25,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#2d5a27';ctx.fillRect(f.x+sway-1,f.y+f.size*0.3,2,f.size);
+  });
+  // Butterflies
+  bgButterflies.forEach(bf=>{
+    bf.phase+=0.03;bf.x+=Math.sin(bf.phase)*bf.speed;bf.y+=Math.cos(bf.phase*0.7)*0.3;
+    if(bf.x>W+20)bf.x=-20;if(bf.x<-20)bf.x=W+20;
+    const wingFlap=Math.sin(tick*0.15+bf.phase)*0.5;
+    ctx.fillStyle=bf.color;
+    ctx.save();ctx.translate(bf.x,bf.y);
+    ctx.scale(1+wingFlap*0.5,1);ctx.beginPath();ctx.ellipse(-bf.size,0,bf.size,bf.size*0.6,0,0,Math.PI*2);ctx.fill();
+    ctx.scale(1/(1+wingFlap*0.5),1);ctx.scale(1-wingFlap*0.5,1);
+    ctx.beginPath();ctx.ellipse(bf.size,0,bf.size,bf.size*0.6,0,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+    ctx.fillStyle='#333';ctx.fillRect(bf.x-1,bf.y-bf.size*0.3,2,bf.size*0.6);
+  });
+}
+
+// === WATER AREA ===
+function drawWater(){
+  const waterY=H*0.55;const waterH=H*0.12;
+  ctx.fillStyle='rgba(100,180,255,0.3)';
+  ctx.beginPath();
+  ctx.moveTo(W*0.1,waterY+waterH);
+  for(let x=W*0.1;x<=W*0.6;x+=5){
+    ctx.lineTo(x,waterY+Math.sin(x*0.03+tick*0.05)*8);
+  }
+  ctx.lineTo(W*0.6,waterY+waterH);ctx.closePath();ctx.fill();
+  // Water sparkles
+  ctx.fillStyle='rgba(255,255,255,0.5)';
+  for(let i=0;i<5;i++){
+    const sx=W*0.15+Math.sin(tick*0.02+i*1.5)*W*0.2;
+    const sy=waterY+5+Math.sin(tick*0.03+i)*5;
+    if(Math.sin(tick*0.05+i*2)>0.5){
+      ctx.beginPath();ctx.arc(sx,sy,2,0,Math.PI*2);ctx.fill();
+    }
+  }
+}
+
+// === SHOP ===
+function renderShop(){
+  const container=document.getElementById('shopItems');
+  container.innerHTML='';
+  upgrades.forEach(u=>{
+    const cost=getUpgradeCost(u);
+    const canBuy=coins>=cost;
+    const div=document.createElement('div');
+    div.className='shopItem'+(canBuy?'':' locked');
+    div.innerHTML=`<div><div class="shopName">${u.icon} ${u.name} (x${u.count})</div><div class="shopDesc">${u.desc}</div></div><div class="shopCost">$${cost.toLocaleString()}</div>`;
+    if(canBuy){
+      div.onclick=()=>{buyUpgrade(u);renderShop()};
+    }
+    container.appendChild(div);
+  });
+}
+
+function buyUpgrade(u){
+  const cost=getUpgradeCost(u);
+  if(coins<cost)return;
+  coins-=cost;u.count++;
+  if(u.effect==='tap')coinsPerTap+=u.value;
+  if(u.effect==='cps')coinsPerSec+=u.value;
+  if(u.id==='friend')addCapyFriend();
+  playSound('upgrade');
+  addParticle(W/2,H/2,'sparkle',15);
+  updateHUD();
+}
+
+function toggleShop(){
+  shopOpen=!shopOpen;
+  document.getElementById('shop').style.display=shopOpen?'block':'none';
+  if(shopOpen){renderShop();playSound('whoosh')}
+}
+
+// === HUD UPDATE ===
+function updateHUD(){
+  document.getElementById('coinDisplay').textContent='$'+Math.floor(coins).toLocaleString();
+  document.getElementById('cpsDisplay').textContent=coinsPerSec.toLocaleString()+' coins/sec | $'+coinsPerTap+'/tap';
+  if(currentChallenge<challenges.length){
+    const ch=challenges[currentChallenge];
+    document.getElementById('challengeLabel').textContent='Challenge: '+ch.label;
+    const prev=currentChallenge>0?challenges[currentChallenge-1].target:0;
+    const pct=Math.min(100,((totalCoins-prev)/(ch.target-prev))*100);
+    document.getElementById('challengeInner').style.width=pct+'%';
+  }
+}
+
+// === CHECK CHALLENGES ===
+function checkChallenges(){
+  if(currentChallenge>=challenges.length)return;
+  const ch=challenges[currentChallenge];
+  if(totalCoins>=ch.target){
+    playSound('challenge');
+    addFloatingText(W/2,H*0.3,'🎉 Challenge Complete!','#ffd700',28);
+    if(ch.reward>0){
+      coins+=ch.reward;totalCoins+=ch.reward;
+      addFloatingText(W/2,H*0.35,'+$'+ch.reward+' bonus!','#00ff00',22);
+    }
+    addParticle(W/2,H/2,'star',20);
+    currentChallenge++;
+    if(currentChallenge>=challenges.length){
+      // WIN!
+      gameWon=true;
+      playSound('victory');
+      addParticle(W/2,H/3,'confetti',80);
+      setTimeout(showVictory,2000);
+    }
+    updateHUD();
+  }
+}
+
+function showVictory(){
+  const elapsed=Math.floor((Date.now()-gameStartTime)/1000);
+  const mins=Math.floor(elapsed/60);const secs=elapsed%60;
+  document.getElementById('victoryStats').textContent=
+    `Total taps: ${totalTaps.toLocaleString()} | Total earned: $${totalCoins.toLocaleString()}`;
+  document.getElementById('victoryTime').textContent=`Time: ${mins}m ${secs}s`;
+  document.getElementById('victoryScreen').style.display='flex';
+}
+
+// === TAP HANDLER ===
+function handleTap(px,py){
+  if(!gameRunning||gameWon)return;
+  const dx=px-capyX,dy=py-capyY;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+  // Tap anywhere but give bonus for hitting capybara
+  let tapValue=coinsPerTap;
+  let hitCapy=dist<90*capyScale;
+  if(hitCapy){
+    tapValue=Math.floor(coinsPerTap*1.5);
+    capyTargetScale=1.15;
+    camShake=5;
+    capyEmotion='excited';
+    setTimeout(()=>{capyEmotion=coinsPerSec>20?'love':'happy'},300);
+    addParticle(capyX,capyY-20,'coin',8);
+    addParticle(px,py,'sparkle',5);
+  } else {
+    addParticle(px,py,'coin',4);
+    addParticle(px,py,'sparkle',3);
+  }
+  coins+=tapValue;totalCoins+=tapValue;totalTaps++;
+  addFloatingText(px,py-20,'+$'+tapValue,hitCapy?'#ffd700':'#90EE90',hitCapy?28:20);
+  playSound(hitCapy?'tap':'coin');
+  checkChallenges();
+  updateHUD();
+}
+
+// === AUTO INCOME ===
+let lastAutoTick=0;
+function autoIncome(now){
+  if(now-lastAutoTick>=1000&&coinsPerSec>0){
+    lastAutoTick=now;
+    const income=coinsPerSec;
+    coins+=income;totalCoins+=income;
+    if(income>0){
+      // Show small floating text near capybara
+      addFloatingText(capyX+Math.random()*60-30,capyY-60,'+$'+income,'#90EE90',16);
+    }
+    checkChallenges();
+    updateHUD();
+  }
+}
+
+// === GOLDEN CAPYBARA EVENT ===
+let goldenCapy=null;let goldenTimer=0;
+function spawnGoldenCapy(){
+  if(goldenCapy||!gameRunning||gameWon)return;
+  goldenCapy={x:Math.random()*(W-100)+50,y:H*0.3+Math.random()*H*0.2,life:300,maxLife:300};
+}
+function updateGoldenCapy(){
+  if(!goldenCapy)return;
+  goldenCapy.life--;
+  if(goldenCapy.life<=0)goldenCapy=null;
+}
+function drawGoldenCapy(){
+  if(!goldenCapy)return;
+  const flash=Math.sin(tick*0.1)*0.3+0.7;
+  ctx.globalAlpha=goldenCapy.life/goldenCapy.maxLife*flash;
+  ctx.save();ctx.translate(goldenCapy.x,goldenCapy.y);
+  ctx.scale(0.5,0.5);
+  // Golden body
+  ctx.fillStyle='#FFD700';
+  ctx.beginPath();ctx.ellipse(0,10,55,40,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#FFEC80';
+  ctx.beginPath();ctx.ellipse(0,-30,40,35,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#FFF8DC';
+  ctx.beginPath();ctx.ellipse(0,-15,20,12,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#333';
+  ctx.beginPath();ctx.arc(-14,-35,5,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(14,-35,5,0,Math.PI*2);ctx.fill();
+  // Sparkle
+  ctx.font='20px sans-serif';ctx.textAlign='center';
+  ctx.fillStyle='#fff';ctx.fillText('✨',0,-60);
+  ctx.restore();ctx.globalAlpha=1;
+  // Label
+  ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillStyle='#ffd700';
+  ctx.fillText('TAP ME!',goldenCapy.x,goldenCapy.y+50);
+}
+function tapGoldenCapy(px,py){
+  if(!goldenCapy)return false;
+  const dx=px-goldenCapy.x,dy=py-goldenCapy.y;
+  if(Math.sqrt(dx*dx+dy*dy)<50){
+    const bonus=Math.floor(coinsPerTap*10+coinsPerSec*5);
+    coins+=bonus;totalCoins+=bonus;
+    addFloatingText(goldenCapy.x,goldenCapy.y-40,'GOLDEN! +$'+bonus,'#ffd700',32);
+    addParticle(goldenCapy.x,goldenCapy.y,'star',25);
+    addParticle(goldenCapy.x,goldenCapy.y,'sparkle',15);
+    playSound('challenge');camShake=12;
+    goldenCapy=null;
+    checkChallenges();updateHUD();
+    return true;
+  }
+  return false;
+}
+
+// === MAIN LOOP ===
+function gameLoop(now){
+  try{
+    tick++;
+    if(gameRunning&&!gameWon){
+      autoIncome(now);
+      // Capybara animation
+      capyX=W/2+(Math.random()-0.5)*camShake;
+      capyY=H*0.52+Math.sin(tick*0.03)*5+(Math.random()-0.5)*camShake;
+      capyScale+=(capyTargetScale-capyScale)*0.2;
+      capyTargetScale+=(1-capyTargetScale)*0.1;
+      camShake*=0.9;
+      // Golden capybara spawn
+      goldenTimer++;
+      if(goldenTimer>600+Math.random()*600){goldenTimer=0;spawnGoldenCapy()}
+      updateGoldenCapy();
+    }
+    updateParticles();
+    updateFloatingTexts();
+    // Draw
+    drawBackground();
+    drawWater();
+    if(gameRunning){
+      // Draw capybara friends
+      capyFriends.forEach(cf=>{
+        cf.bob+=0.02;
+        drawCapybara(capyX+cf.offsetX,capyY+cf.offsetY+Math.sin(cf.bob)*3,cf.scale,'happy');
+      });
+      // Draw main capybara
+      drawCapybara(capyX,capyY,capyScale,capyEmotion);
+      // Draw upgrade indicators on capybara
+      if(upgrades.find(u=>u.id==='crown'&&u.count>0)){
+        ctx.font=`${24*capyScale}px sans-serif`;ctx.textAlign='center';
+        ctx.fillText('👑',capyX,capyY-70*capyScale);
+      }
+      drawGoldenCapy();
+    } else {
+      // Attract mode capybara
+      drawCapybara(W/2,H*0.5+Math.sin(tick*0.03)*5,1+Math.sin(tick*0.02)*0.05,'happy');
+    }
+    drawParticles();
+    drawFloatingTexts();
+  }catch(e){console.error(e)}
+  requestAnimationFrame(gameLoop);
+}
+
+// === INPUT ===
+canvas.addEventListener('pointerdown',e=>{
+  if(!gameRunning)return;
+  ensureAudio();
+  const px=e.clientX,py=e.clientY;
+  if(!tapGoldenCapy(px,py)){handleTap(px,py)}
+});
+
+// === START GAME ===
+function startGame(){
+  ensureAudio();startAmbient();
+  gameRunning=true;gameWon=false;coins=0;totalCoins=0;totalTaps=0;
+  coinsPerTap=1;coinsPerSec=0;currentChallenge=0;
+  capyFriends=[];particles=[];floatingTexts=[];goldenCapy=null;goldenTimer=0;
+  upgrades.forEach(u=>u.count=0);
+  gameStartTime=Date.now();lastAutoTick=Date.now();
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('victoryScreen').style.display='none';
+  document.getElementById('hud').style.display='block';
+  document.getElementById('challengeBar').style.display='block';
+  document.getElementById('shopBtn').style.display='block';
+  shopOpen=false;document.getElementById('shop').style.display='none';
+  initBackground();resize();updateHUD();
+}
+
+document.getElementById('playBtn').onclick=startGame;
+document.getElementById('replayBtn').onclick=startGame;
+document.getElementById('shopBtn').onclick=toggleShop;
+document.getElementById('closeShop').onclick=()=>{shopOpen=false;document.getElementById('shop').style.display='none'};
+
+initBackground();
+requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>
