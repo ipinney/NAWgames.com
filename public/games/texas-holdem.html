@@ -639,9 +639,9 @@ function process(hid){
   const p=players[currentPlayer];
   if(p.folded||p.allIn||p.chips<=0||(actedThisRound.has(currentPlayer)&&p.bet>=currentBet)){
     currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(handId),60);return;}
-  if(p.isHuman){waitingForHuman=true;showUI();}
+  if(p.isHuman){waitingForHuman=true;try{showUI();}catch(e){console.error('showUI crash:',e);document.getElementById('bottomBar').style.display='flex';}}
   else{waitingForHuman=false;hideUI();
-    const nO=countNotFolded()-1;const aiEq=mcEquity(p.hand,communityCards,nO,120);
+    const nO=countNotFolded()-1;let aiEq;try{aiEq=mcEquity(p.hand,communityCards,nO,60);}catch(e){aiEq=40;}
     const d=getDecision(p,false,aiEq);const hid2=handId;
     setTimeout(()=>{if(hid2!==handId)return;execAction(currentPlayer,d.action,d.amount);currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(handId),300);
     },400+Math.random()*400);}
@@ -655,10 +655,11 @@ function showUI(){
   let tip,sc;
   try{
     const nO=countNotFolded()-1;
-    const eq=mcEquity(p.hand,communityCards,nO,180);
+    const eq=mcEquity(p.hand,communityCards,nO,80);
     tip=getDecision(p,true,eq);sc=eq;
   }catch(e){console.error('getDecision error:',e);tip={tip:'CHECK',reason:'Take your time.',score:50};sc=50;}
   // Update all content before making visible
+  try{
   const badge=document.getElementById('scoreBadge');
   badge.textContent=sc+'%';badge.style.background=scoreColor(sc);
   document.getElementById('tipAct').textContent=tip.tip;
@@ -671,7 +672,8 @@ function showUI(){
   if(p.chips+p.bet>currentBet){sl.style.display='flex';rg.min=minR;rg.max=p.chips+p.bet;rg.value=minR;
     document.getElementById('rAmt').textContent='$'+minR;rg.oninput=()=>document.getElementById('rAmt').textContent='$'+rg.value;}
   else sl.style.display='none';
-  // NOW show the bar (all content is fresh)
+  }catch(e2){console.error('showUI render error:',e2);}
+  // ALWAYS show the bar no matter what — buttons must appear
   document.getElementById('bottomBar').style.display='flex';
 }
 function hideUI(){document.getElementById('bottomBar').style.display='none';
