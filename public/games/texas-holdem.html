@@ -278,6 +278,7 @@ function handTier(c,nOpp){
   // Tier 2: Weak (but playable cheap)
   if(suited)return 2;
   if(gap<=1&&hi>=7)return 2;
+  if(hi>=13)return 2; // King-high always has some chance
   if(hu)return 2; // heads-up, everything has some value
 
   // Tier 1: Trash
@@ -564,9 +565,10 @@ function getDecision(p,forTip){
     return{action:'fold',score,tip:'FOLD',reason:`${handDesc} isn't worth $${callAmt}${nOpp>=3?' against this many players':''}.`};
   }
   // Weak (tier 1-2)
-  if(canCheck)return{action:'check',score,tip:'CHECK',reason:`${handDesc} is weak — but checking is free! Always see a free flop.`};
-  if(callAmt<=bigBlind&&nOpp<=1)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Only $${callAmt} heads-up — take a shot.`};
-  return{action:'fold',score,tip:'FOLD',reason:`${handDesc} is weak — fold and wait for a better hand.`};
+  if(canCheck)return{action:'check',score,tip:'CHECK',reason:`${handDesc} — not great, but checking is free! You might pair up on the flop.`};
+  if(callAmt<=bigBlind&&nOpp<=1)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Only $${callAmt} heads-up — any hand can get lucky!`};
+  if(callAmt<=bigBlind)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — cheap to see. Could pair up!`};
+  return{action:'fold',score,tip:'FOLD',reason:`${handDesc} — weak kicker means even if you pair, you might lose. Save chips for a better spot.`};
 }
 
 // Score badge color
@@ -605,6 +607,7 @@ let currentPlayer=-1,currentBet=0,lastRaiseSize=0;
 let handsPlayed=0,handsWon=0,biggestPot=0,revealedCards=[],showdownWinners=[];
 let dealerMsgText='',dealerMsgTimer=0,waitingForHuman=false,gameActive=false;
 let actedThisRound=new Set();
+let handId=0; // guards against stale setTimeout callbacks
 
 function ppos(i,n){const cx=W/2,cy=H/2,rx=Math.min(W*0.37,310),ry=Math.min(H*0.33,195);
   const a=Math.PI/2+(Math.PI*2/n)*i;return{x:cx+Math.cos(a)*rx,y:cy+Math.sin(a)*ry};}
@@ -689,7 +692,7 @@ function startGame(){ea();ambStart();document.getElementById('startScreen').styl
   dealerIdx=Math.random()*5|0;handNum=0;gameActive=true;resize();newHand();}
 
 function newHand(){
-  handNum++;handsPlayed++;showdownWinners=[];
+  handId++;handNum++;handsPlayed++;showdownWinners=[];
   if(handNum>1&&(handNum-1)%5===0){smallBlind=Math.min(smallBlind*2,200);bigBlind=smallBlind*2;}
   deck=shuf(mkDeck());communityCards=[];revealedCards=[];pot=0;currentBet=0;lastRaiseSize=bigBlind;actedThisRound=new Set();
   players.forEach(p=>{p.hand=null;p.folded=false;p.bet=0;p.allIn=false;});
@@ -709,24 +712,24 @@ function newHand(){
     updateHUD();showMsg(`Hand #${handNum} — Blinds $${smallBlind}/$${bigBlind}`);
     gameState='preflop';let utg=(bb+1)%players.length,tries=0;
     while(tries<players.length&&(players[utg].folded||players[utg].allIn||players[utg].chips<=0)){utg=(utg+1)%players.length;tries++;}
-    currentPlayer=utg;setTimeout(()=>process(),1200);
+    currentPlayer=utg;const hid=handId;setTimeout(()=>process(hid),1200);
   },400);
 }
 
 function isRoundOver(){const ap=players.filter(p=>!p.folded&&!p.allIn&&p.chips>0);
   if(ap.length===0)return true;return ap.every(p=>actedThisRound.has(players.indexOf(p))&&p.bet>=currentBet);}
 
-function process(){
-  if(!gameActive)return;
+function process(hid){
+  if(!gameActive||hid!==handId)return;
   if(countNotFolded()<=1){awardPot();return;}
   if(isRoundOver()){advStreet();return;}
   const p=players[currentPlayer];
   if(p.folded||p.allIn||p.chips<=0||(actedThisRound.has(currentPlayer)&&p.bet>=currentBet)){
-    currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(),60);return;}
+    currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(handId),60);return;}
   if(p.isHuman){waitingForHuman=true;showUI();}
   else{waitingForHuman=false;hideUI();
-    const d=getDecision(p,false);
-    setTimeout(()=>{execAction(currentPlayer,d.action,d.amount);currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(),300);
+    const d=getDecision(p,false);const hid2=handId;
+    setTimeout(()=>{if(hid2!==handId)return;execAction(currentPlayer,d.action,d.amount);currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(handId),300);
     },400+Math.random()*400);}
 }
 
@@ -753,7 +756,7 @@ function hideUI(){document.getElementById('bottomBar').style.display='none';}
 
 function doAction(a){if(!waitingForHuman)return;waitingForHuman=false;hideUI();
   let amt=0;if(a==='raise')amt=parseInt(document.getElementById('rSlider').value);
-  execAction(0,a,amt);currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(),300);}
+  execAction(0,a,amt);currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(handId),300);}
 
 function execAction(i,action,amount){
   const p=players[i],pos=ppos(i,players.length);actedThisRound.add(i);
@@ -781,7 +784,7 @@ function advStreet(){hideUI();players.forEach(p=>p.bet=0);currentBet=0;lastRaise
   if(countNotFolded()<=1){awardPot();return;}
   let f=(dealerIdx+1)%players.length,t=0;
   while(t<players.length&&(players[f].folded||players[f].allIn||players[f].chips<=0)){f=(f+1)%players.length;t++;}
-  currentPlayer=f;setTimeout(()=>process(),700);}
+  currentPlayer=f;setTimeout(()=>process(handId),700);}
 
 function doShowdown(){gameState='showdown';hideUI();
   while(communityCards.length<5){deck.pop();communityCards.push(deck.pop());revealedCards.push(communityCards.length-1);}
