@@ -288,65 +288,6 @@ function handTier(c,nOpp){
 // ============================================================
 //  HAND STRENGTH SCORE (0-100)
 // ============================================================
-function handScore(hand,board,nOpp){
-  if(board&&board.length>=3)return postflopScore(hand,board,nOpp);
-  return preflopScore(hand,nOpp);
-}
-
-function preflopScore(hand,nOpp){
-  const tier=handTier(hand,nOpp);
-  const hi=Math.max(hand[0].val,hand[1].val),lo=Math.min(hand[0].val,hand[1].val);
-  const suited=hand[0].suit===hand[1].suit,pair=hand[0].val===hand[1].val;
-  // Base ranges per tier
-  const ranges={8:[82,96],7:[72,84],6:[62,73],5:[52,63],4:[42,53],3:[34,44],2:[26,36],1:[15,28]};
-  const[rlo,rhi]=ranges[tier];
-  // Interpolate by card values
-  const cardVal=pair?(hi-2)/12:(hi+lo-4)/24;
-  let score=rlo+(rhi-rlo)*cardVal;
-  if(suited&&!pair)score+=2;
-  return Math.round(Math.max(5,Math.min(99,score)));
-}
-
-function postflopScore(hand,board,nOpp){
-  const ev=evalHand([...hand,...board]);
-  const outs=countOuts(hand,board);
-  const boardInfo=analyzeBoard(board);
-  // Base from made hand rank
-  const bases={10:99,9:97,8:94,7:88,6:82,5:75,4:67,3:56,2:35,1:18,0:10};
-  let score=bases[ev.rank]||10;
-  // Adjust pair quality — top pair vs bottom pair
-  if(ev.rank===2){
-    const boardVals=board.map(c=>c.val).sort((a,b)=>b-a);
-    const pairVal=hand[0].val===hand[1].val?hand[0].val:
-      (boardVals.includes(hand[0].val)?hand[0].val:hand[1].val);
-    if(pairVal>=boardVals[0])score+=8; // top pair
-    else if(pairVal>=boardVals[1])score+=3; // second pair
-    else score-=3; // bottom pair
-    // Kicker quality
-    const kicker=hand[0].val===pairVal?hand[1].val:hand[0].val;
-    score+=Math.max(0,(kicker-9)*1.5); // bonus for good kicker
-  }
-  // Two pair: top two vs bottom two
-  if(ev.rank===3){
-    const hiCard=Math.max(hand[0].val,hand[1].val);
-    if(hiCard>=12)score+=4; // top two pair
-  }
-  // Add draw equity
-  if(board.length<5&&outs>0){
-    const equity=board.length===3?outs*4:outs*2;
-    score+=equity*0.4;
-  }
-  // Board texture danger
-  if(boardInfo){
-    if(boardInfo.wetness>=3&&ev.rank<=2)score-=5; // wet board danger with weak hand
-    if(boardInfo.paired&&ev.rank<=2)score-=2; // someone might have trips
-  }
-  // Opponent count
-  if(nOpp<=1)score+=4;
-  else if(nOpp>=3)score-=4;
-  return Math.round(Math.max(5,Math.min(99,score)));
-}
-
 // ============================================================
 //  BOARD TEXTURE ANALYSIS
 // ============================================================
@@ -429,159 +370,126 @@ function countOuts(hand,board){
 }
 
 // ============================================================
+//  MONTE CARLO EQUITY — real win probability vs random opponents
+//  Deals random opponent hands + remaining board cards N times,
+//  counts wins/ties → returns 0-100 equity percentage.
+// ============================================================
+function mcEquity(hand, board, nOpp, nSims){
+  if(!hand||hand.length<2)return 50;
+  nOpp=Math.max(1,nOpp||1); nSims=nSims||150;
+  const used=new Set(hand.concat(board).map(c=>c.rank+c.suit));
+  const rem=[];
+  SUITS.forEach(s=>RANKS.forEach(r=>{if(!used.has(r+s))rem.push({suit:s,rank:r,val:RV[r]});}));
+  let wins=0,ties=0;
+  for(let sim=0;sim<nSims;sim++){
+    // Fisher-Yates shuffle
+    const r=[...rem];
+    for(let i=r.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[r[i],r[j]]=[r[j],r[i]];}
+    let idx=0;
+    // Complete board
+    const fb=[...board];while(fb.length<5)fb.push(r[idx++]);
+    // Evaluate our hand
+    const ourEv=evalHand([...hand,...fb]);
+    let dominated=false,isTie=false;
+    // Deal & evaluate each opponent
+    for(let o=0;o<nOpp;o++){
+      const oh=[r[idx++],r[idx++]];
+      const oppEv=evalHand([...oh,...fb]);
+      if(oppEv.rank>ourEv.rank||(oppEv.rank===ourEv.rank&&oppEv.val>ourEv.val)){dominated=true;break;}
+      else if(oppEv.rank===ourEv.rank&&oppEv.val===ourEv.val)isTie=true;
+    }
+    if(!dominated&&!isTie)wins++;
+    else if(!dominated&&isTie)ties++;
+  }
+  return Math.round((wins+ties*0.5)/nSims*100);
+}
+
+// ============================================================
 //  SMART AI + COACH ENGINE
 // ============================================================
-function getDecision(p,forTip){
+function getDecision(p,forTip,eq){
+  // eq = Monte Carlo equity (0-100), passed in from caller
   const canCheck=p.bet>=currentBet;
   const callAmt=Math.min(currentBet-p.bet,p.chips);
   const potAfterCall=pot+callAmt;
   const potOdds=callAmt>0?callAmt/potAfterCall:0;
   const nOpp=countNotFolded()-1;
-  const score=handScore(p.hand,communityCards.length>=3?communityCards:null,nOpp);
+  const isShortStack=p.chips<=bigBlind*5;
+  const isRiver=gameState==='river';
+  const ev=communityCards.length>=3?evalHand([...p.hand,...communityCards]):null;
   const bt=analyzeBoard(communityCards);
   const oppRead=communityCards.length>=3?opponentRead(communityCards,p.hand,nOpp):'';
 
-  // *** GOLDEN RULE: NEVER fold when you can check! ***
-  // Free information is always worth taking.
-
-  // === POSTFLOP ===
-  if(gameState!=='preflop'&&communityCards.length>=3){
-    const ev=evalHand([...p.hand,...communityCards]);
-    const outs=countOuts(p.hand,communityCards);
-    const equity=communityCards.length===3?outs*4/100:outs*2/100;
-    const hi=Math.max(p.hand[0].val,p.hand[1].val),lo=Math.min(p.hand[0].val,p.hand[1].val);
-    const suited=p.hand[0].suit===p.hand[1].suit;
-    const handDesc=p.hand[0].val===p.hand[1].val?`Pair of ${RANKS[hi-2]}s`:`${p.hand[0].rank}${p.hand[0].suit}${p.hand[1].rank}${p.hand[1].suit}`;
-
-    // Monster (trips+): value bet / raise
-    if(ev.rank>=4){
-      const raiseAmt=Math.min(currentBet+Math.floor(pot*0.7),p.chips+p.bet);
-      const isRiver=gameState==='river';
-      // On the river: ALWAYS bet/raise — no more cards coming, get value now!
-      // Pre-river: occasionally slow-play to trap
-      if(canCheck&&(isRiver||Math.random()<0.75))return{action:'raise',amount:raiseAmt,score,
-        tip:'RAISE',reason:isRiver?`${ev.name} on the river! Bet big for value — no more cards coming!`:`${ev.name}! Build the pot. ${oppRead}`};
-      if(!canCheck)return{action:callAmt>p.chips*0.5&&ev.rank>=6?'allin':'call',score,
-        tip:callAmt>p.chips*0.5?'ALL IN':`CALL $${callAmt}`,reason:`${ev.name} is very strong — stay in! ${oppRead}`};
-      return{action:'check',score,tip:'CHECK',reason:`${ev.name} — slow-play and trap them! ${oppRead}`};
-    }
-    // Two pair
-    if(ev.rank===3){
-      if(canCheck){
-        const ra=Math.min(currentBet+bigBlind*3,p.chips+p.bet);
-        const isRiver2=gameState==='river';
-        return (isRiver2||Math.random()<0.5)?{action:'raise',amount:ra,score,tip:'RAISE',reason:isRiver2?`Two Pair! Bet for value on the river!`:`Two Pair — bet to protect. ${oppRead}`}:
-          {action:'check',score,tip:'CHECK',reason:`Two Pair — trap them, then raise! ${oppRead}`};
-      }
-      if(callAmt<=pot*0.75)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Two Pair is worth the call. ${oppRead}`};
-      return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Two Pair — worth it but stay alert. ${oppRead}`};
-    }
-    // One pair
-    if(ev.rank===2){
-      const boardVals=communityCards.map(c=>c.val).sort((a,b)=>b-a);
-      const pairVal=p.hand[0].val===p.hand[1].val?p.hand[0].val:
-        (boardVals.includes(p.hand[0].val)?p.hand[0].val:p.hand[1].val);
-      const isTopPair=pairVal>=boardVals[0];
-      const isOverpair=p.hand[0].val===p.hand[1].val&&p.hand[0].val>boardVals[0];
-      if(canCheck){
-        if(isOverpair||isTopPair){
-          return Math.random()<0.4?
-            {action:'raise',amount:Math.min(currentBet+Math.floor(pot*0.5),p.chips+p.bet),score,tip:'RAISE',reason:`${isOverpair?'Overpair':'Top Pair'}! Bet for value. ${oppRead}`}:
-            {action:'check',score,tip:'CHECK',reason:`${isOverpair?'Overpair':'Top Pair'} — solid hand, control the pot. ${oppRead}`};
-        }
-        return{action:'check',score,tip:'CHECK',reason:`Bottom pair — check and see what happens. ${oppRead}`};
-      }
-      if(isOverpair||isTopPair){
-        if(callAmt<=pot)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`${isOverpair?'Overpair':'Top Pair'} is worth a call. ${oppRead}`};
-        if(callAmt>p.chips*0.5)return{action:'fold',score,tip:'FOLD',reason:`Even with ${isTopPair?'Top':'a'} Pair, $${callAmt} is too much. They probably have you beat.`};
-        return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Top Pair — call but be cautious. ${oppRead}`};
-      }
-      if(callAmt<=bigBlind*2)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Weak pair but cheap to see. ${oppRead}`};
-      return{action:'fold',score,tip:'FOLD',reason:`Bottom pair facing a big bet. Save your chips for a better spot.`};
-    }
-    // Drawing hands (flush/straight draw)
-    if(outs>=8){
-      if(canCheck){
-        return Math.random()<0.15?
-          {action:'raise',amount:Math.min(currentBet+Math.floor(pot*0.5),p.chips+p.bet),score,tip:'RAISE',reason:`Semi-bluff! ${outs} outs (${(equity*100).toFixed(0)}% chance). They might fold! ${oppRead}`}:
-          {action:'check',score,tip:'CHECK',reason:`Drawing hand — ${outs} outs = ${(equity*100).toFixed(0)}% chance. Free card! ${oppRead}`};
-      }
-      if(equity>potOdds)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Good draw! ${outs} outs = ${(equity*100).toFixed(0)}% to hit. Pot odds say call. ${oppRead}`};
-      if(callAmt<=bigBlind*2)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Draw with ${outs} outs — cheap enough to chase. ${oppRead}`};
-      return{action:'fold',score,tip:'FOLD',reason:`Draw odds (${(equity*100).toFixed(0)}%) don't justify $${callAmt}. ${oppRead}`};
-    }
-    // Small draw (4-7 outs)
-    if(outs>=4){
-      if(canCheck)return{action:'check',score,tip:'CHECK',reason:`Small draw (${outs} outs, ${(equity*100).toFixed(0)}%). Check for a free card. ${oppRead}`};
-      if(callAmt<=bigBlind)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Small draw — $${callAmt} is cheap enough. ${oppRead}`};
-      return{action:'fold',score,tip:'FOLD',reason:`Only ${outs} outs (${(equity*100).toFixed(0)}%) — not worth $${callAmt}.`};
-    }
-    // Nothing / high card only
-    if(canCheck){
-      // Occasionally bluff on dry boards heads-up
-      if(bt&&bt.type==='dry'&&nOpp<=1&&Math.random()<0.15){
-        return{action:'raise',amount:Math.min(currentBet+Math.floor(pot*0.5),p.chips+p.bet),score,
-          tip:'RAISE',reason:`Nothing — but dry board, try a bluff! They probably missed too.`};
-      }
-      return{action:'check',score,tip:'CHECK',reason:`Weak hand — check for free. ${oppRead}`};
-    }
-    if(callAmt<=bigBlind&&Math.random()<0.3)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Only $${callAmt} — worth a peek. ${oppRead}`};
-    // Bluff detection hint
-    if(bt&&bt.type==='dry'&&nOpp<=1&&callAmt<=bigBlind*3){
-      return Math.random()<0.3?
-        {action:'call',score,tip:`CALL $${callAmt}`,reason:`Dry board — they could be bluffing! Worth a call.`}:
-        {action:'fold',score,tip:'FOLD',reason:`Nothing here, $${callAmt} to call. They might have it.`};
-    }
-    return{action:'fold',score,tip:'FOLD',reason:`Nothing and it costs $${callAmt}. Fold and wait for better cards.`};
-  }
-
-  // === PREFLOP ===
-  const tier=handTier(p.hand,nOpp);
+  // Hand description
   const hi=Math.max(p.hand[0].val,p.hand[1].val),lo=Math.min(p.hand[0].val,p.hand[1].val);
   const pair=p.hand[0].val===p.hand[1].val,suited=p.hand[0].suit===p.hand[1].suit;
-  const handDesc=pair?`Pair of ${RANKS[hi-2]}s`:`${RANKS[hi-2]}-${RANKS[lo-2]}${suited?' suited':''}`;
-  const huNote=nOpp<=1?' (heads-up = play wider!)':'';
+  const handName=ev&&ev.rank>=2?ev.name:(pair?'Pair of '+RANKS[hi-2]+'s':p.hand[0].rank+p.hand[0].suit+' '+p.hand[1].rank+p.hand[1].suit);
+  const pctTxt=eq+'%';
 
-  // Premium (tier 7-8): always raise
-  if(tier>=7){
-    const ra=Math.min(currentBet+bigBlind*3,p.chips+p.bet);
-    if(canCheck)return{action:'raise',amount:ra,score,tip:'RAISE',reason:`${handDesc} — premium hand! Raise big.${huNote}`};
-    if(callAmt>=p.chips*0.3)return{action:'allin',score,tip:'ALL IN',reason:`${handDesc} — one of the best hands. Go for it!${huNote}`};
-    return{action:'raise',amount:ra,score,tip:'RAISE',reason:`${handDesc} — strong! Raise to show strength.${huNote}`};
+  // *** GOLDEN RULE: NEVER fold when you can check ***
+
+  // === FACING ALL-IN or HUGE BET ===
+  if(callAmt>=p.chips*0.7&&!canCheck){
+    if(eq>=70)return{action:'call',score:eq,tip:'CALL $'+callAmt,reason:pctTxt+' equity — strong enough to call their big bet! '+oppRead};
+    if(eq>=55&&isShortStack)return{action:'allin',score:eq,tip:'ALL IN',reason:'Short stack at '+pctTxt+'. Push or get blinded out!'};
+    if(eq>=50&&callAmt<=bigBlind*6)return{action:'call',score:eq,tip:'CALL $'+callAmt,reason:pctTxt+' — coin flip, but manageable risk.'};
+    return{action:'fold',score:eq,tip:'FOLD',reason:'Only '+pctTxt+' against their big bet. They likely have a strong hand.'};
   }
-  // Strong (tier 5-6): raise or call
-  if(tier>=5){
-    if(canCheck)return Math.random()<0.35?
-      {action:'raise',amount:Math.min(currentBet+bigBlind*2,p.chips+p.bet),score,tip:'RAISE',reason:`${handDesc} — solid hand. Raise to thin the field.${huNote}`}:
-      {action:'check',score,tip:'CHECK',reason:`${handDesc} — good hand, see the flop.${huNote}`};
-    if(callAmt<=bigBlind*3)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — worth seeing the flop for $${callAmt}.${huNote}`};
-    if(callAmt<=bigBlind*5&&nOpp<=2)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — playable with few opponents.${huNote}`};
-    return Math.random()<0.3?{action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — borderline. Call if you feel lucky.`}:
-      {action:'fold',score,tip:'FOLD',reason:`${handDesc} isn't strong enough for $${callAmt} with ${nOpp} opponents.`};
+
+  // === ALL-IN: only with overwhelming equity ===
+  if(!canCheck&&eq>=85&&callAmt>=p.chips*0.4){
+    return{action:'allin',score:eq,tip:'ALL IN',reason:handName+' — '+pctTxt+' win chance. You\'re a big favorite!'};
   }
-  // Speculative (tier 3-4): call small or check
-  if(tier>=3){
-    if(canCheck)return{action:'check',score,tip:'CHECK',reason:`${handDesc} — check and see a cheap flop.${huNote}`};
-    if(callAmt<=bigBlind*2)return Math.random()<(nOpp<=1?0.7:0.4)?
-      {action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — small price, could connect on the flop.${huNote}`}:
-      {action:'fold',score,tip:'FOLD',reason:`${handDesc} is marginal. Folding saves chips.`};
-    if(nOpp<=1&&callAmt<=bigBlind*4)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — heads-up, worth playing!`};
-    return{action:'fold',score,tip:'FOLD',reason:`${handDesc} isn't worth $${callAmt}${nOpp>=3?' against this many players':''}.`};
+
+  // === STRONG (65%+): raise for value ===
+  if(eq>=65){
+    const ra=Math.min(currentBet+Math.floor(pot*0.7),p.chips+p.bet);
+    if(canCheck&&(isRiver||Math.random()<0.8))return{action:'raise',amount:ra,score:eq,
+      tip:'RAISE',reason:isRiver?handName+' at '+pctTxt+'! Bet big on the river — no more cards!':handName+' — '+pctTxt+'. Build the pot! '+oppRead};
+    if(canCheck)return{action:'check',score:eq,tip:'CHECK',reason:handName+' — slow-play to trap. '+oppRead};
+    return{action:'call',score:eq,tip:'CALL $'+callAmt,reason:handName+' at '+pctTxt+' — strong, stay in! '+oppRead};
   }
-  // Weak (tier 1-2)
-  if(canCheck)return{action:'check',score,tip:'CHECK',reason:`${handDesc} — not great, but checking is free! You might pair up on the flop.`};
-  if(callAmt<=bigBlind&&nOpp<=1)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Only $${callAmt} heads-up — any hand can get lucky!`};
-  if(callAmt<=bigBlind)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — cheap to see. Could pair up!`};
-  return{action:'fold',score,tip:'FOLD',reason:`${handDesc} — weak kicker means even if you pair, you might lose. Save chips for a better spot.`};
+
+  // === GOOD (50-64%): raise sometimes, call ===
+  if(eq>=50){
+    if(canCheck)return Math.random()<0.3?
+      {action:'raise',amount:Math.min(currentBet+Math.floor(pot*0.45),p.chips+p.bet),score:eq,tip:'RAISE',reason:handName+' at '+pctTxt+'. Bet for value. '+oppRead}:
+      {action:'check',score:eq,tip:'CHECK',reason:handName+' at '+pctTxt+'. Solid hand, control the pot. '+oppRead};
+    if(callAmt<=pot*0.75)return{action:'call',score:eq,tip:'CALL $'+callAmt,reason:pctTxt+' equity — worth calling. '+oppRead};
+    if(callAmt<=bigBlind*4)return{action:'call',score:eq,tip:'CALL $'+callAmt,reason:handName+' at '+pctTxt+' — playable. '+oppRead};
+    return{action:'fold',score:eq,tip:'FOLD',reason:pctTxt+' equity but $'+callAmt+' is too much of your stack.'};
+  }
+
+  // === MEDIUM (35-49%): cautious play ===
+  if(eq>=35){
+    if(canCheck){
+      if(bt&&bt.type==='dry'&&nOpp<=1&&Math.random()<0.15)
+        return{action:'raise',amount:Math.min(currentBet+Math.floor(pot*0.5),p.chips+p.bet),score:eq,tip:'RAISE',reason:'Only '+pctTxt+' but dry board — try a bluff!'};
+      return{action:'check',score:eq,tip:'CHECK',reason:handName+' at '+pctTxt+'. Check and see what happens. '+oppRead};
+    }
+    if(eq/100>potOdds*1.1)return{action:'call',score:eq,tip:'CALL $'+callAmt,reason:pctTxt+' equity > pot odds ('+Math.round(potOdds*100)+'%). Math says call.'};
+    if(callAmt<=bigBlind*2)return{action:'call',score:eq,tip:'CALL $'+callAmt,reason:pctTxt+' — cheap enough to see. '+oppRead};
+    if(bt&&bt.type==='dry'&&nOpp<=1&&callAmt<=bigBlind*3)
+      return Math.random()<0.4?{action:'call',score:eq,tip:'CALL $'+callAmt,reason:'Dry board — they might be bluffing! '+oppRead}:
+        {action:'fold',score:eq,tip:'FOLD',reason:pctTxt+' — save chips for a better spot.'};
+    return{action:'fold',score:eq,tip:'FOLD',reason:pctTxt+' — not strong enough for $'+callAmt+'.'};
+  }
+
+  // === WEAK (<35%) ===
+  if(canCheck){
+    return{action:'check',score:eq,tip:'CHECK',reason:pctTxt+' — weak but checking is free! Might improve.'};
+  }
+  if(callAmt<=bigBlind&&Math.random()<0.3)return{action:'call',score:eq,tip:'CALL $'+callAmt,reason:'Only $'+callAmt+' — worth a shot.'};
+  return{action:'fold',score:eq,tip:'FOLD',reason:pctTxt+' — not worth $'+callAmt+'. Wait for better cards.'};
 }
 
 // Score badge color
 function scoreColor(s){
-  if(s>=75)return'#22c55e'; // green
-  if(s>=55)return'#84cc16'; // lime
-  if(s>=40)return'#f59e0b'; // amber
-  if(s>=25)return'#f97316'; // orange
-  return'#ef4444'; // red
+  if(s>=65)return'#22c55e'; // green — strong
+  if(s>=50)return'#84cc16'; // lime — good
+  if(s>=35)return'#f59e0b'; // amber — medium
+  if(s>=22)return'#f97316'; // orange — weak
+  return'#ef4444'; // red — very weak
 }
 
 // ============================================================
@@ -733,7 +641,8 @@ function process(hid){
     currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(handId),60);return;}
   if(p.isHuman){waitingForHuman=true;showUI();}
   else{waitingForHuman=false;hideUI();
-    const d=getDecision(p,false);const hid2=handId;
+    const nO=countNotFolded()-1;const aiEq=mcEquity(p.hand,communityCards,nO,120);
+    const d=getDecision(p,false,aiEq);const hid2=handId;
     setTimeout(()=>{if(hid2!==handId)return;execAction(currentPlayer,d.action,d.amount);currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(handId),300);
     },400+Math.random()*400);}
 }
@@ -742,13 +651,16 @@ function showUI(){
   const p=players[0];
   if(!p||!p.hand||p.hand.length<2){return;} // safety: don't show UI without valid hand
   const call=Math.min(currentBet-p.bet,p.chips),canCk=call<=0;
-  // Generate tip FIRST (before showing bar) so stale content never flashes
+  // Calculate real Monte Carlo equity for the human player
   let tip,sc;
-  try{tip=getDecision(p,true);sc=tip.score||50;}
-  catch(e){console.error('getDecision error:',e);tip={tip:'CHECK',reason:'Take your time.',score:50};sc=50;}
+  try{
+    const nO=countNotFolded()-1;
+    const eq=mcEquity(p.hand,communityCards,nO,180);
+    tip=getDecision(p,true,eq);sc=eq;
+  }catch(e){console.error('getDecision error:',e);tip={tip:'CHECK',reason:'Take your time.',score:50};sc=50;}
   // Update all content before making visible
   const badge=document.getElementById('scoreBadge');
-  badge.textContent=sc;badge.style.background=scoreColor(sc);
+  badge.textContent=sc+'%';badge.style.background=scoreColor(sc);
   document.getElementById('tipAct').textContent=tip.tip;
   document.getElementById('tipText').innerHTML='<span class="tipAct">'+tip.tip+'</span> — '+tip.reason;
   document.getElementById('btnCk').style.display=canCk?'block':'none';
