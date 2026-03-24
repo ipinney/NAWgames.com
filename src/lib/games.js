@@ -3,6 +3,24 @@
 
 const GAMES = [
   {
+    slug: 'dinosaur-jump',
+    title: 'Dinosaur Jump',
+    creator: 'Nolan',
+    description: 'A dinosaur runs through the desert jumping over cacti and ducking under pterodactyls! Survive 3 minutes to level up — each level gets faster. Collect stars and meat for bonus points. How many levels can you conquer?',
+    createdAt: '2026-03-24',
+    thumbnail: '/images/dinosaur-jump-preview.png',
+    color: 'from-green-500 to-amber-600',
+  },
+  {
+    slug: 'texas-holdem',
+    title: 'Texas Hold\'em',
+    creator: 'Ivan',
+    description: 'Play Texas Hold\'em poker against 4 animal opponents — Mustang, Fox, Bear, Eagle and Wolf! Start with $1,000, play smart, and try to win the whole table. Blinds go up every 5 hands!',
+    createdAt: '2026-03-24',
+    thumbnail: '/images/texas-holdem-preview.png',
+    color: 'from-emerald-600 to-yellow-500',
+  },
+  {
     slug: 'capybara-press',
     title: 'Capybara Press',
     creator: 'Addie',
