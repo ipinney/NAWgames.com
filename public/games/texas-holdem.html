@@ -5,524 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Texas Hold'em Poker School</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            touch-action: manipulation;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1400px;
-            display: flex;
-            gap: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        }
-
-        .poker-table-section {
-            flex: 1.85;
-            min-width: 0;
-        }
-
-        .coach-panel {
-            flex: 1;
-            background: linear-gradient(135deg, #0d2818 0%, #1a3d2a 100%);
-            border: 2px solid #4db8a8;
-            border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .coach-section {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .coach-label {
-            font-size: 13px;
-            font-weight: 700;
-            color: #4db8a8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .coach-content {
-            font-size: 14px;
-            color: #e0e0e0;
-            line-height: 1.5;
-        }
-
-        .hand-display {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffeb3b;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 12px;
-            border-radius: 8px;
-            border-left: 4px solid #ffeb3b;
-        }
-
-        .hand-description {
-            font-size: 12px;
-            color: #b0bec5;
-            margin-top: 4px;
-        }
-
-        .equity-meter {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .equity-bar {
-            width: 100%;
-            height: 30px;
-            background: #1a3d2a;
-            border: 2px solid #4db8a8;
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .equity-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #ff4444 0%, #ffbb33 40%, #4db8a8 70%, #00ff88 100%);
-            transition: width 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 8px;
-            font-weight: bold;
-            font-size: 12px;
-            color: #000;
-        }
-
-        .equity-percent {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-weight: bold;
-            font-size: 12px;
-            color: #e0e0e0;
-            z-index: 1;
-        }
-
-        .board-read {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 8px;
-            border-left: 4px solid #4db8a8;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .opponent-read {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 8px;
-            border-left: 4px solid #ff9800;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .coach-tip {
-            background: rgba(255, 235, 59, 0.15);
-            border: 2px solid #ffeb3b;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 13px;
-            line-height: 1.6;
-            color: #ffeb3b;
-            font-weight: 500;
-        }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: auto;
-        }
-
-        .action-button {
-            padding: 12px 16px;
-            font-size: 14px;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            touch-action: manipulation;
-        }
-
-        .action-button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        }
-
-        .action-button:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
-        .action-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-check {
-            background: linear-gradient(135deg, #4db8a8 0%, #2a9d8f 100%);
-            color: #000;
-            font-weight: bold;
-            grid-column: span 2;
-        }
-
-        .btn-call {
-            background: linear-gradient(135deg, #4db8a8 0%, #2a9d8f 100%);
-            color: #000;
-            font-weight: bold;
-        }
-
-        .btn-raise {
-            background: linear-gradient(135deg, #2196f3 0%, #1565c0 100%);
-            color: white;
-        }
-
-        .btn-fold {
-            background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
-            color: white;
-        }
-
-        .btn-allin {
-            background: linear-gradient(135deg, #ff9800 0%, #e65100 100%);
-            color: white;
-            font-weight: bold;
-            grid-column: span 2;
-        }
-
-        canvas {
-            display: block;
-            background: linear-gradient(135deg, #0d5f3f 0%, #0a4620 100%);
-            border: 3px solid #4db8a8;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            touch-action: none;
-            pointer-events: none;
-        }
-
-        .start-screen {
-            text-align: center;
-            padding: 40px;
-            background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
-            border-radius: 20px;
-            max-width: 500px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        }
-
-        .game-title {
-            font-size: 48px;
-            font-weight: 900;
-            color: #ffeb3b;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        }
-
-        .game-subtitle {
-            font-size: 20px;
-            color: #4db8a8;
-            margin-bottom: 30px;
-            font-weight: 500;
-        }
-
-        .rules-box {
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid #4db8a8;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-            text-align: left;
-            font-size: 14px;
-            line-height: 1.8;
-            color: #e0e0e0;
-        }
-
-        .rules-box h3 {
-            color: #ffeb3b;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .player-count-selector {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        .player-count-btn {
-            width: 50px;
-            height: 50px;
-            font-size: 16px;
-            font-weight: bold;
-            border: 2px solid #4db8a8;
-            background: rgba(77, 184, 168, 0.2);
-            color: #4db8a8;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            touch-action: manipulation;
-        }
-
-        .player-count-btn:hover {
-            background: #4db8a8;
-            color: #000;
-        }
-
-        .player-count-btn.selected {
-            background: #4db8a8;
-            color: #000;
-            font-weight: bold;
-        }
-
-        .start-button {
-            width: 100%;
-            padding: 18px 30px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #000;
-            background: linear-gradient(135deg, #ffeb3b 0%, #fbc02d 100%);
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            touch-action: manipulation;
-        }
-
-        .start-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .start-button:active {
-            transform: translateY(-1px);
-        }
-
-        .hand-result {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #1a472a 0%, #0d2818 100%);
-            border: 3px solid #4db8a8;
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            z-index: 1000;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
-            max-width: 400px;
-        }
-
-        .hand-result h2 {
-            color: #ffeb3b;
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
-
-        .hand-result p {
-            color: #e0e0e0;
-            font-size: 16px;
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
-
-        .winning-hand {
-            background: rgba(255, 235, 59, 0.1);
-            border: 2px solid #ffeb3b;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            font-size: 18px;
-            color: #ffeb3b;
-            font-weight: bold;
-        }
-
-        .next-hand-btn {
-            margin-top: 20px;
-            padding: 15px 30px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #000;
-            background: linear-gradient(135deg, #ffeb3b 0%, #fbc02d 100%);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            touch-action: manipulation;
-        }
-
-        .next-hand-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .chip-count {
-            font-size: 13px;
-            color: #ffeb3b;
-            margin-top: 4px;
-            font-weight: bold;
-        }
-
-        .waiting-message {
-            background: rgba(77, 184, 168, 0.2);
-            border: 2px solid #4db8a8;
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-            color: #4db8a8;
-            font-weight: 500;
-            margin-top: 10px;
-        }
-
-        .current-pot {
-            background: rgba(255, 235, 59, 0.1);
-            border: 2px solid #ffeb3b;
-            border-radius: 8px;
-            padding: 10px;
-            color: #ffeb3b;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .coach-panel.hidden {
-            display: none;
-        }
-
-        @media (max-width: 1024px) {
-            .container {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .poker-table-section {
-                flex: 1;
-            }
-
-            .coach-panel {
-                flex: 1;
-                max-height: 400px;
-                overflow-y: auto;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .game-title {
-                font-size: 36px;
-            }
-
-            .action-buttons {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .coach-panel {
-                max-height: 350px;
-            }
-
-            .container {
-                padding: 15px;
-                gap: 10px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .game-title {
-                font-size: 28px;
-            }
-
-            .game-subtitle {
-                font-size: 16px;
-            }
-
-            .start-screen {
-                padding: 25px;
-            }
-
-            .container {
-                padding: 10px;
-                flex-direction: column;
-            }
-
-            .coach-panel {
-                max-height: 300px;
-                padding: 15px;
-            }
-
-            .action-button {
-                padding: 10px 12px;
-                font-size: 12px;
-            }
-
-            .coach-label {
-                font-size: 11px;
-            }
-
-            .coach-content {
-                font-size: 12px;
-            }
-
-            .hand-display {
-                font-size: 16px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 10px; }
+        .container { width: 100%; max-width: 1500px; display: flex; gap: 20px; background: rgba(0, 0, 0, 0.2); border-radius: 20px; padding: 20px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7); }
+        .poker-table-section { flex: 2; min-width: 0; }
+        .coach-panel { flex: 1; background: linear-gradient(135deg, #1a1f3a 0%, #16213e 100%); border: 2px solid #00d4ff; border-radius: 15px; padding: 20px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 8px 32px rgba(0, 212, 255, 0.15); overflow-y: auto; max-height: 90vh; }
+        .coach-section { display: flex; flex-direction: column; gap: 10px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(0, 128, 255, 0.05) 100%); padding: 12px; border-radius: 10px; border: 1px solid rgba(0, 212, 255, 0.2); }
+        .coach-label { font-size: 12px; font-weight: 700; color: #00d4ff; text-transform: uppercase; letter-spacing: 1.5px; }
+        .hand-display { font-size: 20px; font-weight: bold; color: #ffd700; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%); padding: 14px; border-radius: 8px; border: 2px solid #ffd700; text-align: center; letter-spacing: 2px; }
+        .hand-description { font-size: 12px; color: #a0d8ff; text-align: center; }
+        .equity-bar { width: 100%; height: 50px; background: linear-gradient(135deg, #0a1f3a 0%, #0d2848 100%); border: 2px solid #00d4ff; border-radius: 10px; overflow: hidden; position: relative; }
+        .equity-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #ff4444 0%, #ff9944 25%, #ffdd44 50%, #44ff44 75%, #00ff88 100%); transition: width 0.3s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; font-weight: bold; font-size: 14px; color: #000; }
+        .equity-percent { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-weight: bold; font-size: 16px; color: #fff; z-index: 1; }
+        .board-read { background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 128, 255, 0.08) 100%); padding: 12px; border-radius: 8px; border-left: 4px solid #00d4ff; font-size: 12px; line-height: 1.6; color: #e8f0ff; }
+        .opponent-read { background: linear-gradient(135deg, rgba(255, 165, 0, 0.08) 0%, rgba(255, 140, 0, 0.08) 100%); padding: 12px; border-radius: 8px; border-left: 4px solid #ff9800; font-size: 12px; line-height: 1.6; color: #ffe8cc; }
+        .coach-tip { background: linear-gradient(135deg, rgba(255, 235, 59, 0.12) 0%, rgba(255, 200, 59, 0.08) 100%); border: 2px solid #ffeb3b; border-radius: 10px; padding: 14px; font-size: 12px; line-height: 1.7; color: #ffeb3b; font-weight: 500; }
+        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; }
+        .action-button { padding: 12px 14px; font-size: 13px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        .action-button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4); }
+        .action-button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-check { background: linear-gradient(135deg, #00d4ff 0%, #0088ff 100%); color: #000; grid-column: span 2; }
+        .btn-call { background: linear-gradient(135deg, #00d4ff 0%, #0088ff 100%); color: #000; }
+        .btn-raise { background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%); color: #000; }
+        .btn-fold { background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%); color: white; }
+        .btn-allin { background: linear-gradient(135deg, #ff6b9d 0%, #ff1744 100%); color: white; grid-column: span 2; }
+        canvas { display: block; background: linear-gradient(135deg, #1a4d2e 0%, #0f3d1a 100%); border: 4px solid #00d4ff; border-radius: 15px; width: 100%; height: auto; aspect-ratio: 4/3; box-shadow: 0 8px 32px rgba(0, 212, 255, 0.25); }
+        .start-screen { text-align: center; padding: 50px 40px; background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); border: 3px solid #00d4ff; border-radius: 25px; max-width: 550px; box-shadow: 0 12px 48px rgba(0, 212, 255, 0.3); }
+        .game-title { font-size: 56px; font-weight: 900; background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px; letter-spacing: 2px; }
+        .game-subtitle { font-size: 20px; color: #00d4ff; margin-bottom: 35px; font-weight: 600; letter-spacing: 1px; }
+        .rules-box { background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 128, 255, 0.1) 100%); border: 2px solid #00d4ff; border-radius: 12px; padding: 24px; margin-bottom: 30px; text-align: left; font-size: 14px; line-height: 1.9; color: #e8f0ff; }
+        .rules-box h3 { color: #ffd700; margin-bottom: 14px; font-size: 16px; letter-spacing: 1px; }
+        .rules-box p { margin-bottom: 8px; }
+        .player-count-selector { display: flex; justify-content: center; gap: 10px; margin: 25px 0; flex-wrap: wrap; }
+        .player-count-btn { width: 56px; height: 56px; font-size: 18px; font-weight: bold; border: 3px solid #ffd700; background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 170, 0, 0.15) 100%); color: #ffd700; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1); }
+        .player-count-btn:hover { background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%); color: #000; transform: scale(1.05); box-shadow: 0 6px 16px rgba(255, 215, 0, 0.3); }
+        .player-count-btn.selected { background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%); color: #000; box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4); }
+        .start-button { width: 100%; padding: 18px 30px; font-size: 18px; font-weight: bold; color: #000; background: linear-gradient(135deg, #00d4ff 0%, #0088ff 100%); border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1.5px; box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3); }
+        .start-button:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0, 212, 255, 0.5); }
+        .start-button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .hand-result { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); border: 4px solid #ffd700; border-radius: 20px; padding: 50px 40px; text-align: center; z-index: 1000; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.8); max-width: 420px; animation: popIn 0.3s ease; }
+        @keyframes popIn { 0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+        .hand-result h2 { background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 32px; margin-bottom: 20px; }
+        .hand-result p { color: #e8f0ff; font-size: 16px; margin-bottom: 12px; line-height: 1.6; }
+        .winning-hand { background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 170, 0, 0.15) 100%); border: 2px solid #ffd700; padding: 18px; border-radius: 10px; margin: 24px 0; font-size: 18px; color: #ffd700; font-weight: bold; letter-spacing: 1px; }
+        .next-hand-btn { margin-top: 24px; padding: 14px 28px; font-size: 16px; font-weight: bold; color: #000; background: linear-gradient(135deg, #00d4ff 0%, #0088ff 100%); border: none; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 6px 16px rgba(0, 212, 255, 0.3); }
+        .next-hand-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4); }
+        .hidden { display: none !important; }
+        .waiting-message { background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 128, 255, 0.15) 100%); border: 2px solid #00d4ff; border-radius: 10px; padding: 14px; text-align: center; color: #00d4ff; font-weight: 600; margin-top: 10px; }
+        .current-pot { background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 170, 0, 0.15) 100%); border: 2px solid #ffd700; border-radius: 10px; padding: 14px; color: #ffd700; font-weight: bold; text-align: center; margin-bottom: 10px; font-size: 18px; }
+        .current-pot > div:first-child { font-size: 11px; color: #b8d4ff; margin-bottom: 4px; }
+        .coach-panel.hidden { display: none; }
+        @media (max-width: 1200px) { .container { flex-direction: column; } .coach-panel { max-height: 350px; } }
+        @media (max-width: 768px) { .game-title { font-size: 40px; } canvas { aspect-ratio: auto; min-height: 300px; } }
+        @media (max-width: 480px) { .game-title { font-size: 32px; } .player-count-btn { width: 50px; height: 50px; } }
     </style>
 </head>
 <body>
     <div id="startScreen" class="start-screen">
-        <div class="game-title">♠ Texas Hold'em ♠</div>
-        <div class="game-subtitle">Poker School for Kids</div>
-
+        <div class="game-title">♠ POKER ♠</div>
+        <div class="game-subtitle">Texas Hold'em School</div>
         <div class="rules-box">
             <h3>How to Play</h3>
-            <p>• Each player gets 2 cards (hidden from others)</p>
-            <p>• 5 community cards are revealed over 4 betting rounds</p>
-            <p>• Make the best 5-card hand from your 2 + 5 community cards</p>
-            <p>• The Coach Panel helps you understand the game!</p>
+            <p>• Each player gets 2 secret cards</p>
+            <p>• 5 community cards reveal over betting rounds</p>
+            <p>• Make the best 5-card hand from your 2 + 5 cards</p>
+            <p>• Coach Panel teaches you every step!</p>
         </div>
-
-        <div style="color: #4db8a8; margin-bottom: 20px; font-weight: 500;">How many players? (2-6)</div>
+        <div style="color: #00d4ff; margin-bottom: 20px; font-weight: 600; letter-spacing: 1px;">SELECT PLAYER COUNT (2-6)</div>
         <div class="player-count-selector">
             <button class="player-count-btn" data-count="2">2</button>
             <button class="player-count-btn" data-count="3">3</button>
@@ -530,62 +79,48 @@
             <button class="player-count-btn" data-count="5">5</button>
             <button class="player-count-btn" data-count="6">6</button>
         </div>
-
-        <button class="start-button" id="dealButton" disabled>Deal Me In!</button>
+        <button class="start-button" id="dealButton" disabled>DEAL ME IN!</button>
     </div>
 
     <div id="gameScreen" class="container hidden">
         <div class="poker-table-section">
-            <canvas id="pokertable" width="800" height="600"></canvas>
+            <canvas id="pokertable"></canvas>
         </div>
-
         <div id="coachPanel" class="coach-panel">
-            <div class="current-pot">
-                <div style="font-size: 11px; color: #b0bec5; margin-bottom: 3px;">CURRENT POT</div>
-                <div id="potDisplay">$0</div>
-            </div>
-
+            <div class="current-pot"><div>CURRENT POT</div><div id="potDisplay">$0</div></div>
             <div class="coach-section">
                 <div class="coach-label">Your Hand</div>
                 <div class="hand-display" id="handDisplay">—</div>
                 <div class="hand-description" id="handDescription">Waiting for cards...</div>
             </div>
-
             <div class="coach-section">
                 <div class="coach-label">Win Chance</div>
-                <div class="equity-meter">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
                     <div class="equity-bar">
                         <div class="equity-fill" id="equityFill"></div>
                         <div class="equity-percent" id="equityPercent">—</div>
                     </div>
                 </div>
             </div>
-
             <div class="coach-section">
                 <div class="coach-label">Board Read</div>
                 <div class="board-read" id="boardRead">—</div>
             </div>
-
             <div class="coach-section">
                 <div class="coach-label">They Might Have</div>
                 <div class="opponent-read" id="opponentRead">—</div>
             </div>
-
             <div class="coach-section">
-                <div class="coach-label">🎓 Coach Says</div>
-                <div class="coach-tip" id="coachTip">Pay attention to your hand strength and the cards on the board!</div>
+                <div class="coach-label">Coach Says</div>
+                <div class="coach-tip" id="coachTip">Watch your hand strength and the board!</div>
             </div>
-
             <div class="coach-section">
                 <div class="coach-label">Your Action</div>
                 <div class="action-buttons" id="actionButtons">
-                    <button class="action-button btn-check" id="checkBtn">CHECK ✓</button>
+                    <button class="action-button btn-check" id="checkBtn">CHECK</button>
                 </div>
             </div>
-
-            <div class="waiting-message" id="waitingMessage" style="display: none;">
-                Waiting for other players...
-            </div>
+            <div class="waiting-message" id="waitingMessage" style="display: none;">Waiting for opponents...</div>
         </div>
     </div>
 
@@ -621,128 +156,11 @@
 
         // ==================== EDUCATIONAL TIPS ====================
         const educationalTips = [
-            {
-                title: "Hand Strength",
-                tips: [
-                    "A-K is the best starting hand. It's called 'Big Slick' and can make a straight or two pair!",
-                    "A-A is the best pair you can get — always play it! You have a huge head start.",
-                    "Pairs are strong. Even small pairs like 2-2 can win if nothing scary appears on the board.",
-                    "Ace-Ten is a strong hand — top 15% of all starting hands! It can make a big straight.",
-                    "Face cards (K, Q, J) are valuable. They often win even if they don't pair.",
-                    "Connected cards like 9-8 are good because they can make straights. You have more ways to win!",
-                    "Suited cards (same color) are worth more because you could make a flush."
-                ]
-            },
-            {
-                title: "Position",
-                tips: [
-                    "Position is like superpowers! If you act last, you see what everyone does first.",
-                    "The dealer button moves around. If you're on the button, that's the best position.",
-                    "Don't play weak hands early — you'll have to act first, and that's dangerous.",
-                    "Late position means you can play more hands because you have more information.",
-                    "UTG means 'Under The Gun' — you're first to act. Be extra careful here!"
-                ]
-            },
-            {
-                title: "Pot Odds",
-                tips: [
-                    "Pot odds means comparing how much you need to pay vs. how much you could win.",
-                    "If the pot is $60 and it costs $10 to call, you're getting 6 to 1 odds. That's great!",
-                    "With good odds and a good draw, you should call and see the next card.",
-                    "If you're getting 2 to 1 odds, the pot must be twice the cost to call. Check the math!",
-                    "Sometimes you'll call to hit your draw. That's using pot odds!"
-                ]
-            },
-            {
-                title: "Board Texture",
-                tips: [
-                    "A 'wet' board means lots of cards can help you — like when three cards are close together.",
-                    "A 'dry' board is boring — cards don't work well together. It's harder to make hands.",
-                    "A paired board means one rank appears twice. Someone might have three of a kind!",
-                    "A flush draw means four cards of the same suit are on the board. One more makes a flush!",
-                    "A straight draw means four cards could make a straight. One card completes it!"
-                ]
-            },
-            {
-                title: "Bluffing",
-                tips: [
-                    "A bluff is pretending you have a strong hand when you don't. It's advanced!",
-                    "Don't bluff beginners — they often call anyway. Bluff smart players!",
-                    "Semi-bluff means you have a draw that could improve. You have two ways to win!",
-                    "Bluff when the board is scary and your opponent might fold.",
-                    "Don't bluff too much or everyone will know you're faking!"
-                ]
-            },
-            {
-                title: "Hand Reading",
-                tips: [
-                    "Watch how people bet. Strong hands usually come with confident bets.",
-                    "A big bet might mean a strong hand — or it might be a bluff. Think about their style!",
-                    "Quick decisions often mean weak hands. Strong hands need thought.",
-                    "If someone keeps checking, they might be afraid. Their hand is probably weak.",
-                    "Try to figure out the range of hands your opponent might have."
-                ]
-            },
-            {
-                title: "Bet Sizing",
-                tips: [
-                    "A big bet scares people. A small bet doesn't mean much.",
-                    "Bet about half the pot to seem confident but not crazy.",
-                    "If you have a strong hand, bet bigger so you win more chips!",
-                    "If you're bluffing, a bigger bet is sometimes better — it looks more confident.",
-                    "Small bets are great when you want someone to call (like with a strong hand)."
-                ]
-            },
-            {
-                title: "River Play",
-                tips: [
-                    "On the river, no more cards are coming. This is the final showdown!",
-                    "If you have a strong hand on the river, RAISE or bet! Don't slow-play.",
-                    "Slow-playing means betting small with a strong hand. That's usually a mistake on the river.",
-                    "On the river, either bet strong or fold. Checking is usually weak.",
-                    "If you're beaten, fold quickly. Don't throw more chips away."
-                ]
-            },
-            {
-                title: "All-In Strategy",
-                tips: [
-                    "Going all-in means pushing all your chips in. It's a big move!",
-                    "Only go all-in with a very strong hand or a great draw.",
-                    "If someone goes all-in, they might have a great hand OR be bluffing. Think hard!",
-                    "Don't go all-in just for excitement. Protect your chips!",
-                    "All-in is powerful in late stages when chips are scarce."
-                ]
-            },
-            {
-                title: "Fold Smartly",
-                tips: [
-                    "Folding means giving up your hand. It's not giving up — it's smart!",
-                    "Fold weak hands early to save your chips for good hands.",
-                    "Fold if you think your opponent has you beaten. Protect your stack!",
-                    "Don't chase losses. If you're behind, folding is the right move.",
-                    "Great players fold a lot. They only play the best hands."
-                ]
-            },
-            {
-                title: "Starting Hands",
-                tips: [
-                    "Pairs and high cards (A-K) are your best friends.",
-                    "In early position, play only the top 10% of hands.",
-                    "In late position, you can play more hands because you have position.",
-                    "K-Q is strong but not as good as A-K. Still a premium hand!",
-                    "Weak hands like 7-2 are the worst. Fold them almost always!"
-                ]
-            },
-            {
-                title: "Aggression",
-                tips: [
-                    "Aggressive play wins money! Bet and raise when you have good hands.",
-                    "Passive play (checking and calling) usually loses. Be bold!",
-                    "But don't be reckless. Aggression is betting when you have a reason.",
-                    "Steal blinds with aggressive bets when the table is weak.",
-                    "Aggression combined with good hands = winning poker!"
-                ]
-            }
+            { title: "Hand Strength", tips: ["A-K is the best starting hand. It's called 'Big Slick' and can make a straight or two pair!", "A-A is the best pair you can get — always play it! You have a huge head start.", "Pairs are strong. Even small pairs like 2-2 can win if nothing scary appears on the board.", "Ace-Ten is a strong hand — top 15% of all starting hands! It can make a big straight.", "Face cards (K, Q, J) are valuable. They often win even if they don't pair.", "Connected cards like 9-8 are good because they can make straights. You have more ways to win!", "Suited cards (same color) are worth more because you could make a flush."] },
+            { title: "Position", tips: ["Position is like superpowers! If you act last, you see what everyone does first.", "The dealer button moves around. If you're on the button, that's the best position.", "Don't play weak hands early — you'll have to act first, and that's dangerous.", "Late position means you can play more hands because you have more information.", "UTG means 'Under The Gun' — you're first to act. Be extra careful here!"] },
+            { title: "Pot Odds", tips: ["Pot odds means comparing how much you need to pay vs. how much you could win.", "If the pot is $60 and it costs $10 to call, you're getting 6 to 1 odds. That's great!", "With good odds and a good draw, you should call and see the next card.", "If you're getting 2 to 1 odds, the pot must be twice the cost to call. Check the math!", "Sometimes you'll call to hit your draw. That's using pot odds!"] },
+            { title: "Board Texture", tips: ["A 'wet' board means lots of cards can help you — like when three cards are close together.", "A 'dry' board is boring — cards don't work well together. It's harder to make hands.", "A paired board means one rank appears twice. Someone might have three of a kind!", "A flush draw means four cards of the same suit are on the board. One more makes a flush!", "A straight draw means four cards could make a straight. One card completes it!"] },
+            { title: "River Play", tips: ["On the river, no more cards are coming. This is the final showdown!", "If you have a strong hand on the river, RAISE or bet! Don't slow-play.", "Slow-playing means betting small with a strong hand. That's usually a mistake on the river.", "On the river, either bet strong or fold. Checking is usually weak.", "If you're beaten, fold quickly. Don't throw more chips away."] }
         ];
 
         // ==================== AUDIO ENGINE ====================
@@ -757,7 +175,6 @@
             try {
                 const ctx = ensureAudio();
                 const now = ctx.currentTime;
-
                 switch(type) {
                     case 'deal':
                         const osc1 = ctx.createOscillator();
@@ -831,9 +248,7 @@
                         osc6.stop(now + 0.15);
                         break;
                 }
-            } catch(e) {
-                // Audio failed silently
-            }
+            } catch(e) {}
         }
 
         // ==================== CARD & HAND FUNCTIONS ====================
@@ -1046,36 +461,15 @@
         }
 
         function getRandomTip(hand, board, nOpp) {
-            // Context-aware tip selection
             let category;
             if (!board || board.length === 0) {
-                // Pre-flop — teach hand strength, position, starting hands
-                const pool = educationalTips.filter(t =>
-                    t.title === 'Hand Strength' || t.title === 'Position' || t.title === 'Starting Hands'
-                );
-                category = pool[Math.floor(Math.random() * pool.length)];
+                category = educationalTips[0];
             } else if (board.length === 5) {
-                // River — teach river play, bet sizing
-                const pool = educationalTips.filter(t =>
-                    t.title === 'River Play' || t.title === 'Bet Sizing' || t.title === 'Hand Reading'
-                );
-                category = pool[Math.floor(Math.random() * pool.length)];
+                category = educationalTips[4];
             } else {
-                // Flop/Turn — teach board texture, pot odds, bluffing
-                const boardInfo = analyzeBoard(board);
-                if (boardInfo.type === 'wet') {
-                    const pool = educationalTips.filter(t =>
-                        t.title === 'Board Texture' || t.title === 'Pot Odds'
-                    );
-                    category = pool[Math.floor(Math.random() * pool.length)];
-                } else {
-                    const pool = educationalTips.filter(t =>
-                        t.title === 'Board Texture' || t.title === 'Bluffing' || t.title === 'Hand Reading'
-                    );
-                    category = pool[Math.floor(Math.random() * pool.length)];
-                }
+                category = educationalTips[Math.floor(Math.random() * educationalTips.length)];
             }
-            if (!category) category = educationalTips[Math.floor(Math.random() * educationalTips.length)];
+            if (!category) category = educationalTips[0];
             return '📚 ' + category.title + ': ' + category.tips[Math.floor(Math.random() * category.tips.length)];
         }
 
@@ -1109,11 +503,10 @@
             gameState.round = 0;
             gameState.dealer = (gameState.dealer + 1) % gameState.players.length;
 
-            // Post blinds — heads-up special: dealer is SB
             const n = gameState.players.length;
             let sbIdx, bbIdx;
             if (n === 2) {
-                sbIdx = gameState.dealer; // dealer is SB in heads-up
+                sbIdx = gameState.dealer;
                 bbIdx = (gameState.dealer + 1) % n;
             } else {
                 sbIdx = (gameState.dealer + 1) % n;
@@ -1134,14 +527,12 @@
 
             gameState.currentBet = bbAmount;
 
-            // Deal hole cards
             gameState.players.forEach(p => {
                 if (p.isActive) p.hand = [dealCard(), dealCard()];
             });
 
-            // Pre-flop: UTG acts first (after BB). Heads-up: SB (dealer) acts first
             if (n === 2) {
-                gameState.toAct = gameState.dealer; // SB acts first pre-flop in heads-up
+                gameState.toAct = gameState.dealer;
             } else {
                 gameState.toAct = (gameState.dealer + 3) % n;
             }
@@ -1163,13 +554,11 @@
             let activePlayers = gameState.players.filter(p => p.isActive && !p.folded && p.chips > 0);
             let allPlayers = gameState.players.filter(p => p.isActive && !p.folded);
 
-            // Only one player left — they win
             if (allPlayers.length <= 1) {
                 showHand(hid);
                 return;
             }
 
-            // All active players (with chips) have acted and bets are matched
             const allMatched = activePlayers.every(p => actedThisRound.has(p.index));
             const betsEqual = activePlayers.every(p => p.bet === gameState.currentBet || p.chips === 0);
             if (allMatched && betsEqual) {
@@ -1177,15 +566,13 @@
                 return;
             }
 
-            // Skip folded / inactive / all-in players
             const p = gameState.players[gameState.toAct];
             if (!p.isActive || p.folded || p.chips <= 0) {
-                actedThisRound.add(p.index); // count them as acted
+                actedThisRound.add(p.index);
                 gameState.toAct = (gameState.toAct + 1) % gameState.players.length;
                 return doBettingRound(hid);
             }
 
-            // Already acted and bet matches — skip
             if (actedThisRound.has(p.index) && p.bet === gameState.currentBet) {
                 nextRound(hid);
                 return;
@@ -1221,7 +608,6 @@
             let action = 'fold';
             if (betToCall === 0) {
                 if (equity > 0.65) action = 'raise';
-                else if (equity > 0.40) action = 'check';
                 else action = 'check';
             } else {
                 if (equity >= 0.85) action = 'allin';
@@ -1396,7 +782,7 @@
         function showResult(winner, handType, cards, hid) {
             if (hid !== gameState.handId) return;
             gameState.gamePhase = 'result';
-            document.getElementById('resultTitle').textContent = winner.isHuman ? '🎉 You Won!' : `${winner.name} wins!`;
+            document.getElementById('resultTitle').textContent = winner.isHuman ? 'YOU WIN!' : `${winner.name} wins!`;
             document.getElementById('resultText').textContent = `with ${handType}`;
             document.getElementById('winningHand').textContent = cards;
             document.getElementById('handResult').classList.remove('hidden');
@@ -1416,11 +802,9 @@
                 const nOpp = gameState.players.filter(pl => pl.isActive && !pl.folded).length - 1;
                 const betToCall = gameState.currentBet - (p.bet || 0);
 
-                // Hand display
                 document.getElementById('handDisplay').textContent = p.hand.join(' ');
                 document.getElementById('handDescription').textContent = getHandDescription(p.hand);
 
-                // Equity
                 let equity = 0.5;
                 try {
                     equity = mcEquity(p.hand, gameState.community, Math.max(1, nOpp), 70);
@@ -1433,34 +817,29 @@
                 eqFill.style.width = eqPercent + '%';
                 document.getElementById('equityPercent').textContent = eqPercent + '%';
 
-                // Board read
                 const boardRead = analyzeBoard(gameState.community);
                 document.getElementById('boardRead').textContent = boardRead.description;
 
-                // Opponent read
                 document.getElementById('opponentRead').textContent = opponentRead(gameState.community, p.hand, nOpp);
 
-                // Coach tip
                 document.getElementById('coachTip').textContent = getRandomTip(p.hand, gameState.community, nOpp);
 
-                // Pot display
                 document.getElementById('potDisplay').textContent = '$' + gameState.pot;
 
-                // Action buttons
                 const buttonsDiv = document.getElementById('actionButtons');
                 buttonsDiv.innerHTML = '';
 
                 if (betToCall === 0) {
                     const checkBtn = document.createElement('button');
                     checkBtn.className = 'action-button btn-check';
-                    checkBtn.textContent = 'CHECK ✓';
+                    checkBtn.textContent = 'CHECK';
                     checkBtn.onclick = () => playerCheck(hid);
                     buttonsDiv.appendChild(checkBtn);
 
                     if (p.chips > 0) {
                         const raiseBtn = document.createElement('button');
                         raiseBtn.className = 'action-button btn-raise';
-                        raiseBtn.textContent = 'BET $20';
+                        raiseBtn.textContent = 'BET';
                         raiseBtn.onclick = () => playerRaise(hid);
                         buttonsDiv.appendChild(raiseBtn);
                     }
@@ -1480,14 +859,14 @@
 
                 const foldBtn = document.createElement('button');
                 foldBtn.className = 'action-button btn-fold';
-                foldBtn.textContent = 'FOLD ✗';
+                foldBtn.textContent = 'FOLD';
                 foldBtn.onclick = () => playerFold(hid);
                 buttonsDiv.appendChild(foldBtn);
 
                 if (p.chips > 0 && betToCall > 0) {
                     const allInBtn = document.createElement('button');
                     allInBtn.className = 'action-button btn-allin';
-                    allInBtn.textContent = 'ALL IN 💰';
+                    allInBtn.textContent = 'ALL IN';
                     allInBtn.onclick = () => playerAllIn(hid);
                     buttonsDiv.appendChild(allInBtn);
                 }
@@ -1495,214 +874,167 @@
                 document.getElementById('waitingMessage').style.display = 'none';
             } catch(e) {
                 console.error('showUI error:', e);
-                const buttonsDiv = document.getElementById('actionButtons');
-                if (buttonsDiv && buttonsDiv.children.length === 0) {
-                    const fallbackBtn = document.createElement('button');
-                    fallbackBtn.className = 'action-button btn-check';
-                    fallbackBtn.textContent = 'CONTINUE';
-                    fallbackBtn.onclick = () => doBettingRound(hid);
-                    buttonsDiv.appendChild(fallbackBtn);
-                }
             }
         }
 
         // ==================== CANVAS DRAWING ====================
+        function resizeCanvas() {
+            const canvas = document.getElementById('pokertable');
+            if (!canvas) return;
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = (rect.width * 3 / 4) * dpr;
+            const ctx = canvas.getContext('2d');
+            ctx.scale(dpr, dpr);
+        }
+
         function drawGame() {
             const canvas = document.getElementById('pokertable');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            const w = canvas.width;
-            const h = canvas.height;
+            const w = canvas.width / (window.devicePixelRatio || 1);
+            const h = canvas.height / (window.devicePixelRatio || 1);
 
-            ctx.fillStyle = '#0a5f3f';
+            ctx.fillStyle = '#1a4d2e';
             ctx.fillRect(0, 0, w, h);
 
-            // Draw table ellipse
-            ctx.fillStyle = '#0d5f3f';
+            const tableRadiusX = Math.min(w / 2.8, 300);
+            const tableRadiusY = Math.min(h / 2.5, 180);
+            ctx.fillStyle = '#0f3d1a';
             ctx.beginPath();
-            ctx.ellipse(w / 2, h / 2 + 40, w / 2.2, h / 2.2, 0, 0, Math.PI * 2);
+            ctx.ellipse(w / 2, h / 2 - 20, tableRadiusX, tableRadiusY, 0, 0, Math.PI * 2);
             ctx.fill();
-            ctx.strokeStyle = '#4db8a8';
-            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#00d4ff';
+            ctx.lineWidth = 4;
             ctx.stroke();
 
-            // Draw player positions
-            const positions = [
-                { x: w / 2, y: 60 },          // 0 - top
-                { x: w - 80, y: h / 2 - 40 }, // 1 - right
-                { x: w - 80, y: h / 2 + 100 }, // 2 - right-bottom
-                { x: w / 2, y: h - 60 },      // 3 - bottom
-                { x: 80, y: h / 2 + 100 },    // 4 - left-bottom
-                { x: 80, y: h / 2 - 40 }      // 5 - left
-            ];
+            const positions = [];
+            const playerCount = gameState.playerCount;
+
+            if (playerCount === 2) {
+                positions.push({ x: w / 2, y: 80 }, { x: w / 2, y: h - 60, isHuman: true });
+            } else if (playerCount === 3) {
+                positions.push({ x: w / 2, y: 70 }, { x: w - 100, y: h / 2 + 40 }, { x: w / 2, y: h - 60, isHuman: true });
+            } else if (playerCount === 4) {
+                positions.push({ x: w / 2, y: 70 }, { x: w - 100, y: h / 2 }, { x: w / 2, y: h - 60, isHuman: true }, { x: 100, y: h / 2 });
+            } else if (playerCount === 5) {
+                positions.push({ x: w / 2, y: 70 }, { x: w - 90, y: h / 2 - 60 }, { x: w - 90, y: h / 2 + 80 }, { x: w / 2, y: h - 60, isHuman: true }, { x: 90, y: h / 2 + 40 });
+            } else {
+                positions.push({ x: w / 2, y: 70 }, { x: w - 80, y: h / 2 - 50 }, { x: w - 80, y: h / 2 + 50 }, { x: w / 2, y: h - 60, isHuman: true }, { x: 80, y: h / 2 + 50 }, { x: 80, y: h / 2 - 50 });
+            }
 
             const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F'];
             const animals = ['fox', 'bear', 'owl', 'cat', 'rabbit', 'panda'];
 
             gameState.players.forEach((p, i) => {
-                if (i >= gameState.playerCount) return;
+                if (i >= playerCount || i >= positions.length) return;
                 const pos = positions[i];
-                drawPlayer(ctx, p, pos, colors[i], animals[i], i === gameState.dealer);
+                const isDealer = i === gameState.dealer;
+                const isActive = gameState.toAct === i && gameState.gamePhase === 'playing';
+                drawPlayer(ctx, p, pos, colors[i], animals[i], isDealer, isActive);
             });
 
-            // Draw community cards in center
             if (gameState.community.length > 0) {
-                const startX = w / 2 - (gameState.community.length * 35);
+                const cardWidth = 50;
+                const cardHeight = 75;
+                const cardGap = 10;
+                const totalWidth = gameState.community.length * cardWidth + (gameState.community.length - 1) * cardGap;
+                const startX = (w - totalWidth) / 2;
+                const startY = h / 2 - 50;
+
                 gameState.community.forEach((card, i) => {
-                    drawCard(ctx, card, startX + i * 70, h / 2 - 25, 60, 90);
+                    drawCard(ctx, card, startX + i * (cardWidth + cardGap), startY, cardWidth, cardHeight, true);
                 });
             }
 
-            // Draw pot
-            ctx.fillStyle = '#ffeb3b';
-            ctx.font = 'bold 20px sans-serif';
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 24px sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(`Pot: $${gameState.pot}`, w / 2, h - 100);
+            ctx.fillText(`POT: $${gameState.pot}`, w / 2, h / 2 + 120);
 
-            // Redraw continuously
             if (gameState.gamePhase === 'playing') {
                 requestAnimationFrame(drawGame);
             }
         }
 
-        function drawPlayer(ctx, player, pos, color, animal, isDealer) {
-            const size = 50;
+        function drawPlayer(ctx, player, pos, color, animal, isDealer, isActive) {
+            const size = 45;
+            const animSize = 25;
 
-            // Draw chip stack
+            if (isActive) {
+                ctx.fillStyle = 'rgba(0, 212, 255, 0.3)';
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, size + 15, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
             ctx.fillStyle = color;
             ctx.beginPath();
             ctx.arc(pos.x, pos.y, size, 0, Math.PI * 2);
             ctx.fill();
-            ctx.strokeStyle = isDealer ? '#ffeb3b' : '#fff';
-            ctx.lineWidth = isDealer ? 3 : 2;
+            ctx.strokeStyle = isDealer ? '#ffd700' : '#fff';
+            ctx.lineWidth = isDealer ? 4 : 2;
             ctx.stroke();
 
-            // Draw animal
-            drawAnimal(ctx, animal, pos.x, pos.y, size * 0.6);
+            drawAnimal(ctx, animal, pos.x, pos.y, animSize);
 
-            // Draw name
+            if (player.folded) {
+                ctx.save();
+                ctx.globalAlpha = 0.8;
+                ctx.fillStyle = '#ff4444';
+                ctx.font = 'bold 16px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('FOLD', pos.x, pos.y - 5);
+                ctx.restore();
+            }
+
             ctx.fillStyle = '#fff';
             ctx.font = 'bold 12px sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
-            ctx.fillText(player.name, pos.x, pos.y + size + 8);
+            const nameY = pos.y + size + 10;
+            ctx.fillText(player.name, pos.x, nameY);
 
-            // Draw chips
-            ctx.fillStyle = '#ffeb3b';
-            ctx.font = 'bold 11px sans-serif';
-            ctx.fillText(`$${player.chips}`, pos.x, pos.y + size + 25);
-
-            // Draw bet
-            if (player.bet > 0) {
-                ctx.fillStyle = '#ff6b6b';
-                ctx.fillText(`Bet: $${player.bet}`, pos.x, pos.y - size - 20);
+            if (player.isHuman) {
+                ctx.fillStyle = '#ffd700';
+                ctx.font = 'bold 10px sans-serif';
+                ctx.fillText('YOU', pos.x, nameY + 14);
             }
 
-            // Draw status
-            if (player.folded) {
-                ctx.fillStyle = 'rgba(255, 0, 0, 0.7)';
-                ctx.font = 'bold 16px sans-serif';
-                ctx.fillText('FOLD', pos.x, pos.y - 10);
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 11px sans-serif';
+            ctx.fillText(`$${player.chips}`, pos.x, pos.y + size + 40);
+
+            if (player.bet > 0) {
+                ctx.fillStyle = '#ff9999';
+                ctx.font = 'bold 10px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(`Bet: $${player.bet}`, pos.x, pos.y - size - 15);
             }
         }
 
         function drawAnimal(ctx, animal, x, y, size) {
             ctx.save();
             ctx.translate(x, y);
-
-            switch(animal) {
-                case 'fox':
-                    ctx.fillStyle = '#FF6B6B';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#FFD700';
-                    ctx.beginPath();
-                    ctx.arc(-size * 0.3, -size * 0.3, size * 0.25, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.arc(size * 0.3, -size * 0.3, size * 0.25, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                case 'bear':
-                    ctx.fillStyle = '#8B4513';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#000';
-                    ctx.beginPath();
-                    ctx.arc(-size * 0.3, -size * 0.25, size * 0.2, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.arc(size * 0.3, -size * 0.25, size * 0.2, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                case 'owl':
-                    ctx.fillStyle = '#8B7355';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#FFD700';
-                    ctx.beginPath();
-                    ctx.arc(-size * 0.3, -size * 0.2, size * 0.25, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.arc(size * 0.3, -size * 0.2, size * 0.25, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#000';
-                    ctx.beginPath();
-                    ctx.arc(-size * 0.3, -size * 0.2, size * 0.1, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.arc(size * 0.3, -size * 0.2, size * 0.1, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-                case 'cat':
-                    ctx.fillStyle = '#FFA500';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#FFD700';
-                    ctx.beginPath();
-                    ctx.moveTo(-size * 0.4, -size * 0.35);
-                    ctx.lineTo(-size * 0.25, -size * 0.55);
-                    ctx.lineTo(-size * 0.1, -size * 0.35);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.moveTo(size * 0.1, -size * 0.35);
-                    ctx.lineTo(size * 0.25, -size * 0.55);
-                    ctx.lineTo(size * 0.4, -size * 0.35);
-                    ctx.fill();
-                    break;
-                case 'rabbit':
-                    ctx.fillStyle = '#FFB6C1';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#FFF';
-                    ctx.fillRect(-size * 0.15, -size * 0.5, size * 0.3, size * 0.4);
-                    ctx.fillRect(-size * 0.15, -size * 0.6, size * 0.3, size * 0.15);
-                    break;
-                case 'panda':
-                    ctx.fillStyle = '#FFF';
-                    ctx.beginPath();
-                    ctx.arc(0, 0, size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#000';
-                    ctx.beginPath();
-                    ctx.arc(-size * 0.3, -size * 0.2, size * 0.25, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.arc(size * 0.3, -size * 0.2, size * 0.25, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-            }
-
+            ctx.fillStyle = ['#FF6B6B', '#8B4513', '#8B7355', '#FFA500', '#FFB6C1', '#FFF'][['fox', 'bear', 'owl', 'cat', 'rabbit', 'panda'].indexOf(animal)];
+            ctx.beginPath();
+            ctx.arc(0, 0, size, 0, Math.PI * 2);
+            ctx.fill();
+            // Simple eye dots
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(-size * 0.2, -size * 0.15, size * 0.12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(size * 0.2, -size * 0.15, size * 0.12, 0, Math.PI * 2);
+            ctx.fill();
             ctx.restore();
         }
 
-        function drawCard(ctx, card, x, y, w, h) {
+        function drawCard(ctx, card, x, y, w, h, isCommunity = false) {
             const parsed = parseCard(card);
             const isRed = parsed.suit === '♥' || parsed.suit === '♦';
             const color = isRed ? '#ff4444' : '#000';
@@ -1737,6 +1069,7 @@
             document.getElementById('coachPanel').classList.remove('hidden');
 
             ensureAudio();
+            resizeCanvas();
             initGame();
             drawGame();
         });
@@ -1751,8 +1084,9 @@
 
         document.getElementById('nextHandBtn').addEventListener('click', nextHand);
 
-        // ==================== INITIALIZATION ====================
         window.addEventListener('load', function() {
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
             console.log('Texas Hold\'em Poker School loaded!');
         });
     </script>
