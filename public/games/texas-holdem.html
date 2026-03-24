@@ -660,10 +660,7 @@ function showUI(){
   }catch(e){console.error('getDecision error:',e);tip={tip:'CHECK',reason:'Take your time.',score:50};sc=50;}
   // Update all content before making visible
   try{
-  const badge=document.getElementById('scoreBadge');
-  badge.textContent=sc+'%';badge.style.background=scoreColor(sc);
-  document.getElementById('tipAct').textContent=tip.tip;
-  document.getElementById('tipText').innerHTML='<span class="tipAct">'+tip.tip+'</span> — '+tip.reason;
+  // BUTTONS FIRST — must always work
   document.getElementById('btnCk').style.display=canCk?'block':'none';
   document.getElementById('btnCl').style.display=canCk?'none':'block';
   document.getElementById('btnCl').textContent=call>=p.chips?'CALL $'+p.chips:'CALL $'+call;
@@ -672,6 +669,10 @@ function showUI(){
   if(p.chips+p.bet>currentBet){sl.style.display='flex';rg.min=minR;rg.max=p.chips+p.bet;rg.value=minR;
     document.getElementById('rAmt').textContent='$'+minR;rg.oninput=()=>document.getElementById('rAmt').textContent='$'+rg.value;}
   else sl.style.display='none';
+  // Tip display
+  const badge=document.getElementById('scoreBadge');
+  badge.textContent=sc+'%';badge.style.background=scoreColor(sc);
+  document.getElementById('tipText').innerHTML='<span class="tipAct" id="tipAct">'+tip.tip+'</span> — '+tip.reason;
   }catch(e2){console.error('showUI render error:',e2);}
   // ALWAYS show the bar no matter what — buttons must appear
   document.getElementById('bottomBar').style.display='flex';
