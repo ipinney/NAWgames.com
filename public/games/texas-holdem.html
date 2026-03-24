@@ -33,6 +33,10 @@ canvas#c{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;z-in
 #raiseSlider{position:fixed;bottom:68px;left:50%;transform:translateX(-50%);z-index:60;display:none;align-items:center;gap:10px;background:rgba(0,0,0,0.7);padding:7px 14px;border-radius:20px}
 #raiseSlider input{width:clamp(100px,28vw,190px);accent-color:#ffd700}
 #raiseSlider span{color:#ffd700;font-weight:700;font-size:13px;min-width:45px}
+#tipBox{position:fixed;bottom:105px;left:50%;transform:translateX(-50%);z-index:65;display:none;max-width:clamp(260px,70vw,400px);padding:10px 16px;background:linear-gradient(135deg,rgba(30,58,95,0.92),rgba(15,29,48,0.95));border:2px solid #ffd700;border-radius:14px;color:#fff;font-size:clamp(12px,2.5vw,15px);text-align:center;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+#tipBox .tip-label{color:#ffd700;font-weight:900;font-size:clamp(10px,2vw,12px);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+#tipBox .tip-action{font-weight:700;font-size:clamp(14px,3vw,18px);margin-bottom:3px}
+#tipBox .tip-reason{color:#a0c4e8;font-size:clamp(11px,2.2vw,13px);line-height:1.4}
 </style>
 </head>
 <body>
@@ -44,7 +48,7 @@ canvas#c{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;z-in
     Play against 4 animal opponents around the table.<br>
     Start with $1,000 each — play until someone wins it all!<br>
     Dealer rotates, blinds increase every 5 hands.<br>
-    Tap cards to play. Auto-aim your bets!
+    Look for the blue tip box to learn what to do!
   </div>
   <button onclick="startGame()">DEAL ME IN</button>
 </div>
@@ -61,6 +65,12 @@ canvas#c{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;z-in
     <span id="hudHand">Hand #1</span>
     <span class="blind" id="hudBlinds">Blinds: $10/$20</span>
   </div>
+</div>
+
+<div id="tipBox">
+  <div class="tip-label">★ Coach Says ★</div>
+  <div class="tip-action" id="tipAction">CHECK</div>
+  <div class="tip-reason" id="tipReason">No need to bet yet.</div>
 </div>
 
 <div id="raiseSlider">
@@ -87,27 +97,21 @@ function ensureAudio(){if(!audioCtx)audioCtx=new AudioCtx();if(audioCtx.state===
 function playSound(type){
   if(!audioCtx)return;const t=audioCtx.currentTime;const m=audioCtx.createGain();m.connect(audioCtx.destination);
   if(type==='deal'){
-    // card flick
     const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*0.08,audioCtx.sampleRate);
     const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.12));
     const ns=audioCtx.createBufferSource();ns.buffer=buf;const g=audioCtx.createGain();
     g.gain.setValueAtTime(0.25,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.1);
     ns.connect(g);g.connect(m);ns.start(t);ns.stop(t+0.1);
-    // tonal click
     const o=audioCtx.createOscillator();const og=audioCtx.createGain();o.type='triangle';
     o.frequency.setValueAtTime(900,t);o.frequency.exponentialRampToValueAtTime(300,t+0.06);
     og.gain.setValueAtTime(0.12,t);og.gain.exponentialRampToValueAtTime(0.001,t+0.08);
     o.connect(og);og.connect(m);o.start(t);o.stop(t+0.08);m.gain.setValueAtTime(0.5,t);
   } else if(type==='chip'){
-    // ceramic chip clink
-    for(let i=0;i<3;i++){
-      const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.type='sine';
+    for(let i=0;i<3;i++){const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.type='sine';
       o.frequency.setValueAtTime(1800+i*400+Math.random()*300,t+i*0.03);
       o.frequency.exponentialRampToValueAtTime(600,t+i*0.03+0.08);
       g.gain.setValueAtTime(0.08,t+i*0.03);g.gain.exponentialRampToValueAtTime(0.001,t+i*0.03+0.1);
-      o.connect(g);g.connect(m);o.start(t+i*0.03);o.stop(t+i*0.03+0.1);
-    }
-    // noise click
+      o.connect(g);g.connect(m);o.start(t+i*0.03);o.stop(t+i*0.03+0.1);}
     const buf=audioCtx.createBuffer(1,audioCtx.sampleRate*0.04,audioCtx.sampleRate);
     const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.08));
     const ns=audioCtx.createBufferSource();ns.buffer=buf;const ng=audioCtx.createGain();
@@ -130,7 +134,6 @@ function playSound(type){
     g.gain.setValueAtTime(0.06,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.18);
     o.connect(g);g.connect(m);o.start(t);o.stop(t+0.18);m.gain.setValueAtTime(0.3,t);
   } else if(type==='check'){
-    // double tap
     for(let i=0;i<2;i++){const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.type='sine';
       o.frequency.setValueAtTime(500,t+i*0.07);g.gain.setValueAtTime(0.08,t+i*0.07);
       g.gain.exponentialRampToValueAtTime(0.001,t+i*0.07+0.06);
@@ -146,7 +149,6 @@ function playSound(type){
       g.gain.setValueAtTime(0.08,t+i*0.05);g.gain.exponentialRampToValueAtTime(0.001,t+i*0.05+0.22);
       o.connect(g);g.connect(m);o.start(t+i*0.05);o.stop(t+i*0.05+0.22);}m.gain.setValueAtTime(0.5,t);
   } else if(type==='potwin'){
-    // coins cascading
     for(let i=0;i<8;i++){const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.type='sine';
       const f=1400+Math.random()*600;o.frequency.setValueAtTime(f,t+i*0.04);
       o.frequency.exponentialRampToValueAtTime(f*0.5,t+i*0.04+0.12);
@@ -186,79 +188,51 @@ function drawParticles(){particles.forEach(p=>{const lr=p.life/p.maxLife;ctx.glo
   if(p.type==='star'){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.life*0.2);ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);ctx.restore();}
   else{ctx.beginPath();ctx.arc(p.x,p.y,p.size*lr,0,Math.PI*2);ctx.fill();}});ctx.globalAlpha=1;}
 
-// Chip toss animations — chips fly from player seat toward pot center
 let chipAnims=[];
 function tossChips(fromX,fromY,amount){
   const toX=W/2,toY=H/2-20;
   const count=Math.min(Math.max(3,Math.floor(amount/50)),12);
   for(let i=0;i<count;i++){
-    chipAnims.push({
-      x:fromX,y:fromY,
-      tx:toX+(Math.random()-0.5)*30,ty:toY+(Math.random()-0.5)*20,
+    chipAnims.push({x:fromX,y:fromY,tx:toX+(Math.random()-0.5)*30,ty:toY+(Math.random()-0.5)*20,
       t:0,dur:25+i*3+Math.random()*10,
       color:['#ffd700','#e0c000','#c0a000','#ff8c00'][Math.floor(Math.random()*4)],
-      size:Math.min(W*0.012,7)+Math.random()*2
-    });
+      size:Math.min(W*0.012,7)+Math.random()*2});
   }
 }
-function updateChipAnims(){
-  chipAnims.forEach(c=>{c.t++;});
-  chipAnims=chipAnims.filter(c=>c.t<c.dur);
-}
+function updateChipAnims(){chipAnims.forEach(c=>{c.t++;});chipAnims=chipAnims.filter(c=>c.t<c.dur);}
 function drawChipAnims(){
-  chipAnims.forEach(c=>{
-    const p=c.t/c.dur;
-    const ease=1-Math.pow(1-p,3); // ease-out cubic
-    const cx=c.x+(c.tx-c.x)*ease;
-    const cy=c.y+(c.ty-c.y)*ease-Math.sin(p*Math.PI)*30; // arc
+  chipAnims.forEach(c=>{const p=c.t/c.dur;const ease=1-Math.pow(1-p,3);
+    const cx2=c.x+(c.tx-c.x)*ease,cy2=c.y+(c.ty-c.y)*ease-Math.sin(p*Math.PI)*30;
     ctx.fillStyle=c.color;ctx.strokeStyle='#8B6914';ctx.lineWidth=1;
-    ctx.beginPath();ctx.arc(cx,cy,c.size,0,Math.PI*2);ctx.fill();ctx.stroke();
-    // shine
-    ctx.fillStyle='rgba(255,255,255,0.4)';ctx.beginPath();ctx.arc(cx-c.size*0.25,cy-c.size*0.25,c.size*0.35,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(cx2,cy2,c.size,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.4)';ctx.beginPath();ctx.arc(cx2-c.size*0.25,cy2-c.size*0.25,c.size*0.35,0,Math.PI*2);ctx.fill();
   });
 }
 
-// Pot chip stack in center
 function drawPotChips(x,y,amount){
   if(amount<=0)return;
-  const stacks=Math.min(Math.ceil(amount/200),5);
-  const height=Math.min(Math.ceil(amount/100),8);
-  for(let s=0;s<stacks;s++){
-    const sx=x-stacks*7+s*14;
-    for(let h=0;h<height;h++){
-      const sy=y-h*3;
-      ctx.fillStyle=h%2===0?'#ffd700':'#e0c000';
-      ctx.strokeStyle='#8B6914';ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.ellipse(sx,sy,6,3,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-    }
-  }
-  // Amount label
-  ctx.fillStyle='rgba(0,0,0,0.6)';
-  const tw=ctx.measureText('$'+amount.toLocaleString()).width;
+  const stacks=Math.min(Math.ceil(amount/200),5),height=Math.min(Math.ceil(amount/100),8);
+  for(let s=0;s<stacks;s++){const sx=x-stacks*7+s*14;
+    for(let h=0;h<height;h++){const sy=y-h*3;
+      ctx.fillStyle=h%2===0?'#ffd700':'#e0c000';ctx.strokeStyle='#8B6914';ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.ellipse(sx,sy,6,3,0,0,Math.PI*2);ctx.fill();ctx.stroke();}}
+  ctx.fillStyle='rgba(0,0,0,0.6)';const tw=ctx.measureText('$'+amount.toLocaleString()).width;
   roundRect(x-tw/2-6,y+8,tw+12,18,5,true,false);
   ctx.fillStyle='#ffd700';ctx.font=`bold ${Math.min(W*0.025,13)}px Arial`;
-  ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText('$'+amount.toLocaleString(),x,y+17);
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('$'+amount.toLocaleString(),x,y+17);
 }
 
-// Card deal animation
 let cardAnims=[];
-function dealCardAnim(toX,toY,delay){
-  cardAnims.push({x:W/2,y:H/2-40,tx:toX,ty:toY,t:0,dur:20,delay});
-}
+function dealCardAnim(toX,toY,delay){cardAnims.push({x:W/2,y:H/2-40,tx:toX,ty:toY,t:0,dur:20,delay});}
 function updateCardAnims(){cardAnims.forEach(c=>{if(c.delay>0){c.delay--;return;}c.t++;});cardAnims=cardAnims.filter(c=>c.t<c.dur);}
 function drawCardAnims(){
   const cw=Math.min(W*0.05,35),ch=cw*1.45;
-  cardAnims.forEach(c=>{
-    if(c.delay>0)return;
-    const p=Math.min(c.t/c.dur,1);const ease=1-Math.pow(1-p,3);
-    const cx=c.x+(c.tx-c.x)*ease,cy=c.y+(c.ty-c.y)*ease;
-    // Card back
-    const grad=ctx.createLinearGradient(cx,cy,cx+cw,cy+ch);
+  cardAnims.forEach(c=>{if(c.delay>0)return;const p=Math.min(c.t/c.dur,1);const ease=1-Math.pow(1-p,3);
+    const cx2=c.x+(c.tx-c.x)*ease,cy2=c.y+(c.ty-c.y)*ease;
+    const grad=ctx.createLinearGradient(cx2,cy2,cx2+cw,cy2+ch);
     grad.addColorStop(0,'#1e3a5f');grad.addColorStop(1,'#0f1d30');
-    ctx.fillStyle=grad;roundRect(cx-cw/2,cy-ch/2,cw,ch,4,true,false);
-    ctx.strokeStyle='#ffd700';ctx.lineWidth=1;roundRect(cx-cw/2,cy-ch/2,cw,ch,4,false,true);
-  });
+    ctx.fillStyle=grad;roundRect(cx2-cw/2,cy2-ch/2,cw,ch,4,true,false);
+    ctx.strokeStyle='#ffd700';ctx.lineWidth=1;roundRect(cx2-cw/2,cy2-ch/2,cw,ch,4,false,true);});
 }
 
 // ============================================================
@@ -282,17 +256,14 @@ function makeDeck(){let d=[];SUITS.forEach(s=>RANKS.forEach(r=>d.push({suit:s,ra
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
 function evaluateHand(cards){
-  if(cards.length<5)return{rank:0,name:'None',val:0};
+  if(cards.length<5)return{rank:0,name:'Nothing',val:0};
   let best={rank:0,name:'High Card',val:0};
   const combos=getCombos(cards,5);
   combos.forEach(c=>{const e=evalFive(c);if(e.rank>best.rank||(e.rank===best.rank&&e.val>best.val))best=e;});
   return best;
 }
-function getCombos(arr,k){
-  if(k===0)return[[]];if(arr.length<k)return[];
-  const[first,...rest]=arr;
-  return[...getCombos(rest,k-1).map(c=>[first,...c]),...getCombos(rest,k)];
-}
+function getCombos(arr,k){if(k===0)return[[]];if(arr.length<k)return[];const[first,...rest]=arr;
+  return[...getCombos(rest,k-1).map(c=>[first,...c]),...getCombos(rest,k)];}
 function evalFive(cards){
   const sorted=[...cards].sort((a,b)=>b.val-a.val);
   const vals=sorted.map(c=>c.val),suits=sorted.map(c=>c.suit);
@@ -302,7 +273,7 @@ function evalFive(cards){
   if(vals[0]===14&&vals[1]===5&&vals[2]===4&&vals[3]===3&&vals[4]===2){isStraight=true;straightHigh=5;}
   const counts={};vals.forEach(v=>{counts[v]=(counts[v]||0)+1;});
   const groups=Object.entries(counts).map(([v,c])=>({val:+v,count:c})).sort((a,b)=>b.count-a.count||b.val-a.val);
-  if(isStraight&&isFlush){return straightHigh===14?{rank:10,name:'Royal Flush',val:straightHigh}:{rank:9,name:'Straight Flush',val:straightHigh};}
+  if(isStraight&&isFlush)return straightHigh===14?{rank:10,name:'Royal Flush',val:straightHigh}:{rank:9,name:'Straight Flush',val:straightHigh};
   if(groups[0].count===4)return{rank:8,name:'Four of a Kind',val:groups[0].val*100+groups[1].val};
   if(groups[0].count===3&&groups[1].count===2)return{rank:7,name:'Full House',val:groups[0].val*100+groups[1].val};
   if(isFlush)return{rank:6,name:'Flush',val:vals[0]*1e8+vals[1]*1e6+vals[2]*1e4+vals[3]*100+vals[4]};
@@ -319,141 +290,87 @@ function evalFive(cards){
 // ============================================================
 function drawAnimalAvatar(cx,cy,radius,animal,highlight){
   ctx.save();
-  // Circle background
   ctx.beginPath();ctx.arc(cx,cy,radius,0,Math.PI*2);
   ctx.fillStyle=highlight?'rgba(255,215,0,0.2)':'rgba(20,10,5,0.6)';ctx.fill();
   if(highlight){ctx.strokeStyle='#ffd700';ctx.lineWidth=3;ctx.stroke();}
   else{ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1.5;ctx.stroke();}
-
   const r=radius*0.72;
   if(animal==='horse'){
-    // Brown horse head
-    ctx.fillStyle='#8B5E3C';
-    ctx.beginPath();ctx.ellipse(cx,cy+r*0.1,r*0.55,r*0.7,0,0,Math.PI*2);ctx.fill();
-    // Muzzle
-    ctx.fillStyle='#D2A679';
-    ctx.beginPath();ctx.ellipse(cx,cy+r*0.45,r*0.35,r*0.3,0,0,Math.PI*2);ctx.fill();
-    // Eyes
+    ctx.fillStyle='#8B5E3C';ctx.beginPath();ctx.ellipse(cx,cy+r*0.1,r*0.55,r*0.7,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#D2A679';ctx.beginPath();ctx.ellipse(cx,cy+r*0.45,r*0.35,r*0.3,0,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#2a1a0a';ctx.beginPath();ctx.arc(cx-r*0.2,cy-r*0.1,r*0.1,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx+r*0.2,cy-r*0.1,r*0.1,0,Math.PI*2);ctx.fill();
-    // Eye shine
     ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(cx-r*0.18,cy-r*0.12,r*0.04,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx+r*0.22,cy-r*0.12,r*0.04,0,Math.PI*2);ctx.fill();
-    // Nostrils
     ctx.fillStyle='#5a3a20';ctx.beginPath();ctx.arc(cx-r*0.1,cy+r*0.45,r*0.06,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx+r*0.1,cy+r*0.45,r*0.06,0,Math.PI*2);ctx.fill();
-    // Ears
     ctx.fillStyle='#8B5E3C';
     ctx.beginPath();ctx.moveTo(cx-r*0.35,cy-r*0.55);ctx.lineTo(cx-r*0.2,cy-r*0.9);ctx.lineTo(cx-r*0.05,cy-r*0.55);ctx.fill();
     ctx.beginPath();ctx.moveTo(cx+r*0.35,cy-r*0.55);ctx.lineTo(cx+r*0.2,cy-r*0.9);ctx.lineTo(cx+r*0.05,cy-r*0.55);ctx.fill();
-    // Mane
-    ctx.fillStyle='#3a2010';
-    for(let i=0;i<4;i++){ctx.beginPath();ctx.ellipse(cx-r*0.45+i*r*0.08,cy-r*0.5+i*r*0.12,r*0.08,r*0.18,-0.3,0,Math.PI*2);ctx.fill();}
+    ctx.fillStyle='#3a2010';for(let i=0;i<4;i++){ctx.beginPath();ctx.ellipse(cx-r*0.45+i*r*0.08,cy-r*0.5+i*r*0.12,r*0.08,r*0.18,-0.3,0,Math.PI*2);ctx.fill();}
   } else if(animal==='fox'){
-    // Orange fox
-    ctx.fillStyle='#E87425';
-    ctx.beginPath();ctx.ellipse(cx,cy+r*0.05,r*0.6,r*0.55,0,0,Math.PI*2);ctx.fill();
-    // White cheeks/chin
-    ctx.fillStyle='#FFF5E0';
-    ctx.beginPath();ctx.ellipse(cx,cy+r*0.35,r*0.4,r*0.3,0,0,Math.PI*2);ctx.fill();
-    // Ears
+    ctx.fillStyle='#E87425';ctx.beginPath();ctx.ellipse(cx,cy+r*0.05,r*0.6,r*0.55,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#FFF5E0';ctx.beginPath();ctx.ellipse(cx,cy+r*0.35,r*0.4,r*0.3,0,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#E87425';
     ctx.beginPath();ctx.moveTo(cx-r*0.4,cy-r*0.35);ctx.lineTo(cx-r*0.35,cy-r*0.9);ctx.lineTo(cx-r*0.05,cy-r*0.4);ctx.fill();
     ctx.beginPath();ctx.moveTo(cx+r*0.4,cy-r*0.35);ctx.lineTo(cx+r*0.35,cy-r*0.9);ctx.lineTo(cx+r*0.05,cy-r*0.4);ctx.fill();
-    // Inner ears
     ctx.fillStyle='#1a1a1a';
     ctx.beginPath();ctx.moveTo(cx-r*0.35,cy-r*0.4);ctx.lineTo(cx-r*0.32,cy-r*0.75);ctx.lineTo(cx-r*0.12,cy-r*0.42);ctx.fill();
     ctx.beginPath();ctx.moveTo(cx+r*0.35,cy-r*0.4);ctx.lineTo(cx+r*0.32,cy-r*0.75);ctx.lineTo(cx+r*0.12,cy-r*0.42);ctx.fill();
-    // Eyes
-    ctx.fillStyle='#2a1a0a';ctx.beginPath();ctx.ellipse(cx-r*0.2,cy-r*0.05,r*0.09,r*0.11,0,0,Math.PI*2);ctx.fill();
-    ctx.beginPath();ctx.ellipse(cx+r*0.2,cy-r*0.05,r*0.09,r*0.11,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#ffd700';ctx.beginPath();ctx.arc(cx-r*0.2,cy-r*0.05,r*0.06,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#000';ctx.beginPath();ctx.arc(cx-r*0.2,cy-r*0.05,r*0.03,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#ffd700';ctx.beginPath();ctx.arc(cx+r*0.2,cy-r*0.05,r*0.06,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#000';ctx.beginPath();ctx.arc(cx+r*0.2,cy-r*0.05,r*0.03,0,Math.PI*2);ctx.fill();
-    // Nose
+    ctx.fillStyle='#ffd700';ctx.beginPath();ctx.arc(cx-r*0.2,cy-r*0.05,r*0.08,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(cx+r*0.2,cy-r*0.05,r*0.08,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#000';ctx.beginPath();ctx.arc(cx-r*0.2,cy-r*0.05,r*0.035,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(cx+r*0.2,cy-r*0.05,r*0.035,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(cx,cy+r*0.2,r*0.08,0,Math.PI*2);ctx.fill();
   } else if(animal==='bear'){
-    // Brown bear
-    ctx.fillStyle='#6B4226';
-    ctx.beginPath();ctx.arc(cx,cy,r*0.65,0,Math.PI*2);ctx.fill();
-    // Ears
+    ctx.fillStyle='#6B4226';ctx.beginPath();ctx.arc(cx,cy,r*0.65,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx-r*0.45,cy-r*0.5,r*0.22,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx+r*0.45,cy-r*0.5,r*0.22,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#8B6340';
-    ctx.beginPath();ctx.arc(cx-r*0.45,cy-r*0.5,r*0.12,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#8B6340';ctx.beginPath();ctx.arc(cx-r*0.45,cy-r*0.5,r*0.12,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx+r*0.45,cy-r*0.5,r*0.12,0,Math.PI*2);ctx.fill();
-    // Muzzle
-    ctx.fillStyle='#A0765A';
-    ctx.beginPath();ctx.ellipse(cx,cy+r*0.25,r*0.35,r*0.28,0,0,Math.PI*2);ctx.fill();
-    // Eyes
+    ctx.fillStyle='#A0765A';ctx.beginPath();ctx.ellipse(cx,cy+r*0.25,r*0.35,r*0.28,0,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#1a0e05';ctx.beginPath();ctx.arc(cx-r*0.22,cy-r*0.1,r*0.09,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx+r*0.22,cy-r*0.1,r*0.09,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(cx-r*0.2,cy-r*0.12,r*0.035,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx+r*0.24,cy-r*0.12,r*0.035,0,Math.PI*2);ctx.fill();
-    // Nose
     ctx.fillStyle='#1a0e05';ctx.beginPath();ctx.ellipse(cx,cy+r*0.18,r*0.1,r*0.07,0,0,Math.PI*2);ctx.fill();
   } else if(animal==='eagle'){
-    // White-headed eagle
-    ctx.fillStyle='#F5F0E0';
-    ctx.beginPath();ctx.ellipse(cx,cy-r*0.1,r*0.5,r*0.55,0,0,Math.PI*2);ctx.fill();
-    // Brown body
-    ctx.fillStyle='#4A2A0A';
-    ctx.beginPath();ctx.ellipse(cx,cy+r*0.45,r*0.55,r*0.3,0,0,Math.PI*2);ctx.fill();
-    // Beak
-    ctx.fillStyle='#F5A623';
-    ctx.beginPath();ctx.moveTo(cx,cy+r*0.05);ctx.lineTo(cx-r*0.12,cy-r*0.08);ctx.lineTo(cx+r*0.12,cy-r*0.08);ctx.fill();
+    ctx.fillStyle='#F5F0E0';ctx.beginPath();ctx.ellipse(cx,cy-r*0.1,r*0.5,r*0.55,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#4A2A0A';ctx.beginPath();ctx.ellipse(cx,cy+r*0.45,r*0.55,r*0.3,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#F5A623';ctx.beginPath();ctx.moveTo(cx,cy+r*0.05);ctx.lineTo(cx-r*0.12,cy-r*0.08);ctx.lineTo(cx+r*0.12,cy-r*0.08);ctx.fill();
     ctx.beginPath();ctx.moveTo(cx,cy+r*0.15);ctx.lineTo(cx-r*0.08,cy+r*0.05);ctx.lineTo(cx+r*0.08,cy+r*0.05);ctx.fill();
-    // Eyes — fierce
-    ctx.fillStyle='#1a0e05';ctx.beginPath();ctx.arc(cx-r*0.18,cy-r*0.15,r*0.08,0,Math.PI*2);ctx.fill();
-    ctx.beginPath();ctx.arc(cx+r*0.18,cy-r*0.15,r*0.08,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#ffd700';ctx.beginPath();ctx.arc(cx-r*0.18,cy-r*0.15,r*0.05,0,Math.PI*2);ctx.fill();
-    ctx.beginPath();ctx.arc(cx+r*0.18,cy-r*0.15,r*0.05,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#ffd700';ctx.beginPath();ctx.arc(cx-r*0.18,cy-r*0.15,r*0.06,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(cx+r*0.18,cy-r*0.15,r*0.06,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#000';ctx.beginPath();ctx.arc(cx-r*0.18,cy-r*0.15,r*0.025,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx+r*0.18,cy-r*0.15,r*0.025,0,Math.PI*2);ctx.fill();
-    // Brow ridge (fierce look)
     ctx.strokeStyle='#4A2A0A';ctx.lineWidth=r*0.06;
     ctx.beginPath();ctx.moveTo(cx-r*0.3,cy-r*0.25);ctx.lineTo(cx-r*0.08,cy-r*0.2);ctx.stroke();
     ctx.beginPath();ctx.moveTo(cx+r*0.3,cy-r*0.25);ctx.lineTo(cx+r*0.08,cy-r*0.2);ctx.stroke();
   } else if(animal==='wolf'){
-    // Gray wolf
-    ctx.fillStyle='#7A7A80';
-    ctx.beginPath();ctx.ellipse(cx,cy+r*0.05,r*0.55,r*0.6,0,0,Math.PI*2);ctx.fill();
-    // White muzzle
-    ctx.fillStyle='#D0D0D5';
-    ctx.beginPath();ctx.ellipse(cx,cy+r*0.3,r*0.3,r*0.25,0,0,Math.PI*2);ctx.fill();
-    // Ears
+    ctx.fillStyle='#7A7A80';ctx.beginPath();ctx.ellipse(cx,cy+r*0.05,r*0.55,r*0.6,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#D0D0D5';ctx.beginPath();ctx.ellipse(cx,cy+r*0.3,r*0.3,r*0.25,0,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#5A5A60';
     ctx.beginPath();ctx.moveTo(cx-r*0.35,cy-r*0.4);ctx.lineTo(cx-r*0.25,cy-r*0.95);ctx.lineTo(cx,cy-r*0.45);ctx.fill();
     ctx.beginPath();ctx.moveTo(cx+r*0.35,cy-r*0.4);ctx.lineTo(cx+r*0.25,cy-r*0.95);ctx.lineTo(cx,cy-r*0.45);ctx.fill();
-    // Inner ears
     ctx.fillStyle='#B0A0A0';
     ctx.beginPath();ctx.moveTo(cx-r*0.3,cy-r*0.45);ctx.lineTo(cx-r*0.24,cy-r*0.78);ctx.lineTo(cx-r*0.05,cy-r*0.47);ctx.fill();
     ctx.beginPath();ctx.moveTo(cx+r*0.3,cy-r*0.45);ctx.lineTo(cx+r*0.24,cy-r*0.78);ctx.lineTo(cx+r*0.05,cy-r*0.47);ctx.fill();
-    // Eyes — yellow
     ctx.fillStyle='#ffc107';ctx.beginPath();ctx.ellipse(cx-r*0.2,cy-r*0.05,r*0.09,r*0.07,0,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.ellipse(cx+r*0.2,cy-r*0.05,r*0.09,r*0.07,0,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#000';ctx.beginPath();ctx.arc(cx-r*0.2,cy-r*0.05,r*0.04,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx+r*0.2,cy-r*0.05,r*0.04,0,Math.PI*2);ctx.fill();
-    // Nose
     ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.ellipse(cx,cy+r*0.18,r*0.08,r*0.06,0,0,Math.PI*2);ctx.fill();
   } else {
-    // Cowboy hat human (player)
-    // Face
     ctx.fillStyle='#F0C090';ctx.beginPath();ctx.arc(cx,cy+r*0.1,r*0.5,0,Math.PI*2);ctx.fill();
-    // Eyes
     ctx.fillStyle='#2a5090';ctx.beginPath();ctx.arc(cx-r*0.18,cy,r*0.07,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx+r*0.18,cy,r*0.07,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#000';ctx.beginPath();ctx.arc(cx-r*0.18,cy,r*0.035,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.arc(cx+r*0.18,cy,r*0.035,0,Math.PI*2);ctx.fill();
-    // Smile
     ctx.strokeStyle='#8B4513';ctx.lineWidth=r*0.04;ctx.beginPath();ctx.arc(cx,cy+r*0.15,r*0.2,0.1*Math.PI,0.9*Math.PI);ctx.stroke();
-    // Cowboy hat
     ctx.fillStyle='#8B4513';
-    ctx.beginPath();ctx.ellipse(cx,cy-r*0.35,r*0.7,r*0.15,0,0,Math.PI*2);ctx.fill(); // brim
-    ctx.fillRect(cx-r*0.3,cy-r*0.7,r*0.6,r*0.4); // crown
-    ctx.beginPath();ctx.ellipse(cx,cy-r*0.7,r*0.3,r*0.08,0,0,Math.PI*2);ctx.fill(); // top
-    // Hat band
+    ctx.beginPath();ctx.ellipse(cx,cy-r*0.35,r*0.7,r*0.15,0,0,Math.PI*2);ctx.fill();
+    ctx.fillRect(cx-r*0.3,cy-r*0.7,r*0.6,r*0.4);
+    ctx.beginPath();ctx.ellipse(cx,cy-r*0.7,r*0.3,r*0.08,0,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#ffd700';ctx.fillRect(cx-r*0.3,cy-r*0.38,r*0.6,r*0.06);
   }
   ctx.restore();
@@ -462,36 +379,34 @@ function drawAnimalAvatar(cx,cy,radius,animal,highlight){
 // ============================================================
 //  GAME STATE
 // ============================================================
-const ANIMALS=['player','horse','fox','bear','eagle','wolf']; // index 0 = human
-const NAMES=['YOU','MUSTANG','FOX','BEAR','EAGLE','WOLF'];
 const START_CHIPS=1000;
-let players=[]; // {name,animal,chips,hand,folded,isHuman,bet,allIn,acted}
+let players=[];
 let communityCards=[],deck=[],pot=0,dealerIdx=0;
 let handNum=0,smallBlind=10,bigBlind=20;
-let gameState='waiting'; // waiting,preflop,flop,turn,river,showdown
-let currentPlayer=-1,lastRaiser=-1,lastRaiseSize=0,currentBet=0;
+let gameState='waiting';
+let currentPlayer=-1,currentBet=0,lastRaiseSize=0;
 let handsPlayed=0,handsWon=0,biggestPot=0;
-let revealedCards=[];
+let revealedCards=[],showdownWinners=[],showdownEval=null;
 let dealerMsgText='',dealerMsgTimer=0;
 let waitingForHuman=false,gameActive=false;
-let showdownWinners=[],showdownEval=null;
-let showdownPauseTimer=0;
+
+// *** NEW: Track who has acted THIS STREET using a Set of player indices ***
+// A betting round ends when every active (not folded, not all-in) player
+// is in actedThisRound AND their bet matches currentBet.
+let actedThisRound=new Set();
 
 // ============================================================
 //  PLAYER POSITIONING
 // ============================================================
 function getPlayerPos(idx,total){
-  // Human at bottom center. Others arranged around oval.
   const cx=W/2,cy=H/2;
   const rx=Math.min(W*0.37,310),ry=Math.min(H*0.33,195);
-  const angleStart=Math.PI/2;
-  const step=(Math.PI*2)/total;
-  const angle=angleStart+step*idx;
+  const angle=Math.PI/2+(Math.PI*2/total)*idx;
   return{x:cx+Math.cos(angle)*rx,y:cy+Math.sin(angle)*ry};
 }
 
 // ============================================================
-//  CARD DRAWING
+//  CARD & TABLE DRAWING
 // ============================================================
 function drawCard(cx,cy,card,faceUp,w,h,glow){
   ctx.save();
@@ -505,18 +420,14 @@ function drawCard(cx,cy,card,faceUp,w,h,glow){
     ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('★',cx+w/2,cy+h/2);
   } else {
     if(glow){ctx.shadowColor='#ffd700';ctx.shadowBlur=12;}
-    ctx.fillStyle='#fff';roundRect(cx,cy,w,h,5,true,false);
-    ctx.shadowBlur=0;
+    ctx.fillStyle='#fff';roundRect(cx,cy,w,h,5,true,false);ctx.shadowBlur=0;
     ctx.strokeStyle=glow?'#ffd700':'#bbb';ctx.lineWidth=glow?2:0.8;roundRect(cx,cy,w,h,5,false,true);
-    const col=SUIT_COLORS[card.suit];
-    ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='middle';
-    const fs=Math.floor(w*0.36);
-    ctx.font=`bold ${fs}px Arial`;ctx.fillText(card.rank,cx+w/2,cy+h*0.3);
+    ctx.fillStyle=SUIT_COLORS[card.suit];ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font=`bold ${Math.floor(w*0.36)}px Arial`;ctx.fillText(card.rank,cx+w/2,cy+h*0.3);
     ctx.font=`${Math.floor(w*0.38)}px serif`;ctx.fillText(card.suit,cx+w/2,cy+h*0.66);
   }
   ctx.restore();
 }
-
 function roundRect(x,y,w,h,r,fill,stroke){
   ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
   ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
@@ -524,28 +435,19 @@ function roundRect(x,y,w,h,r,fill,stroke){
   if(fill)ctx.fill();if(stroke)ctx.stroke();
 }
 
-// ============================================================
-//  TABLE & PLAYER RENDERING
-// ============================================================
 function drawTable(){
   const grad=ctx.createRadialGradient(W/2,H/2,50,W/2,H/2,Math.max(W,H)*0.6);
   grad.addColorStop(0,'#1a7a3a');grad.addColorStop(0.7,'#0f5c28');grad.addColorStop(1,'#082a12');
   ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
-  // Table oval
   ctx.save();
   const tw=Math.min(W*0.82,680),th=Math.min(H*0.58,330);
   ctx.beginPath();ctx.ellipse(W/2,H/2,tw/2,th/2,0,0,Math.PI*2);
   const tg=ctx.createRadialGradient(W/2,H/2,10,W/2,H/2,tw/2);
   tg.addColorStop(0,'#1e8e42');tg.addColorStop(1,'#14692e');
   ctx.fillStyle=tg;ctx.fill();
-  // Wood rim
   ctx.strokeStyle='#6B3A1F';ctx.lineWidth=Math.max(10,W*0.018);ctx.stroke();
   ctx.strokeStyle='#8B5A3F';ctx.lineWidth=Math.max(6,W*0.01);ctx.stroke();
   ctx.strokeStyle='rgba(255,215,0,0.15)';ctx.lineWidth=1.5;ctx.stroke();
-  ctx.restore();
-  // Subtle felt texture
-  ctx.save();ctx.globalAlpha=0.04;ctx.fillStyle='#000';
-  for(let i=0;i<30;i++){ctx.beginPath();ctx.arc(W*0.3+Math.random()*W*0.4,H*0.3+Math.random()*H*0.4,1+Math.random()*2,0,Math.PI*2);ctx.fill();}
   ctx.restore();
 }
 
@@ -553,17 +455,16 @@ function drawPlayers(){
   const total=players.length;
   const cardW=Math.min(W*0.055,40),cardH=cardW*1.45;
   const avatarR=Math.min(W*0.045,30);
+  const sbIdx=nextAliveFrom((dealerIdx+1)%total);
+  const bbIdx=nextAliveFrom((sbIdx+1)%total);
 
   players.forEach((p,i)=>{
     if(!p)return;
     const pos=getPlayerPos(i,total);
     const isActive=i===currentPlayer&&!p.folded&&!p.allIn;
     const isDead=p.chips<=0&&p.folded;
-
-    // Avatar
     ctx.save();
-    if(isDead)ctx.globalAlpha=0.35;
-    else if(p.folded)ctx.globalAlpha=0.5;
+    if(isDead)ctx.globalAlpha=0.35;else if(p.folded)ctx.globalAlpha=0.5;
     drawAnimalAvatar(pos.x,pos.y,avatarR,p.animal,isActive);
     ctx.restore();
 
@@ -588,38 +489,27 @@ function drawPlayers(){
       ctx.fillStyle='#333';ctx.font=`bold ${Math.min(W*0.014,8)}px Arial`;
       ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('D',bx,by+0.5);
     }
-
-    // SB / BB indicators
-    const sbIdx=nextActiveFrom((dealerIdx+1)%total);
-    const bbIdx=nextActiveFrom((sbIdx+1)%total);
+    // SB/BB badges
     if(i===sbIdx&&gameState!=='waiting'){
       const bx=pos.x-avatarR-3,by=pos.y-avatarR+3;
-      ctx.beginPath();ctx.arc(bx,by,Math.min(W*0.013,8),0,Math.PI*2);
-      ctx.fillStyle='#3b82f6';ctx.fill();
+      ctx.beginPath();ctx.arc(bx,by,Math.min(W*0.013,8),0,Math.PI*2);ctx.fillStyle='#3b82f6';ctx.fill();
       ctx.fillStyle='#fff';ctx.font=`bold ${Math.min(W*0.012,7)}px Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('S',bx,by+0.5);
     }
     if(i===bbIdx&&gameState!=='waiting'){
       const bx=pos.x-avatarR-3,by=pos.y+avatarR-3;
-      ctx.beginPath();ctx.arc(bx,by,Math.min(W*0.013,8),0,Math.PI*2);
-      ctx.fillStyle='#f59e0b';ctx.fill();
+      ctx.beginPath();ctx.arc(bx,by,Math.min(W*0.013,8),0,Math.PI*2);ctx.fillStyle='#f59e0b';ctx.fill();
       ctx.fillStyle='#fff';ctx.font=`bold ${Math.min(W*0.012,7)}px Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('B',bx,by+0.5);
     }
-
-    // Current bet indicator (chips near player moving toward pot)
+    // Bet chips
     if(p.bet>0&&!p.folded){
-      const bDir=Math.atan2(H/2-pos.y,W/2-pos.x);
-      const bDist=Math.min(avatarR+25,50);
+      const bDir=Math.atan2(H/2-pos.y,W/2-pos.x),bDist=Math.min(avatarR+25,50);
       const bx=pos.x+Math.cos(bDir)*bDist,by=pos.y+Math.sin(bDir)*bDist;
-      // Mini chip stack
       const sc=Math.min(3,Math.ceil(p.bet/bigBlind));
-      for(let s=0;s<sc;s++){
-        ctx.fillStyle=s%2===0?'#ffd700':'#e0c000';ctx.strokeStyle='#8B6914';ctx.lineWidth=0.5;
-        ctx.beginPath();ctx.ellipse(bx,by-s*2.5,5,2.5,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-      }
+      for(let s=0;s<sc;s++){ctx.fillStyle=s%2===0?'#ffd700':'#e0c000';ctx.strokeStyle='#8B6914';ctx.lineWidth=0.5;
+        ctx.beginPath();ctx.ellipse(bx,by-s*2.5,5,2.5,0,0,Math.PI*2);ctx.fill();ctx.stroke();}
       ctx.fillStyle='#ffd700';ctx.font=`bold ${Math.min(W*0.018,10)}px Arial`;
       ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('$'+p.bet,bx,by+10);
     }
-
     // Cards
     if(p.hand&&p.hand.length===2){
       const show=p.isHuman||(gameState==='showdown'&&!p.folded);
@@ -629,17 +519,13 @@ function drawPlayers(){
       drawCard(cx1,cy1,p.hand[0],show,cardW,cardH,isWinner);
       drawCard(cx1+cardW+4,cy1,p.hand[1],show,cardW,cardH,isWinner);
     }
-
-    // Status labels
     if(p.folded&&p.hand&&p.chips>0){
       ctx.save();ctx.globalAlpha=0.7;ctx.fillStyle='#ef4444';ctx.font=`bold ${Math.min(W*0.02,12)}px Arial`;
       ctx.textAlign='center';ctx.fillText('FOLD',pos.x,pos.y-(avatarR+cardH+22));ctx.restore();
     }
     if(p.allIn&&!p.folded){
-      ctx.save();ctx.fillStyle='#a855f7';ctx.font=`bold ${Math.min(W*0.022,13)}px Arial`;
-      ctx.textAlign='center';
-      const labelY=pos.y-(avatarR+(p.hand?cardH+22:10));
-      ctx.fillText('ALL IN',pos.x,labelY);ctx.restore();
+      ctx.save();ctx.fillStyle='#a855f7';ctx.font=`bold ${Math.min(W*0.022,13)}px Arial`;ctx.textAlign='center';
+      ctx.fillText('ALL IN',pos.x,pos.y-(avatarR+(p.hand?cardH+22:10)));ctx.restore();
     }
   });
 }
@@ -649,66 +535,42 @@ function drawCommunity(){
   const cardW=Math.min(W*0.07,50),cardH=cardW*1.45;
   const totalW=communityCards.length*(cardW+5)-5;
   const startX=W/2-totalW/2,startY=H/2-cardH/2-15;
-  communityCards.forEach((c,i)=>{
-    const revealed=revealedCards.includes(i);
-    const isWinner=false; // could highlight winning cards
-    drawCard(startX+i*(cardW+5),startY,c,revealed,cardW,cardH,false);
-  });
+  communityCards.forEach((c,i)=>{drawCard(startX+i*(cardW+5),startY,c,revealedCards.includes(i),cardW,cardH,false);});
 }
 
 function drawDealerMsg(){
   if(dealerMsgTimer<=0)return;
   const alpha=Math.min(1,dealerMsgTimer/30);
   ctx.save();ctx.globalAlpha=alpha;
-  ctx.fillStyle='rgba(0,0,0,0.55)';
+  ctx.font=`bold ${Math.min(W*0.03,16)}px Arial`;
   const tw=ctx.measureText(dealerMsgText).width;
-  roundRect(W/2-tw/2-14,H*0.37-14,tw+28,32,8,true,false);
-  ctx.fillStyle='#fff';ctx.font=`bold ${Math.min(W*0.03,16)}px Arial`;
-  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(0,0,0,0.55)';roundRect(W/2-tw/2-14,H*0.37-14,tw+28,32,8,true,false);
+  ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText(dealerMsgText,W/2,H*0.37);
   ctx.restore();
 }
 
 // ============================================================
-//  PROPER TEXAS HOLD'EM GAME LOGIC
+//  CORE GAME LOGIC — CLEAN STATE MACHINE
 // ============================================================
 
-// Next player with chips who hasn't folded, starting after idx
-function nextActiveFrom(startIdx){
-  let n=startIdx%players.length;
-  let tries=0;
-  while(tries<players.length){
-    if(!players[n].folded&&players[n].chips>0)return n;
-    n=(n+1)%players.length;tries++;
-  }
-  return n;
-}
-
-// Next player who can still act (not folded, not all-in, has chips)
-function nextCanAct(idx){
-  let n=(idx+1)%players.length;
-  let tries=0;
-  while(tries<players.length){
-    if(!players[n].folded&&!players[n].allIn&&players[n].chips>0)return n;
-    n=(n+1)%players.length;tries++;
-  }
-  return -1; // nobody can act
+function nextAliveFrom(startIdx){
+  let n=startIdx%players.length,tries=0;
+  while(tries<players.length){if(!players[n].folded&&players[n].chips>0)return n;n=(n+1)%players.length;tries++;}
+  return startIdx%players.length;
 }
 
 function countNotFolded(){return players.filter(p=>!p.folded).length;}
 function countCanAct(){return players.filter(p=>!p.folded&&!p.allIn&&p.chips>0).length;}
 
 function postBlind(idx,amount){
-  const p=players[idx];
-  const actual=Math.min(amount,p.chips);
+  const p=players[idx],actual=Math.min(amount,p.chips);
   p.chips-=actual;p.bet=actual;pot+=actual;
   if(p.chips===0)p.allIn=true;
-  const pos=getPlayerPos(idx,players.length);
-  tossChips(pos.x,pos.y,actual);
+  tossChips(getPlayerPos(idx,players.length).x,getPlayerPos(idx,players.length).y,actual);
 }
 
 function showDealerMsg(msg){dealerMsgText=msg;dealerMsgTimer=180;}
-
 function updateHUD(){
   document.getElementById('hudChips').textContent='$'+players[0].chips.toLocaleString();
   document.getElementById('hudHand').textContent='Hand #'+handNum;
@@ -719,141 +581,112 @@ function startGame(){
   ensureAudio();startAmbient();
   document.getElementById('startScreen').style.display='none';
   document.getElementById('hud').style.display='block';
-
   players=[
-    {name:'YOU',animal:'player',chips:START_CHIPS,hand:null,folded:false,isHuman:true,bet:0,allIn:false,acted:false},
-    {name:'MUSTANG',animal:'horse',chips:START_CHIPS,hand:null,folded:false,isHuman:false,bet:0,allIn:false,acted:false},
-    {name:'FOX',animal:'fox',chips:START_CHIPS,hand:null,folded:false,isHuman:false,bet:0,allIn:false,acted:false},
-    {name:'BEAR',animal:'bear',chips:START_CHIPS,hand:null,folded:false,isHuman:false,bet:0,allIn:false,acted:false},
-    {name:'EAGLE',animal:'eagle',chips:START_CHIPS,hand:null,folded:false,isHuman:false,bet:0,allIn:false,acted:false},
+    {name:'YOU',animal:'player',chips:START_CHIPS,hand:null,folded:false,isHuman:true,bet:0,allIn:false},
+    {name:'MUSTANG',animal:'horse',chips:START_CHIPS,hand:null,folded:false,isHuman:false,bet:0,allIn:false},
+    {name:'FOX',animal:'fox',chips:START_CHIPS,hand:null,folded:false,isHuman:false,bet:0,allIn:false},
+    {name:'BEAR',animal:'bear',chips:START_CHIPS,hand:null,folded:false,isHuman:false,bet:0,allIn:false},
+    {name:'EAGLE',animal:'eagle',chips:START_CHIPS,hand:null,folded:false,isHuman:false,bet:0,allIn:false},
   ];
-  dealerIdx=Math.floor(Math.random()*5);
-  handNum=0;gameActive=true;
-  resize();
+  dealerIdx=Math.floor(Math.random()*5);handNum=0;gameActive=true;resize();
   startNewHand();
 }
 
 function startNewHand(){
-  handNum++;handsPlayed++;
-  showdownWinners=[];showdownEval=null;
+  handNum++;handsPlayed++;showdownWinners=[];showdownEval=null;
+  if(handNum>1&&(handNum-1)%5===0){smallBlind=Math.min(smallBlind*2,200);bigBlind=smallBlind*2;}
+  deck=shuffle(makeDeck());communityCards=[];revealedCards=[];pot=0;currentBet=0;lastRaiseSize=bigBlind;
+  actedThisRound=new Set();
 
-  // Blinds increase every 5 hands
-  if(handNum>1&&(handNum-1)%5===0){
-    smallBlind=Math.min(smallBlind*2,200);bigBlind=smallBlind*2;
-  }
-
-  deck=shuffle(makeDeck());
-  communityCards=[];revealedCards=[];pot=0;currentBet=0;lastRaiser=-1;lastRaiseSize=bigBlind;
-
-  // Reset all
-  players.forEach(p=>{p.hand=null;p.folded=false;p.bet=0;p.allIn=false;p.acted=false;});
-
-  // Check win/lose
+  players.forEach(p=>{p.hand=null;p.folded=false;p.bet=0;p.allIn=false;});
   const alive=players.filter(p=>p.chips>0);
   if(players[0].chips<=0){endGame(false);return;}
   if(alive.length===1&&alive[0].isHuman){endGame(true);return;}
-
-  // Busted players fold immediately
   players.forEach(p=>{if(p.chips<=0)p.folded=true;});
 
-  // Rotate dealer to next alive player
-  dealerIdx=nextActiveFrom((dealerIdx+1)%players.length);
-
-  // Post blinds: SB is left of dealer, BB is left of SB
-  const sbIdx=nextActiveFrom((dealerIdx+1)%players.length);
-  const bbIdx=nextActiveFrom((sbIdx+1)%players.length);
-  postBlind(sbIdx,smallBlind);
-  postBlind(bbIdx,bigBlind);
+  // Rotate dealer
+  dealerIdx=nextAliveFrom((dealerIdx+1)%players.length);
+  const sbIdx=nextAliveFrom((dealerIdx+1)%players.length);
+  const bbIdx=nextAliveFrom((sbIdx+1)%players.length);
+  postBlind(sbIdx,smallBlind);postBlind(bbIdx,bigBlind);
   currentBet=bigBlind;lastRaiseSize=bigBlind;
 
-  // Deal hole cards
-  const activePl=players.filter(p=>!p.folded);
-  activePl.forEach(p=>{p.hand=[deck.pop(),deck.pop()];});
-
-  // Deal card animations
-  activePl.forEach((p,i)=>{
+  // Deal
+  players.filter(p=>!p.folded).forEach((p,i)=>{
+    p.hand=[deck.pop(),deck.pop()];
     const pos=getPlayerPos(players.indexOf(p),players.length);
     const cardW=Math.min(W*0.055,40),cardH=cardW*1.45;
     const cardYOff=players.indexOf(p)===0?-(cardH+Math.min(W*0.045,30)+18):-(Math.min(W*0.045,30)+cardH+6);
     dealCardAnim(pos.x-cardW,pos.y+cardYOff+cardH/2,i*6);
     dealCardAnim(pos.x+2,pos.y+cardYOff+cardH/2,i*6+3);
   });
+  for(let i=0;i<alive.length;i++)setTimeout(()=>playSound('deal'),i*100);
 
-  for(let i=0;i<activePl.length;i++)setTimeout(()=>playSound('deal'),i*100);
+  updateHUD();showDealerMsg(`Hand #${handNum} — Blinds $${smallBlind}/$${bigBlind}`);
 
-  updateHUD();
-  showDealerMsg(`Hand #${handNum} — Blinds $${smallBlind}/$${bigBlind}`);
-
-  // Pre-flop: action starts left of BB (Under The Gun)
+  // Pre-flop: UTG = left of BB. BB's blind counts as their "action" for matching,
+  // but BB has NOT "acted" — they get option to raise when it comes back.
   gameState='preflop';
-  const utgIdx=nextCanAct(bbIdx);
-  if(utgIdx===-1){advanceStreet();return;}
-  currentPlayer=utgIdx;
-  // lastRaiser = BB (they get to act last with option to raise)
-  lastRaiser=bbIdx;
 
-  setTimeout(()=>runBettingRound(),1200);
+  // Find UTG (first active player left of BB who can act)
+  let utg=(bbIdx+1)%players.length;
+  let tries=0;
+  while(tries<players.length&&(players[utg].folded||players[utg].allIn||players[utg].chips<=0)){utg=(utg+1)%players.length;tries++;}
+
+  currentPlayer=utg;
+  setTimeout(()=>processCurrentPlayer(),1200);
 }
 
-function runBettingRound(){
+// ============================================================
+//  BETTING ROUND ENGINE (rewritten — no more loop bug)
+// ============================================================
+
+function isRoundOver(){
+  // Round is over when EVERY player who can act has acted AND their bet matches currentBet
+  const activePlayers=players.filter(p=>!p.folded&&!p.allIn&&p.chips>0);
+  if(activePlayers.length===0)return true;
+  return activePlayers.every(p=>actedThisRound.has(players.indexOf(p))&&p.bet>=currentBet);
+}
+
+function processCurrentPlayer(){
   if(!gameActive)return;
 
-  // Only 1 player left? Award pot.
+  // Hand over? (everyone folded but 1)
   if(countNotFolded()<=1){awardPot();return;}
 
-  // Nobody left who can act? Advance.
-  if(countCanAct()===0){advanceStreet();return;}
-
-  const p=players[currentPlayer];
+  // Betting round over?
+  if(isRoundOver()){advanceStreet();return;}
 
   // Skip folded / all-in / busted
+  const p=players[currentPlayer];
   if(p.folded||p.allIn||p.chips<=0){
-    // Check if we've gone around
-    const next=nextCanAct(currentPlayer);
-    if(next===-1||next===lastRaiser){
-      // Check if lastRaiser still needs to act (BB special case preflop)
-      if(!players[lastRaiser].acted&&!players[lastRaiser].folded&&!players[lastRaiser].allIn&&players[lastRaiser].chips>0){
-        currentPlayer=lastRaiser;
-        setTimeout(()=>runBettingRound(),100);return;
-      }
-      advanceStreet();return;
-    }
-    currentPlayer=next;
-    setTimeout(()=>runBettingRound(),100);return;
+    moveToNextPlayer();return;
   }
 
-  // Has this player already acted and their bet matches?
-  if(p.acted&&p.bet>=currentBet&&currentPlayer!==lastRaiser){
-    const next=nextCanAct(currentPlayer);
-    if(next===-1||next===lastRaiser){
-      if(!players[lastRaiser].acted&&!players[lastRaiser].folded&&!players[lastRaiser].allIn&&players[lastRaiser].chips>0){
-        currentPlayer=lastRaiser;
-        setTimeout(()=>runBettingRound(),100);return;
-      }
-      advanceStreet();return;
-    }
-    currentPlayer=next;
-    setTimeout(()=>runBettingRound(),100);return;
+  // Already acted and bet matches? Skip.
+  if(actedThisRound.has(currentPlayer)&&p.bet>=currentBet){
+    moveToNextPlayer();return;
   }
 
-  // All bets matched and everyone acted?
-  const allMatched=players.every(p2=>p2.folded||p2.allIn||p2.bet>=currentBet);
-  const allActed=players.filter(p2=>!p2.folded&&!p2.allIn&&p2.chips>0).every(p2=>p2.acted);
-  if(allMatched&&allActed){advanceStreet();return;}
-
+  // This player needs to act
   if(p.isHuman){
-    showActions();waitingForHuman=true;
+    showActions();showTip();waitingForHuman=true;
   } else {
-    waitingForHuman=false;hideActions();
+    waitingForHuman=false;hideActions();hideTip();
     const decision=aiDecide(p);
     setTimeout(()=>{
       executeAction(currentPlayer,decision.action,decision.amount);
-      const next=nextCanAct(currentPlayer);
-      if(next===-1||(next===lastRaiser&&players[lastRaiser].acted)){advanceStreet();return;}
-      currentPlayer=next;
-      setTimeout(()=>runBettingRound(),350);
+      moveToNextPlayer();
     },500+Math.random()*500);
   }
+}
+
+function moveToNextPlayer(){
+  // Advance to next player index (wrapping), then process
+  let next=(currentPlayer+1)%players.length;
+  currentPlayer=next;
+  // Use setTimeout to prevent stack overflow and give rendering time
+  setTimeout(()=>processCurrentPlayer(),80);
 }
 
 function showActions(){
@@ -863,102 +696,77 @@ function showActions(){
   const canCheck=callAmt<=0;
   document.getElementById('btnCheck').style.display=canCheck?'block':'none';
   document.getElementById('btnCall').style.display=canCheck?'none':'block';
-  document.getElementById('btnCall').textContent=callAmt>=p.chips?`CALL ALL-IN $${p.chips}`:`CALL $${callAmt}`;
-  const slider=document.getElementById('raiseSlider');
-  const range=document.getElementById('raiseRange');
+  document.getElementById('btnCall').textContent=callAmt>=p.chips?`CALL $${p.chips}`:`CALL $${callAmt}`;
+  const slider=document.getElementById('raiseSlider'),range=document.getElementById('raiseRange');
   const minR=Math.min(currentBet+lastRaiseSize,p.chips+p.bet);
-  if(p.chips+p.bet>currentBet+lastRaiseSize){
-    slider.style.display='flex';
-    range.min=minR;range.max=p.chips+p.bet;range.value=minR;
+  if(p.chips+p.bet>currentBet){
+    slider.style.display='flex';range.min=minR;range.max=p.chips+p.bet;range.value=minR;
     document.getElementById('raiseAmt').textContent='$'+minR;
     range.oninput=()=>{document.getElementById('raiseAmt').textContent='$'+range.value;};
   } else {slider.style.display='none';}
 }
-
-function hideActions(){
-  document.getElementById('actions').style.display='none';
-  document.getElementById('raiseSlider').style.display='none';
-}
+function hideActions(){document.getElementById('actions').style.display='none';document.getElementById('raiseSlider').style.display='none';}
 
 function doAction(action){
   if(!waitingForHuman)return;
-  waitingForHuman=false;hideActions();
+  waitingForHuman=false;hideActions();hideTip();
   let amount=0;
   if(action==='raise')amount=parseInt(document.getElementById('raiseRange').value);
   executeAction(0,action,amount);
-  const next=nextCanAct(0);
-  if(next===-1||(next===lastRaiser&&players[lastRaiser].acted)){
-    setTimeout(()=>advanceStreet(),300);return;
-  }
-  currentPlayer=next;
-  setTimeout(()=>runBettingRound(),350);
+  moveToNextPlayer();
 }
 
 function executeAction(idx,action,amount){
   const p=players[idx];
   const pos=getPlayerPos(idx,players.length);
-  p.acted=true;
+  actedThisRound.add(idx);
 
   if(action==='fold'){
-    p.folded=true;playSound('fold');
-    addParticle(pos.x,pos.y,'fold',5);
+    p.folded=true;playSound('fold');addParticle(pos.x,pos.y,'fold',5);
     showDealerMsg(`${p.name} folds`);
   } else if(action==='check'){
-    playSound('check');
-    showDealerMsg(`${p.name} checks`);
+    playSound('check');showDealerMsg(`${p.name} checks`);
   } else if(action==='call'){
     const callAmt=Math.min(currentBet-p.bet,p.chips);
     p.chips-=callAmt;pot+=callAmt;p.bet+=callAmt;
     if(p.chips===0)p.allIn=true;
-    playSound('chip');
-    tossChips(pos.x,pos.y,callAmt);
+    playSound('chip');tossChips(pos.x,pos.y,callAmt);
     showDealerMsg(`${p.name} calls $${callAmt}`);
   } else if(action==='raise'){
     const raiseTotal=Math.max(amount||currentBet+lastRaiseSize,currentBet+lastRaiseSize);
     const actual=Math.min(raiseTotal,p.chips+p.bet);
-    const newRaiseSize=actual-currentBet;
     const toAdd=actual-p.bet;
     p.chips-=toAdd;pot+=toAdd;
-    lastRaiseSize=Math.max(newRaiseSize,lastRaiseSize);
+    lastRaiseSize=Math.max(actual-currentBet,lastRaiseSize);
     currentBet=actual;p.bet=actual;
     if(p.chips===0)p.allIn=true;
-    // Everyone else needs to act again
-    players.forEach((p2,i2)=>{if(i2!==idx&&!p2.folded&&!p2.allIn)p2.acted=false;});
-    lastRaiser=idx;p.acted=true;
-    playSound('chip');
-    tossChips(pos.x,pos.y,toAdd);
+    // Everyone else must re-act
+    actedThisRound.clear();actedThisRound.add(idx);
+    playSound('chip');tossChips(pos.x,pos.y,toAdd);
     showDealerMsg(`${p.name} raises to $${actual}`);
   } else if(action==='allin'){
-    const toAdd=p.chips;
-    const totalBet=p.bet+toAdd;
+    const toAdd=p.chips,totalBet=p.bet+toAdd;
     pot+=toAdd;p.chips=0;p.allIn=true;
     if(totalBet>currentBet){
-      const newRaiseSize=totalBet-currentBet;
-      if(newRaiseSize>=lastRaiseSize){lastRaiseSize=newRaiseSize;}
+      lastRaiseSize=Math.max(totalBet-currentBet,lastRaiseSize);
       currentBet=totalBet;
-      players.forEach((p2,i2)=>{if(i2!==idx&&!p2.folded&&!p2.allIn)p2.acted=false;});
-      lastRaiser=idx;
+      actedThisRound.clear();actedThisRound.add(idx);
     }
     p.bet=totalBet;
-    playSound('allin');
-    tossChips(pos.x,pos.y,toAdd);
-    addParticle(pos.x,pos.y,'star',10);
+    playSound('allin');tossChips(pos.x,pos.y,toAdd);addParticle(pos.x,pos.y,'star',10);
     showDealerMsg(`${p.name} ALL IN $${totalBet}!`);
   }
-  updateHUD();
-  if(pot>biggestPot)biggestPot=pot;
+  updateHUD();if(pot>biggestPot)biggestPot=pot;
 }
 
 function advanceStreet(){
-  // Collect bets, reset for new street
-  players.forEach(p=>{p.bet=0;p.acted=false;});
-  currentBet=0;lastRaiseSize=bigBlind;
+  hideActions();hideTip();
+  players.forEach(p=>{p.bet=0;});
+  currentBet=0;lastRaiseSize=bigBlind;actedThisRound=new Set();
 
-  const streetBefore=gameState;
   if(gameState==='preflop'){
     deck.pop();communityCards.push(deck.pop(),deck.pop(),deck.pop());
-    revealedCards=[0,1,2];gameState='flop';playSound('reveal');
-    showDealerMsg('— FLOP —');
+    revealedCards=[0,1,2];gameState='flop';playSound('reveal');showDealerMsg('— FLOP —');
   } else if(gameState==='flop'){
     deck.pop();communityCards.push(deck.pop());revealedCards.push(3);
     gameState='turn';playSound('reveal');showDealerMsg('— TURN —');
@@ -969,159 +777,149 @@ function advanceStreet(){
     doShowdown();return;
   }
 
-  // If only 1 player can act (or 0), run out remaining cards
+  // If nobody or only 1 person can act, run out remaining cards
   if(countCanAct()<=1&&countNotFolded()>1){
     setTimeout(()=>{
-      while(communityCards.length<5){
-        deck.pop();communityCards.push(deck.pop());revealedCards.push(communityCards.length-1);
-      }
-      playSound('reveal');
-      setTimeout(()=>doShowdown(),800);
-    },700);
-    return;
+      while(communityCards.length<5){deck.pop();communityCards.push(deck.pop());revealedCards.push(communityCards.length-1);}
+      playSound('reveal');setTimeout(()=>doShowdown(),800);
+    },700);return;
   }
   if(countNotFolded()<=1){awardPot();return;}
 
-  // Post-flop: first active player LEFT of dealer acts first
-  const firstAct=nextActiveFrom((dealerIdx+1)%players.length);
-  const firstCanAct2=nextCanAct(dealerIdx);
-  if(firstCanAct2===-1){advanceStreet();return;}
-  currentPlayer=firstCanAct2;
-  lastRaiser=-1; // no one has raised yet this street
-
-  setTimeout(()=>runBettingRound(),700);
+  // Post-flop: first to act is first active player left of dealer (button acts last)
+  let first=(dealerIdx+1)%players.length;
+  let tries=0;
+  while(tries<players.length&&(players[first].folded||players[first].allIn||players[first].chips<=0)){first=(first+1)%players.length;tries++;}
+  currentPlayer=first;
+  setTimeout(()=>processCurrentPlayer(),700);
 }
 
-// Modified runBettingRound needs to handle lastRaiser=-1 (no raise yet)
-// When lastRaiser===-1, round ends when we reach someone who already acted
-// Actually let's simplify: set lastRaiser to the first actor, so round ends when we get back to them
-// ... but that's wrong because they haven't acted yet.
-// Better approach: round ends when all active players have acted AND bets are equal.
-// This is already handled by the allMatched&&allActed check above.
-
 function doShowdown(){
-  gameState='showdown';hideActions();
+  gameState='showdown';hideActions();hideTip();
   while(communityCards.length<5){deck.pop();communityCards.push(deck.pop());revealedCards.push(communityCards.length-1);}
   showDealerMsg('— SHOWDOWN —');
-
   const contenders=players.filter(p=>!p.folded&&p.hand);
   contenders.forEach(p=>{p.eval=evaluateHand([...p.hand,...communityCards]);});
   contenders.sort((a,b)=>b.eval.rank-a.eval.rank||(b.eval.val-a.eval.val));
-
   let winners=[];
   if(contenders.length>0){
-    const best=contenders[0].eval;
-    winners=contenders.filter(p=>p.eval.rank===best.rank&&p.eval.val===best.val);
+    const best=contenders[0].eval;winners=contenders.filter(p=>p.eval.rank===best.rank&&p.eval.val===best.val);
     showdownEval=best;
   }
-
   const share=Math.floor(pot/Math.max(1,winners.length));
-  winners.forEach(w=>{
-    w.chips+=share;
-    const idx=players.indexOf(w);
-    showdownWinners.push(idx);
-    const pos=getPlayerPos(idx,players.length);
-    addParticle(pos.x,pos.y,'win',25);
-    addParticle(pos.x,pos.y,'star',15);
-  });
-
+  winners.forEach(w=>{w.chips+=share;const idx=players.indexOf(w);showdownWinners.push(idx);
+    const pos=getPlayerPos(idx,players.length);addParticle(pos.x,pos.y,'win',25);addParticle(pos.x,pos.y,'star',15);});
   const isHumanWin=winners.some(w=>w.isHuman);
-  if(isHumanWin){handsWon++;playSound('win');playSound('potwin');}
-  else playSound('lose');
-
+  if(isHumanWin){handsWon++;playSound('win');playSound('potwin');}else playSound('lose');
   const winNames=winners.map(w=>w.name).join(' & ');
-  setTimeout(()=>{
-    showDealerMsg(`${winNames} wins $${pot} — ${showdownEval?showdownEval.name:''}!`);
-    updateHUD();
-    setTimeout(()=>startNewHand(),3500);
-  },1200);
+  setTimeout(()=>{showDealerMsg(`${winNames} wins $${pot} — ${showdownEval?showdownEval.name:''}!`);
+    updateHUD();setTimeout(()=>startNewHand(),3500);},1200);
 }
 
 function awardPot(){
+  hideActions();hideTip();
   const winner=players.find(p=>!p.folded);
-  if(winner){
-    winner.chips+=pot;
-    const idx=players.indexOf(winner);
-    showdownWinners=[idx];
-    const pos=getPlayerPos(idx,players.length);
-    addParticle(pos.x,pos.y,'win',20);addParticle(pos.x,pos.y,'chips',12);
-    if(winner.isHuman){handsWon++;playSound('win');playSound('potwin');}
-    else playSound('lose');
-    showDealerMsg(`${winner.name} wins $${pot}!`);
-  }
-  updateHUD();
-  setTimeout(()=>startNewHand(),2500);
+  if(winner){winner.chips+=pot;const idx=players.indexOf(winner);showdownWinners=[idx];
+    const pos=getPlayerPos(idx,players.length);addParticle(pos.x,pos.y,'win',20);addParticle(pos.x,pos.y,'chips',12);
+    if(winner.isHuman){handsWon++;playSound('win');playSound('potwin');}else playSound('lose');
+    showDealerMsg(`${winner.name} wins $${pot}!`);}
+  updateHUD();setTimeout(()=>startNewHand(),2500);
 }
 
 function endGame(won){
-  gameActive=false;hideActions();
-  document.getElementById('hud').style.display='none';
+  gameActive=false;hideActions();hideTip();document.getElementById('hud').style.display='none';
   const go=document.getElementById('gameOver');go.style.display='flex';
   document.getElementById('goTitle').textContent=won?'YOU WON THE TABLE!':'BUSTED!';
   document.getElementById('goTitle').style.color=won?'#ffd700':'#ef4444';
   document.getElementById('goStats').innerHTML=`
-    Hands Played: ${handsPlayed}<br>
-    Hands Won: ${handsWon}<br>
-    Biggest Pot: $${biggestPot.toLocaleString()}<br>
-    Final Chips: $${players[0].chips.toLocaleString()}<br>
-    ${won?'You cleaned out every animal at the table!':'Better luck next time, partner.'}
-  `;
-  if(won){playSound('win');addParticle(W/2,H/2,'win',50);addParticle(W/2,H/2,'star',30);}
-  else playSound('lose');
+    Hands Played: ${handsPlayed}<br>Hands Won: ${handsWon}<br>
+    Biggest Pot: $${biggestPot.toLocaleString()}<br>Final Chips: $${players[0].chips.toLocaleString()}<br>
+    ${won?'You cleaned out every animal at the table!':'Better luck next time, partner.'}`;
+  if(won){playSound('win');addParticle(W/2,H/2,'win',50);addParticle(W/2,H/2,'star',30);}else playSound('lose');
 }
 
 // ============================================================
-//  AI DECISION MAKING
+//  COACH TIP — recommendation for the human player
+// ============================================================
+function getRecommendation(){
+  const p=players[0];if(!p||!p.hand)return{action:'Check',reason:'No cards yet.'};
+  const callAmt=Math.min(currentBet-p.bet,p.chips);
+  const canCheck=callAmt<=0;
+  const potOdds=callAmt>0?callAmt/(pot+callAmt):0;
+
+  // Evaluate hand strength
+  let handName='';
+  let strength=0; // 0-10
+
+  if(communityCards.length>=3){
+    const ev=evaluateHand([...p.hand,...communityCards]);
+    handName=ev.name;
+    strength=ev.rank; // 1-10
+  } else {
+    // Preflop strength
+    const c=p.hand,hi=Math.max(c[0].val,c[1].val),lo=Math.min(c[0].val,c[1].val);
+    const pair=c[0].val===c[1].val,suited=c[0].suit===c[1].suit;
+    if(pair&&hi>=12){strength=9;handName='Premium pair ('+RANKS[hi-2]+'s)';}
+    else if(pair&&hi>=9){strength=7;handName='Strong pair ('+RANKS[hi-2]+'s)';}
+    else if(pair){strength=5;handName='Small pair ('+RANKS[hi-2]+'s)';}
+    else if(hi===14&&lo>=12){strength=8;handName='Big Ace (A-'+RANKS[lo-2]+')';}
+    else if(hi===14&&lo>=10){strength=6;handName='Ace-face';}
+    else if(hi===14){strength=4;handName='Ace-small';}
+    else if(hi>=12&&lo>=10){strength=5;handName='Two face cards';}
+    else if(suited&&hi-lo<=2){strength=4;handName='Suited connector';}
+    else if(suited){strength=3;handName='Suited cards';}
+    else if(hi-lo<=1&&hi>=8){strength=3;handName='Connected cards';}
+    else{strength=1;handName='Weak hand';}
+  }
+
+  // Generate recommendation
+  if(strength>=8){
+    if(canCheck)return{action:'RAISE',reason:`You have ${handName}! That's really strong — raise to build the pot!`};
+    return{action:'RAISE',reason:`${handName} is a great hand! Raise to win more chips.`};
+  }
+  if(strength>=5){
+    if(canCheck)return{action:'CHECK',reason:`${handName} is decent. Check for now and see what happens.`};
+    if(callAmt<=bigBlind*3)return{action:'CALL',reason:`${handName} is worth $${callAmt} to see more cards.`};
+    return{action:'FOLD',reason:`${handName} isn't strong enough for a $${callAmt} call.`};
+  }
+  if(strength>=3){
+    if(canCheck)return{action:'CHECK',reason:`${handName} — check for free and hope to improve.`};
+    if(callAmt<=bigBlind)return{action:'CALL',reason:`Only $${callAmt} to call — worth a shot with ${handName}.`};
+    return{action:'FOLD',reason:`${handName} is too weak for $${callAmt}. Save your chips!`};
+  }
+  // Weak
+  if(canCheck)return{action:'CHECK',reason:`${handName} — check for free. No reason to bet.`};
+  return{action:'FOLD',reason:`${handName} is too weak. Fold and wait for a better hand!`};
+}
+
+function showTip(){
+  const tip=getRecommendation();
+  document.getElementById('tipAction').textContent=tip.action;
+  document.getElementById('tipReason').textContent=tip.reason;
+  document.getElementById('tipBox').style.display='block';
+}
+function hideTip(){document.getElementById('tipBox').style.display='none';}
+
+// ============================================================
+//  AI
 // ============================================================
 function aiDecide(p){
   const canCheck=p.bet>=currentBet;
   const callAmt=Math.min(currentBet-p.bet,p.chips);
-
-  // Postflop with community cards
-  if(gameState!=='preflop'&&communityCards.length>=3){
+  if(communityCards.length>=3){
     const ev=evaluateHand([...p.hand,...communityCards]);
-    if(ev.rank>=4){ // trips+
-      if(Math.random()<0.65)return{action:'raise',amount:Math.min(currentBet+pot*0.5+bigBlind*2,p.chips+p.bet)};
-      return canCheck?{action:'check'}:{action:'call'};
-    }
-    if(ev.rank>=3){ // two pair
-      if(canCheck&&Math.random()<0.4)return{action:'raise',amount:Math.min(currentBet+bigBlind*2,p.chips+p.bet)};
-      if(canCheck)return{action:'check'};
-      if(callAmt<=bigBlind*4)return{action:'call'};
-      return Math.random()<0.4?{action:'call'}:{action:'fold'};
-    }
-    if(ev.rank===2){ // pair
-      if(canCheck)return Math.random()<0.2?{action:'raise',amount:Math.min(currentBet+bigBlind*2,p.chips+p.bet)}:{action:'check'};
-      if(callAmt<=bigBlind*3)return{action:'call'};
-      return Math.random()<0.25?{action:'call'}:{action:'fold'};
-    }
-    // nothing
+    if(ev.rank>=4){if(Math.random()<0.65)return{action:'raise',amount:Math.min(currentBet+Math.floor(pot*0.5)+bigBlind*2,p.chips+p.bet)};return canCheck?{action:'check'}:{action:'call'};}
+    if(ev.rank>=3){if(canCheck&&Math.random()<0.4)return{action:'raise',amount:Math.min(currentBet+bigBlind*2,p.chips+p.bet)};if(canCheck)return{action:'check'};if(callAmt<=bigBlind*4)return{action:'call'};return Math.random()<0.4?{action:'call'}:{action:'fold'};}
+    if(ev.rank===2){if(canCheck)return Math.random()<0.2?{action:'raise',amount:Math.min(currentBet+bigBlind*2,p.chips+p.bet)}:{action:'check'};if(callAmt<=bigBlind*3)return{action:'call'};return Math.random()<0.25?{action:'call'}:{action:'fold'};}
     if(canCheck)return Math.random()<0.12?{action:'raise',amount:Math.min(currentBet+bigBlind*2,p.chips+p.bet)}:{action:'check'};
-    if(callAmt<=bigBlind)return Math.random()<0.35?{action:'call'}:{action:'fold'};
-    return{action:'fold'};
+    if(callAmt<=bigBlind)return Math.random()<0.35?{action:'call'}:{action:'fold'};return{action:'fold'};
   }
-
-  // Preflop
   const str=evalPreflop(p);
-  if(str>=8){
-    if(Math.random()<0.75)return{action:'raise',amount:Math.min(currentBet+bigBlind*2+Math.floor(Math.random()*bigBlind*2),p.chips+p.bet)};
-    return canCheck?{action:'check'}:{action:'call'};
-  }
-  if(str>=5){
-    if(canCheck)return Math.random()<0.25?{action:'raise',amount:Math.min(currentBet+bigBlind*2,p.chips+p.bet)}:{action:'check'};
-    if(callAmt<=bigBlind*3)return{action:'call'};
-    return Math.random()<0.25?{action:'call'}:{action:'fold'};
-  }
-  if(str>=3){
-    if(canCheck)return{action:'check'};
-    if(callAmt<=bigBlind*2)return Math.random()<0.45?{action:'call'}:{action:'fold'};
-    return{action:'fold'};
-  }
-  if(canCheck)return{action:'check'};
-  if(callAmt<=bigBlind&&Math.random()<0.25)return{action:'call'};
-  return{action:'fold'};
+  if(str>=8){if(Math.random()<0.75)return{action:'raise',amount:Math.min(currentBet+bigBlind*2+Math.floor(Math.random()*bigBlind*2),p.chips+p.bet)};return canCheck?{action:'check'}:{action:'call'};}
+  if(str>=5){if(canCheck)return Math.random()<0.25?{action:'raise',amount:Math.min(currentBet+bigBlind*2,p.chips+p.bet)}:{action:'check'};if(callAmt<=bigBlind*3)return{action:'call'};return Math.random()<0.25?{action:'call'}:{action:'fold'};}
+  if(str>=3){if(canCheck)return{action:'check'};if(callAmt<=bigBlind*2)return Math.random()<0.45?{action:'call'}:{action:'fold'};return{action:'fold'};}
+  if(canCheck)return{action:'check'};if(callAmt<=bigBlind&&Math.random()<0.25)return{action:'call'};return{action:'fold'};
 }
-
 function evalPreflop(p){
   const c=p.hand;if(!c||c.length<2)return 1;
   const hi=Math.max(c[0].val,c[1].val),lo=Math.min(c[0].val,c[1].val);
@@ -1129,8 +927,7 @@ function evalPreflop(p){
   if(pair&&hi>=12)return 10;if(pair&&hi>=9)return 8;if(pair)return 5;
   if(hi===14&&lo>=12)return 9;if(hi===14&&lo>=10)return 7;if(hi===14)return 4+(suited?1:0);
   if(hi===13&&lo>=11)return 6+(suited?1:0);
-  if(suited&&hi-lo<=2&&hi>=9)return 5;if(suited&&hi>=10)return 4;
-  if(hi-lo<=1&&hi>=8)return 4;
+  if(suited&&hi-lo<=2&&hi>=9)return 5;if(suited&&hi>=10)return 4;if(hi-lo<=1&&hi>=8)return 4;
   return 1+(suited?1:0);
 }
 
@@ -1142,7 +939,6 @@ function gameLoop(){
     drawTable();
     if(gameActive||document.getElementById('gameOver').style.display==='flex'){
       drawCommunity();
-      // Pot chips in center
       if(pot>0)drawPotChips(W/2,H/2+Math.min(H*0.12,50),pot);
       drawPlayers();
     }
@@ -1155,25 +951,18 @@ function gameLoop(){
   requestAnimationFrame(gameLoop);
 }
 
-// Attract mode — render while start screen is up
+// Attract mode
 function attractRender(){
   if(document.getElementById('startScreen').style.display!=='none'){
     drawTable();
-    // Demo cards
     const cardW=48,cardH=70,t=Date.now()*0.001;
     const demoCards=[{suit:'♠',rank:'A'},{suit:'♥',rank:'K'},{suit:'♦',rank:'Q'},{suit:'♣',rank:'J'},{suit:'♥',rank:'10'}];
-    for(let i=0;i<5;i++){
-      const x=W/2-125+i*52,y=H/2-35+Math.sin(t+i*0.7)*6;
-      drawCard(x,y,demoCards[i],true,cardW,cardH,i===0);
-    }
-    // Demo avatars
+    for(let i=0;i<5;i++){drawCard(W/2-125+i*52,H/2-35+Math.sin(t+i*0.7)*6,demoCards[i],true,cardW,cardH,i===0);}
     const animals=['horse','fox','bear','eagle','wolf'];
-    const r=Math.min(W*0.035,24);
+    const r2=Math.min(W*0.035,24);
     animals.forEach((a,i)=>{
       const angle=Math.PI*0.2+i*Math.PI*0.15;
-      const ax=W/2+Math.cos(angle)*Math.min(W*0.35,250);
-      const ay=H/2+Math.sin(angle)*Math.min(H*0.3,150)+Math.sin(t*0.5+i)*5;
-      drawAnimalAvatar(ax,ay,r,a,i===Math.floor(t)%5);
+      drawAnimalAvatar(W/2+Math.cos(angle)*Math.min(W*0.35,250),H/2+Math.sin(angle)*Math.min(H*0.3,150)+Math.sin(t*0.5+i)*5,r2,a,i===Math.floor(t)%5);
     });
     if(Math.random()<0.04)addParticle(W/2+(Math.random()-0.5)*200,H/2+(Math.random()-0.5)*80,'star',1);
     drawParticles();updateParticles();
