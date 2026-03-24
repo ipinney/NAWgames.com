@@ -6,8 +6,8 @@
 <title>Texas Hold'em</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a5c2a;overflow:hidden;touch-action:none;user-select:none;font-family:'Segoe UI',Arial,sans-serif}
-canvas#c{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1}
+body{background:#0a5c2a;overflow:hidden;user-select:none;font-family:'Segoe UI',Arial,sans-serif}
+canvas#c{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;touch-action:none;pointer-events:none}
 #startScreen{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a7a3a 0%,#0a4a1a 60%,#031a08 100%)}
 #startScreen h1{font-size:clamp(32px,8vw,72px);color:#ffd700;text-shadow:0 4px 20px rgba(255,215,0,0.5);margin-bottom:5px;font-weight:900;letter-spacing:2px}
 #startScreen .sub{font-size:clamp(14px,3vw,24px);color:#90ee90;margin-bottom:20px}
@@ -19,14 +19,13 @@ canvas#c{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;z-in
 #gameOver button{padding:14px 40px;font-size:clamp(16px,3.5vw,24px);background:linear-gradient(135deg,#ffd700,#ff8c00);color:#1a1a2e;border:none;border-radius:50px;cursor:pointer;font-weight:900}
 #hud{position:fixed;top:8px;left:8px;right:8px;z-index:50;display:none;pointer-events:none}
 .hud-bar{display:flex;justify-content:space-between;align-items:center;padding:5px 12px;background:rgba(0,0,0,0.55);border-radius:12px;color:#fff;font-size:clamp(11px,2.4vw,15px)}
-/* ---- ACTION BAR (bottom) ---- */
-#bottomBar{position:fixed;bottom:0;left:0;right:0;z-index:60;display:none;flex-direction:column;align-items:center;background:linear-gradient(0deg,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.45) 80%,transparent 100%);padding:6px 6px 10px;gap:4px}
-#tipBar{display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:10px;background:rgba(30,58,95,0.8);border:1px solid rgba(255,215,0,0.4);width:fit-content;max-width:95vw}
-#tipBar .star{color:#ffd700;font-size:clamp(11px,2.2vw,14px)}
-#tipBar .tipTxt{color:#a0c4e8;font-size:clamp(10px,2.1vw,13px);line-height:1.3}
+#bottomBar{position:fixed;bottom:0;left:0;right:0;z-index:60;display:none;flex-direction:column;align-items:center;background:linear-gradient(0deg,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.5) 80%,transparent 100%);padding:6px 6px 10px;gap:4px}
+#tipBar{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:10px;background:rgba(30,58,95,0.85);border:1px solid rgba(255,215,0,0.4);width:fit-content;max-width:96vw}
+#scoreBadge{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:24px;border-radius:12px;font-size:clamp(11px,2.2vw,14px);font-weight:900;color:#fff;padding:0 6px;flex-shrink:0}
+#tipBar .tipTxt{color:#c8ddf0;font-size:clamp(10px,2.1vw,13px);line-height:1.3}
 #tipBar .tipAct{color:#ffd700;font-weight:700}
 #actRow{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:520px}
-#actRow button{padding:8px 14px;font-size:clamp(12px,2.5vw,16px);border:none;border-radius:22px;cursor:pointer;font-weight:700;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.3);min-width:60px}
+#actRow button{padding:8px 14px;font-size:clamp(12px,2.5vw,16px);border:none;border-radius:22px;cursor:pointer;font-weight:700;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.3);min-width:60px;pointer-events:auto;-webkit-tap-highlight-color:transparent}
 #actRow button:active{transform:scale(0.95)}
 .bf{background:linear-gradient(135deg,#ef4444,#b91c1c)}
 .bc{background:linear-gradient(135deg,#3b82f6,#1d4ed8)}
@@ -34,7 +33,7 @@ canvas#c{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;z-in
 .br{background:linear-gradient(135deg,#f59e0b,#d97706)}
 .ba{background:linear-gradient(135deg,#a855f7,#7c3aed)}
 #raiseRow{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.5);padding:4px 12px;border-radius:16px}
-#raiseRow input{width:clamp(80px,25vw,170px);accent-color:#ffd700}
+#raiseRow input{width:clamp(80px,25vw,170px);accent-color:#ffd700;pointer-events:auto}
 #raiseRow span{color:#ffd700;font-weight:700;font-size:12px;min-width:40px}
 </style>
 </head>
@@ -42,14 +41,13 @@ canvas#c{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;z-in
 <div id="startScreen">
   <h1>TEXAS HOLD'EM</h1>
   <div class="sub">★ Lone Star Poker ★</div>
-  <div class="info">Play against 4 animal opponents!<br>Start with $1,000 — win the whole table.<br>The Coach will help you make smart plays.</div>
+  <div class="info">Play against 4 animal opponents!<br>Start with $1,000 — win the whole table.<br>The Coach will help you learn smart plays.</div>
   <button onclick="startGame()">DEAL ME IN</button>
 </div>
 <div id="gameOver"><h1 id="goTitle"></h1><div class="stats" id="goStats"></div><button onclick="location.reload()">PLAY AGAIN</button></div>
 <div id="hud"><div class="hud-bar"><span style="color:#ffd700;font-weight:700" id="hudChips">$1,000</span><span id="hudHand">Hand #1</span><span style="color:#90ee90" id="hudBlinds">$10/$20</span></div></div>
-
 <div id="bottomBar">
-  <div id="tipBar"><span class="star">★</span><span class="tipTxt" id="tipText"><span class="tipAct" id="tipAct">CHECK</span> — No need to bet yet</span></div>
+  <div id="tipBar"><span id="scoreBadge">50</span><span class="tipTxt" id="tipText"><span class="tipAct" id="tipAct">CHECK</span> — No need to bet yet</span></div>
   <div id="raiseRow" style="display:none"><input type="range" id="rSlider" min="0" max="1000" value="100"><span id="rAmt">$100</span></div>
   <div id="actRow">
     <button class="bf" onclick="doAction('fold')">FOLD</button>
@@ -59,43 +57,32 @@ canvas#c{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;z-in
     <button class="ba" onclick="doAction('allin')">ALL IN</button>
   </div>
 </div>
-
 <canvas id="c"></canvas>
 <script>
 // ============================================================
-//  AUDIO ENGINE — Rich synthesized poker sounds
+//  AUDIO ENGINE
 // ============================================================
 const AC=window.AudioContext||window.webkitAudioContext;let ax;
 function ea(){if(!ax)ax=new AC();if(ax.state==='suspended')ax.resume();}
-
-// Noise helper
 function noiseBuf(dur){const b=ax.createBuffer(1,ax.sampleRate*dur,ax.sampleRate);const d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;return b;}
-
 function snd(type){
   if(!ax)return;const t=ax.currentTime;const m=ax.createGain();m.connect(ax.destination);
   if(type==='shuffle'){
-    // Multiple rapid card flicks with bandpass noise
-    for(let i=0;i<8;i++){
-      const ns=ax.createBufferSource();ns.buffer=noiseBuf(0.04);
+    for(let i=0;i<8;i++){const ns=ax.createBufferSource();ns.buffer=noiseBuf(0.04);
       const bp=ax.createBiquadFilter();bp.type='bandpass';bp.frequency.value=3000+Math.random()*2000;bp.Q.value=2;
       const g=ax.createGain();const st=t+i*0.04+Math.random()*0.01;
       g.gain.setValueAtTime(0.08+Math.random()*0.06,st);g.gain.exponentialRampToValueAtTime(0.001,st+0.035);
-      ns.connect(bp);bp.connect(g);g.connect(m);ns.start(st);ns.stop(st+0.04);
-    }
-    m.gain.setValueAtTime(0.6,t);
+      ns.connect(bp);bp.connect(g);g.connect(m);ns.start(st);ns.stop(st+0.04);}m.gain.setValueAtTime(0.6,t);
   } else if(type==='deal'){
-    // Card slide: descending noise + tonal swoosh
     const ns=ax.createBufferSource();ns.buffer=noiseBuf(0.12);
     const hp=ax.createBiquadFilter();hp.type='highpass';hp.frequency.value=4000;
     const g=ax.createGain();g.gain.setValueAtTime(0.12,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.1);
     ns.connect(hp);hp.connect(g);g.connect(m);ns.start(t);ns.stop(t+0.12);
-    // Tonal swish
     const o=ax.createOscillator();const og=ax.createGain();o.type='triangle';
     o.frequency.setValueAtTime(800,t);o.frequency.exponentialRampToValueAtTime(250,t+0.08);
     og.gain.setValueAtTime(0.06,t);og.gain.exponentialRampToValueAtTime(0.001,t+0.09);
     o.connect(og);og.connect(m);o.start(t);o.stop(t+0.1);m.gain.setValueAtTime(0.5,t);
   } else if(type==='flip'){
-    // Card reveal: quick upward sweep + paper snap
     const o=ax.createOscillator();const g=ax.createGain();o.type='triangle';
     o.frequency.setValueAtTime(400,t);o.frequency.exponentialRampToValueAtTime(1200,t+0.08);
     g.gain.setValueAtTime(0.1,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.12);
@@ -103,44 +90,29 @@ function snd(type){
     const ns=ax.createBufferSource();ns.buffer=noiseBuf(0.05);
     const bp=ax.createBiquadFilter();bp.type='bandpass';bp.frequency.value=5000;bp.Q.value=1.5;
     const ng=ax.createGain();ng.gain.setValueAtTime(0.15,t);ng.gain.exponentialRampToValueAtTime(0.001,t+0.04);
-    ns.connect(bp);bp.connect(ng);ng.connect(m);ns.start(t);ns.stop(t+0.05);
-    m.gain.setValueAtTime(0.5,t);
+    ns.connect(bp);bp.connect(ng);ng.connect(m);ns.start(t);ns.stop(t+0.05);m.gain.setValueAtTime(0.5,t);
   } else if(type==='chip'){
-    // Ceramic chip clink: layered high-freq oscillators + noise click
-    for(let i=0;i<3;i++){
-      const o=ax.createOscillator();const g=ax.createGain();
-      o.type=i===0?'sine':'square';
-      o.frequency.setValueAtTime(4000+i*2500+Math.random()*800,t+i*0.02);
+    for(let i=0;i<3;i++){const o=ax.createOscillator();const g=ax.createGain();
+      o.type=i===0?'sine':'square';o.frequency.setValueAtTime(4000+i*2500+Math.random()*800,t+i*0.02);
       o.frequency.exponentialRampToValueAtTime(1500,t+i*0.02+0.12);
       g.gain.setValueAtTime(0.04,t+i*0.02);g.gain.exponentialRampToValueAtTime(0.001,t+i*0.02+0.15);
-      o.connect(g);g.connect(m);o.start(t+i*0.02);o.stop(t+i*0.02+0.15);
-    }
+      o.connect(g);g.connect(m);o.start(t+i*0.02);o.stop(t+i*0.02+0.15);}
     const ns=ax.createBufferSource();ns.buffer=noiseBuf(0.03);
     const hp=ax.createBiquadFilter();hp.type='highpass';hp.frequency.value=6000;
     const ng=ax.createGain();ng.gain.setValueAtTime(0.12,t);ng.gain.exponentialRampToValueAtTime(0.001,t+0.04);
-    ns.connect(hp);hp.connect(ng);ng.connect(m);ns.start(t);ns.stop(t+0.04);
-    m.gain.setValueAtTime(0.4,t);
+    ns.connect(hp);hp.connect(ng);ng.connect(m);ns.start(t);ns.stop(t+0.04);m.gain.setValueAtTime(0.4,t);
   } else if(type==='chips_rake'){
-    // Collecting chips: rapid cascading clinks
-    for(let i=0;i<6;i++){
-      const o=ax.createOscillator();const g=ax.createGain();o.type='sine';
+    for(let i=0;i<6;i++){const o=ax.createOscillator();const g=ax.createGain();o.type='sine';
       const f=3000+i*500+Math.random()*400;o.frequency.setValueAtTime(f,t+i*0.035);
       o.frequency.exponentialRampToValueAtTime(f*0.4,t+i*0.035+0.1);
       g.gain.setValueAtTime(0.05,t+i*0.035);g.gain.exponentialRampToValueAtTime(0.001,t+i*0.035+0.12);
-      o.connect(g);g.connect(m);o.start(t+i*0.035);o.stop(t+i*0.035+0.12);
-    }
-    m.gain.setValueAtTime(0.4,t);
+      o.connect(g);g.connect(m);o.start(t+i*0.035);o.stop(t+i*0.035+0.12);}m.gain.setValueAtTime(0.4,t);
   } else if(type==='check'){
-    // Double tap on felt
-    for(let i=0;i<2;i++){
-      const ns=ax.createBufferSource();ns.buffer=noiseBuf(0.02);
+    for(let i=0;i<2;i++){const ns=ax.createBufferSource();ns.buffer=noiseBuf(0.02);
       const lp=ax.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1500;
       const g=ax.createGain();g.gain.setValueAtTime(0.1,t+i*0.08);g.gain.exponentialRampToValueAtTime(0.001,t+i*0.08+0.04);
-      ns.connect(lp);lp.connect(g);g.connect(m);ns.start(t+i*0.08);ns.stop(t+i*0.08+0.04);
-    }
-    m.gain.setValueAtTime(0.4,t);
+      ns.connect(lp);lp.connect(g);g.connect(m);ns.start(t+i*0.08);ns.stop(t+i*0.08+0.04);}m.gain.setValueAtTime(0.4,t);
   } else if(type==='fold'){
-    // Cards tossed: descending swish
     const o=ax.createOscillator();const g=ax.createGain();o.type='sine';
     o.frequency.setValueAtTime(500,t);o.frequency.exponentialRampToValueAtTime(150,t+0.18);
     g.gain.setValueAtTime(0.06,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.2);
@@ -148,18 +120,14 @@ function snd(type){
     const ns=ax.createBufferSource();ns.buffer=noiseBuf(0.1);
     const hp=ax.createBiquadFilter();hp.type='highpass';hp.frequency.value=2000;
     const ng=ax.createGain();ng.gain.setValueAtTime(0.06,t);ng.gain.exponentialRampToValueAtTime(0.001,t+0.1);
-    ns.connect(hp);hp.connect(ng);ng.connect(m);ns.start(t);ns.stop(t+0.1);
-    m.gain.setValueAtTime(0.35,t);
+    ns.connect(hp);hp.connect(ng);ng.connect(m);ns.start(t);ns.stop(t+0.1);m.gain.setValueAtTime(0.35,t);
   } else if(type==='allin'){
-    // Dramatic: rising pitch + chip cascade
     for(let i=0;i<8;i++){const o=ax.createOscillator();const g=ax.createGain();o.type='sawtooth';
       o.frequency.setValueAtTime(200+i*100,t+i*0.04);o.frequency.exponentialRampToValueAtTime(80,t+i*0.04+0.2);
       g.gain.setValueAtTime(0.06,t+i*0.04);g.gain.exponentialRampToValueAtTime(0.001,t+i*0.04+0.22);
-      o.connect(g);g.connect(m);o.start(t+i*0.04);o.stop(t+i*0.04+0.22);}
-    m.gain.setValueAtTime(0.5,t);
+      o.connect(g);g.connect(m);o.start(t+i*0.04);o.stop(t+i*0.04+0.22);}m.gain.setValueAtTime(0.5,t);
   } else if(type==='win'){
-    const notes=[523,659,784,1047];
-    notes.forEach((f,i)=>{const o=ax.createOscillator();const g=ax.createGain();o.type='triangle';o.frequency.value=f;
+    [523,659,784,1047].forEach((f,i)=>{const o=ax.createOscillator();const g=ax.createGain();o.type='triangle';o.frequency.value=f;
       g.gain.setValueAtTime(0,t+i*0.12);g.gain.linearRampToValueAtTime(0.12,t+i*0.12+0.04);g.gain.linearRampToValueAtTime(0,t+i*0.12+0.4);
       o.connect(g);g.connect(m);o.start(t+i*0.12);o.stop(t+i*0.12+0.4);});m.gain.setValueAtTime(0.5,t);
   } else if(type==='lose'){
@@ -175,7 +143,7 @@ function ambStart(){if(ambOn||!ax)return;ambOn=true;const ns=ax.createBufferSour
   ns.connect(f);f.connect(g);g.connect(ax.destination);ns.start();}
 
 // ============================================================
-//  PARTICLES & CHIP ANIMS (unchanged from v3, compressed)
+//  PARTICLES & CHIP ANIMS
 // ============================================================
 let particles=[];
 function ap(x,y,tp,n){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=0.8+Math.random()*2.5;let l,r,g,b,sz;
@@ -218,14 +186,13 @@ function drCdA(){const cw=Math.min(W*0.05,35),ch=cw*1.45;cardAn.forEach(c=>{if(c
 const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');let W,H;
 function resize(){W=window.innerWidth;H=window.innerHeight;canvas.width=W;canvas.height=H;}
 resize();window.addEventListener('resize',resize);window.addEventListener('orientationchange',()=>setTimeout(resize,200));
-document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 
 function rr(x,y,w,h,r,f,s){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
   ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
   ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();if(f)ctx.fill();if(s)ctx.stroke();}
 
 // ============================================================
-//  DECK, EVAL (same)
+//  DECK, EVAL
 // ============================================================
 const SUITS=['♠','♥','♦','♣'],SC={'♠':'#1a1a2e','♥':'#dc2626','♦':'#2563eb','♣':'#16a34a'};
 const RANKS=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
@@ -252,180 +219,367 @@ function e5(c){const s=[...c].sort((a,b)=>b.val-a.val),v=s.map(c=>c.val),su=s.ma
   return{rank:1,name:'High Card',val:v[0]*1e8+v[1]*1e6+v[2]*1e4+v[3]*100+v[4]};}
 
 // ============================================================
-//  HAND TIER SYSTEM (research-based)
+//  HAND TIER — OPPONENT-COUNT AWARE
 // ============================================================
-function handTier(c){
-  // Returns 1-8 (8=premium, 1=trash)
+function handTier(c,nOpp){
   const hi=Math.max(c[0].val,c[1].val),lo=Math.min(c[0].val,c[1].val);
   const pair=c[0].val===c[1].val,suited=c[0].suit===c[1].suit;
   const gap=hi-lo;
-  // Tier 8: AA KK QQ AKs
-  if(pair&&hi>=12)return 8;
-  if(hi===14&&lo===13&&suited)return 8;
-  // Tier 7: AKo JJ TT AQs AJs KQs
-  if(hi===14&&lo===13)return 7;
-  if(pair&&hi>=10)return 7;
-  if(hi===14&&lo>=11&&suited)return 7;
-  if(hi===13&&lo===12&&suited)return 7;
-  // Tier 6: 99 88 ATs KJs QJs JTs AQo
-  if(pair&&hi>=8)return 6;
-  if(hi===14&&lo===10&&suited)return 6;
-  if(suited&&hi>=11&&gap===1)return 6;
-  if(hi===14&&lo===12)return 6;
-  // Tier 5: 77 66 55 T9s 98s A5s-A2s KQo AJo KJo
-  if(pair&&hi>=5)return 5;
-  if(suited&&hi>=9&&gap<=1)return 5;
-  if(hi===14&&lo<=5&&suited)return 5;
-  if(hi===14&&lo>=11)return 5;
-  if(hi===13&&lo>=11)return 5;
-  // Tier 4: 44 33 22 suited connectors 87s-54s, suited aces
-  if(pair)return 4;
-  if(suited&&gap<=1&&hi>=5)return 4;
-  if(hi===14&&suited)return 4;
-  if(suited&&gap<=2&&hi>=8)return 4;
-  // Tier 3: suited gappers, broadway offsuit
+  const hu=nOpp<=1; // heads-up
+  const sh=nOpp<=2; // short-handed (3 players)
+
+  // Tier 8: Premium — always raise
+  if(pair&&hi>=12)return 8; // QQ+
+  if(hi===14&&lo===13&&suited)return 8; // AKs
+  if(hu&&pair&&hi>=10)return 8; // JJ+ heads-up is premium
+
+  // Tier 7: Very Strong
+  if(hi===14&&lo===13)return 7; // AKo
+  if(pair&&hi>=10)return 7; // JJ TT
+  if(hi===14&&lo>=11&&suited)return 7; // AQs AJs
+  if(hi===13&&lo===12&&suited)return 7; // KQs
+  if(hu&&hi===14&&lo>=10&&suited)return 7; // ATs heads-up
+  if(hu&&pair&&hi>=8)return 7; // 99 88 heads-up
+
+  // Tier 6: Strong
+  if(pair&&hi>=8)return 6; // 99 88
+  if(hi===14&&lo===10&&suited)return 6; // ATs
+  if(suited&&hi>=11&&gap===1)return 6; // KJs QJs JTs
+  if(hi===14&&lo===12)return 6; // AQo
+  if(hu&&hi===14&&suited)return 6; // Any suited ace heads-up
+  if(hu&&suited&&hi>=10&&gap<=2)return 6; // QTs KTs T9s heads-up
+  if(sh&&pair&&hi>=6)return 6; // 77 66 short-handed
+
+  // Tier 5: Playable
+  if(pair&&hi>=5)return 5; // 77-55
+  if(suited&&hi>=9&&gap<=1)return 5; // T9s 98s
+  if(hi===14&&lo<=5&&suited)return 5; // A5s-A2s
+  if(hi===14&&lo>=11)return 5; // AJo ATo big table
+  if(hi===13&&lo>=11)return 5; // KQo KJo
+  if(hu&&suited&&hi>=8)return 5; // Any suited 8+ heads-up (Q3s etc.)
+  if(hu&&hi>=11)return 5; // Any broadway heads-up
+  if(sh&&suited&&gap<=2&&hi>=8)return 5; // suited gappers short-handed
+
+  // Tier 4: Speculative
+  if(pair)return 4; // 44 33 22
+  if(suited&&gap<=1&&hi>=5)return 4; // suited connectors
+  if(hi===14&&suited)return 4; // suited aces
+  if(suited&&gap<=2&&hi>=8)return 4; // suited 1-gappers
+  if(hu&&suited&&hi>=6)return 4; // more suited hands heads-up
+  if(hu&&hi>=10&&lo>=6)return 4; // connected broadway heads-up
+
+  // Tier 3: Marginal
   if(suited&&hi>=10)return 3;
   if(hi>=11&&lo>=10)return 3;
   if(suited&&gap<=2)return 3;
-  // Tier 2: suited junk, connected offsuit
+  if(hu&&suited)return 3; // any suited heads-up
+  if(hu&&hi>=9)return 3; // 9+ high heads-up
+
+  // Tier 2: Weak (but playable cheap)
   if(suited)return 2;
   if(gap<=1&&hi>=7)return 2;
-  // Tier 1: trash
+  if(hu)return 2; // heads-up, everything has some value
+
+  // Tier 1: Trash
   return 1;
+}
+
+// ============================================================
+//  HAND STRENGTH SCORE (0-100)
+// ============================================================
+function handScore(hand,board,nOpp){
+  if(board&&board.length>=3)return postflopScore(hand,board,nOpp);
+  return preflopScore(hand,nOpp);
+}
+
+function preflopScore(hand,nOpp){
+  const tier=handTier(hand,nOpp);
+  const hi=Math.max(hand[0].val,hand[1].val),lo=Math.min(hand[0].val,hand[1].val);
+  const suited=hand[0].suit===hand[1].suit,pair=hand[0].val===hand[1].val;
+  // Base ranges per tier
+  const ranges={8:[82,96],7:[72,84],6:[62,73],5:[52,63],4:[42,53],3:[34,44],2:[26,36],1:[15,28]};
+  const[rlo,rhi]=ranges[tier];
+  // Interpolate by card values
+  const cardVal=pair?(hi-2)/12:(hi+lo-4)/24;
+  let score=rlo+(rhi-rlo)*cardVal;
+  if(suited&&!pair)score+=2;
+  return Math.round(Math.max(5,Math.min(99,score)));
+}
+
+function postflopScore(hand,board,nOpp){
+  const ev=evalHand([...hand,...board]);
+  const outs=countOuts(hand,board);
+  const boardInfo=analyzeBoard(board);
+  // Base from made hand rank
+  const bases={10:99,9:97,8:94,7:88,6:82,5:75,4:67,3:56,2:35,1:18,0:10};
+  let score=bases[ev.rank]||10;
+  // Adjust pair quality — top pair vs bottom pair
+  if(ev.rank===2){
+    const boardVals=board.map(c=>c.val).sort((a,b)=>b-a);
+    const pairVal=hand[0].val===hand[1].val?hand[0].val:
+      (boardVals.includes(hand[0].val)?hand[0].val:hand[1].val);
+    if(pairVal>=boardVals[0])score+=8; // top pair
+    else if(pairVal>=boardVals[1])score+=3; // second pair
+    else score-=3; // bottom pair
+    // Kicker quality
+    const kicker=hand[0].val===pairVal?hand[1].val:hand[0].val;
+    score+=Math.max(0,(kicker-9)*1.5); // bonus for good kicker
+  }
+  // Two pair: top two vs bottom two
+  if(ev.rank===3){
+    const hiCard=Math.max(hand[0].val,hand[1].val);
+    if(hiCard>=12)score+=4; // top two pair
+  }
+  // Add draw equity
+  if(board.length<5&&outs>0){
+    const equity=board.length===3?outs*4:outs*2;
+    score+=equity*0.4;
+  }
+  // Board texture danger
+  if(boardInfo){
+    if(boardInfo.wetness>=3&&ev.rank<=2)score-=5; // wet board danger with weak hand
+    if(boardInfo.paired&&ev.rank<=2)score-=2; // someone might have trips
+  }
+  // Opponent count
+  if(nOpp<=1)score+=4;
+  else if(nOpp>=3)score-=4;
+  return Math.round(Math.max(5,Math.min(99,score)));
+}
+
+// ============================================================
+//  BOARD TEXTURE ANALYSIS
+// ============================================================
+function analyzeBoard(board){
+  if(!board||board.length<3)return null;
+  const suits=board.map(c=>c.suit),vals=board.map(c=>c.val).sort((a,b)=>b-a);
+  // Flush potential
+  const sc={};suits.forEach(s=>{sc[s]=(sc[s]||0)+1;});
+  const maxSuit=Math.max(...Object.values(sc));
+  const flushDraw=maxSuit>=3;
+  const flushPossible=maxSuit>=3;
+  // Straight potential
+  const uv=[...new Set(vals)].sort((a,b)=>a-b);
+  if(uv.includes(14))uv.unshift(1);
+  let maxCon=1,cur=1;
+  for(let i=1;i<uv.length;i++){if(uv[i]-uv[i-1]<=2)cur++;else cur=1;maxCon=Math.max(maxCon,cur);}
+  const straightDraw=maxCon>=3;
+  // Paired
+  const vc={};vals.forEach(v=>{vc[v]=(vc[v]||0)+1;});
+  const paired=Object.values(vc).some(c=>c>=2);
+  // Wetness score
+  const wetness=(flushDraw?2:0)+(straightDraw?2:0)+(maxCon>=2?1:0);
+  let type,desc;
+  if(paired){type='paired';desc='Paired board';}
+  else if(wetness>=3){type='wet';desc='Wet board (lots of draws)';}
+  else if(wetness>=1){type='medium';desc='Semi-connected board';}
+  else{type='dry';desc='Dry board (few draws)';}
+  const hasAce=vals.includes(14),hasKing=vals.includes(13),hasQueen=vals.includes(12);
+  const highCount=vals.filter(v=>v>=11).length;
+  const allHigh=vals.every(v=>v>=10);
+  const allLow=vals.every(v=>v<=8);
+  return{type,desc,flushDraw,flushPossible,straightDraw,paired,hasAce,hasKing,hasQueen,highCount,allHigh,allLow,wetness,maxSuit,vals};
+}
+
+// ============================================================
+//  OPPONENT HAND READING
+// ============================================================
+function opponentRead(board,hand,nOpp){
+  const bt=analyzeBoard(board);
+  if(!bt)return'';
+  const reads=[];
+  // What scary hands are possible
+  if(bt.hasAce)reads.push('Anyone with an Ace has top pair');
+  else if(bt.hasKing)reads.push('A King gives top pair here');
+  if(bt.flushPossible&&bt.maxSuit>=3){
+    const fSuit=Object.entries(
+      board.reduce((a,c)=>{a[c.suit]=(a[c.suit]||0)+1;return a;},{})
+    ).find(([s,c])=>c>=3);
+    if(fSuit)reads.push('flush draw possible in '+fSuit[0]);
+  }
+  if(bt.straightDraw)reads.push('straight draws are out there');
+  if(bt.paired)reads.push('trips possible but unlikely');
+  // Bluff detection based on board texture
+  if(bt.type==='dry'&&nOpp<=2)reads.push('dry board — a big bet could be a bluff!');
+  if(bt.allLow&&nOpp<=2)reads.push('low cards — high-card hands likely missed');
+  if(bt.allHigh)reads.push('lots of high cards — big hands possible');
+  // What we block
+  const ourVals=hand.map(c=>c.val);
+  const ourSuits=hand.map(c=>c.suit);
+  if(bt.hasAce&&ourVals.includes(14))reads.push('you hold an Ace, so fewer Ace combos for them');
+  return reads.length>0?reads.slice(0,2).join('. ')+'.':'';
 }
 
 // Count outs for flush/straight draws
 function countOuts(hand,board){
   const all=[...hand,...board];let outs=0;
-  // Flush draw
   const suitCounts={};all.forEach(c=>{suitCounts[c.suit]=(suitCounts[c.suit]||0)+1;});
-  const flushDraw=Object.values(suitCounts).some(v=>v===4);
-  if(flushDraw)outs+=9;
-  // Straight draw (OESD or gutshot)
+  if(Object.values(suitCounts).some(v=>v===4))outs+=9;
   const vals=[...new Set(all.map(c=>c.val))].sort((a,b)=>a-b);
-  if(vals.includes(14))vals.unshift(1); // ace low
-  let maxConsec=0,gaps=0;
+  if(vals.includes(14))vals.unshift(1);
   for(let i=0;i<=vals.length-4;i++){
-    const window=vals.slice(i,i+5);
-    if(window.length>=4){
-      const range=window[window.length-1]-window[0];
-      const unique=window.length;
-      if(range<=4){
-        const missing=range+1-unique;
-        if(missing===1&&unique===4)outs+=4; // gutshot
-        if(missing===0&&unique===4){
-          // Check if open-ended
-          if(window[0]>1&&window[window.length-1]<14)outs+=4; // OESD adds 4 more
-        }
-      }
-    }
-  }
-  // Overcards (if no pair on board matching our cards)
-  const boardVals=board.map(c=>c.val);
-  const topBoard=Math.max(...boardVals);
-  hand.forEach(c=>{if(c.val>topBoard)outs+=3;}); // ~3 outs per overcard
-  return Math.min(outs,20); // cap
+    const w=vals.slice(i,i+5);if(w.length>=4){
+      const range=w[w.length-1]-w[0],unique=w.length;
+      if(range<=4){const missing=range+1-unique;
+        if(missing===1&&unique===4)outs+=4;
+        if(missing===0&&unique===4&&w[0]>1&&w[w.length-1]<14)outs+=4;}}}
+  const boardVals=board.map(c=>c.val),topBoard=Math.max(...boardVals);
+  hand.forEach(c=>{if(c.val>topBoard)outs+=3;});
+  return Math.min(outs,20);
 }
 
 // ============================================================
-//  SMART AI + COACH
+//  SMART AI + COACH ENGINE
 // ============================================================
 function getDecision(p,forTip){
-  // Works for both AI players and generating tips for human
   const canCheck=p.bet>=currentBet;
   const callAmt=Math.min(currentBet-p.bet,p.chips);
   const potAfterCall=pot+callAmt;
   const potOdds=callAmt>0?callAmt/potAfterCall:0;
-  const nActive=countNotFolded();
-  const spr=pot>0?p.chips/pot:20;
+  const nOpp=countNotFolded()-1;
+  const score=handScore(p.hand,communityCards.length>=3?communityCards:null,nOpp);
+  const bt=analyzeBoard(communityCards);
+  const oppRead=communityCards.length>=3?opponentRead(communityCards,p.hand,nOpp):'';
+
+  // *** GOLDEN RULE: NEVER fold when you can check! ***
+  // Free information is always worth taking.
 
   // === POSTFLOP ===
   if(gameState!=='preflop'&&communityCards.length>=3){
     const ev=evalHand([...p.hand,...communityCards]);
     const outs=countOuts(p.hand,communityCards);
-    const equity=communityCards.length===3?outs*4/100:outs*2/100; // rule of 4/2
-    const madeStrength=ev.rank;
+    const equity=communityCards.length===3?outs*4/100:outs*2/100;
+    const hi=Math.max(p.hand[0].val,p.hand[1].val),lo=Math.min(p.hand[0].val,p.hand[1].val);
+    const suited=p.hand[0].suit===p.hand[1].suit;
+    const handDesc=p.hand[0].val===p.hand[1].val?`Pair of ${RANKS[hi-2]}s`:`${p.hand[0].rank}${p.hand[0].suit}${p.hand[1].rank}${p.hand[1].suit}`;
 
     // Monster (trips+): value bet / raise
-    if(madeStrength>=4){
+    if(ev.rank>=4){
       const raiseAmt=Math.min(currentBet+Math.floor(pot*0.65),p.chips+p.bet);
-      if(canCheck&&Math.random()<0.7)return{action:'raise',amount:raiseAmt,
-        tip:`RAISE`,reason:`You have ${ev.name}! Build the pot — this is a strong hand.`};
-      if(!canCheck)return{action:callAmt>p.chips*0.5&&madeStrength>=6?'allin':'call',amount:0,
-        tip:callAmt>p.chips*0.5?'ALL IN':`CALL $${callAmt}`,reason:`${ev.name} is very strong — definitely stay in!`};
-      return{action:'check',tip:'CHECK',reason:`${ev.name} — let others bet, then raise them!`};
+      if(canCheck&&Math.random()<0.7)return{action:'raise',amount:raiseAmt,score,
+        tip:'RAISE',reason:`${ev.name}! Build the pot. ${oppRead}`};
+      if(!canCheck)return{action:callAmt>p.chips*0.5&&ev.rank>=6?'allin':'call',score,
+        tip:callAmt>p.chips*0.5?'ALL IN':`CALL $${callAmt}`,reason:`${ev.name} is very strong — stay in! ${oppRead}`};
+      return{action:'check',score,tip:'CHECK',reason:`${ev.name} — slow-play and trap them! ${oppRead}`};
     }
     // Two pair
-    if(madeStrength===3){
+    if(ev.rank===3){
       if(canCheck){
-        const raiseAmt=Math.min(currentBet+bigBlind*2,p.chips+p.bet);
-        return Math.random()<0.45?{action:'raise',amount:raiseAmt,tip:'RAISE',reason:`Two Pair is strong — bet to protect your hand.`}:
-          {action:'check',tip:'CHECK',reason:`Two Pair — see if anyone bets so you can raise.`};
+        const ra=Math.min(currentBet+bigBlind*2,p.chips+p.bet);
+        return Math.random()<0.45?{action:'raise',amount:ra,score,tip:'RAISE',reason:`Two Pair — bet to protect. ${oppRead}`}:
+          {action:'check',score,tip:'CHECK',reason:`Two Pair — trap them, then raise! ${oppRead}`};
       }
-      if(callAmt<=pot*0.75)return{action:'call',tip:`CALL $${callAmt}`,reason:`Two Pair is worth the call.`};
-      return{action:'call',tip:`CALL $${callAmt}`,reason:`Two Pair — worth it but be cautious.`};
+      if(callAmt<=pot*0.75)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Two Pair is worth the call. ${oppRead}`};
+      return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Two Pair — worth it but stay alert. ${oppRead}`};
     }
     // One pair
-    if(madeStrength===2){
-      if(canCheck)return Math.random()<0.2?
-        {action:'raise',amount:Math.min(currentBet+bigBlind*2,p.chips+p.bet),tip:'RAISE',reason:`One Pair — a small bet might scare others away.`}:
-        {action:'check',tip:'CHECK',reason:`One Pair — check and see what develops.`};
-      if(callAmt<=bigBlind*3)return{action:'call',tip:`CALL $${callAmt}`,reason:`Your Pair is worth a small call.`};
-      if(callAmt<=pot*0.5&&nActive<=3)return{action:'call',tip:`CALL $${callAmt}`,reason:`Pair might be good with few players left.`};
-      return{action:'fold',tip:'FOLD',reason:`Your Pair isn't strong enough for $${callAmt}. Save your chips.`};
+    if(ev.rank===2){
+      const boardVals=communityCards.map(c=>c.val).sort((a,b)=>b-a);
+      const pairVal=p.hand[0].val===p.hand[1].val?p.hand[0].val:
+        (boardVals.includes(p.hand[0].val)?p.hand[0].val:p.hand[1].val);
+      const isTopPair=pairVal>=boardVals[0];
+      const isOverpair=p.hand[0].val===p.hand[1].val&&p.hand[0].val>boardVals[0];
+      if(canCheck){
+        if(isOverpair||isTopPair){
+          return Math.random()<0.4?
+            {action:'raise',amount:Math.min(currentBet+Math.floor(pot*0.5),p.chips+p.bet),score,tip:'RAISE',reason:`${isOverpair?'Overpair':'Top Pair'}! Bet for value. ${oppRead}`}:
+            {action:'check',score,tip:'CHECK',reason:`${isOverpair?'Overpair':'Top Pair'} — solid hand, control the pot. ${oppRead}`};
+        }
+        return{action:'check',score,tip:'CHECK',reason:`Bottom pair — check and see what happens. ${oppRead}`};
+      }
+      if(isOverpair||isTopPair){
+        if(callAmt<=pot)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`${isOverpair?'Overpair':'Top Pair'} is worth a call. ${oppRead}`};
+        if(callAmt>p.chips*0.5)return{action:'fold',score,tip:'FOLD',reason:`Even with ${isTopPair?'Top':'a'} Pair, $${callAmt} is too much. They probably have you beat.`};
+        return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Top Pair — call but be cautious. ${oppRead}`};
+      }
+      if(callAmt<=bigBlind*2)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Weak pair but cheap to see. ${oppRead}`};
+      return{action:'fold',score,tip:'FOLD',reason:`Bottom pair facing a big bet. Save your chips for a better spot.`};
     }
     // Drawing hands (flush/straight draw)
     if(outs>=8){
-      if(canCheck)return{action:'check',tip:'CHECK',reason:`You have a draw (${outs} outs, ~${(equity*100).toFixed(0)}% chance). Check for free!`};
-      if(equity>potOdds)return{action:'call',tip:`CALL $${callAmt}`,reason:`Good draw! ${outs} outs = ${(equity*100).toFixed(0)}% chance, and pot odds are right.`};
-      return{action:'fold',tip:'FOLD',reason:`Draw odds (${(equity*100).toFixed(0)}%) don't justify $${callAmt} call.`};
+      if(canCheck){
+        return Math.random()<0.15?
+          {action:'raise',amount:Math.min(currentBet+Math.floor(pot*0.5),p.chips+p.bet),score,tip:'RAISE',reason:`Semi-bluff! ${outs} outs (${(equity*100).toFixed(0)}% chance). They might fold! ${oppRead}`}:
+          {action:'check',score,tip:'CHECK',reason:`Drawing hand — ${outs} outs = ${(equity*100).toFixed(0)}% chance. Free card! ${oppRead}`};
+      }
+      if(equity>potOdds)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Good draw! ${outs} outs = ${(equity*100).toFixed(0)}% to hit. Pot odds say call. ${oppRead}`};
+      if(callAmt<=bigBlind*2)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Draw with ${outs} outs — cheap enough to chase. ${oppRead}`};
+      return{action:'fold',score,tip:'FOLD',reason:`Draw odds (${(equity*100).toFixed(0)}%) don't justify $${callAmt}. ${oppRead}`};
     }
-    // Nothing
-    if(canCheck)return Math.random()<0.1?
-      {action:'raise',amount:Math.min(currentBet+Math.floor(pot*0.5),p.chips+p.bet),tip:'RAISE',reason:`Nothing yet — but a bluff might win the pot!`}:
-      {action:'check',tip:'CHECK',reason:`Weak hand — check for free and hope for improvement.`};
-    if(callAmt<=bigBlind&&Math.random()<0.3)return{action:'call',tip:`CALL $${callAmt}`,reason:`Only $${callAmt} — might be worth a look.`};
-    return{action:'fold',tip:'FOLD',reason:`Nothing here and it costs $${callAmt}. Fold and wait!`};
+    // Small draw (4-7 outs)
+    if(outs>=4){
+      if(canCheck)return{action:'check',score,tip:'CHECK',reason:`Small draw (${outs} outs, ${(equity*100).toFixed(0)}%). Check for a free card. ${oppRead}`};
+      if(callAmt<=bigBlind)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Small draw — $${callAmt} is cheap enough. ${oppRead}`};
+      return{action:'fold',score,tip:'FOLD',reason:`Only ${outs} outs (${(equity*100).toFixed(0)}%) — not worth $${callAmt}.`};
+    }
+    // Nothing / high card only
+    if(canCheck){
+      // Occasionally bluff on dry boards heads-up
+      if(bt&&bt.type==='dry'&&nOpp<=1&&Math.random()<0.15){
+        return{action:'raise',amount:Math.min(currentBet+Math.floor(pot*0.5),p.chips+p.bet),score,
+          tip:'RAISE',reason:`Nothing — but dry board, try a bluff! They probably missed too.`};
+      }
+      return{action:'check',score,tip:'CHECK',reason:`Weak hand — check for free. ${oppRead}`};
+    }
+    if(callAmt<=bigBlind&&Math.random()<0.3)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Only $${callAmt} — worth a peek. ${oppRead}`};
+    // Bluff detection hint
+    if(bt&&bt.type==='dry'&&nOpp<=1&&callAmt<=bigBlind*3){
+      return Math.random()<0.3?
+        {action:'call',score,tip:`CALL $${callAmt}`,reason:`Dry board — they could be bluffing! Worth a call.`}:
+        {action:'fold',score,tip:'FOLD',reason:`Nothing here, $${callAmt} to call. They might have it.`};
+    }
+    return{action:'fold',score,tip:'FOLD',reason:`Nothing and it costs $${callAmt}. Fold and wait for better cards.`};
   }
 
   // === PREFLOP ===
-  const tier=handTier(p.hand);
+  const tier=handTier(p.hand,nOpp);
   const hi=Math.max(p.hand[0].val,p.hand[1].val),lo=Math.min(p.hand[0].val,p.hand[1].val);
-  const pair=p.hand[0].val===p.hand[1].val;
-  const handDesc=pair?`Pair of ${RANKS[hi-2]}s`:`${RANKS[hi-2]}-${RANKS[lo-2]}${p.hand[0].suit===p.hand[1].suit?' suited':''}`;
+  const pair=p.hand[0].val===p.hand[1].val,suited=p.hand[0].suit===p.hand[1].suit;
+  const handDesc=pair?`Pair of ${RANKS[hi-2]}s`:`${RANKS[hi-2]}-${RANKS[lo-2]}${suited?' suited':''}`;
+  const huNote=nOpp<=1?' (heads-up = play wider!)':'';
 
   // Premium (tier 7-8): always raise
   if(tier>=7){
-    const raiseAmt=Math.min(currentBet+bigBlind*3,p.chips+p.bet);
-    if(canCheck)return{action:'raise',amount:raiseAmt,tip:'RAISE',reason:`${handDesc} — premium hand! Raise big to build the pot.`};
-    if(callAmt>=p.chips*0.3)return{action:'allin',tip:'ALL IN',reason:`${handDesc} is one of the best starting hands. Go for it!`};
-    return{action:'raise',amount:raiseAmt,tip:'RAISE',reason:`${handDesc} — strong! Raise to show strength.`};
+    const ra=Math.min(currentBet+bigBlind*3,p.chips+p.bet);
+    if(canCheck)return{action:'raise',amount:ra,score,tip:'RAISE',reason:`${handDesc} — premium hand! Raise big.${huNote}`};
+    if(callAmt>=p.chips*0.3)return{action:'allin',score,tip:'ALL IN',reason:`${handDesc} — one of the best hands. Go for it!${huNote}`};
+    return{action:'raise',amount:ra,score,tip:'RAISE',reason:`${handDesc} — strong! Raise to show strength.${huNote}`};
   }
   // Strong (tier 5-6): raise or call
   if(tier>=5){
-    if(canCheck)return Math.random()<0.3?
-      {action:'raise',amount:Math.min(currentBet+bigBlind*2,p.chips+p.bet),tip:'RAISE',reason:`${handDesc} — good hand. A raise could thin the field.`}:
-      {action:'check',tip:'CHECK',reason:`${handDesc} — decent hand, check and see the flop.`};
-    if(callAmt<=bigBlind*3)return{action:'call',tip:`CALL $${callAmt}`,reason:`${handDesc} is worth seeing the flop for $${callAmt}.`};
-    return Math.random()<0.3?{action:'call',tip:`CALL $${callAmt}`,reason:`${handDesc} — borderline. Call if you're feeling lucky.`}:
-      {action:'fold',tip:'FOLD',reason:`${handDesc} isn't strong enough for $${callAmt}.`};
+    if(canCheck)return Math.random()<0.35?
+      {action:'raise',amount:Math.min(currentBet+bigBlind*2,p.chips+p.bet),score,tip:'RAISE',reason:`${handDesc} — solid hand. Raise to thin the field.${huNote}`}:
+      {action:'check',score,tip:'CHECK',reason:`${handDesc} — good hand, see the flop.${huNote}`};
+    if(callAmt<=bigBlind*3)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — worth seeing the flop for $${callAmt}.${huNote}`};
+    if(callAmt<=bigBlind*5&&nOpp<=2)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — playable with few opponents.${huNote}`};
+    return Math.random()<0.3?{action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — borderline. Call if you feel lucky.`}:
+      {action:'fold',score,tip:'FOLD',reason:`${handDesc} isn't strong enough for $${callAmt} with ${nOpp} opponents.`};
   }
-  // Medium (tier 3-4): call small or check
+  // Speculative (tier 3-4): call small or check
   if(tier>=3){
-    if(canCheck)return{action:'check',tip:'CHECK',reason:`${handDesc} — check and see a cheap flop.`};
-    if(callAmt<=bigBlind*2)return Math.random()<0.5?
-      {action:'call',tip:`CALL $${callAmt}`,reason:`${handDesc} — small cost, could get lucky on the flop.`}:
-      {action:'fold',tip:'FOLD',reason:`${handDesc} is marginal. Folding is safe.`};
-    return{action:'fold',tip:'FOLD',reason:`${handDesc} isn't worth $${callAmt}. Wait for better cards.`};
+    if(canCheck)return{action:'check',score,tip:'CHECK',reason:`${handDesc} — check and see a cheap flop.${huNote}`};
+    if(callAmt<=bigBlind*2)return Math.random()<(nOpp<=1?0.7:0.4)?
+      {action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — small price, could connect on the flop.${huNote}`}:
+      {action:'fold',score,tip:'FOLD',reason:`${handDesc} is marginal. Folding saves chips.`};
+    if(nOpp<=1&&callAmt<=bigBlind*4)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`${handDesc} — heads-up, worth playing!`};
+    return{action:'fold',score,tip:'FOLD',reason:`${handDesc} isn't worth $${callAmt}${nOpp>=3?' against this many players':''}.`};
   }
-  // Weak (tier 1-2): fold
-  if(canCheck)return{action:'check',tip:'CHECK',reason:`${handDesc} is weak — check for free.`};
-  if(callAmt<=bigBlind&&Math.random()<0.2)return{action:'call',tip:`CALL $${callAmt}`,reason:`Only $${callAmt} — tiny price to see a flop.`};
-  return{action:'fold',tip:'FOLD',reason:`${handDesc} is weak — fold and wait for a better hand!`};
+  // Weak (tier 1-2)
+  if(canCheck)return{action:'check',score,tip:'CHECK',reason:`${handDesc} is weak — but checking is free! Always see a free flop.`};
+  if(callAmt<=bigBlind&&nOpp<=1)return{action:'call',score,tip:`CALL $${callAmt}`,reason:`Only $${callAmt} heads-up — take a shot.`};
+  return{action:'fold',score,tip:'FOLD',reason:`${handDesc} is weak — fold and wait for a better hand.`};
+}
+
+// Score badge color
+function scoreColor(s){
+  if(s>=75)return'#22c55e'; // green
+  if(s>=55)return'#84cc16'; // lime
+  if(s>=40)return'#f59e0b'; // amber
+  if(s>=25)return'#f97316'; // orange
+  return'#ef4444'; // red
 }
 
 // ============================================================
-//  ANIMAL AVATARS (canvas-drawn, same as v3)
+//  ANIMAL AVATARS
 // ============================================================
 function drAvatar(cx,cy,r,animal,hl){
   ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
@@ -482,7 +636,6 @@ function drPlayers(){
   players.forEach((p,i)=>{if(!p)return;const pos=ppos(i,n);const act=i===currentPlayer&&!p.folded&&!p.allIn;
     ctx.save();if(p.chips<=0&&p.folded)ctx.globalAlpha=0.35;else if(p.folded)ctx.globalAlpha=0.5;
     drAvatar(pos.x,pos.y,ar,p.animal,act);ctx.restore();
-    // Nameplate
     const nw=Math.min(W*0.12,75),nh=Math.min(W*0.045,28),nx=pos.x-nw/2,ny=pos.y+ar+4;
     ctx.fillStyle=p.folded?'rgba(30,30,30,0.6)':'rgba(0,0,0,0.55)';rr(nx,ny,nw,nh,6,1,0);
     if(act){ctx.strokeStyle='#ffd700';ctx.lineWidth=1.5;rr(nx,ny,nw,nh,6,0,1);}
@@ -490,16 +643,13 @@ function drPlayers(){
     ctx.fillText(p.name,pos.x,ny+nh*0.32);
     ctx.fillStyle=p.chips<=0?'#ef4444':'#ffd700';ctx.font=`${Math.min(W*0.018,10)}px Arial`;
     ctx.fillText(p.chips<=0?'BUST':'$'+p.chips.toLocaleString(),pos.x,ny+nh*0.72);
-    // D/S/B badges
     if(i===dealerIdx){const bx=pos.x+ar+3,by=pos.y-ar+3;ctx.beginPath();ctx.arc(bx,by,Math.min(W*0.015,9),0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.fillStyle='#333';ctx.font=`bold ${Math.min(W*0.014,8)}px Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('D',bx,by+0.5);}
     if(i===sbI&&gameState!=='waiting'){const bx=pos.x-ar-3,by=pos.y-ar+3;ctx.beginPath();ctx.arc(bx,by,Math.min(W*0.013,8),0,Math.PI*2);ctx.fillStyle='#3b82f6';ctx.fill();ctx.fillStyle='#fff';ctx.font=`bold ${Math.min(W*0.012,7)}px Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('S',bx,by+0.5);}
     if(i===bbI&&gameState!=='waiting'){const bx=pos.x-ar-3,by=pos.y+ar-3;ctx.beginPath();ctx.arc(bx,by,Math.min(W*0.013,8),0,Math.PI*2);ctx.fillStyle='#f59e0b';ctx.fill();ctx.fillStyle='#fff';ctx.font=`bold ${Math.min(W*0.012,7)}px Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('B',bx,by+0.5);}
-    // Bet
     if(p.bet>0&&!p.folded){const bd=Math.atan2(H/2-pos.y,W/2-pos.x),dd=Math.min(ar+25,50);const bx=pos.x+Math.cos(bd)*dd,by=pos.y+Math.sin(bd)*dd;
-      const sc=Math.min(3,Math.ceil(p.bet/bigBlind));for(let s=0;s<sc;s++){ctx.fillStyle=s%2?'#e0c000':'#ffd700';ctx.strokeStyle='#8B6914';ctx.lineWidth=0.5;
+      const sc2=Math.min(3,Math.ceil(p.bet/bigBlind));for(let s=0;s<sc2;s++){ctx.fillStyle=s%2?'#e0c000':'#ffd700';ctx.strokeStyle='#8B6914';ctx.lineWidth=0.5;
         ctx.beginPath();ctx.ellipse(bx,by-s*2.5,5,2.5,0,0,Math.PI*2);ctx.fill();ctx.stroke();}
       ctx.fillStyle='#ffd700';ctx.font=`bold ${Math.min(W*0.018,10)}px Arial`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('$'+p.bet,bx,by+10);}
-    // Cards
     if(p.hand&&p.hand.length===2){const show=p.isHuman||(gameState==='showdown'&&!p.folded);
       const yo=i===0?-(ch+ar+18):-(ar+ch+6),cx1=pos.x-cw-2,cy1=pos.y+yo;
       drCard(cx1,cy1,p.hand[0],show,cw,ch,showdownWinners.includes(i));
@@ -573,7 +723,7 @@ function process(){
   const p=players[currentPlayer];
   if(p.folded||p.allIn||p.chips<=0||(actedThisRound.has(currentPlayer)&&p.bet>=currentBet)){
     currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(),60);return;}
-  if(p.isHuman){showUI();waitingForHuman=true;}
+  if(p.isHuman){waitingForHuman=true;showUI();}
   else{waitingForHuman=false;hideUI();
     const d=getDecision(p,false);
     setTimeout(()=>{execAction(currentPlayer,d.action,d.amount);currentPlayer=(currentPlayer+1)%players.length;setTimeout(()=>process(),300);
@@ -581,7 +731,7 @@ function process(){
 }
 
 function showUI(){
-  const bb=document.getElementById('bottomBar');bb.style.display='flex';
+  const bb2=document.getElementById('bottomBar');bb2.style.display='flex';
   const p=players[0],call=Math.min(currentBet-p.bet,p.chips),canCk=call<=0;
   document.getElementById('btnCk').style.display=canCk?'block':'none';
   document.getElementById('btnCl').style.display=canCk?'none':'block';
@@ -591,8 +741,11 @@ function showUI(){
   if(p.chips+p.bet>currentBet){sl.style.display='flex';rg.min=minR;rg.max=p.chips+p.bet;rg.value=minR;
     document.getElementById('rAmt').textContent='$'+minR;rg.oninput=()=>document.getElementById('rAmt').textContent='$'+rg.value;}
   else sl.style.display='none';
-  // Tip
+  // Tip with score
   const tip=getDecision(p,true);
+  const sc=tip.score||50;
+  const badge=document.getElementById('scoreBadge');
+  badge.textContent=sc;badge.style.background=scoreColor(sc);
   document.getElementById('tipAct').textContent=tip.tip;
   document.getElementById('tipText').innerHTML=`<span class="tipAct">${tip.tip}</span> — ${tip.reason}`;
 }
@@ -664,7 +817,6 @@ function loop(){try{drTable();if(gameActive||document.getElementById('gameOver')
   drCA();upCA();drCdA();upCdA();drP();upP();drMsg();if(dealerMsgTimer>0)dealerMsgTimer--;}catch(e){console.error(e);}
   requestAnimationFrame(loop);}
 
-// Attract
 function attr(){if(document.getElementById('startScreen').style.display!=='none'){drTable();
   const cw=48,ch=70,t=Date.now()*0.001;
   [{suit:'♠',rank:'A'},{suit:'♥',rank:'K'},{suit:'♦',rank:'Q'},{suit:'♣',rank:'J'},{suit:'♥',rank:'10'}].forEach((c,i)=>
