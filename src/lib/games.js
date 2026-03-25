@@ -164,6 +164,15 @@ const GAMES = [
     thumbnail: '/images/rbi-preview.png',
     color: 'from-yellow-500 to-green-700',
   },
+  {
+    slug: 'my-perfect-hotel',
+    title: 'My Perfect Hotel',
+    creator: 'Addie',
+    description: 'You are the hotel maid! Clean rooms before time runs out — make beds, scrub toilets, mop floors, and pick up trash. The boss inspects your work and gives you stars. 5 levels of increasing challenge!',
+    createdAt: '2026-03-25',
+    thumbnail: '/images/my-perfect-hotel-preview.png',
+    color: 'from-pink-400 to-purple-600',
+  },
 ];
 
 export function getAllGames() {
@@ -178,3 +187,4 @@ export function formatDate(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
+
