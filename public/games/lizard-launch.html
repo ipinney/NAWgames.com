@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Lizard Launch!</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; background: #87CEEB; }
+canvas#c { display: block; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; }
+
+#start-screen {
+  position: fixed; inset: 0; z-index: 100;
+  background: linear-gradient(180deg, #4A90D0 0%, #87CEEB 40%, #B8E4B8 75%, #5A9A3A 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-family: 'Arial Rounded MT Bold', 'Trebuchet MS', Arial, sans-serif;
+}
+.game-title {
+  font-size: clamp(2.8rem, 9vw, 5.5rem);
+  color: #fff;
+  text-shadow: 4px 4px 0 #2A6A00, -2px -2px 0 #2A6A00, 2px -2px 0 #2A6A00, -2px 2px 0 #2A6A00;
+  letter-spacing: -1px; margin-bottom: 6px;
+}
+.game-sub {
+  font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+  color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  margin-bottom: 32px;
+}
+.lizard-row {
+  display: flex; gap: clamp(20px, 6vw, 60px); margin-bottom: 36px;
+  align-items: center;
+}
+.lizard-card { text-align: center; }
+.lizard-card canvas { display: block; margin: 0 auto 6px; }
+.lizard-card .liz-name {
+  font-size: 1.1rem; color: #fff; font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+}
+.lizard-card .liz-power {
+  font-size: 0.82rem; color: #fff; opacity: 0.9;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+.play-btn {
+  background: linear-gradient(135deg, #FF6B35 0%, #FF4400 100%);
+  color: #fff; border: none; border-radius: 50px;
+  padding: clamp(14px,3vw,20px) clamp(40px,10vw,70px);
+  font-size: clamp(1.4rem,4vw,2rem);
+  font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+  cursor: pointer;
+  box-shadow: 0 7px 0 #AA2200, 0 10px 25px rgba(0,0,0,0.35);
+  transition: transform 0.08s, box-shadow 0.08s;
+  letter-spacing: 1px;
+}
+.play-btn:active { transform: translateY(5px); box-shadow: 0 2px 0 #AA2200, 0 4px 10px rgba(0,0,0,0.3); }
+
+#hud {
+  position: fixed; top: 0; left: 0; right: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 16px; z-index: 50; pointer-events: none;
+}
+.hud-pill {
+  background: rgba(0,0,0,0.45); border-radius: 22px; padding: 7px 18px;
+  color: #fff; font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-size: 1.15rem; font-weight: bold; backdrop-filter: blur(4px);
+}
+
+#result-screen {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.65); backdrop-filter: blur(3px);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+}
+.result-box {
+  background: linear-gradient(145deg, #FFFDF5, #FFE8B0);
+  border-radius: 28px; padding: 36px 52px; text-align: center;
+  max-width: 92vw; box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+  border: 3px solid rgba(255,200,50,0.4);
+}
+.result-title { font-size: clamp(1.8rem,5vw,2.8rem); color: #FF5522; margin-bottom: 8px; }
+.result-stars { font-size: clamp(2rem,8vw,3.5rem); margin: 10px 0; letter-spacing: 4px; }
+.result-score { font-size: 1.3rem; color: #555; margin-bottom: 20px; }
+.result-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.rbtn {
+  color: #fff; border: none; border-radius: 30px;
+  padding: 13px 32px; font-size: 1.25rem;
+  font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+  cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,0.25);
+}
+.rbtn-next { background: #4CAF50; }
+.rbtn-next:active { transform: translateY(3px); }
+.rbtn-replay { background: #2196F3; }
+.rbtn-replay:active { transform: translateY(3px); }
+
+#tip {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.5); color: #fff; padding: 9px 22px;
+  border-radius: 22px; font-family: Arial, sans-serif; font-size: 0.92rem;
+  z-index: 50; pointer-events: none; transition: opacity 0.6s;
+  white-space: nowrap;
+}
+</style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="start-screen">
+  <div class="game-title">🦎 Lizard Launch!</div>
+  <div class="game-sub">Sling your lizard pals at the bug invaders!</div>
+  <div class="lizard-row">
+    <div class="lizard-card">
+      <canvas id="prev-gecko" width="90" height="90"></canvas>
+      <div class="liz-name">Oinnaole</div>
+      <div class="liz-power">🔘 Tap to split into 3!</div>
+    </div>
+    <div class="lizard-card">
+      <canvas id="prev-dragon" width="90" height="90"></canvas>
+      <div class="liz-name">Blappy</div>
+      <div class="liz-power">🔥 Tap to breathe fire!</div>
+    </div>
+  </div>
+  <button class="play-btn" id="startBtn">PLAY! 🚀</button>
+</div>
+
+<!-- HUD -->
+<div id="hud">
+  <div class="hud-pill" id="lvl-disp">Level 1</div>
+  <div class="hud-pill" id="score-disp">⭐ 0</div>
+</div>
+
+<!-- TIP BAR -->
+<div id="tip">Pull back the slingshot to launch!</div>
+
+<!-- RESULT SCREEN -->
+<div id="result-screen">
+  <div class="result-box">
+    <div class="result-title" id="res-title">🎉 Level Complete!</div>
+    <div class="result-stars" id="res-stars">⭐⭐⭐</div>
+    <div class="result-score" id="res-score">Score: 0</div>
+    <div class="result-btns">
+      <button class="rbtn rbtn-next" id="btn-next" onclick="nextLevel()">Next ➜</button>
+      <button class="rbtn rbtn-replay" onclick="replayLevel()">Replay 🔁</button>
+    </div>
+  </div>
+</div>
+
+<!-- GAME CANVAS -->
+<canvas id="c"></canvas>
+
+<script>
+// ===========================================
+// CANVAS SETUP
+// ===========================================
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', () => { resize(); if (gameState !== 'start') setupSling(); });
+window.addEventListener('orientationchange', () => setTimeout(() => { resize(); if (gameState !== 'start') setupSling(); }, 300));
+
+// ===========================================
+// AUDIO ENGINE
+// ===========================================
+let audioCtx;
+function ensureAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+function playSound(type) {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime;
+  const master = audioCtx.createGain();
+  master.connect(audioCtx.destination);
+  master.gain.value = 0.5;
+
+  if (type === 'launch') {
+    // Elastic snap + whoosh
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type = 'sawtooth'; o.frequency.setValueAtTime(350, t); o.frequency.exponentialRampToValueAtTime(70, t+0.22);
+    g.gain.setValueAtTime(0.4, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.3);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.3);
+    const o2 = audioCtx.createOscillator(); const g2 = audioCtx.createGain();
+    o2.type = 'sine'; o2.frequency.setValueAtTime(900, t); o2.frequency.exponentialRampToValueAtTime(300, t+0.15);
+    g2.gain.setValueAtTime(0.25, t); g2.gain.exponentialRampToValueAtTime(0.001, t+0.2);
+    o2.connect(g2); g2.connect(master); o2.start(t); o2.stop(t+0.2);
+  } else if (type === 'hit_wood') {
+    const buf = audioCtx.createBuffer(1, audioCtx.sampleRate*0.18, audioCtx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.12));
+    const ns = audioCtx.createBufferSource(); ns.buffer = buf;
+    const g = audioCtx.createGain(); g.gain.value = 0.5;
+    ns.connect(g); g.connect(master); ns.start(t);
+    master.gain.value = 0.65;
+  } else if (type === 'hit_stone') {
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type = 'square'; o.frequency.setValueAtTime(65, t); o.frequency.exponentialRampToValueAtTime(30, t+0.12);
+    g.gain.setValueAtTime(0.45, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.18);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.18);
+    master.gain.value = 0.6;
+  } else if (type === 'hit_glass') {
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(1200, t); o.frequency.exponentialRampToValueAtTime(400, t+0.25);
+    g.gain.setValueAtTime(0.3, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.3);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.3);
+    master.gain.value = 0.5;
+  } else if (type === 'splat') {
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(450, t); o.frequency.exponentialRampToValueAtTime(80, t+0.4);
+    g.gain.setValueAtTime(0.35, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.45);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.45);
+    const buf = audioCtx.createBuffer(1, audioCtx.sampleRate*0.15, audioCtx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.2));
+    const ns = audioCtx.createBufferSource(); ns.buffer = buf;
+    const g2 = audioCtx.createGain(); g2.gain.value = 0.3;
+    ns.connect(g2); g2.connect(master); ns.start(t);
+    master.gain.value = 0.6;
+  } else if (type === 'fire') {
+    const buf = audioCtx.createBuffer(1, audioCtx.sampleRate*0.45, audioCtx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(d.length*0.35));
+    const ns = audioCtx.createBufferSource(); ns.buffer = buf;
+    const filt = audioCtx.createBiquadFilter(); filt.type='bandpass'; filt.frequency.value=450; filt.Q.value=0.4;
+    const g = audioCtx.createGain(); g.gain.value = 0.6;
+    ns.connect(filt); filt.connect(g); g.connect(master); ns.start(t);
+    master.gain.value = 0.7;
+  } else if (type === 'split') {
+    [380, 490, 610].forEach((f, i) => {
+      const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.22, t+i*0.05); g.gain.exponentialRampToValueAtTime(0.001, t+i*0.05+0.22);
+      o.connect(g); g.connect(master); o.start(t+i*0.05); o.stop(t+i*0.05+0.25);
+    });
+    master.gain.value = 0.55;
+  } else if (type === 'victory') {
+    [523, 659, 784, 1047].forEach((f, i) => {
+      const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t+i*0.14); g.gain.linearRampToValueAtTime(0.22, t+i*0.14+0.05);
+      g.gain.linearRampToValueAtTime(0, t+i*0.14+0.55);
+      o.connect(g); g.connect(master); o.start(t+i*0.14); o.stop(t+i*0.14+0.6);
+    });
+    master.gain.value = 0.65;
+  } else if (type === 'fail') {
+    [400, 300, 220, 150].forEach((f, i) => {
+      const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t+i*0.18); g.gain.linearRampToValueAtTime(0.2, t+i*0.18+0.05);
+      g.gain.linearRampToValueAtTime(0, t+i*0.18+0.28);
+      o.connect(g); g.connect(master); o.start(t+i*0.18); o.stop(t+i*0.18+0.3);
+    });
+    master.gain.value = 0.5;
+  } else if (type === 'bounce') {
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(500, t); o.frequency.exponentialRampToValueAtTime(250, t+0.1);
+    g.gain.setValueAtTime(0.2, t); g.gain.exponentialRampToValueAtTime(0.001, t+0.15);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+0.15);
+    master.gain.value = 0.4;
+  }
+}
+
+// ===========================================
+// CONSTANTS
+// ===========================================
+const GRAVITY = 0.38;     // world coords, applied to world_vy per frame
+const GROUND_H = 110;     // ground strip height in px
+const PULL_MAX = 90;      // max sling pull radius px
+const MAX_LAUNCH_SPEED = 19;
+const SLING_X_WORLD = 190; // world X of slingshot
+let SLING_Y_WORLD = 80;   // world Y of sling cup (above ground)
+
+// ===========================================
+// GAME STATE
+// ===========================================
+let gameState = 'start';
+let score = 0;
+let currentLevel = 0;
+let lizardQueue = [];
+let blocks = [];
+let enemies = [];
+let particles = [];
+let floatTexts = [];
+let fireProjs = [];
+let currentLizard = null;
+let pulling = false;
+let pullX = 0, pullY = 0;
+let camX = 0, camXTarget = 0;
+let shakeAmt = 0;
+let watchTimer = 0;
+let levelOver = false;
+
+// ===========================================
+// LEVEL DEFINITIONS
+// World Y=0 = ground level. Positive Y = up.
+// Block: x=left edge world, y=base (bottom) world, w,h in px, type
+// Enemy: x=center world, y=center world
+// ===========================================
+const LEVELS = [
+  {
+    name: "Bug Patrol",
+    lizards: ['gecko','gecko','dragon'],
+    blocks: [
+      { x:780, y:0,  w:55, h:90,  type:'wood'  },
+      { x:780, y:90, w:55, h:40,  type:'wood'  },
+      { x:870, y:0,  w:55, h:55,  type:'glass' },
+    ],
+    enemies: [
+      { x:807, y:130+20 },
+      { x:897, y:55+20  },
+    ]
+  },
+  {
+    name: "Tower of Bugs",
+    lizards: ['gecko','dragon','gecko'],
+    blocks: [
+      { x:720, y:0,   w:50, h:110, type:'wood'  },
+      { x:870, y:0,   w:50, h:110, type:'wood'  },
+      { x:720, y:110, w:200,h:40,  type:'wood'  },
+      { x:790, y:150, w:60, h:60,  type:'glass' },
+    ],
+    enemies: [
+      { x:745, y:110+20 },
+      { x:895, y:110+20 },
+      { x:820, y:210+20 },
+    ]
+  },
+  {
+    name: "Stone Fort",
+    lizards: ['dragon','gecko','gecko','gecko'],
+    blocks: [
+      { x:690, y:0,   w:45, h:130, type:'stone' },
+      { x:840, y:0,   w:45, h:130, type:'stone' },
+      { x:690, y:130, w:195,h:40,  type:'wood'  },
+      { x:755, y:170, w:60, h:55,  type:'wood'  },
+      { x:940, y:0,   w:50, h:85,  type:'wood'  },
+      { x:940, y:85, w:50, h:40,  type:'glass' },
+    ],
+    enemies: [
+      { x:712, y:130+20 },
+      { x:862, y:130+20 },
+      { x:785, y:225+20 },
+      { x:965, y:125+20 },
+    ]
+  },
+  {
+    name: "Bug Castle",
+    lizards: ['gecko','dragon','gecko','dragon'],
+    blocks: [
+      { x:680, y:0,   w:45, h:170, type:'stone' },
+      { x:725, y:0,   w:50, h:85,  type:'wood'  },
+      { x:725, y:85,  w:50, h:85,  type:'glass' },
+      { x:895, y:0,   w:45, h:170, type:'stone' },
+      { x:940, y:0,   w:50, h:90,  type:'wood'  },
+      { x:680, y:170, w:310,h:35,  type:'wood'  },
+      { x:800, y:205, w:60, h:65,  type:'glass' },
+      { x:1040,y:0,   w:50, h:90,  type:'wood'  },
+    ],
+    enemies: [
+      { x:702, y:170+20 },
+      { x:750, y:85+20  },
+      { x:917, y:170+20 },
+      { x:965, y:90+20  },
+      { x:830, y:270+20 },
+      { x:1065,y:90+20  },
+    ]
+  },
+  {
+    name: "Bug Kingdom 👑",
+    lizards: ['dragon','gecko','dragon','gecko','gecko'],
+    blocks: [
+      { x:640, y:0,   w:45, h:200, type:'stone' },
+      { x:685, y:0,   w:75, h:45,  type:'wood'  },
+      { x:685, y:45,  w:75, h:45,  type:'stone' },
+      { x:685, y:90,  w:75, h:45,  type:'wood'  },
+      { x:685, y:135, w:75, h:45,  type:'glass' },
+      { x:685, y:180, w:75, h:45,  type:'stone' },
+      { x:835, y:0,   w:45, h:200, type:'stone' },
+      { x:880, y:0,   w:55, h:90,  type:'wood'  },
+      { x:880, y:90,  w:55, h:90,  type:'glass' },
+      { x:880, y:180, w:55, h:45,  type:'stone' },
+      { x:990, y:0,   w:50, h:130, type:'wood'  },
+      { x:835, y:200, w:205,h:35,  type:'stone' },
+      { x:1055,y:0,   w:45, h:130, type:'stone' },
+    ],
+    enemies: [
+      { x:662, y:200+20 },
+      { x:857, y:200+20 },
+      { x:907, y:90+20  },
+      { x:1015,y:130+20 },
+      { x:1077,y:130+20 },
+      { x:860, y:235+20 },
+    ]
+  }
+];
+
+// Block properties
+const BLOCK_HP   = { wood:3, stone:7, glass:1 };
+const BLOCK_COL  = {
+  wood:  { fill:'#C8793A', stroke:'#8B4C15', mid:'#E8A060', crack:'#7A3A10' },
+  stone: { fill:'#8A8A8A', stroke:'#555',    mid:'#A8A8A8', crack:'#444'    },
+  glass: { fill:'rgba(190,225,255,0.55)', stroke:'#88BBEE', mid:'rgba(220,240,255,0.8)', crack:'#5599DD' }
+};
+
+// ===========================================
+// PARTICLES
+// ===========================================
+function spawnParticles(sx, sy, type, n) {
+  for (let i=0;i<n;i++) {
+    const a = Math.random()*Math.PI*2, spd = 0.8 + Math.random()*4.5;
+    let r,g,b,life,size,grav;
+    if (type==='wood')  { r=180;g=110;b=40;  life=28+Math.random()*18; size=4+Math.random()*6; grav=0.15; }
+    if (type==='stone') { r=130;g=130;b=130; life=25+Math.random()*18; size=4+Math.random()*7; grav=0.18; }
+    if (type==='glass') { r=180;g=225;b=255; life=18+Math.random()*14; size=2+Math.random()*4; grav=0.12; }
+    if (type==='fire')  { r=255;g=80+Math.random()*140;b=0; life=22+Math.random()*16; size=5+Math.random()*8; grav=-0.06; }
+    if (type==='splat') { r=40+Math.random()*40;g=160+Math.random()*60;b=40; life=28+Math.random()*18; size=4+Math.random()*6; grav=0.15; }
+    if (type==='star')  { r=255;g=220;b=50; life=35+Math.random()*18; size=3+Math.random()*5; grav=0.05; }
+    particles.push({
+      x:sx, y:sy,
+      vx:Math.cos(a)*spd, vy:Math.sin(a)*spd,
+      r,g,b,life,maxLife:life,size,grav
+    });
+  }
+}
+
+function spawnFloatText(text, sx, sy, color='#FFD700') {
+  floatTexts.push({ text, x:sx, y:sy, vy:-1.6, life:75, maxLife:75, color });
+}
+
+// ===========================================
+// WORLD ↔ SCREEN TRANSFORMS
+// World Y=0 at ground. Positive Y = up.
+// Screen Y=0 at top. Positive Y = down.
+// screenY = (H - GROUND_H) - worldY
+// ===========================================
+function w2s(wx, wy) {
+  return { x: wx - camX, y: (H - GROUND_H) - wy };
+}
+
+// ===========================================
+// SLING SETUP
+// ===========================================
+function setupSling() {
+  SLING_Y_WORLD = 80;
+}
+
+// ===========================================
+// DRAW: CRESTED GECKO (Oinnaole - yellow-green)
+// ===========================================
+function drawGecko(c, x, y, size, angle, alpha=1) {
+  c.save();
+  c.globalAlpha = alpha;
+  c.translate(x, y);
+  c.rotate(angle);
+
+  // Tail
+  c.strokeStyle = '#7BAA18'; c.lineWidth = size*0.28; c.lineCap = 'round';
+  c.beginPath(); c.moveTo(-size*0.9, size*0.1);
+  c.quadraticCurveTo(-size*1.7, size*0.6, -size*1.4, size*1.05);
+  c.stroke();
+  c.strokeStyle = '#A8D820'; c.lineWidth = size*0.14;
+  c.stroke();
+
+  // Body
+  c.fillStyle = '#B8D82A'; c.strokeStyle = '#7BAA18'; c.lineWidth = 2.2;
+  c.beginPath(); c.ellipse(0, 0, size*0.95, size*0.72, 0, 0, Math.PI*2);
+  c.fill(); c.stroke();
+  // Belly
+  c.fillStyle = '#DEFF80';
+  c.beginPath(); c.ellipse(size*0.05, size*0.12, size*0.52, size*0.42, 0, 0, Math.PI*2);
+  c.fill();
+  // Scales pattern
+  c.strokeStyle = 'rgba(80,120,0,0.25)'; c.lineWidth = 1;
+  for (let i=-1;i<=1;i++) {
+    c.beginPath(); c.arc(i*size*0.35, -size*0.1, size*0.18, 0, Math.PI*2); c.stroke();
+  }
+
+  // Head
+  c.fillStyle = '#B8D82A'; c.strokeStyle = '#7BAA18'; c.lineWidth = 2;
+  c.beginPath(); c.ellipse(size*0.88, -size*0.1, size*0.52, size*0.4, 0.25, 0, Math.PI*2);
+  c.fill(); c.stroke();
+
+  // Crest (the signature crested gecko feature!)
+  c.fillStyle = '#90C010';
+  c.beginPath(); c.moveTo(size*0.38, -size*0.52);
+  for (let i=0;i<6;i++) {
+    c.lineTo(size*(0.38+i*0.17), -size*(0.75+(i%2)*0.22));
+    c.lineTo(size*(0.47+i*0.17), -size*0.52);
+  }
+  c.fill();
+
+  // Eye
+  c.fillStyle='white'; c.beginPath(); c.arc(size*1.08,-size*0.17,size*0.2,0,Math.PI*2); c.fill();
+  c.fillStyle='#1A4000'; c.beginPath(); c.arc(size*1.12,-size*0.17,size*0.13,0,Math.PI*2); c.fill();
+  c.fillStyle='white'; c.beginPath(); c.arc(size*1.16,-size*0.22,size*0.05,0,Math.PI*2); c.fill();
+
+  // Legs
+  c.strokeStyle='#7BAA18'; c.lineWidth=size*0.16; c.lineCap='round';
+  c.beginPath(); c.moveTo(size*0.35,size*0.52); c.lineTo(size*0.55,size*0.9); c.stroke();
+  c.beginPath(); c.moveTo(-size*0.2,size*0.52); c.lineTo(-size*0.42,size*0.9); c.stroke();
+
+  c.restore();
+}
+
+// ===========================================
+// DRAW: BEARDED DRAGON (Blappy - orange)
+// ===========================================
+function drawDragon(c, x, y, size, angle, alpha=1) {
+  c.save();
+  c.globalAlpha = alpha;
+  c.translate(x, y);
+  c.rotate(angle);
+
+  // Tail with diamond tip
+  c.strokeStyle='#8B3A08'; c.lineWidth=size*0.3; c.lineCap='round';
+  c.beginPath(); c.moveTo(-size*1.0, 0);
+  c.quadraticCurveTo(-size*1.7,-size*0.35,-size*1.95,size*0.38);
+  c.stroke();
+  c.fillStyle='#8B3A08';
+  c.beginPath();
+  c.moveTo(-size*1.95,size*0.38); c.lineTo(-size*2.25,size*0.1); c.lineTo(-size*2.0,size*0.75);
+  c.fill();
+
+  // Body
+  c.fillStyle='#D46820'; c.strokeStyle='#8B3A08'; c.lineWidth=2.5;
+  c.beginPath(); c.ellipse(0,0,size*1.05,size*0.78,0,0,Math.PI*2);
+  c.fill(); c.stroke();
+  // Belly plates
+  c.fillStyle='#F0B840';
+  c.beginPath(); c.ellipse(0,size*0.18,size*0.58,size*0.48,0,0,Math.PI*2);
+  c.fill();
+
+  // Back spines
+  c.fillStyle='#6B2A04';
+  for (let i=-2;i<=2;i++) {
+    c.beginPath(); c.moveTo(i*size*0.22,-size*0.62);
+    c.lineTo(i*size*0.22-size*0.08,-size*0.95); c.lineTo(i*size*0.22+size*0.08,-size*0.62);
+    c.fill();
+  }
+
+  // Head
+  c.fillStyle='#D46820'; c.strokeStyle='#8B3A08'; c.lineWidth=2;
+  c.beginPath(); c.ellipse(size*0.9,-size*0.1,size*0.58,size*0.44,0.2,0,Math.PI*2);
+  c.fill(); c.stroke();
+  // Head spines
+  c.fillStyle='#8B3A08';
+  for (let i=0;i<4;i++) {
+    c.beginPath();
+    c.moveTo(size*(0.55+i*0.15),-size*0.35);
+    c.lineTo(size*(0.6+i*0.15),-size*0.65); c.lineTo(size*(0.65+i*0.15),-size*0.35);
+    c.fill();
+  }
+  // Beard spikes
+  for (let i=-3;i<=3;i++) {
+    c.beginPath(); c.moveTo(size*(0.62+i*0.09),size*0.38);
+    c.lineTo(size*(0.65+i*0.09),size*0.7); c.lineTo(size*(0.7+i*0.09),size*0.38);
+    c.fill();
+  }
+
+  // Eye
+  c.fillStyle='white'; c.beginPath(); c.arc(size*1.17,-size*0.2,size*0.2,0,Math.PI*2); c.fill();
+  c.fillStyle='#CC5500'; c.beginPath(); c.arc(size*1.2,-size*0.2,size*0.13,0,Math.PI*2); c.fill();
+  c.fillStyle='#111'; c.beginPath(); c.arc(size*1.22,-size*0.2,size*0.07,0,Math.PI*2); c.fill();
+  c.fillStyle='white'; c.beginPath(); c.arc(size*1.26,-size*0.26,size*0.04,0,Math.PI*2); c.fill();
+
+  // Legs
+  c.strokeStyle='#8B3A08'; c.lineWidth=size*0.17; c.lineCap='round';
+  c.beginPath(); c.moveTo(size*0.35,size*0.58); c.lineTo(size*0.58,size*0.95); c.stroke();
+  c.beginPath(); c.moveTo(-size*0.25,size*0.58); c.lineTo(-size*0.48,size*0.95); c.stroke();
+
+  c.restore();
+}
+
+// ===========================================
+// DRAW: BUG ENEMY
+// ===========================================
+function drawBug(c, x, y, size) {
+  c.save(); c.translate(x, y);
+
+  // Shadow
+  c.fillStyle='rgba(0,0,0,0.2)';
+  c.beginPath(); c.ellipse(0,size*0.8,size*0.8,size*0.2,0,0,Math.PI*2); c.fill();
+
+  // Body
+  c.fillStyle='#1A8C2A'; c.strokeStyle='#0D5218'; c.lineWidth=2.5;
+  c.beginPath(); c.ellipse(0,0,size,size*0.88,0,0,Math.PI*2);
+  c.fill(); c.stroke();
+
+  // Eyes
+  c.fillStyle='white'; c.beginPath(); c.arc(-size*0.3,-size*0.2,size*0.32,0,Math.PI*2); c.fill();
+  c.beginPath(); c.arc(size*0.3,-size*0.2,size*0.32,0,Math.PI*2); c.fill();
+  c.fillStyle='#111'; c.beginPath(); c.arc(-size*0.24,-size*0.2,size*0.2,0,Math.PI*2); c.fill();
+  c.beginPath(); c.arc(size*0.36,-size*0.2,size*0.2,0,Math.PI*2); c.fill();
+  c.fillStyle='white'; c.beginPath(); c.arc(-size*0.18,-size*0.26,size*0.07,0,Math.PI*2); c.fill();
+  c.beginPath(); c.arc(size*0.42,-size*0.26,size*0.07,0,Math.PI*2); c.fill();
+
+  // Angry brows
+  c.strokeStyle='#0D5218'; c.lineWidth=size*0.16; c.lineCap='round';
+  c.beginPath(); c.moveTo(-size*0.6,-size*0.48); c.lineTo(-size*0.08,-size*0.4); c.stroke();
+  c.beginPath(); c.moveTo(size*0.6,-size*0.48); c.lineTo(size*0.08,-size*0.4); c.stroke();
+
+  // Antennae
+  c.strokeStyle='#0D5218'; c.lineWidth=2; c.lineCap='round';
+  c.beginPath(); c.moveTo(-size*0.3,-size*0.72); c.quadraticCurveTo(-size*0.55,-size*1.35,-size*0.25,-size*1.5); c.stroke();
+  c.beginPath(); c.moveTo(size*0.3,-size*0.72); c.quadraticCurveTo(size*0.55,-size*1.35,size*0.25,-size*1.5); c.stroke();
+  c.fillStyle='#0D5218';
+  c.beginPath(); c.arc(-size*0.25,-size*1.5,size*0.13,0,Math.PI*2); c.fill();
+  c.beginPath(); c.arc(size*0.25,-size*1.5,size*0.13,0,Math.PI*2); c.fill();
+
+  // Legs
+  c.strokeStyle='#0D5218'; c.lineWidth=2.2;
+  for (let s of [-1,1]) {
+    for (let row of [-0.28,0.08,0.44]) {
+      c.beginPath(); c.moveTo(s*size*0.9,row*size); c.lineTo(s*size*1.5,(row+s*0.22)*size); c.stroke();
+    }
+  }
+  c.restore();
+}
+
+// ===========================================
+// DRAW: SLINGSHOT
+// ===========================================
+function drawSlingshot(c, sx, sy) {
+  // Post
+  c.fillStyle='#7B4A1C'; c.strokeStyle='#4A2808'; c.lineWidth=3;
+  c.beginPath(); c.roundRect(sx-11,sy,22,75,6); c.fill(); c.stroke();
+  // Left arm
+  c.beginPath(); c.roundRect(sx-34,sy-18,16,62,5); c.fill(); c.stroke();
+  // Right arm
+  c.beginPath(); c.roundRect(sx+18,sy-18,16,62,5); c.fill(); c.stroke();
+  // Knobs
+  c.fillStyle='#5A3010'; c.strokeStyle='#4A2808'; c.lineWidth=2;
+  c.beginPath(); c.arc(sx-26,sy-18,10,0,Math.PI*2); c.fill(); c.stroke();
+  c.beginPath(); c.arc(sx+26,sy-18,10,0,Math.PI*2); c.fill(); c.stroke();
+  // Wood grain on post
+  c.strokeStyle='rgba(0,0,0,0.15)'; c.lineWidth=1;
+  for (let i=5;i<70;i+=12) {
+    c.beginPath(); c.moveTo(sx-8,sy+i); c.lineTo(sx+8,sy+i); c.stroke();
+  }
+}
+
+// ===========================================
+// DRAW: SLINGSHOT BANDS
+// ===========================================
+function drawBands(c, sx, sy, lx, ly) {
+  const lf={x:sx-26,y:sy-18}, rf={x:sx+26,y:sy-18};
+  c.strokeStyle='#4A2808'; c.lineWidth=4.5; c.lineCap='round';
+  c.beginPath(); c.moveTo(lf.x,lf.y); c.lineTo(lx,ly); c.stroke();
+  c.beginPath(); c.moveTo(rf.x,rf.y); c.lineTo(lx,ly); c.stroke();
+  c.strokeStyle='#7B4A1C'; c.lineWidth=2.5;
+  c.beginPath(); c.moveTo(lf.x,lf.y); c.lineTo(lx,ly); c.stroke();
+  c.beginPath(); c.moveTo(rf.x,rf.y); c.lineTo(lx,ly); c.stroke();
+}
+
+// ===========================================
+// DRAW: BLOCK
+// ===========================================
+function drawBlock(c, block) {
+  if (block.dead) return;
+  const sp = w2s(block.x, block.y + block.h); // screen pos of top-left
+  const col = BLOCK_COL[block.type];
+  const ratio = block.hp / block.maxHp;
+
+  // Shadow
+  c.fillStyle='rgba(0,0,0,0.18)';
+  c.fillRect(sp.x+3, sp.y+4, block.w, block.h);
+
+  // Body
+  if (block.type === 'glass') {
+    c.fillStyle = col.fill;
+    c.fillRect(sp.x, sp.y, block.w, block.h);
+    // Glass highlight
+    c.fillStyle='rgba(255,255,255,0.35)';
+    c.fillRect(sp.x+3,sp.y+3,block.w*0.35,block.h*0.5);
+  } else {
+    // Gradient-ish for wood/stone
+    c.fillStyle = col.fill;
+    c.fillRect(sp.x, sp.y, block.w, block.h);
+    c.fillStyle = col.mid;
+    c.fillRect(sp.x+3, sp.y+3, block.w*0.4, block.h-6);
+  }
+
+  // Texture
+  if (block.type === 'wood') {
+    c.strokeStyle='rgba(0,0,0,0.12)'; c.lineWidth=1;
+    for (let i=8;i<block.h;i+=10) {
+      c.beginPath(); c.moveTo(sp.x+2,sp.y+i); c.lineTo(sp.x+block.w-2,sp.y+i); c.stroke();
+    }
+  } else if (block.type === 'stone') {
+    c.strokeStyle='rgba(0,0,0,0.18)'; c.lineWidth=1;
+    c.beginPath(); c.moveTo(sp.x+block.w/2,sp.y); c.lineTo(sp.x+block.w/2,sp.y+block.h/2); c.stroke();
+    c.beginPath(); c.moveTo(sp.x,sp.y+block.h/2); c.lineTo(sp.x+block.w/2,sp.y+block.h/2); c.stroke();
+  }
+
+  // Border
+  c.strokeStyle=col.stroke; c.lineWidth=2.2;
+  c.strokeRect(sp.x,sp.y,block.w,block.h);
+
+  // Cracks
+  if (ratio < 0.75) {
+    c.strokeStyle=col.crack; c.lineWidth=2; c.lineCap='round';
+    c.beginPath();
+    c.moveTo(sp.x+block.w*0.25,sp.y+block.h*0.15);
+    c.lineTo(sp.x+block.w*0.48,sp.y+block.h*0.52);
+    c.lineTo(sp.x+block.w*0.72,sp.y+block.h*0.78);
+    c.moveTo(sp.x+block.w*0.48,sp.y+block.h*0.52);
+    c.lineTo(sp.x+block.w*0.28,sp.y+block.h*0.75);
+    c.stroke();
+    if (ratio < 0.4) {
+      c.beginPath();
+      c.moveTo(sp.x+block.w*0.6,sp.y+block.h*0.1);
+      c.lineTo(sp.x+block.w*0.5,sp.y+block.h*0.45);
+      c.stroke();
+    }
+  }
+}
+
+// ===========================================
+// COLLISION HELPERS
+// ===========================================
+function circleRect(cx,cy,cr,rx,ry,rw,rh) {
+  const nx=Math.max(rx,Math.min(cx,rx+rw)), ny=Math.max(ry,Math.min(cy,ry+rh));
+  return (cx-nx)*(cx-nx)+(cy-ny)*(cy-ny)<=cr*cr;
+}
+
+function hitBlock(sx,sy,radius) {
+  let hit=false;
+  blocks.forEach(b=>{
+    if(b.dead) return;
+    const sp=w2s(b.x,b.y+b.h);
+    if(!circleRect(sx,sy,radius,sp.x,sp.y,b.w,b.h)) return;
+    hit=true;
+    const old=b.hp;
+    const dmg = radius>15 ? (b.type==='stone'?1:b.type==='glass'?99:3) : (b.type==='stone'?1:2);
+    b.hp-=dmg;
+    b.cracked=b.hp<=b.maxHp*0.5;
+    const mid={x:sp.x+b.w/2,y:sp.y+b.h/2};
+    if(b.hp<=0 && old>0) {
+      b.dead=true;
+      spawnParticles(mid.x,mid.y,b.type,14);
+      spawnFloatText('+50',mid.x,mid.y,'#FFD700');
+      score+=50; updateHUD();
+      shakeAmt=9;
+      playSound('hit_'+b.type);
+    } else if(old>0) {
+      spawnParticles(mid.x,mid.y,'star',4);
+      shakeAmt=4;
+      playSound('hit_'+b.type);
+    }
+  });
+  return hit;
+}
+
+function hitEnemies(sx,sy,radius) {
+  enemies.forEach(e=>{
+    if(!e.alive) return;
+    const esp=w2s(e.x,e.y);
+    const dx=esp.x-sx, dy=esp.y-sy;
+    if(dx*dx+dy*dy<=(radius+e.size)*(radius+e.size)) {
+      e.alive=false;
+      spawnParticles(esp.x,esp.y,'splat',20);
+      spawnFloatText('+100',esp.x,esp.y,'#00EE88');
+      score+=100; updateHUD();
+      shakeAmt=12;
+      playSound('splat');
+    }
+  });
+}
+
+// ===========================================
+// LIZARD ABILITIES
+// ===========================================
+function geckoSplit(liz) {
+  if(liz.abilityUsed) return;
+  liz.abilityUsed=true;
+  playSound('split'); shakeAmt=6;
+  const speed=Math.sqrt(liz.vx*liz.vx+liz.vy*liz.vy);
+  const baseAngle=Math.atan2(liz.vy,liz.vx);
+  const offsets=[-0.38,0,0.38];
+  liz.children=offsets.map(da=>({
+    type:'gecko_mini', x:liz.x, y:liz.y,
+    vx:Math.cos(baseAngle+da)*speed*0.92,
+    vy:Math.sin(baseAngle+da)*speed*0.92,
+    size:liz.size*0.62, alive:true, angle:0,
+    abilityUsed:true, trail:[],
+  }));
+  liz.size*=0.62;
+  liz.vx=Math.cos(baseAngle)*speed;
+  liz.vy=Math.sin(baseAngle)*speed;
+  const sp=w2s(liz.x,liz.y);
+  spawnParticles(sp.x,sp.y,'star',12);
+  showTip('Split! 3 geckos! 🦎🦎🦎');
+}
+
+function dragonFireBreath(liz) {
+  if(liz.abilityUsed) return;
+  liz.abilityUsed=true;
+  playSound('fire'); shakeAmt=7;
+  const a=Math.atan2(-liz.vy,liz.vx); // screen angle (vy inverted for screen)
+  const sp=w2s(liz.x,liz.y);
+  const spreadAngles=[-0.5,-0.25,0,0.25,0.5];
+  spreadAngles.forEach(da=>{
+    fireProjs.push({
+      x:sp.x, y:sp.y,
+      vx:Math.cos(a+da)*13, vy:Math.sin(a+da)*13,
+      life:50, maxLife:50, size:11,
+    });
+  });
+  spawnParticles(sp.x,sp.y,'fire',18);
+  showTip('FIRE BREATH! 🔥');
+}
+
+// ===========================================
+// TRAJECTORY PREVIEW (in screen coords)
+// ===========================================
+function buildTrajectory(startSX,startSY,svx,svy) {
+  const pts=[];
+  let x=startSX,y=startSY,dvx=svx,dvy=svy;
+  for(let i=0;i<65;i++){
+    pts.push({x,y});
+    x+=dvx; y+=dvy; dvy+=GRAVITY; // gravity increases screen Y
+    if(y>H-GROUND_H+10) break;
+  }
+  return pts;
+}
+
+// ===========================================
+// LEVEL SETUP
+// ===========================================
+function loadLevel(idx) {
+  currentLevel=idx; gameState='aim'; levelOver=false;
+  setupSling(); camX=0; camXTarget=0;
+  shakeAmt=0; pulling=false; pullX=0; pullY=0;
+  particles=[]; floatTexts=[]; fireProjs=[];
+
+  const def=LEVELS[idx];
+  lizardQueue=def.lizards.map(t=>({type:t,used:false}));
+  blocks=def.blocks.map(b=>({
+    ...b, hp:BLOCK_HP[b.type], maxHp:BLOCK_HP[b.type], cracked:false, dead:false,
+  }));
+  enemies=def.enemies.map(e=>({...e,size:18,alive:true}));
+
+  document.getElementById('lvl-disp').textContent=`Level ${idx+1}: ${def.name}`;
+  updateHUD();
+  spawnCurrentLizard();
+  showTip('Pull back the slingshot to launch!');
+}
+
+function spawnCurrentLizard() {
+  const next=lizardQueue.find(l=>!l.used);
+  if(!next){
+    currentLizard=null;
+    if(!levelOver){levelOver=true;setTimeout(endLevelCheck,1200);}
+    return;
+  }
+  next.used=true;
+  currentLizard={
+    type:next.type,
+    x:SLING_X_WORLD, y:SLING_Y_WORLD,
+    vx:0, vy:0,
+    size:next.type==='dragon'?25:21,
+    alive:true, flying:false,
+    angle:0, trail:[],
+    abilityUsed:false, children:[],
+  };
+  gameState='aim';
+}
+
+// ===========================================
+// END LEVEL CHECK
+// ===========================================
+function endLevelCheck() {
+  if(levelOver && gameState==='result') return;
+  const alive=enemies.filter(e=>e.alive).length;
+  const lizardsLeft=lizardQueue.filter(l=>!l.used).length;
+
+  if(alive===0) {
+    // WIN
+    score+=lizardsLeft*200; updateHUD();
+    const total=LEVELS[currentLevel].lizards.length;
+    const used=total-lizardsLeft;
+    const stars=used<=Math.ceil(total*0.34)?3:used<=Math.ceil(total*0.67)?2:1;
+    playSound('victory');
+    setTimeout(()=>showResult(true,stars),600);
+  } else {
+    // LOSE
+    playSound('fail');
+    setTimeout(()=>showResult(false,0),600);
+  }
+  gameState='result';
+}
+
+function showResult(win,stars) {
+  document.getElementById('res-title').textContent=win
+    ? (currentLevel>=LEVELS.length-1 ? '🎉 You Beat the Game!' : '🎉 Level Complete!')
+    : '😢 Out of Lizards!';
+  document.getElementById('res-stars').textContent=win
+    ? '⭐'.repeat(stars)+'☆'.repeat(3-stars) : '☆☆☆';
+  document.getElementById('res-score').textContent=`Score: ${score}`;
+  const btnNext=document.getElementById('btn-next');
+  btnNext.style.display=(win&&currentLevel<LEVELS.length-1)?'':'none';
+  document.getElementById('result-screen').style.display='flex';
+}
+
+function nextLevel() {
+  document.getElementById('result-screen').style.display='none';
+  loadLevel(currentLevel+1);
+}
+function replayLevel() {
+  document.getElementById('result-screen').style.display='none';
+  loadLevel(currentLevel);
+}
+
+// ===========================================
+// HUD
+// ===========================================
+function updateHUD() {
+  document.getElementById('score-disp').textContent=`⭐ ${score}`;
+}
+
+let tipTimer;
+function showTip(txt) {
+  const el=document.getElementById('tip');
+  el.textContent=txt; el.style.opacity='1';
+  clearTimeout(tipTimer);
+  tipTimer=setTimeout(()=>{el.style.opacity='0';},3200);
+}
+
+// ===========================================
+// BACKGROUND DRAWING
+// ===========================================
+function drawBackground() {
+  // Sky
+  const sky=ctx.createLinearGradient(0,0,0,H-GROUND_H);
+  sky.addColorStop(0,'#3A8ED0'); sky.addColorStop(1,'#A8D8F5');
+  ctx.fillStyle=sky; ctx.fillRect(0,0,W,H-GROUND_H);
+
+  // Clouds (parallax layer 1)
+  const cloudOffsets=[{x:80,y:55,s:90},{x:320,y:38,s:115},{x:620,y:68,s:80},{x:920,y:45,s:100},{x:1180,y:72,s:75}];
+  cloudOffsets.forEach(c=>{
+    drawCloud(c.x-camX*0.18,c.y,c.s);
+  });
+
+  // Rolling hills (parallax layer 2)
+  ctx.fillStyle='#52A838';
+  drawHill(180-camX*0.28,H-GROUND_H,240,95);
+  drawHill(480-camX*0.28,H-GROUND_H,310,110);
+  drawHill(780-camX*0.22,H-GROUND_H,260,85);
+  drawHill(1100-camX*0.22,H-GROUND_H,290,100);
+  drawHill(1400-camX*0.18,H-GROUND_H,240,90);
+
+  // Ground strip
+  const grd=ctx.createLinearGradient(0,H-GROUND_H,0,H);
+  grd.addColorStop(0,'#62B830'); grd.addColorStop(0.12,'#4A9820');
+  grd.addColorStop(0.14,'#8B5E1A'); grd.addColorStop(1,'#6B4510');
+  ctx.fillStyle=grd; ctx.fillRect(0,H-GROUND_H,W,GROUND_H);
+
+  // Grass blades
+  ctx.fillStyle='#72CC38';
+  const gOff=(-camX%38+38)%38;
+  for(let gx=gOff-38;gx<W+40;gx+=38) {
+    for(let b=0;b<3;b++) {
+      const bx=gx+b*11;
+      const bh=10+Math.sin(bx*0.4)*3;
+      ctx.beginPath();
+      ctx.moveTo(bx,H-GROUND_H);
+      ctx.quadraticCurveTo(bx+4,H-GROUND_H-bh,bx+8,H-GROUND_H);
+      ctx.fill();
+    }
+  }
+}
+
+function drawCloud(x,y,s) {
+  ctx.fillStyle='rgba(255,255,255,0.88)';
+  ctx.beginPath();
+  ctx.arc(x,y,s*0.4,0,Math.PI*2);
+  ctx.arc(x+s*0.36,y-s*0.1,s*0.32,0,Math.PI*2);
+  ctx.arc(x-s*0.36,y+s*0.06,s*0.28,0,Math.PI*2);
+  ctx.arc(x+s*0.65,y+s*0.06,s*0.28,0,Math.PI*2);
+  ctx.fill();
+}
+
+function drawHill(x,y,w,h) {
+  ctx.beginPath(); ctx.moveTo(x-w*0.5,y);
+  ctx.quadraticCurveTo(x,y-h,x+w*0.5,y); ctx.fill();
+}
+
+// ===========================================
+// DRAW LIZARD QUEUE
+// ===========================================
+function drawQueue() {
+  const remaining=lizardQueue.filter(l=>!l.used);
+  remaining.forEach((liz,i)=>{
+    const qx=60+i*42, qy=H-GROUND_H+56;
+    if(liz.type==='gecko') drawGecko(ctx,qx,qy,13,0);
+    else drawDragon(ctx,qx,qy,13,0);
+  });
+  if(remaining.length>0) {
+    ctx.fillStyle='rgba(255,255,255,0.7)';
+    ctx.font='12px Arial'; ctx.textAlign='left';
+    ctx.fillText('NEXT:',8,H-GROUND_H+60);
+  }
+}
+
+// ===========================================
+// DRAW FIRE PROJECTILES
+// ===========================================
+function drawFire() {
+  fireProjs.forEach(fp=>{
+    const ratio=fp.life/fp.maxLife;
+    ctx.save(); ctx.globalAlpha=ratio*0.9;
+    const gr=ctx.createRadialGradient(fp.x,fp.y,0,fp.x,fp.y,fp.size*(1+0.5*(1-ratio)));
+    gr.addColorStop(0,'#FFFF80'); gr.addColorStop(0.45,'#FF8800'); gr.addColorStop(1,'rgba(255,0,0,0)');
+    ctx.fillStyle=gr;
+    ctx.beginPath(); ctx.arc(fp.x,fp.y,fp.size*(1+0.5*(1-ratio)),0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  });
+}
+
+// ===========================================
+// UPDATE
+// ===========================================
+function update() {
+  shakeAmt*=0.82;
+
+  // Camera
+  if(gameState==='flying'&&currentLizard) {
+    camXTarget=Math.max(0,currentLizard.x-W*0.32);
+  } else if(gameState==='aim') {
+    camXTarget*=0.85; // drift back to 0
+  }
+  camX+=(camXTarget-camX)*0.1;
+
+  // Particles
+  particles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.vx*=0.96; p.vy+=p.grav; p.life--;
+  });
+  particles=particles.filter(p=>p.life>0);
+
+  // Float texts
+  floatTexts.forEach(ft=>{ft.y+=ft.vy;ft.life--;});
+  floatTexts=floatTexts.filter(ft=>ft.life>0);
+
+  // Fire projectiles (screen coords)
+  fireProjs.forEach(fp=>{
+    fp.x+=fp.vx; fp.y+=fp.vy; fp.vy+=0.22; fp.life--;
+    hitEnemies(fp.x,fp.y,fp.size);
+    hitBlock(fp.x,fp.y,fp.size*0.7);
+    if(fp.life%3===0) spawnParticles(fp.x,fp.y,'fire',2);
+  });
+  fireProjs=fireProjs.filter(fp=>fp.life>0&&fp.y<H);
+
+  if(gameState==='flying'&&currentLizard&&currentLizard.alive) {
+    const liz=currentLizard;
+
+    // Physics in world coords
+    liz.vy-=GRAVITY;
+    liz.x+=liz.vx;
+    liz.y+=liz.vy;
+    liz.angle=Math.atan2(-liz.vy,liz.vx); // screen-orient angle
+
+    // Trail in screen coords
+    const sp=w2s(liz.x,liz.y);
+    liz.trail.push({x:sp.x,y:sp.y});
+    if(liz.trail.length>18) liz.trail.shift();
+
+    // Ground hit
+    if(liz.y<=0) {
+      const sp2=w2s(liz.x,0);
+      spawnParticles(sp2.x,sp2.y,'splat',8); shakeAmt=6;
+      playSound('hit_wood'); liz.alive=false;
+    }
+    // OOB
+    if(liz.x>2500||liz.y<-800||liz.x<-200) liz.alive=false;
+
+    // Collisions
+    if(liz.alive) {
+      hitBlock(sp.x,sp.y,liz.size);
+      hitEnemies(sp.x,sp.y,liz.size);
+    }
+
+    // Children (gecko split)
+    if(liz.children) liz.children.forEach(child=>{
+      if(!child.alive) return;
+      child.vy-=GRAVITY;
+      child.x+=child.vx; child.y+=child.vy;
+      child.angle=Math.atan2(-child.vy,child.vx);
+      const csp=w2s(child.x,child.y);
+      child.trail.push({x:csp.x,y:csp.y});
+      if(child.trail.length>12) child.trail.shift();
+      if(child.y<=0||child.x>2500) {child.alive=false;return;}
+      hitBlock(csp.x,csp.y,child.size);
+      hitEnemies(csp.x,csp.y,child.size);
+    });
+
+    if(!liz.alive) {
+      // Done flying — wait then load next
+      gameState='watching';
+      setTimeout(()=>{
+        spawnCurrentLizard();
+        if(currentLizard) gameState='aim';
+        // Check if no enemies left
+        if(enemies.filter(e=>e.alive).length===0&&!levelOver){
+          levelOver=true; endLevelCheck();
+        }
+        if(!currentLizard&&!levelOver){
+          levelOver=true; endLevelCheck();
+        }
+      },1300);
+    }
+  }
+}
+
+// ===========================================
+// DRAW
+// ===========================================
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  // Screen shake
+  if(shakeAmt>0.5) ctx.translate((Math.random()-0.5)*shakeAmt,(Math.random()-0.5)*shakeAmt);
+
+  drawBackground();
+
+  const sx_screen = SLING_X_WORLD - camX;
+  const sy_screen = (H - GROUND_H) - SLING_Y_WORLD;
+
+  // Trajectory dots
+  if(gameState==='aim'&&pulling&&currentLizard) {
+    const sp=w2s(currentLizard.x,currentLizard.y);
+    const svx=-pullX/PULL_MAX*MAX_LAUNCH_SPEED;
+    const svy=-(-pullY/PULL_MAX*MAX_LAUNCH_SPEED); // pullY positive=down screen=up world → screen vy negative=up
+    // Wait: world_vy = pullY/PULL_MAX * MAX_LAUNCH_SPEED (positive up)
+    // screen_vy = -world_vy (since screenY = groundLine - worldY, so screenVy = -worldVy)
+    const svyScreen = -(pullY/PULL_MAX*MAX_LAUNCH_SPEED);
+    const traj=buildTrajectory(sp.x,sp.y,svx,svyScreen);
+    ctx.setLineDash([7,7]); ctx.strokeStyle='rgba(255,255,255,0.7)'; ctx.lineWidth=2.5;
+    ctx.beginPath();
+    traj.forEach((pt,i)=>i===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y));
+    ctx.stroke(); ctx.setLineDash([]);
+
+    // Pull power indicator
+    const dist=Math.sqrt(pullX*pullX+pullY*pullY)/PULL_MAX;
+    const col=dist<0.4?'#44FF44':dist<0.7?'#FFCC00':'#FF4444';
+    ctx.fillStyle=col+'99';
+    ctx.beginPath(); ctx.arc(sp.x,sp.y,dist*28+8,0,Math.PI*2); ctx.fill();
+  }
+
+  // Trail
+  if(currentLizard&&currentLizard.flying&&currentLizard.trail.length>1) {
+    ctx.strokeStyle='rgba(255,220,80,0.5)'; ctx.lineWidth=3; ctx.lineCap='round';
+    ctx.beginPath();
+    currentLizard.trail.forEach((pt,i)=>i===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y));
+    ctx.stroke();
+    if(currentLizard.children) currentLizard.children.forEach(ch=>{
+      if(!ch.alive||ch.trail.length<2) return;
+      ctx.strokeStyle='rgba(200,240,80,0.4)'; ctx.lineWidth=2;
+      ctx.beginPath();
+      ch.trail.forEach((pt,i)=>i===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y));
+      ctx.stroke();
+    });
+  }
+
+  // Sling bands (draw BEHIND slingshot structure)
+  if(currentLizard&&!currentLizard.flying) {
+    const lsp=w2s(currentLizard.x,currentLizard.y);
+    drawBands(ctx,sx_screen,sy_screen,lsp.x,lsp.y);
+  } else if(gameState==='watching') {
+    // bands retract to fork
+    drawBands(ctx,sx_screen,sy_screen,sx_screen,sy_screen-18);
+  }
+
+  // Slingshot
+  drawSlingshot(ctx,sx_screen,sy_screen);
+
+  // Blocks
+  blocks.forEach(b=>drawBlock(ctx,b));
+
+  // Enemies
+  enemies.forEach(e=>{
+    if(!e.alive) return;
+    const esp=w2s(e.x,e.y);
+    // Idle bob
+    const bob=Math.sin(Date.now()/480+e.x*0.01)*4;
+    drawBug(ctx,esp.x,esp.y+bob,e.size);
+  });
+
+  // Current lizard
+  if(currentLizard&&currentLizard.alive) {
+    const sp=w2s(currentLizard.x,currentLizard.y);
+    if(currentLizard.type==='gecko'||currentLizard.type==='gecko_mini') {
+      drawGecko(ctx,sp.x,sp.y,currentLizard.size,currentLizard.angle);
+    } else {
+      drawDragon(ctx,sp.x,sp.y,currentLizard.size,currentLizard.angle);
+    }
+    if(currentLizard.children) currentLizard.children.forEach(ch=>{
+      if(!ch.alive) return;
+      const csp=w2s(ch.x,ch.y);
+      drawGecko(ctx,csp.x,csp.y,ch.size,ch.angle);
+    });
+  }
+
+  drawFire();
+
+  // Particles
+  particles.forEach(p=>{
+    ctx.globalAlpha=p.life/p.maxLife;
+    ctx.fillStyle=`rgb(${p.r},${p.g},${p.b})`;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.size*(p.life/p.maxLife),0,Math.PI*2); ctx.fill();
+  });
+  ctx.globalAlpha=1;
+
+  // Float texts
+  floatTexts.forEach(ft=>{
+    ctx.globalAlpha=ft.life/ft.maxLife;
+    ctx.fillStyle=ft.color;
+    ctx.font='bold 22px "Arial Rounded MT Bold", Arial';
+    ctx.textAlign='center'; ctx.fillText(ft.text,ft.x,ft.y);
+  });
+  ctx.globalAlpha=1; ctx.textAlign='left';
+
+  // Lizard queue
+  drawQueue();
+
+  // Ability hint during flight
+  if(gameState==='flying'&&currentLizard&&currentLizard.alive&&!currentLizard.abilityUsed) {
+    const ab=currentLizard.type==='gecko'?'TAP TO SPLIT!':'TAP TO FIRE!';
+    const col=currentLizard.type==='gecko'?'#AAFF44':'#FF8822';
+    const pulse=0.7+0.3*Math.sin(Date.now()/220);
+    ctx.globalAlpha=pulse;
+    ctx.fillStyle=col;
+    ctx.font='bold 18px "Arial Rounded MT Bold", Arial';
+    ctx.textAlign='center';
+    ctx.fillText(ab,W/2,65);
+    ctx.globalAlpha=1; ctx.textAlign='left';
+  }
+
+  ctx.restore();
+}
+
+// ===========================================
+// GAME LOOP
+// ===========================================
+let rafId;
+function gameLoop() {
+  try { update(); draw(); } catch(e) { console.error('GameLoop error:',e); }
+  rafId=requestAnimationFrame(gameLoop);
+}
+
+// ===========================================
+// INPUT
+// ===========================================
+function getPos(e) {
+  if(e.touches&&e.touches.length>0) return {x:e.touches[0].clientX,y:e.touches[0].clientY};
+  return {x:e.clientX,y:e.clientY};
+}
+
+function onPointerDown(e) {
+  ensureAudio();
+  if(gameState==='flying') {
+    // Ability tap
+    if(currentLizard&&currentLizard.alive&&!currentLizard.abilityUsed) {
+      if(currentLizard.type==='gecko') geckoSplit(currentLizard);
+      else dragonFireBreath(currentLizard);
+    }
+    return;
+  }
+  if(gameState!=='aim') return;
+  const pos=getPos(e);
+  const sx=SLING_X_WORLD-camX;
+  const sy=(H-GROUND_H)-SLING_Y_WORLD;
+  const dx=pos.x-sx, dy=pos.y-sy;
+  if(Math.abs(dx)<100&&Math.abs(dy)<110) {
+    pulling=true; pullX=0; pullY=0;
+    if(currentLizard){currentLizard.x=SLING_X_WORLD;currentLizard.y=SLING_Y_WORLD;}
+  }
+}
+
+function onPointerMove(e) {
+  if(!pulling||gameState!=='aim') return;
+  if(e.cancelable) e.preventDefault();
+  const pos=getPos(e);
+  const sx=SLING_X_WORLD-camX;
+  const sy=(H-GROUND_H)-SLING_Y_WORLD;
+  let dx=pos.x-sx, dy=pos.y-sy;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+  if(dist>PULL_MAX){dx=dx/dist*PULL_MAX;dy=dy/dist*PULL_MAX;}
+  pullX=dx; pullY=dy;
+  if(currentLizard) {
+    currentLizard.x=SLING_X_WORLD+pullX;
+    // pullY > 0 = dragged DOWN on screen → worldY decreases
+    currentLizard.y=SLING_Y_WORLD-pullY;
+  }
+}
+
+function onPointerUp(e) {
+  if(!pulling||gameState!=='aim'||!currentLizard) {pulling=false;return;}
+  pulling=false;
+  const dist=Math.sqrt(pullX*pullX+pullY*pullY);
+  if(dist<12) {
+    currentLizard.x=SLING_X_WORLD; currentLizard.y=SLING_Y_WORLD; return;
+  }
+  const power=dist/PULL_MAX;
+  const spd=power*MAX_LAUNCH_SPEED;
+  // pullX<0=left, launch goes right: vx = -pullX/PULL_MAX * spd
+  // pullY>0=down screen, launch goes up: vy = +pullY/PULL_MAX * spd (world up)
+  currentLizard.vx=-pullX/PULL_MAX*spd;
+  currentLizard.vy=pullY/PULL_MAX*spd; // world Y, positive = up
+  if(currentLizard.vy<2) currentLizard.vy=2; // always some upward arc
+  currentLizard.x=SLING_X_WORLD; currentLizard.y=SLING_Y_WORLD;
+  currentLizard.flying=true;
+  gameState='flying';
+  playSound('launch');
+  document.getElementById('tip').style.opacity='0';
+}
+
+// Mouse
+canvas.addEventListener('mousedown',onPointerDown);
+document.addEventListener('mousemove',onPointerMove);
+document.addEventListener('mouseup',onPointerUp);
+// Touch
+canvas.addEventListener('touchstart',onPointerDown,{passive:true});
+document.addEventListener('touchmove',onPointerMove,{passive:false});
+document.addEventListener('touchend',onPointerUp,{passive:true});
+
+// ===========================================
+// START GAME
+// ===========================================
+function startGame() {
+  ensureAudio();
+  document.getElementById('start-screen').style.display='none';
+  score=0; currentLevel=0;
+  updateHUD();
+  setupSling();
+  loadLevel(0);
+  if(!rafId) gameLoop();
+}
+document.getElementById('startBtn').addEventListener('click',startGame);
+
+// ===========================================
+// START SCREEN PREVIEW
+// ===========================================
+window.addEventListener('load',()=>{
+  const gc=document.getElementById('prev-gecko');
+  const gCtx=gc.getContext('2d');
+  drawGecko(gCtx,45,50,24,0);
+
+  const dc=document.getElementById('prev-dragon');
+  const dCtx=dc.getContext('2d');
+  drawDragon(dCtx,45,50,24,0);
+});
+</script>
+</body>
+</html>
