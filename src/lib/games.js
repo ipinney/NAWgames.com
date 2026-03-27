@@ -6,7 +6,7 @@ const GAMES = [
     slug: 'lizard-launch',
     title: 'Lizard Launch!',
     creator: 'Nolan',
-    description: 'Sling Oinnaole the crested gecko and Blappy the bearded dragon at bug invaders! Tap to split into three geckos, or unleash Blappy's fire breath. Knock down wood, stone, and glass towers across 5 wild levels!',
+    description: "Sling Oinnaole the crested gecko and Blappy the bearded dragon at bug invaders! Tap to split into three geckos, or unleash Blappy's fire breath. Knock down wood, stone, and glass towers across 5 wild levels!",
     createdAt: '2026-03-27',
     thumbnail: '/images/lizard-launch-preview.png',
     color: 'from-green-400 to-orange-500',
