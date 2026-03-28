@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'bubble-gun',
+    title: 'Bubble Gun!',
+    creator: 'Addie',
+    description: 'Shoot spiders, beetles, and killer clowns with your bubble gun! Navigate a colorful meadow world, pop enemies with iridescent bubbles, and survive endless waves of creepy crawlies.',
+    createdAt: '2026-03-28',
+    thumbnail: '/images/bubble-gun-preview.png',
+    color: 'from-pink-400 to-purple-600',
+  },
+  {
     slug: 'lizard-launch',
     title: 'Lizard Launch!',
     creator: 'Nolan',
