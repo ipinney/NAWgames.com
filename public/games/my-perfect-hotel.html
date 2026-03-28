@@ -2,1046 +2,1269 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Perfect Hotel</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #FFB6D9 0%, #DDA0DD 100%);
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
 
-        #gameContainer {
+        .game-container {
+            width: 100%;
+            max-width: 900px;
+            height: 100vh;
+            max-height: 600px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             position: relative;
-            width: 100vw;
-            height: 100vh;
-            max-width: 1200px;
-            max-height: 800px;
-            aspect-ratio: 3/2;
+            border: 8px solid #FFD700;
         }
 
-        canvas {
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            touch-action: none;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-        }
-
-        #startOverlay {
-            position: fixed;
+        /* ===== START SCREEN ===== */
+        #startScreen {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 182, 217, 0.95);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 100;
-            backdrop-filter: blur(5px);
+            z-index: 1000;
         }
 
-        #startOverlay.hidden {
-            display: none;
+        .start-content {
+            text-align: center;
+            animation: slideInDown 0.6s ease-out;
         }
 
-        .title {
-            font-size: 4em;
-            font-weight: bold;
-            color: #8B008B;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-            animation: bounce 2s infinite;
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hotel-title {
+            font-size: 72px;
+            margin-bottom: 10px;
+            animation: bounce 1s infinite;
         }
 
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .game-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-subtitle {
+            font-size: 24px;
+            color: #FFE4B5;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .character-preview {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 40px;
+            font-size: 80px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
 
-        .subtitle {
-            font-size: 1.5em;
-            color: #9932CC;
-            margin-bottom: 40px;
-        }
-
-        .playButton {
-            padding: 20px 60px;
-            font-size: 1.8em;
-            background: linear-gradient(135deg, #FF69B4, #FF1493);
+        .char-label {
+            position: absolute;
+            font-size: 14px;
             color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
             font-weight: bold;
-            margin: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
         }
 
-        .playButton:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-        }
-
-        .playButton:active {
-            transform: scale(0.95);
-        }
-
-        .levelSelect {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .levelBtn {
-            padding: 12px 24px;
-            font-size: 1.2em;
-            background: linear-gradient(135deg, #DDA0DD, #BA55D3);
+        #startBtn {
+            font-size: 28px;
+            padding: 20px 40px;
+            background: linear-gradient(135deg, #FF6B6B, #FFE66D);
+            border: none;
+            border-radius: 15px;
             color: white;
-            border: 2px solid #8B008B;
-            border-radius: 10px;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .levelBtn:hover {
-            background: linear-gradient(135deg, #FF69B4, #FF1493);
+        #startBtn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        #startBtn:active {
+            transform: scale(0.96);
+        }
+
+        /* ===== TOP HUD ===== */
+        .hud {
+            background: linear-gradient(to bottom, #FFD700, #FFA500);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 3px solid #FF8C00;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .hud-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .timer-bar {
+            width: 150px;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 2px solid #333;
+        }
+
+        .timer-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF6B6B, #FFE66D, #4CAF50);
+            width: 100%;
+            transition: width 0.1s linear;
+        }
+
+        /* ===== MAIN GAME AREA ===== */
+        .game-area {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .left-panel {
+            width: 200px;
+            background: #FFE4B5;
+            padding: 15px;
+            border-right: 3px solid #FF8C00;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .door {
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            border: 3px solid #654321;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            margin-bottom: 10px;
+            position: relative;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .door::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: gold;
+            border-radius: 50%;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .guest-queue {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .guest-item {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #FFB6C1, #FFB6C1);
+            border: 2px solid #FF69B4;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            position: relative;
+        }
+
+        .guest-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
+        }
+
+        .guest-item.selected {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: 2px solid #FF6347;
+            box-shadow: 0 0 20px rgba(255, 99, 71, 0.6);
+        }
+
+        .guest-item.waiting {
+            animation: wiggle 0.3s infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        .guest-emoji {
+            font-size: 28px;
+        }
+
+        .guest-name {
+            flex: 1;
+        }
+
+        /* ===== CENTER PANEL (ROOMS) ===== */
+        .center-panel {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background: #E0F6FF;
+        }
+
+        .desk-label {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            flex: 1;
+        }
+
+        .room {
+            background: #90EE90;
+            border: 3px solid #228B22;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px;
+            position: relative;
+            overflow: hidden;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .room:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .room.clean {
+            background: linear-gradient(135deg, #90EE90, #7CFC00);
+            border-color: #228B22;
+        }
+
+        .room.clean::after {
+            content: '✨';
+            position: absolute;
+            font-size: 20px;
+            animation: sparkle 2s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .room.occupied {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-color: #FF8C00;
+            animation: pulse-room 1s infinite;
+        }
+
+        @keyframes pulse-room {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 165, 0, 0.3); }
+            50% { box-shadow: 0 0 0 10px rgba(255, 165, 0, 0); }
+        }
+
+        .room.dirty {
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            border-color: #5C4033;
+            animation: dirty-shake 0.4s ease-out;
+        }
+
+        @keyframes dirty-shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        .room.cleaning {
+            background: linear-gradient(135deg, #87CEEB, #4DB8FF);
+            border-color: #0099FF;
+            animation: cleaning-shimmer 0.6s ease-in-out;
+        }
+
+        @keyframes cleaning-shimmer {
+            0%, 100% { background: linear-gradient(135deg, #87CEEB, #4DB8FF); }
+            50% { background: linear-gradient(135deg, #4DB8FF, #87CEEB); }
+        }
+
+        .room-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .room-number {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .room-emoji {
+            font-size: 36px;
+        }
+
+        .room-timer {
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2px 8px;
+            border-radius: 4px;
+            min-width: 40px;
+        }
+
+        .room.clean .room-text {
+            font-size: 16px;
+            color: #228B22;
+        }
+
+        .room.occupied .room-text {
+            font-size: 16px;
+            color: #FF8C00;
+        }
+
+        .room.dirty .room-text {
+            font-size: 16px;
+            color: #E8E8E8;
+        }
+
+        /* ===== BOTTOM PANEL (SHOP) ===== */
+        .shop-panel {
+            background: linear-gradient(to top, #FFE4B5, #FFE4B5);
+            padding: 12px 15px;
+            border-top: 3px solid #FF8C00;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .shop-btn {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #FF6B6B, #FF4757);
+            border: 2px solid #FF3838;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+        }
+
+        .shop-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 71, 87, 0.5);
+        }
+
+        .shop-btn:active {
+            transform: translateY(0);
+        }
+
+        .shop-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ===== DAY END SCREEN ===== */
+        #dayEndScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 900;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .day-end-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            max-width: 400px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .day-end-content h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .day-stat {
+            font-size: 18px;
+            margin: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .day-stat-value {
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .stars-display {
+            font-size: 48px;
+            margin: 20px 0;
+            letter-spacing: 8px;
+            animation: starPop 0.6s ease-out;
+        }
+
+        @keyframes starPop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .continue-btn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 18px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .continue-btn:hover {
             transform: scale(1.05);
         }
 
-        .levelBtn.selected {
-            background: linear-gradient(135deg, #FF1493, #C71585);
-            border: 3px solid #8B008B;
+        /* ===== FLOATING TEXT ===== */
+        .floating-text {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+            z-index: 100;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px);
+            }
+        }
+
+        /* ===== JANITOR CHARACTER ===== */
+        .janitor {
+            position: absolute;
+            font-size: 36px;
+            z-index: 50;
+            animation: janitorWalk 1s linear forwards;
+        }
+
+        @keyframes janitorWalk {
+            from { opacity: 1; }
+            to { opacity: 1; }
+        }
+
+        .janitor-working {
+            animation: janitorClean 0.6s ease-in-out infinite !important;
+        }
+
+        @keyframes janitorClean {
+            0%, 100% { transform: rotate(0deg) scaleX(1); }
+            50% { transform: rotate(-10deg) scaleX(-1); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .game-container {
+                max-width: 100%;
+                max-height: 100%;
+                border-radius: 0;
+            }
+
+            .hud {
+                font-size: 18px;
+            }
+
+            .game-title {
+                font-size: 36px;
+            }
+
+            .hotel-title {
+                font-size: 56px;
+            }
+
+            .rooms-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ===== SCROLLBAR STYLING ===== */
+        .left-panel::-webkit-scrollbar,
+        .center-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .left-panel::-webkit-scrollbar-track,
+        .center-panel::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        .left-panel::-webkit-scrollbar-thumb,
+        .center-panel::-webkit-scrollbar-thumb {
+            background: #FF8C00;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <div id="gameContainer">
-        <canvas id="c"></canvas>
-        <div id="startOverlay">
-            <h1 class="title">🏨 My Perfect Hotel 🧹</h1>
-            <p class="subtitle">Help the maid clean the rooms!</p>
-            <button class="playButton" id="playBtn">START GAME</button>
-            <div class="levelSelect" id="levelSelect"></div>
+    <div class="game-container">
+        <!-- START SCREEN -->
+        <div id="startScreen">
+            <div class="start-content">
+                <div class="hotel-title">🏨</div>
+                <div class="game-title">My Perfect Hotel</div>
+                <div class="game-subtitle">Can you keep all the guests happy?</div>
+
+                <div class="character-preview">
+                    <div style="position: relative;">
+                        🧑‍💼
+                        <div class="char-label" style="bottom: -30px;">Manager</div>
+                    </div>
+                    <div style="position: relative;">
+                        👤
+                        <div class="char-label" style="bottom: -30px;">Guest</div>
+                    </div>
+                </div>
+
+                <button id="startBtn">OPEN FOR BUSINESS! 🚀</button>
+            </div>
+        </div>
+
+        <!-- DAY END SCREEN -->
+        <div id="dayEndScreen">
+            <div class="day-end-content">
+                <h2 id="dayEndTitle">Day Complete!</h2>
+                <div class="day-stat">
+                    <span>Guests Served:</span>
+                    <span class="day-stat-value" id="guestsServed">0</span>
+                </div>
+                <div class="day-stat">
+                    <span>Guests Missed:</span>
+                    <span class="day-stat-value" id="guestsMissed">0</span>
+                </div>
+                <div class="day-stat">
+                    <span>Money Earned:</span>
+                    <span class="day-stat-value" id="moneyEarned">$0</span>
+                </div>
+                <div class="stars-display" id="starsDisplay">⭐</div>
+                <button class="continue-btn" onclick="game.nextDay()">Next Day →</button>
+            </div>
+        </div>
+
+        <!-- GAME HUD -->
+        <div class="hud">
+            <div class="hud-item">
+                <span>🏨</span>
+                <span id="hotelName">My Perfect Hotel</span>
+            </div>
+            <div class="hud-item">
+                <span>💰</span>
+                <span id="moneyDisplay">$0</span>
+            </div>
+            <div class="hud-item">
+                <span>⭐</span>
+                <span id="dayDisplay">Day 1</span>
+            </div>
+            <div class="hud-item">
+                <span>⏱️</span>
+                <div class="timer-bar">
+                    <div class="timer-bar-fill" id="timerBar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN GAME AREA -->
+        <div class="game-area">
+            <!-- LEFT PANEL: DOOR & QUEUE -->
+            <div class="left-panel">
+                <div class="door">🚪</div>
+                <div class="guest-queue" id="guestQueue"></div>
+            </div>
+
+            <!-- CENTER PANEL: ROOMS -->
+            <div class="center-panel">
+                <div class="desk-label">🛎️ FRONT DESK</div>
+                <div class="rooms-grid" id="roomsGrid"></div>
+            </div>
+        </div>
+
+        <!-- SHOP PANEL -->
+        <div class="shop-panel">
+            <button class="shop-btn" id="janitorbtn" onclick="game.hireJanitor()">
+                <span>👷 Hire Janitor</span><br><span style="font-size: 12px;">$50</span>
+            </button>
+            <button class="shop-btn" id="roombtn" onclick="game.buyMoreRooms()">
+                <span>🏠 +2 Rooms</span><br><span style="font-size: 12px;">$80</span>
+            </button>
+            <button class="shop-btn" id="upgradeBtn" onclick="game.upgradeJanitor()">
+                <span>⚡ Janitor++</span><br><span style="font-size: 12px;">$120</span>
+            </button>
         </div>
     </div>
 
     <script>
-        // ============================================================================
-        // MY PERFECT HOTEL - Complete Game Code
-        // ============================================================================
-
-        const canvas = document.getElementById('c');
-        const ctx = canvas.getContext('2d');
-        const startOverlay = document.getElementById('startOverlay');
-        const playBtn = document.getElementById('playBtn');
-        const levelSelect = document.getElementById('levelSelect');
-
-        // Resize canvas to window size
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        // ============================================================================
-        // GAME STATE & CONSTANTS
-        // ============================================================================
-
-        const GAME_WIDTH = 800;
-        const GAME_HEIGHT = 600;
-        const TILE_SIZE = 40;
-        const ROOM_WIDTH = 400;
-        const ROOM_HEIGHT = 300;
-
-        let gameState = {
-            currentLevel: 1,
-            score: 0,
-            timeRemaining: 0,
-            gameRunning: false,
-            levelComplete: false,
-            showLevelComplete: false,
-            maidX: 200,
-            maidY: 150,
-            cleaning: false,
-            cleaningProgress: 0,
-            currentCleaningItem: null,
-            itemsCleaned: 0,
-            itemsTotal: 0,
-            stars: 0,
-            showGameOver: false,
-            bossComments: '',
-            screenShake: 0,
-            scaleRatio: 1,
-            selectedLevel: 1
-        };
-
-        const LEVELS = {
-            1: {
-                timeLimit: 60,
-                rooms: 1,
-                itemTypes: { bed: 2, toilet: 1, trash: 2, floor: 1 },
-                bossStrictness: 0.7,
-                description: 'Clean 1 Bedroom'
-            },
-            2: {
-                timeLimit: 90,
-                rooms: 2,
-                itemTypes: { bed: 2, toilet: 2, shower: 1, trash: 3, floor: 2 },
-                bossStrictness: 0.6,
-                description: 'Clean 2 Rooms'
-            },
-            3: {
-                timeLimit: 120,
-                rooms: 3,
-                itemTypes: { bed: 3, toilet: 2, shower: 2, trash: 4, floor: 3, window: 2 },
-                bossStrictness: 0.5,
-                description: 'Clean 3 Rooms'
-            },
-            4: {
-                timeLimit: 100,
-                rooms: 3,
-                itemTypes: { bed: 4, toilet: 3, shower: 2, trash: 5, floor: 4, window: 3 },
-                bossStrictness: 0.4,
-                description: 'Clean Everything Fast!'
-            },
-            5: {
-                timeLimit: 150,
-                rooms: 4,
-                itemTypes: { bed: 5, toilet: 4, shower: 3, trash: 6, floor: 5, window: 4 },
-                bossStrictness: 0.3,
-                description: 'Ultimate Challenge!'
-            }
-        };
-
-        // ============================================================================
-        // ARRAYS & DATA STRUCTURES - Initialize BEFORE game loop
-        // ============================================================================
-
-        let items = [];
-        let particles = [];
-        let rooms = [];
-        let keys = {};
-        let touchInput = { x: 0, y: 0, active: false };
-
-        // Audio context
-        let audioContext = null;
-
-        // ============================================================================
-        // AUDIO SYSTEM
-        // ============================================================================
-
-        function initAudio() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
+        // ===== AUDIO SYNTHESIS =====
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
-            if (!audioContext) initAudio();
-            if (audioContext.state === 'suspended') audioContext.resume();
-
             const now = audioContext.currentTime;
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            const masterVolume = 0.3;
 
             switch(type) {
-                case 'spray':
-                    osc.frequency.setValueAtTime(3000, now);
-                    osc.frequency.exponentialRampToValueAtTime(2000, now + 0.1);
-                    osc.type = 'square';
-                    osc.start(now);
-                    osc.stop(now + 0.1);
+                case 'bell':
+                    // Two-note ascending chime
+                    [587.33, 783.99].forEach((freq, i) => {
+                        const osc = audioContext.createOscillator();
+                        const gain = audioContext.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioContext.destination);
+                        osc.frequency.value = freq;
+                        gain.gain.setValueAtTime(0.3 * masterVolume, now + i * 0.1);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.3);
+                        osc.start(now + i * 0.1);
+                        osc.stop(now + i * 0.1 + 0.3);
+                    });
                     break;
-                case 'scrub':
-                    osc.frequency.setValueAtTime(1500, now);
-                    osc.frequency.exponentialRampToValueAtTime(1000, now + 0.15);
-                    osc.type = 'sawtooth';
-                    osc.start(now);
-                    osc.stop(now + 0.15);
+
+                case 'checkin':
+                    // Pop sound - high frequency
+                    const osc1 = audioContext.createOscillator();
+                    const gain1 = audioContext.createGain();
+                    osc1.connect(gain1);
+                    gain1.connect(audioContext.destination);
+                    osc1.frequency.setValueAtTime(1200, now);
+                    osc1.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+                    gain1.gain.setValueAtTime(0.3 * masterVolume, now);
+                    gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    osc1.start(now);
+                    osc1.stop(now + 0.15);
                     break;
-                case 'sparkle':
-                    osc.frequency.setValueAtTime(4000, now);
-                    osc.frequency.exponentialRampToValueAtTime(5000, now + 0.2);
-                    osc.type = 'sine';
-                    osc.start(now);
-                    osc.stop(now + 0.2);
+
+                case 'checkout':
+                    // Ka-ching coin sound
+                    const osc2 = audioContext.createOscillator();
+                    const gain2 = audioContext.createGain();
+                    osc2.connect(gain2);
+                    gain2.connect(audioContext.destination);
+                    osc2.frequency.setValueAtTime(800, now);
+                    osc2.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
+                    gain2.gain.setValueAtTime(0.3 * masterVolume, now);
+                    gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    osc2.start(now);
+                    osc2.stop(now + 0.4);
                     break;
-                case 'beep':
-                    osc.frequency.setValueAtTime(800, now);
-                    osc.type = 'square';
-                    osc.start(now);
-                    osc.stop(now + 0.1);
+
+                case 'clean_start':
+                    // Swoosh sound
+                    const noise = audioContext.createBufferSource();
+                    const buffer = audioContext.createBuffer(1, audioContext.sampleRate * 0.3, audioContext.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < buffer.length; i++) {
+                        data[i] = Math.random() * 2 - 1;
+                    }
+                    noise.buffer = buffer;
+                    const filter = audioContext.createBiquadFilter();
+                    filter.type = 'highpass';
+                    filter.frequency.value = 1000;
+                    const gainClean = audioContext.createGain();
+                    noise.connect(filter);
+                    filter.connect(gainClean);
+                    gainClean.connect(audioContext.destination);
+                    gainClean.gain.setValueAtTime(0.2 * masterVolume, now);
+                    gainClean.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    noise.start(now);
+                    noise.stop(now + 0.3);
                     break;
-                case 'jingle':
-                    const notes = [523, 659, 784, 659];
-                    for (let i = 0; i < notes.length; i++) {
+
+                case 'clean_done':
+                    // Sparkle ascending chime
+                    [523.25, 659.25, 783.99].forEach((freq, i) => {
                         const o = audioContext.createOscillator();
                         const g = audioContext.createGain();
                         o.connect(g);
                         g.connect(audioContext.destination);
-                        o.frequency.setValueAtTime(notes[i], now + i * 0.15);
-                        g.gain.setValueAtTime(0.2, now + i * 0.15);
-                        g.gain.exponentialRampToValueAtTime(0.01, now + (i + 1) * 0.15);
+                        o.frequency.value = freq;
+                        g.gain.setValueAtTime(0.2 * masterVolume, now + i * 0.08);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.2);
+                        o.start(now + i * 0.08);
+                        o.stop(now + i * 0.08 + 0.2);
+                    });
+                    break;
+
+                case 'hire':
+                    // Power-up fanfare
+                    [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+                        const o = audioContext.createOscillator();
+                        const g = audioContext.createGain();
+                        o.connect(g);
+                        g.connect(audioContext.destination);
+                        o.frequency.value = freq;
+                        g.gain.setValueAtTime(0.25 * masterVolume, now + i * 0.1);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.3);
+                        o.start(now + i * 0.1);
+                        o.stop(now + i * 0.1 + 0.3);
+                    });
+                    break;
+
+                case 'miss':
+                    // Sad descending tone
+                    [400, 300, 200].forEach((freq, i) => {
+                        const o = audioContext.createOscillator();
+                        const g = audioContext.createGain();
+                        o.connect(g);
+                        g.connect(audioContext.destination);
+                        o.frequency.value = freq;
+                        g.gain.setValueAtTime(0.2 * masterVolume, now + i * 0.15);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.15 + 0.3);
                         o.start(now + i * 0.15);
-                        o.stop(now + (i + 1) * 0.15);
-                    }
-                    return;
-                case 'bossScan':
-                    osc.frequency.setValueAtTime(2000, now);
-                    osc.frequency.linearRampToValueAtTime(1000, now + 0.3);
-                    osc.type = 'sine';
-                    osc.start(now);
-                    osc.stop(now + 0.3);
+                        o.stop(now + i * 0.15 + 0.3);
+                    });
                     break;
-                case 'deduct':
-                    osc.frequency.setValueAtTime(400, now);
-                    osc.type = 'square';
-                    osc.start(now);
-                    osc.stop(now + 0.2);
+
+                case 'day_end':
+                    // End of day jingle
+                    [523.25, 659.25, 783.99, 1046.5, 783.99, 659.25, 523.25].forEach((freq, i) => {
+                        const o = audioContext.createOscillator();
+                        const g = audioContext.createGain();
+                        o.connect(g);
+                        g.connect(audioContext.destination);
+                        o.frequency.value = freq;
+                        g.gain.setValueAtTime(0.2 * masterVolume, now + i * 0.12);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.12 + 0.25);
+                        o.start(now + i * 0.12);
+                        o.stop(now + i * 0.12 + 0.25);
+                    });
                     break;
             }
         }
 
-        // ============================================================================
-        // PARTICLE SYSTEM
-        // ============================================================================
+        // ===== GAME STATE & LOGIC =====
+        const game = {
+            state: 'start',
+            money: 0,
+            day: 1,
+            dayTime: 90,
+            dayTimeMax: 90,
+            rooms: [],
+            guests: [],
+            guestQueue: [],
+            selectedGuest: null,
+            guestSpawnRate: 1.5,
+            guestSpawnTimer: 0,
+            dayStats: {
+                guestsServed: 0,
+                guestsMissed: 0,
+                moneyEarned: 0,
+                dayStartMoney: 0
+            },
+            hasJanitor: false,
+            janitorLevel: 1,
+            janitorCleaning: false,
+            janitorCleanTime: 4,
 
-        function createParticle(x, y, type, count = 1) {
-            for (let i = 0; i < count; i++) {
-                const angle = (Math.PI * 2 * i) / count;
-                const velocity = 2 + Math.random() * 3;
+            init() {
+                document.getElementById('startBtn').addEventListener('click', () => this.startGame());
+                this.createRooms(4);
+            },
 
-                particles.push({
-                    x: x,
-                    y: y,
-                    vx: Math.cos(angle) * velocity,
-                    vy: Math.sin(angle) * velocity,
-                    life: 1,
-                    type: type,
-                    size: 3 + Math.random() * 4
-                });
-            }
-        }
-
-        function updateParticles() {
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.1; // gravity
-                p.life -= 0.02;
-
-                if (p.life <= 0) {
-                    particles.splice(i, 1);
+            createRooms(count) {
+                this.rooms = [];
+                for (let i = 0; i < count; i++) {
+                    this.rooms.push({
+                        id: i,
+                        state: 'clean', // 'clean', 'occupied', 'dirty', 'cleaning'
+                        guest: null,
+                        timer: 0,
+                        cleanTimer: 0,
+                        element: null
+                    });
                 }
-            }
-        }
+                this.renderRooms();
+            },
 
-        function drawParticles() {
-            particles.forEach(p => {
-                ctx.save();
-                ctx.globalAlpha = p.life;
+            startGame() {
+                this.state = 'playing';
+                document.getElementById('startScreen').style.display = 'none';
+                this.money = 0;
+                this.day = 1;
+                this.dayStats = {
+                    guestsServed: 0,
+                    guestsMissed: 0,
+                    moneyEarned: 0,
+                    dayStartMoney: 0
+                };
+                this.hasJanitor = false;
+                this.janitorLevel = 1;
+                this.startDay();
+            },
 
-                if (p.type === 'sparkle') {
-                    ctx.fillStyle = '#FFD700';
-                    ctx.font = 'bold 12px Arial';
-                    ctx.fillText('✨', p.x - 6, p.y + 6);
-                } else if (p.type === 'dust') {
-                    ctx.fillStyle = 'rgba(200, 200, 200, 0.7)';
-                    ctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
-                } else if (p.type === 'water') {
-                    ctx.fillStyle = 'rgba(100, 150, 255, 0.6)';
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
+            startDay() {
+                this.dayTime = this.dayTimeMax;
+                this.dayStats.dayStartMoney = this.money;
+                this.dayStats.guestsServed = 0;
+                this.dayStats.guestsMissed = 0;
+                this.dayStats.moneyEarned = 0;
+                this.guestSpawnRate = 1.5 - (this.day * 0.1);
+                this.guestSpawnRate = Math.max(0.5, this.guestSpawnRate);
+                this.guestQueue = [];
+                this.guests = [];
+                this.selectedGuest = null;
+                this.guestSpawnTimer = 0;
+                this.updateUI();
+                this.gameLoop();
+            },
+
+            gameLoop() {
+                if (this.state !== 'playing') return;
+
+                const deltaTime = 0.016; // ~60fps
+                this.dayTime -= deltaTime;
+
+                // Spawn guests
+                this.guestSpawnTimer += deltaTime;
+                if (this.guestSpawnTimer > this.guestSpawnRate && this.guests.length < 10) {
+                    this.spawnGuest();
+                    this.guestSpawnTimer = 0;
                 }
 
-                ctx.restore();
-            });
-        }
-
-        // ============================================================================
-        // ROOM & ITEM GENERATION
-        // ============================================================================
-
-        function generateRooms() {
-            rooms = [];
-            items = [];
-
-            const levelConfig = LEVELS[gameState.currentLevel];
-            const numRooms = levelConfig.rooms;
-
-            for (let r = 0; r < numRooms; r++) {
-                const roomX = (r % 2) * ROOM_WIDTH;
-                const roomY = Math.floor(r / 2) * ROOM_HEIGHT;
-
-                rooms.push({
-                    x: roomX,
-                    y: roomY,
-                    width: ROOM_WIDTH,
-                    height: ROOM_HEIGHT,
-                    type: r % 3 === 0 ? 'bedroom' : r % 3 === 1 ? 'bathroom' : 'suite'
-                });
-
-                // Generate items based on room type
-                const itemCounts = levelConfig.itemTypes;
-                let itemId = 0;
-
-                // Distribute items in room
-                const positions = generateItemPositions(roomX, roomY, 15);
-                let posIdx = 0;
-
-                Object.keys(itemCounts).forEach(type => {
-                    for (let i = 0; i < itemCounts[type]; i++) {
-                        if (posIdx < positions.length) {
-                            const pos = positions[posIdx++];
-                            items.push({
-                                id: itemId++,
-                                type: type,
-                                x: pos.x,
-                                y: pos.y,
-                                clean: false,
-                                cleanTime: getCleanTime(type),
-                                progress: 0
-                            });
+                // Update guests in queue
+                this.guests.forEach(guest => {
+                    if (!guest.assigned) {
+                        guest.waitTime += deltaTime;
+                        if (guest.waitTime > 8) {
+                            // Guest leaves sad
+                            playSound('miss');
+                            this.dayStats.guestsMissed++;
+                            this.guests = this.guests.filter(g => g !== guest);
+                            this.renderGuestQueue();
                         }
                     }
                 });
-            }
 
-            gameState.itemsTotal = items.length;
-            gameState.itemsCleaned = 0;
-        }
-
-        function generateItemPositions(roomX, roomY, count) {
-            const positions = [];
-            for (let i = 0; i < count; i++) {
-                positions.push({
-                    x: roomX + 20 + Math.random() * (ROOM_WIDTH - 40),
-                    y: roomY + 20 + Math.random() * (ROOM_HEIGHT - 40)
+                // Update rooms
+                this.rooms.forEach(room => {
+                    if (room.state === 'occupied') {
+                        room.timer -= deltaTime;
+                        if (room.timer <= 0) {
+                            this.checkoutGuest(room);
+                        }
+                    }
+                    if (room.state === 'cleaning') {
+                        room.cleanTimer -= deltaTime;
+                        if (room.cleanTimer <= 0) {
+                            room.state = 'clean';
+                            playSound('clean_done');
+                            this.renderRooms();
+                        }
+                    }
                 });
-            }
-            return positions;
-        }
 
-        function getCleanTime(type) {
-            const times = {
-                bed: 40,
-                toilet: 35,
-                shower: 45,
-                trash: 20,
-                floor: 30,
-                window: 25,
-                dust: 25
-            };
-            return times[type] || 30;
-        }
+                // Janitor AI
+                if (this.hasJanitor && !this.janitorCleaning) {
+                    const dirtyRooms = this.rooms.filter(r => r.state === 'dirty');
+                    if (dirtyRooms.length > 0) {
+                        const room = dirtyRooms[0];
+                        this.janitorCleanRoom(room);
+                    }
+                }
 
-        // ============================================================================
-        // RENDERING
-        // ============================================================================
+                // Update UI
+                this.updateUI();
 
-        function drawHotel() {
-            ctx.save();
+                // Check if day is over
+                if (this.dayTime <= 0) {
+                    this.endDay();
+                    return;
+                }
 
-            // Background
-            ctx.fillStyle = '#FFF0F5';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                requestAnimationFrame(() => this.gameLoop());
+            },
 
-            // Draw rooms
-            rooms.forEach(room => {
-                ctx.save();
+            spawnGuest() {
+                const guestEmojis = ['😊', '👨‍💼', '👩‍💼', '👶', '👴', '👵', '🧑‍🎨', '👨‍👩‍👧', '🧑‍💻'];
+                const guest = {
+                    id: Math.random(),
+                    emoji: guestEmojis[Math.floor(Math.random() * guestEmojis.length)],
+                    waitTime: 0,
+                    assigned: false,
+                    element: null,
+                    stayTime: 8 + Math.random() * 7, // 8-15 seconds
+                    payment: 8 + Math.floor(Math.random() * 8) // $8-15
+                };
+                this.guests.push(guest);
+                playSound('bell');
+                this.renderGuestQueue();
+            },
 
-                // Room background
-                if (room.type === 'bedroom') {
-                    ctx.fillStyle = '#FFE4E1';
-                } else if (room.type === 'bathroom') {
-                    ctx.fillStyle = '#E0FFFF';
+            selectGuest(guest) {
+                if (this.selectedGuest === guest) {
+                    this.selectedGuest = null;
                 } else {
-                    ctx.fillStyle = '#FFF8DC';
+                    this.selectedGuest = guest;
                 }
-                ctx.fillRect(room.x, room.y, room.width, room.height);
+                this.renderGuestQueue();
+            },
 
-                // Room border
-                ctx.strokeStyle = '#8B008B';
-                ctx.lineWidth = 3;
-                ctx.strokeRect(room.x, room.y, room.width, room.height);
+            assignGuestToRoom(room) {
+                if (!this.selectedGuest || room.state !== 'clean') return;
 
-                // Room label
-                ctx.fillStyle = '#8B008B';
-                ctx.font = 'bold 16px Arial';
-                ctx.fillText(room.type.toUpperCase(), room.x + 10, room.y + 25);
+                const guest = this.selectedGuest;
+                playSound('checkin');
 
-                ctx.restore();
-            });
+                room.state = 'occupied';
+                room.guest = guest;
+                room.timer = guest.stayTime;
+                guest.assigned = true;
+                guest.roomId = room.id;
 
-            // Draw items
-            items.forEach(item => {
-                drawItem(item);
-            });
+                this.guests = this.guests.filter(g => g !== guest);
+                this.selectedGuest = null;
+                this.dayStats.guestsServed++;
 
-            // Draw maid character
-            drawMaid(gameState.maidX, gameState.maidY);
+                this.renderRooms();
+                this.renderGuestQueue();
+            },
 
-            // Draw HUD
-            drawHUD();
+            checkoutGuest(room) {
+                const earnings = room.guest.payment;
+                this.money += earnings;
+                this.dayStats.moneyEarned += earnings;
 
-            ctx.restore();
-        }
-
-        function drawItem(item) {
-            ctx.save();
-
-            const colors = {
-                bed: '#FF69B4',
-                toilet: '#87CEEB',
-                shower: '#4169E1',
-                trash: '#808080',
-                floor: '#D2B48C',
-                window: '#B0E0E6',
-                dust: '#A9A9A9'
-            };
-
-            const color = colors[item.type] || '#FFB6C1';
-
-            if (item.clean) {
-                ctx.fillStyle = color;
-                ctx.globalAlpha = 0.5;
-            } else {
-                ctx.fillStyle = color;
-                ctx.globalAlpha = 1;
-            }
-
-            const size = 25;
-            ctx.fillRect(item.x - size/2, item.y - size/2, size, size);
-
-            // Item symbol
-            ctx.globalAlpha = 1;
-            ctx.fillStyle = '#FFFFFF';
-            ctx.font = '16px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-
-            const symbols = {
-                bed: '🛏️',
-                toilet: '🚽',
-                shower: '🚿',
-                trash: '🗑️',
-                floor: '🧹',
-                window: '🪟',
-                dust: '💨'
-            };
-
-            ctx.fillText(symbols[item.type] || '✓', item.x, item.y);
-
-            // Clean progress bar
-            if (gameState.currentCleaningItem === item.id && gameState.cleaning) {
-                ctx.strokeStyle = '#FFD700';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(item.x - size/2 - 2, item.y - size/2 - 10, size + 4, 5);
-                ctx.fillStyle = '#FFD700';
-                const progress = (gameState.cleaningProgress / item.cleanTime) * (size + 4);
-                ctx.fillRect(item.x - size/2 - 2, item.y - size/2 - 10, progress, 5);
-            }
-
-            ctx.restore();
-        }
-
-        function drawMaid(x, y) {
-            ctx.save();
-
-            // Body (dress)
-            ctx.fillStyle = '#FF1493';
-            ctx.beginPath();
-            ctx.ellipse(x, y + 5, 12, 16, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Apron
-            ctx.fillStyle = '#FFFFFF';
-            ctx.beginPath();
-            ctx.ellipse(x, y + 8, 10, 12, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Head
-            ctx.fillStyle = '#FDBCB4';
-            ctx.beginPath();
-            ctx.arc(x, y - 10, 8, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Hair
-            ctx.fillStyle = '#8B4513';
-            ctx.beginPath();
-            ctx.arc(x, y - 13, 9, 0, Math.PI, false);
-            ctx.fill();
-
-            // Eyes
-            ctx.fillStyle = '#000000';
-            ctx.beginPath();
-            ctx.arc(x - 3, y - 11, 2, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(x + 3, y - 11, 2, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Smile
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.arc(x, y - 8, 3, 0, Math.PI);
-            ctx.stroke();
-
-            // Arms
-            ctx.strokeStyle = '#FDBCB4';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(x - 12, y);
-            ctx.lineTo(x - 18, y + 5);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(x + 12, y);
-            ctx.lineTo(x + 18, y + 5);
-            ctx.stroke();
-
-            // Shoes
-            ctx.fillStyle = '#8B0000';
-            ctx.fillRect(x - 6, y + 22, 5, 4);
-            ctx.fillRect(x + 1, y + 22, 5, 4);
-
-            ctx.restore();
-        }
-
-        function drawHUD() {
-            ctx.save();
-
-            // Semi-transparent background for HUD
-            ctx.fillStyle = 'rgba(255, 182, 217, 0.9)';
-            ctx.fillRect(0, 0, canvas.width, 60);
-
-            // Score
-            ctx.fillStyle = '#8B008B';
-            ctx.font = 'bold 20px Arial';
-            ctx.fillText(`Score: ${gameState.score}`, 20, 35);
-
-            // Timer with shake effect for critical time
-            const timerX = canvas.width / 2 - 50;
-            let displayTime = Math.max(0, gameState.timeRemaining);
-
-            if (displayTime < 10 && gameState.gameRunning) {
-                ctx.fillStyle = '#FF0000';
-                playSound('beep');
-            } else if (displayTime < 10) {
-                ctx.fillStyle = '#FF0000';
-            } else {
-                ctx.fillStyle = '#8B008B';
-            }
-
-            ctx.font = 'bold 24px Arial';
-            ctx.fillText(`⏱️ ${displayTime}s`, timerX, 35);
-
-            // Items remaining
-            const itemsText = `Items: ${gameState.itemsTotal - gameState.itemsCleaned}/${gameState.itemsTotal}`;
-            ctx.fillStyle = '#8B008B';
-            ctx.font = 'bold 18px Arial';
-            ctx.textAlign = 'right';
-            ctx.fillText(itemsText, canvas.width - 20, 35);
-
-            // Level
-            ctx.textAlign = 'left';
-            ctx.font = 'bold 18px Arial';
-            ctx.fillText(`Level ${gameState.currentLevel}`, 20, 50);
-
-            ctx.restore();
-        }
-
-        function drawLevelComplete() {
-            ctx.save();
-
-            // Overlay
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Panel
-            ctx.fillStyle = '#FFB6D9';
-            ctx.fillRect(canvas.width/2 - 200, canvas.height/2 - 150, 400, 300);
-            ctx.strokeStyle = '#8B008B';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(canvas.width/2 - 200, canvas.height/2 - 150, 400, 300);
-
-            // Title
-            ctx.fillStyle = '#8B008B';
-            ctx.font = 'bold 32px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('Level Complete! ⭐', canvas.width/2, canvas.height/2 - 110);
-
-            // Stars
-            ctx.font = '40px Arial';
-            for (let i = 0; i < gameState.stars; i++) {
-                ctx.fillText('⭐', canvas.width/2 - 50 + i * 50, canvas.height/2 - 40);
-            }
-
-            // Info
-            ctx.fillStyle = '#8B008B';
-            ctx.font = '18px Arial';
-            ctx.textAlign = 'left';
-            ctx.fillText(`Score: ${gameState.score}`, canvas.width/2 - 180, canvas.height/2 + 20);
-            ctx.fillText(`Items Cleaned: ${gameState.itemsCleaned}`, canvas.width/2 - 180, canvas.height/2 + 50);
-            ctx.fillText(`Boss: ${gameState.bossComments}`, canvas.width/2 - 180, canvas.height/2 + 80);
-
-            // Next level button info
-            ctx.font = 'bold 16px Arial';
-            ctx.textAlign = 'center';
-            if (gameState.currentLevel < 5) {
-                ctx.fillText('Press SPACE or TAP to continue', canvas.width/2, canvas.height/2 + 130);
-            } else {
-                ctx.fillText('Game Complete! Congratulations!', canvas.width/2, canvas.height/2 + 130);
-            }
-
-            ctx.restore();
-        }
-
-        // ============================================================================
-        // GAME LOGIC
-        // ============================================================================
-
-        function startGame() {
-            gameState.gameRunning = true;
-            gameState.levelComplete = false;
-            gameState.showLevelComplete = false;
-            gameState.score = 0;
-            gameState.timeRemaining = LEVELS[gameState.currentLevel].timeLimit;
-            gameState.maidX = 100;
-            gameState.maidY = 100;
-            gameState.cleaning = false;
-            gameState.currentCleaningItem = null;
-
-            generateRooms();
-            startOverlay.classList.add('hidden');
-        }
-
-        function updateGame() {
-            if (!gameState.gameRunning) return;
-
-            // Update timer
-            gameState.timeRemaining--;
-
-            if (gameState.timeRemaining <= 0) {
-                endLevel();
-                return;
-            }
-
-            // Update maid position
-            updateMaidPosition();
-
-            // Update cleaning
-            if (gameState.cleaning && gameState.currentCleaningItem !== null) {
-                const item = items.find(i => i.id === gameState.currentCleaningItem);
-                if (item && !item.clean) {
-                    gameState.cleaningProgress++;
-                    playSound('scrub');
-
-                    if (gameState.cleaningProgress >= item.cleanTime) {
-                        item.clean = true;
-                        gameState.itemsCleaned++;
-                        gameState.score += 100;
-                        gameState.cleaning = false;
-                        gameState.cleaningProgress = 0;
-                        gameState.currentCleaningItem = null;
-
-                        playSound('sparkle');
-                        createParticle(item.x, item.y, 'sparkle', 8);
-                    }
+                // Floating text animation
+                const roomElement = room.element;
+                if (roomElement) {
+                    const floatingText = document.createElement('div');
+                    floatingText.className = 'floating-text';
+                    floatingText.textContent = `+$${earnings}! ✨`;
+                    floatingText.style.color = '#FFD700';
+                    floatingText.style.left = roomElement.offsetLeft + 30 + 'px';
+                    floatingText.style.top = roomElement.offsetTop + 30 + 'px';
+                    document.querySelector('.game-area').appendChild(floatingText);
+                    setTimeout(() => floatingText.remove(), 1000);
                 }
-            }
 
-            // Check if all items cleaned
-            if (gameState.itemsCleaned === gameState.itemsTotal && gameState.timeRemaining > 0) {
-                endLevel();
-            }
+                playSound('checkout');
+                room.state = 'dirty';
+                room.guest = null;
+                room.timer = 0;
+                this.renderRooms();
+            },
 
-            // Screen shake for time warning
-            if (gameState.timeRemaining < 10 && gameState.timeRemaining % 2 === 0) {
-                gameState.screenShake = 2;
-            }
-        }
+            cleanRoom(room) {
+                if (room.state !== 'dirty') return;
 
-        function updateMaidPosition() {
-            const speed = 3;
-            let dx = 0, dy = 0;
+                room.state = 'cleaning';
+                room.cleanTimer = 3;
+                playSound('clean_start');
+                this.renderRooms();
+            },
 
-            if (keys['w'] || keys['ArrowUp']) dy = -speed;
-            if (keys['s'] || keys['ArrowDown']) dy = speed;
-            if (keys['a'] || keys['ArrowLeft']) dx = -speed;
-            if (keys['d'] || keys['ArrowRight']) dx = speed;
+            janitorCleanRoom(room) {
+                const cleanTime = this.janitorLevel === 1 ? 4 : 2;
+                room.state = 'cleaning';
+                room.cleanTimer = cleanTime;
+                this.janitorCleaning = true;
 
-            // Touch input
-            if (touchInput.active) {
-                const dx_touch = touchInput.x - gameState.maidX;
-                const dy_touch = touchInput.y - gameState.maidY;
-                const dist = Math.sqrt(dx_touch * dx_touch + dy_touch * dy_touch);
+                // Animate janitor moving to room
+                const janitor = document.createElement('div');
+                janitor.className = 'janitor janitor-working';
+                janitor.textContent = '👷';
+                janitor.style.left = '50px';
+                janitor.style.top = '150px';
+                document.querySelector('.game-area').appendChild(janitor);
 
-                if (dist > 10) {
-                    dx = (dx_touch / dist) * speed;
-                    dy = (dy_touch / dist) * speed;
-                }
-            }
+                setTimeout(() => {
+                    janitor.remove();
+                    this.janitorCleaning = false;
+                }, cleanTime * 1000);
+            },
 
-            gameState.maidX += dx;
-            gameState.maidY += dy;
+            hireJanitor() {
+                if (this.money < 50) return;
+                if (this.hasJanitor) return;
 
-            // Boundary checking
-            gameState.maidX = Math.max(15, Math.min(canvas.width - 15, gameState.maidX));
-            gameState.maidY = Math.max(70, Math.min(canvas.height - 15, gameState.maidY));
-        }
+                playSound('hire');
+                this.money -= 50;
+                this.hasJanitor = true;
+                this.updateUI();
+            },
 
-        function endLevel() {
-            gameState.gameRunning = false;
-            gameState.levelComplete = true;
-            gameState.showLevelComplete = true;
+            upgradeJanitor() {
+                if (!this.hasJanitor || this.money < 120) return;
+                if (this.janitorLevel === 2) return;
 
-            // Calculate boss inspection score
-            const missedItems = gameState.itemsTotal - gameState.itemsCleaned;
-            const bossStrictness = LEVELS[gameState.currentLevel].bossStrictness;
-            const deduction = Math.floor(missedItems * 50 * bossStrictness);
+                playSound('hire');
+                this.money -= 120;
+                this.janitorLevel = 2;
+                this.updateUI();
+            },
 
-            gameState.score = Math.max(0, gameState.score - deduction);
+            buyMoreRooms() {
+                if (this.money < 80 || this.rooms.length >= 6) return;
 
-            // Calculate stars
-            const cleanPercentage = gameState.itemsCleaned / gameState.itemsTotal;
-            if (cleanPercentage === 1 && gameState.timeRemaining > gameState.timeRemaining * 0.3) {
-                gameState.stars = 3;
-                gameState.bossComments = 'Perfect! Flawless work! 🌟';
-            } else if (cleanPercentage >= 0.8) {
-                gameState.stars = 2;
-                gameState.bossComments = 'Great job! Nearly perfect! ⭐';
-            } else if (cleanPercentage >= 0.5) {
-                gameState.stars = 1;
-                gameState.bossComments = 'Not bad, but could be better.';
-            } else {
-                gameState.stars = 0;
-                gameState.bossComments = 'Needs more work!';
-            }
-
-            playSound('jingle');
-        }
-
-        function checkItemProximity() {
-            const proximityRange = 40;
-
-            for (let item of items) {
-                if (item.clean) continue;
-
-                const dx = gameState.maidX - item.x;
-                const dy = gameState.maidY - item.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < proximityRange) {
-                    return item.id;
-                }
-            }
-
-            return null;
-        }
-
-        // ============================================================================
-        // EVENT HANDLERS
-        // ============================================================================
-
-        document.addEventListener('keydown', (e) => {
-            keys[e.key] = true;
-
-            if (e.key === ' ' || e.key === 'e' || e.key === 'E') {
-                e.preventDefault();
-
-                if (!gameState.gameRunning && gameState.levelComplete) {
-                    // Next level or restart
-                    if (gameState.currentLevel < 5) {
-                        gameState.currentLevel++;
-                    }
-                    startGame();
-                } else if (gameState.gameRunning) {
-                    // Start cleaning
-                    const nearbyItem = checkItemProximity();
-                    if (nearbyItem !== null) {
-                        gameState.currentCleaningItem = nearbyItem;
-                        gameState.cleaning = true;
-                        gameState.cleaningProgress = 0;
-                    }
-                }
-            }
-        });
-
-        document.addEventListener('keyup', (e) => {
-            keys[e.key] = false;
-
-            if (e.key === ' ' || e.key === 'e' || e.key === 'E') {
-                gameState.cleaning = false;
-            }
-        });
-
-        // Touch controls
-        canvas.addEventListener('touchstart', (e) => {
-            const touch = e.touches[0];
-            touchInput.x = touch.clientX * (canvas.width / window.innerWidth);
-            touchInput.y = touch.clientY * (canvas.height / window.innerHeight);
-            touchInput.active = true;
-        });
-
-        canvas.addEventListener('touchmove', (e) => {
-            const touch = e.touches[0];
-            touchInput.x = touch.clientX * (canvas.width / window.innerWidth);
-            touchInput.y = touch.clientY * (canvas.height / window.innerHeight);
-        });
-
-        canvas.addEventListener('touchend', () => {
-            touchInput.active = false;
-
-            // Try to clean nearby item
-            const nearbyItem = checkItemProximity();
-            if (nearbyItem !== null) {
-                gameState.currentCleaningItem = nearbyItem;
-                gameState.cleaning = true;
-                gameState.cleaningProgress = 0;
-            }
-        });
-
-        playBtn.addEventListener('click', () => {
-            gameState.currentLevel = gameState.selectedLevel || 1;
-            startGame();
-        });
-
-        // Level select buttons
-        function initLevelSelect() {
-            levelSelect.innerHTML = '';
-            for (let i = 1; i <= 5; i++) {
-                const btn = document.createElement('button');
-                btn.className = 'levelBtn' + (i === gameState.selectedLevel ? ' selected' : '');
-                btn.textContent = `Level ${i}`;
-                btn.addEventListener('click', () => {
-                    gameState.selectedLevel = i;
-                    document.querySelectorAll('.levelBtn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
+                playSound('hire');
+                this.money -= 80;
+                this.rooms.push({
+                    id: this.rooms.length,
+                    state: 'clean',
+                    guest: null,
+                    timer: 0,
+                    cleanTimer: 0,
+                    element: null
                 });
-                levelSelect.appendChild(btn);
+                this.renderRooms();
+                this.updateUI();
+            },
+
+            renderRooms() {
+                const grid = document.getElementById('roomsGrid');
+                grid.innerHTML = '';
+
+                this.rooms.forEach(room => {
+                    const div = document.createElement('div');
+                    div.className = `room ${room.state}`;
+
+                    let emoji = '🟢';
+                    let status = 'CLEAN ✅';
+
+                    if (room.state === 'occupied') {
+                        emoji = room.guest.emoji;
+                        status = `⏱️ ${Math.ceil(room.timer)}s`;
+                    } else if (room.state === 'dirty') {
+                        emoji = '🗑️';
+                        status = 'DIRTY 🗑️';
+                    } else if (room.state === 'cleaning') {
+                        emoji = '✨';
+                        status = 'CLEANING...';
+                    }
+
+                    div.innerHTML = `
+                        <div class="room-content">
+                            <div class="room-number">Room ${room.id + 1}</div>
+                            <div class="room-emoji">${emoji}</div>
+                            <div class="room-text">${status}</div>
+                        </div>
+                    `;
+
+                    div.addEventListener('click', () => {
+                        if (this.selectedGuest && room.state === 'clean') {
+                            this.assignGuestToRoom(room);
+                        } else if (room.state === 'dirty' && !this.hasJanitor) {
+                            this.cleanRoom(room);
+                        }
+                    });
+
+                    div.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        if (this.selectedGuest && room.state === 'clean') {
+                            this.assignGuestToRoom(room);
+                        } else if (room.state === 'dirty' && !this.hasJanitor) {
+                            this.cleanRoom(room);
+                        }
+                    });
+
+                    grid.appendChild(div);
+                    room.element = div;
+                });
+            },
+
+            renderGuestQueue() {
+                const queue = document.getElementById('guestQueue');
+                queue.innerHTML = '';
+
+                this.guests.forEach(guest => {
+                    const div = document.createElement('div');
+                    div.className = 'guest-item';
+                    if (guest === this.selectedGuest) div.classList.add('selected');
+                    if (guest.waitTime > 3) div.classList.add('waiting');
+
+                    const face = guest.waitTime > 6 ? '😡' : guest.waitTime > 3 ? '😤' : '😊';
+
+                    div.innerHTML = `
+                        <span class="guest-emoji">${guest.emoji}</span>
+                        <span class="guest-name">${face}</span>
+                    `;
+
+                    div.addEventListener('click', () => this.selectGuest(guest));
+                    div.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        this.selectGuest(guest);
+                    });
+
+                    queue.appendChild(div);
+                });
+            },
+
+            updateUI() {
+                document.getElementById('moneyDisplay').textContent = `$${Math.floor(this.money)}`;
+                document.getElementById('dayDisplay').textContent = `Day ${this.day}`;
+
+                const timerPercent = (this.dayTime / this.dayTimeMax) * 100;
+                document.getElementById('timerBar').style.width = timerPercent + '%';
+
+                // Update shop buttons
+                document.getElementById('janitorbtn').classList.toggle('disabled', this.money < 50 || this.hasJanitor);
+                document.getElementById('roombtn').classList.toggle('disabled', this.money < 80 || this.rooms.length >= 6);
+                document.getElementById('upgradeBtn').classList.toggle('disabled', !this.hasJanitor || this.money < 120 || this.janitorLevel === 2);
+            },
+
+            endDay() {
+                this.state = 'day_end';
+                playSound('day_end');
+
+                const missRate = this.dayStats.guestsMissed / (this.dayStats.guestsServed + this.dayStats.guestsMissed || 1);
+                let stars = 3;
+                if (missRate > 0.25) stars = 1;
+                else if (missRate > 0.1) stars = 2;
+
+                document.getElementById('guestsServed').textContent = this.dayStats.guestsServed;
+                document.getElementById('guestsMissed').textContent = this.dayStats.guestsMissed;
+                document.getElementById('moneyEarned').textContent = `$${this.dayStats.moneyEarned}`;
+                document.getElementById('starsDisplay').textContent = '⭐'.repeat(stars);
+
+                document.getElementById('dayEndScreen').style.display = 'flex';
+            },
+
+            nextDay() {
+                this.day++;
+                document.getElementById('dayEndScreen').style.display = 'none';
+                this.createRooms(this.rooms.length);
+                this.startDay();
             }
-        }
+        };
 
-        // ============================================================================
-        // MAIN GAME LOOP
-        // ============================================================================
-
-        let lastFrameTime = Date.now();
-        let frameCount = 0;
-
-        function loop() {
-            try {
-                const currentTime = Date.now();
-                const deltaTime = currentTime - lastFrameTime;
-                lastFrameTime = currentTime;
-
-                // Update
-                if (gameState.gameRunning) {
-                    updateGame();
-                }
-                updateParticles();
-
-                // Draw
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // Apply screen shake
-                if (gameState.screenShake > 0) {
-                    ctx.save();
-                    const shake = Math.random() * gameState.screenShake * 2 - gameState.screenShake;
-                    ctx.translate(shake, shake);
-                    gameState.screenShake -= 0.1;
-                }
-
-                // Draw game
-                drawHotel();
-                drawParticles();
-
-                if (gameState.screenShake > 0) {
-                    ctx.restore();
-                }
-
-                // Draw level complete overlay
-                if (gameState.showLevelComplete) {
-                    drawLevelComplete();
-                }
-
-                // Attract mode: draw hotel scene even when start screen is showing
-                // (Canvas must have varied pixels for Playwright test)
-
-                frameCount++;
-
-            } catch (e) {
-                console.error('Game loop error:', e);
-            }
-
-            requestAnimationFrame(loop);
-        }
-
-        // ============================================================================
-        // INITIALIZATION
-        // ============================================================================
-
-        // Initialize all arrays
-        items = [];
-        particles = [];
-        rooms = [];
-        keys = {};
-        touchInput = { x: 0, y: 0, active: false };
-
-        // Generate attract mode rooms so canvas renders content behind start screen
-        gameState.currentLevel = 1;
-        gameState.timeRemaining = LEVELS[1].timeLimit;
-        generateRooms();
-        gameState.maidX = 200;
-        gameState.maidY = 150;
-
-        // Start the game loop
-        initLevelSelect();
-        initAudio();
-
-        // Handle visibility change
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && gameState.gameRunning) {
-                gameState.gameRunning = false;
-            }
-        });
-
-        // Start animation loop
-        loop();
-
-        // Show start screen with drawing
-        startOverlay.classList.remove('hidden');
-
+        // Start game
+        game.init();
     </script>
 </body>
 </html>

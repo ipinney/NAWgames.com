@@ -177,7 +177,7 @@ const GAMES = [
     slug: 'my-perfect-hotel',
     title: 'My Perfect Hotel',
     creator: 'Addie',
-    description: 'You are the hotel maid! Clean rooms before time runs out — make beds, scrub toilets, mop floors, and pick up trash. The boss inspects your work and gives you stars. 5 levels of increasing challenge!',
+    description: "You're the front desk manager! Greet guests as they walk in, assign them to clean rooms, and keep up with the mess. Hire a janitor to help out and unlock more rooms as your hotel grows!",
     createdAt: '2026-03-25',
     thumbnail: '/images/my-perfect-hotel-preview.png',
     color: 'from-pink-400 to-purple-600',
