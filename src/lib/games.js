@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'word-breaker',
+    title: 'Word Breaker',
+    creator: 'Ivan',
+    description: 'Smash sentences apart, word by word! Classic Breakout meets typography — the bricks ARE colorful words arranged as sentences about animals, space, dinosaurs, and more. Break every word with combos, power-ups, and explosive letter-scattering effects across 7 themed levels!',
+    createdAt: '2026-03-29',
+    thumbnail: '/images/word-breaker-preview.png',
+    color: 'from-cyan-400 to-purple-600',
+  },
+  {
     slug: 'bubble-gun',
     title: 'Bubble Gun!',
     creator: 'Addie',
