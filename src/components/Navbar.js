@@ -192,6 +192,9 @@ export default function Navbar() {
             <Link href="/request" className="text-white/70 hover:text-naw-orange text-xs sm:text-sm font-medium transition-colors hidden sm:block">
               Request a Game
             </Link>
+            <Link href="/projects" className="text-white/70 hover:text-naw-pink text-xs sm:text-sm font-medium transition-colors hidden sm:block">
+              Projects
+            </Link>
             <Link href="/lizardlens" className="text-white/70 hover:text-naw-green text-xs sm:text-sm font-medium transition-colors hidden sm:block">
               Lizard Cam
             </Link>
