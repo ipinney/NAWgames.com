@@ -5,124 +5,261 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 
 const GO2RTC_URL = 'https://spark-2f53.tail8a7863.ts.net';
 
+// Codecs supported by go2rtc MSE — sent to server so it picks compatible ones
+const MSE_CODECS = [
+  'avc1.640029', // H.264 high 4.1
+  'avc1.64002A', // H.264 high 4.2
+  'avc1.640033', // H.264 high 5.1
+  'hvc1.1.6.L153.B0', // H.265 main 5.1
+  'mp4a.40.2',   // AAC LC
+  'mp4a.40.5',   // AAC HE
+  'flac',
+  'opus',
+];
+
+function getSupportedCodecs() {
+  const MS = window.ManagedMediaSource || window.MediaSource;
+  if (!MS) return '';
+  return MSE_CODECS
+    .filter(c => MS.isTypeSupported(`video/mp4; codecs="${c}"`))
+    .join();
+}
+
 function StreamPlayer({ name, emoji, species, streamId }) {
   const videoRef = useRef(null);
   const wsRef = useRef(null);
-  const msRef = useRef(null);
-  const sbRef = useRef(null);
-  const bufferQueue = useRef([]);
+  const reconnectTID = useRef(null);
+  const connectTS = useRef(0);
   const [status, setStatus] = useState('connecting');
-  const [retryCount, setRetryCount] = useState(0);
+  const mountedRef = useRef(true);
 
-  const connect = useCallback(() => {
-    setStatus('connecting');
+  const RECONNECT_TIMEOUT = 10000;
 
-    // Clean up previous connection
+  const cleanup = useCallback(() => {
     if (wsRef.current) {
+      wsRef.current.onopen = null;
+      wsRef.current.onmessage = null;
+      wsRef.current.onerror = null;
+      wsRef.current.onclose = null;
       wsRef.current.close();
       wsRef.current = null;
     }
-    if (msRef.current) {
-      msRef.current = null;
-      sbRef.current = null;
-      bufferQueue.current = [];
+    if (videoRef.current) {
+      videoRef.current.src = '';
+      videoRef.current.srcObject = null;
     }
+  }, []);
+
+  const scheduleReconnect = useCallback(() => {
+    if (!mountedRef.current) return;
+    if (reconnectTID.current) return; // already scheduled
+
+    const delay = Math.max(RECONNECT_TIMEOUT - (Date.now() - connectTS.current), 1000);
+    setStatus('reconnecting');
+
+    reconnectTID.current = setTimeout(() => {
+      reconnectTID.current = null;
+      if (mountedRef.current) connect();
+    }, delay);
+  }, []); // connect added via ref pattern below
+
+  const connect = useCallback(() => {
+    if (!mountedRef.current) return;
+
+    cleanup();
+    setStatus('connecting');
+    connectTS.current = Date.now();
 
     const wsUrl = `${GO2RTC_URL.replace('https://', 'wss://')}/api/ws?src=${streamId}`;
-    const ws = new WebSocket(wsUrl);
-    wsRef.current = ws;
+    
+    let ws;
+    try {
+      ws = new WebSocket(wsUrl);
+    } catch (e) {
+      console.error('[LizardLens] WebSocket creation failed:', e);
+      scheduleReconnect();
+      return;
+    }
 
     ws.binaryType = 'arraybuffer';
+    wsRef.current = ws;
+
+    let ms = null;
+    let sb = null;
+    // Pre-allocated buffer following go2rtc reference implementation
+    const buf = new Uint8Array(2 * 1024 * 1024);
+    let bufLen = 0;
+    let hasReceivedData = false;
 
     ws.onopen = () => {
-      // Request MSE stream
-      ws.send(JSON.stringify({ type: 'mse' }));
+      // Follow go2rtc official pattern: create MediaSource FIRST,
+      // then send codec list on sourceopen
+      const ManagedMS = window.ManagedMediaSource;
+      const NativeMS = window.MediaSource;
+      const MSConstructor = ManagedMS || NativeMS;
+
+      if (!MSConstructor) {
+        console.error('[LizardLens] No MediaSource support');
+        setStatus('offline');
+        return;
+      }
+
+      ms = new MSConstructor();
+
+      ms.addEventListener('sourceopen', () => {
+        if (!ManagedMS && videoRef.current) {
+          URL.revokeObjectURL(videoRef.current.src);
+        }
+        // Send supported codecs to server — this is what the official client does
+        const codecs = getSupportedCodecs();
+        ws.send(JSON.stringify({ type: 'mse', value: codecs }));
+      }, { once: true });
+
+      if (ManagedMS) {
+        // Safari 17+ path
+        if (videoRef.current) {
+          videoRef.current.disableRemotePlayback = true;
+          videoRef.current.srcObject = ms;
+        }
+      } else {
+        // Standard path
+        if (videoRef.current) {
+          videoRef.current.src = URL.createObjectURL(ms);
+          videoRef.current.srcObject = null;
+        }
+      }
+
+      // Attempt autoplay (muted to satisfy browser policy)
+      if (videoRef.current) {
+        videoRef.current.play().catch(() => {
+          if (videoRef.current && !videoRef.current.muted) {
+            videoRef.current.muted = true;
+            videoRef.current.play().catch(() => {});
+          }
+        });
+      }
     };
 
     ws.onmessage = (ev) => {
       if (typeof ev.data === 'string') {
         const msg = JSON.parse(ev.data);
+
         if (msg.type === 'mse') {
-          // Got codec info, set up MediaSource
-          const ms = new MediaSource();
-          msRef.current = ms;
-          videoRef.current.src = URL.createObjectURL(ms);
+          // Server confirmed codec — add source buffer
+          try {
+            sb = ms.addSourceBuffer(msg.value);
+            sb.mode = 'segments';
 
-          ms.addEventListener('sourceopen', () => {
-            try {
-              const sb = ms.addSourceBuffer(msg.value);
-              sbRef.current = sb;
-              sb.mode = 'segments';
+            sb.addEventListener('updateend', () => {
+              // Flush queued data
+              if (!sb.updating && bufLen > 0) {
+                try {
+                  const data = buf.slice(0, bufLen);
+                  sb.appendBuffer(data);
+                  bufLen = 0;
+                } catch (e) {
+                  // buffer full, skip
+                }
+              }
 
-              sb.addEventListener('updateend', () => {
-                if (bufferQueue.current.length > 0 && !sb.updating) {
+              // Keep buffer window tight + catch up to live edge
+              // (following go2rtc reference implementation)
+              if (!sb.updating && sb.buffered && sb.buffered.length) {
+                const end = sb.buffered.end(sb.buffered.length - 1);
+                const start = end - 5;
+                const start0 = sb.buffered.start(0);
+
+                // Trim old buffer
+                if (start > start0) {
                   try {
-                    sb.appendBuffer(bufferQueue.current.shift());
-                  } catch (e) {
-                    // Buffer full or other error, skip
-                  }
+                    sb.remove(start0, start);
+                    ms.setLiveSeekableRange(start, end);
+                  } catch (e) { /* ignore */ }
                 }
 
-                // Keep buffer manageable — remove old data
-                if (sb.buffered.length > 0 && videoRef.current) {
-                  const currentTime = videoRef.current.currentTime;
-                  if (currentTime > 10) {
-                    try {
-                      sb.remove(0, currentTime - 5);
-                    } catch (e) {
-                      // Ignore remove errors
-                    }
-                  }
+                // Jump forward if we've fallen behind
+                if (videoRef.current && videoRef.current.currentTime < start) {
+                  videoRef.current.currentTime = start;
                 }
-              });
 
-              setStatus('live');
-            } catch (e) {
-              console.error('Failed to add source buffer:', e);
-              setStatus('offline');
-            }
-          });
+                // Adjust playback rate to catch up to live
+                if (videoRef.current) {
+                  const gap = end - videoRef.current.currentTime;
+                  videoRef.current.playbackRate = gap > 0.1 ? gap : 0.1;
+                }
+              }
+            });
+
+            setStatus('live');
+          } catch (e) {
+            console.error('[LizardLens] addSourceBuffer failed:', e);
+            setStatus('offline');
+            ws.close();
+          }
+        } else if (msg.type === 'error') {
+          console.error('[LizardLens] Server error:', msg.value);
+          // If MSE not supported on server side, it will send an error
+          ws.close();
         }
       } else {
         // Binary data — media segment
-        const sb = sbRef.current;
+        hasReceivedData = true;
+
         if (sb) {
-          try {
-            if (sb.updating || bufferQueue.current.length > 0) {
-              bufferQueue.current.push(ev.data);
-              // Prevent memory buildup
-              if (bufferQueue.current.length > 100) {
-                bufferQueue.current = bufferQueue.current.slice(-50);
-              }
-            } else {
-              sb.appendBuffer(ev.data);
+          if (sb.updating || bufLen > 0) {
+            const b = new Uint8Array(ev.data);
+            if (bufLen + b.byteLength <= buf.byteLength) {
+              buf.set(b, bufLen);
+              bufLen += b.byteLength;
             }
-          } catch (e) {
-            // Buffer errors, skip frame
+            // else drop frame to prevent overflow
+          } else {
+            try {
+              sb.appendBuffer(ev.data);
+            } catch (e) {
+              // buffer errors, skip frame
+            }
           }
         }
       }
     };
 
-    ws.onerror = () => {
-      setStatus('offline');
+    ws.onerror = (e) => {
+      console.error('[LizardLens] WebSocket error:', e);
     };
 
     ws.onclose = () => {
-      setStatus('offline');
+      wsRef.current = null;
+      if (mountedRef.current) {
+        scheduleReconnect();
+      }
     };
-  }, [streamId]);
+
+    // Video error handler — close WS to trigger reconnect (per go2rtc reference)
+    if (videoRef.current) {
+      videoRef.current.onerror = () => {
+        const err = videoRef.current?.error;
+        console.error('[LizardLens] Video error:', err?.code, err?.message);
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.close(); // triggers reconnect
+        }
+      };
+    }
+  }, [streamId, cleanup, scheduleReconnect]);
 
   useEffect(() => {
+    mountedRef.current = true;
     connect();
-    return () => {
-      if (wsRef.current) wsRef.current.close();
-    };
-  }, [retryCount, connect]);
 
-  const handleRetry = () => {
-    setRetryCount((c) => c + 1);
-  };
+    return () => {
+      mountedRef.current = false;
+      if (reconnectTID.current) {
+        clearTimeout(reconnectTID.current);
+        reconnectTID.current = null;
+      }
+      cleanup();
+    };
+  }, [connect, cleanup]);
 
   return (
     <div className="flex flex-col rounded-2xl overflow-hidden border border-white/10 bg-naw-card">
@@ -136,9 +273,21 @@ function StreamPlayer({ name, emoji, species, streamId }) {
           </div>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className={`w-2 h-2 rounded-full ${status === 'live' ? 'bg-red-500 animate-pulse' : status === 'connecting' ? 'bg-yellow-500 animate-pulse' : 'bg-white/20'}`} />
-          <span className={`text-xs font-medium ${status === 'live' ? 'text-red-400' : status === 'connecting' ? 'text-yellow-400' : 'text-white/30'}`}>
-            {status === 'live' ? 'LIVE' : status === 'connecting' ? 'CONNECTING...' : 'OFFLINE'}
+          <span className={`w-2 h-2 rounded-full ${
+            status === 'live' ? 'bg-red-500 animate-pulse' :
+            status === 'connecting' || status === 'reconnecting' ? 'bg-yellow-500 animate-pulse' :
+            'bg-white/20'
+          }`} />
+          <span className={`text-xs font-medium ${
+            status === 'live' ? 'text-red-400' :
+            status === 'connecting' ? 'text-yellow-400' :
+            status === 'reconnecting' ? 'text-yellow-400' :
+            'text-white/30'
+          }`}>
+            {status === 'live' ? 'LIVE' :
+             status === 'connecting' ? 'CONNECTING...' :
+             status === 'reconnecting' ? 'RECONNECTING...' :
+             'OFFLINE'}
           </span>
         </div>
       </div>
@@ -157,17 +306,19 @@ function StreamPlayer({ name, emoji, species, streamId }) {
             <span className="text-4xl mb-3">😴</span>
             <p className="text-white/50 text-sm mb-3">{name} cam is offline</p>
             <button
-              onClick={handleRetry}
+              onClick={connect}
               className="bg-naw-purple/30 border border-naw-purple/40 text-white px-4 py-2 rounded-lg text-xs hover:bg-naw-purple/50 transition-colors"
             >
               Try Again
             </button>
           </div>
         )}
-        {status === 'connecting' && (
+        {(status === 'connecting' || status === 'reconnecting') && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60">
             <div className="w-8 h-8 border-2 border-naw-cyan border-t-transparent rounded-full animate-spin mb-3" />
-            <p className="text-white/50 text-sm">Connecting to {name}&apos;s camera...</p>
+            <p className="text-white/50 text-sm">
+              {status === 'reconnecting' ? `Reconnecting to ${name}'s camera...` : `Connecting to ${name}'s camera...`}
+            </p>
           </div>
         )}
       </div>
