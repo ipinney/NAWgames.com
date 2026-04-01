@@ -47,12 +47,12 @@ export default function HomePage() {
               Request a Game
             </Link>
             <Link
-            <Link
               href="/projects"
               className="border border-naw-pink/30 text-naw-pink px-5 py-2.5 rounded-xl text-sm hover:bg-naw-pink/10 transition-colors font-semibold flex items-center gap-1.5"
             >
               📚 Projects
             </Link>
+            <Link
               href="/lizardlens"
               className="bg-gradient-to-r from-green-600 to-emerald-500 text-white font-semibold px-5 py-2.5 rounded-xl text-sm hover:opacity-90 transition-opacity flex items-center gap-1.5"
             >
