@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'fitness-hero',
+    title: 'Fitness Hero',
+    creator: 'Ivan',
+    description: 'Move your REAL body to play! Camera tracks your jumping jacks, squats, and pushups to control a neon runner. Jump over barriers, duck under obstacles, and smash through walls — all with real exercises! How far can you run?',
+    createdAt: '2026-04-01',
+    thumbnail: '/images/fitness-hero-preview.png',
+    color: 'from-pink-500 to-purple-600',
+  },
+  {
     slug: 'angry-birds-rebirth',
     title: 'Angry Birds ReBirth',
     creator: 'Nolan',
