@@ -50,6 +50,7 @@
         .move-card .emoji { font-size: clamp(36px,8vw,64px); }
         .move-card .move-name { font-size: clamp(12px,2.5vw,16px); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         .move-card .move-action { font-size: clamp(10px,2vw,14px); opacity: 0.8; }
+        .move-card { pointer-events: none; cursor: default; }
 
         .start-btn {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
@@ -113,6 +114,55 @@
             font-weight: 900; text-transform: uppercase; letter-spacing: 2px;
         }
         .replay-btn:active { transform: scale(0.95); }
+
+        /* HUGE MOVE INDICATOR */
+        #moveIndicator {
+            position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+            z-index: 50; text-align: center; pointer-events: none;
+            opacity: 0; transition: opacity 0.15s;
+        }
+        #moveIndicator.visible { opacity: 1; }
+        #moveIndicator .move-emoji { font-size: clamp(60px,15vw,120px); display: block; line-height: 1; }
+        #moveIndicator .move-text {
+            font-size: clamp(28px,7vw,56px); font-weight: 900; color: #FFF;
+            text-shadow: 0 0 20px rgba(0,0,0,0.8), 0 0 40px currentColor;
+            text-transform: uppercase; letter-spacing: 4px;
+            animation: pulse-indicator 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes pulse-indicator {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
+        }
+        #moveIndicator.move-jump .move-text { color: #FF6B6B; }
+        #moveIndicator.move-squat .move-text { color: #4ECDC4; }
+        #moveIndicator.move-smash .move-text { color: #FFE66D; }
+
+        /* DETECTED POSE STATUS BAR */
+        #poseStatus {
+            position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+            z-index: 50; display: flex; gap: 8px; pointer-events: none;
+        }
+        .pose-pill {
+            padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 700;
+            background: rgba(0,0,0,0.5); color: rgba(255,255,255,0.4);
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.15s;
+        }
+        .pose-pill.active {
+            color: #FFF; border-color: currentColor;
+            box-shadow: 0 0 12px currentColor;
+        }
+        .pose-pill.active-standing { color: #AAA; border-color: #AAA; background: rgba(170,170,170,0.2); }
+        .pose-pill.active-jumping { color: #FF6B6B; border-color: #FF6B6B; background: rgba(255,107,107,0.2); }
+        .pose-pill.active-squatting { color: #4ECDC4; border-color: #4ECDC4; background: rgba(78,205,196,0.2); }
+        .pose-pill.active-pushup { color: #FFE66D; border-color: #FFE66D; background: rgba(255,230,109,0.2); }
+
+        /* KEYBOARD HINT */
+        #keyboardHint {
+            position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+            z-index: 50; font-size: 12px; color: rgba(255,255,255,0.35);
+            pointer-events: none; white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -124,6 +174,7 @@
         <div id="startScreen" class="screen-overlay">
             <h1>FITNESS HERO</h1>
             <p class="subtitle">Move Your Body to Play!</p>
+            <p style="font-size:clamp(14px,3vw,20px);text-transform:uppercase;letter-spacing:3px;opacity:0.7;margin-bottom:12px;font-weight:600;">Your Moves:</p>
             <div class="moves-display">
                 <div class="move-card">
                     <div class="emoji">🙌</div>
@@ -180,6 +231,24 @@
             </div>
         </div>
     </div>
+
+
+        <!-- HUGE MOVE INDICATOR -->
+        <div id="moveIndicator">
+            <span class="move-emoji" id="moveEmoji"></span>
+            <span class="move-text" id="moveText"></span>
+        </div>
+
+        <!-- DETECTED POSE STATUS -->
+        <div id="poseStatus" style="display:none;">
+            <div class="pose-pill" id="pill-standing">STANDING</div>
+            <div class="pose-pill" id="pill-jumping">JUMPING</div>
+            <div class="pose-pill" id="pill-squatting">SQUATTING</div>
+            <div class="pose-pill" id="pill-pushup">PUSHUP</div>
+        </div>
+
+        <!-- KEYBOARD HINT -->
+        <div id="keyboardHint" style="display:none;">Keyboard: ↑ Jump &nbsp; ↓ Duck &nbsp; Enter = Smash</div>
 
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/pose.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1675466862/camera_utils.js" crossorigin="anonymous"></script>
@@ -669,7 +738,7 @@
         if (state.squatCooldown <= 0 && state.calibratedHipY !== null &&
             lh && rh && lh.visibility > 0.3 && rh.visibility > 0.3) {
             const avgHip = (lh.y + rh.y) / 2;
-            if (avgHip > state.calibratedHipY + 0.08) {
+            if (avgHip > state.calibratedHipY + 0.05) {
                 triggerMove('squat');
                 return;
             }
@@ -678,7 +747,7 @@
         // PUSHUP: nose/shoulders drop very low (person going to ground)
         if (state.smashCooldown <= 0 && state.calibratedNoseY !== null &&
             nose && nose.visibility > 0.3) {
-            if (nose.y > state.calibratedNoseY + 0.2) {
+            if (nose.y > state.calibratedNoseY + 0.12) {
                 triggerMove('smash');
                 return;
             }
@@ -1160,14 +1229,7 @@
             ctx.fillText(`${state.combo}x COMBO`, W / 2, 80);
         }
 
-        // Current detected move indicator
-        if (state.moveTimer > 0) {
-            ctx.textAlign = 'center';
-            ctx.font = 'bold 22px Arial';
-            ctx.fillStyle = OBS_COLORS[state.currentMove] || '#FFF';
-            const icon = OBS_ICONS[state.currentMove] || '';
-            ctx.fillText(`${icon} ${state.currentMove.toUpperCase()}`, W / 2, H - 20);
-        }
+        // (moved to DOM-based pose status bar)
 
         ctx.shadowBlur = 0;
         ctx.restore();
@@ -1220,6 +1282,8 @@
 
     function beginGameplay() {
         state.screen = 'playing';
+        document.getElementById('keyboardHint').style.display = 'block';
+        document.getElementById('keyboardHint').style.display = 'block';
         state.gameStartTime = Date.now();
         state.score = 0;
         state.distance = 0;
@@ -1377,6 +1441,8 @@
                 drawParticles(ctx);
                 drawFloats(ctx);
                 drawHUD();
+                updateMoveIndicator();
+                updatePoseStatus();
 
                 // Red flash overlay
                 if (state.redFlash > 0) {
@@ -1400,6 +1466,122 @@
 
         requestAnimationFrame(gameLoop);
     }
+
+    // =============================================
+    // HUGE MOVE INDICATOR (approaching obstacle)
+    // =============================================
+    const moveIndicatorEl = document.getElementById('moveIndicator');
+    const moveEmojiEl = document.getElementById('moveEmoji');
+    const moveTextEl = document.getElementById('moveText');
+    const INDICATOR_LABELS = { jump: 'JUMP NOW!', squat: 'SQUAT NOW!', smash: 'PUSHUP!' };
+    const INDICATOR_EMOJIS = { jump: '\u{1F64C}', squat: '\u{1F3CB}\uFE0F', smash: '\u{1F4AA}' };
+    let indicatorActiveType = '';
+
+    function updateMoveIndicator() {
+        if (state.screen !== 'playing') {
+            moveIndicatorEl.classList.remove('visible');
+            indicatorActiveType = '';
+            return;
+        }
+        let nearest = null;
+        let nearestDist = Infinity;
+        for (const obs of obstacles) {
+            if (obs.passed || obs.cleared) continue;
+            const dist = obs.x - char.x;
+            if (dist > 0 && dist < W * 0.55 && dist < nearestDist) {
+                nearest = obs;
+                nearestDist = dist;
+            }
+        }
+        if (nearest) {
+            const type = nearest.type;
+            if (indicatorActiveType !== type) {
+                indicatorActiveType = type;
+                moveEmojiEl.textContent = INDICATOR_EMOJIS[type];
+                moveTextEl.textContent = INDICATOR_LABELS[type];
+                moveIndicatorEl.className = 'visible move-' + type;
+            }
+            const urgency = 1 - (nearestDist / (W * 0.55));
+            moveIndicatorEl.style.opacity = String(0.6 + urgency * 0.4);
+        } else {
+            moveIndicatorEl.classList.remove('visible');
+            moveIndicatorEl.style.opacity = '0';
+            indicatorActiveType = '';
+        }
+    }
+
+    // =============================================
+    // DETECTED POSE STATUS BAR
+    // =============================================
+    const poseStatusEl = document.getElementById('poseStatus');
+    const posePills = {
+        standing: document.getElementById('pill-standing'),
+        jumping: document.getElementById('pill-jumping'),
+        squatting: document.getElementById('pill-squatting'),
+        pushup: document.getElementById('pill-pushup'),
+    };
+
+    function updatePoseStatus() {
+        if (state.screen !== 'playing' && state.screen !== 'calibration') {
+            poseStatusEl.style.display = 'none';
+            return;
+        }
+        poseStatusEl.style.display = 'flex';
+        const lm = state.lastLandmarks;
+        let detected = 'standing';
+        if (lm) {
+            const lw = lm[15], rw = lm[16], ls = lm[11], rs = lm[12];
+            const lh = lm[23], rh = lm[24];
+            const nose = lm[0];
+            if (lw && rw && ls && rs &&
+                lw.visibility > 0.3 && rw.visibility > 0.3 &&
+                lw.y < ls.y - 0.1 && rw.y < rs.y - 0.1) {
+                detected = 'jumping';
+            }
+            else if (state.calibratedHipY !== null && lh && rh &&
+                     lh.visibility > 0.3 && rh.visibility > 0.3) {
+                const avgHip = (lh.y + rh.y) / 2;
+                if (avgHip > state.calibratedHipY + 0.05) {
+                    detected = 'squatting';
+                }
+            }
+            if (detected === 'standing' && state.calibratedNoseY !== null &&
+                nose && nose.visibility > 0.3) {
+                if (nose.y > state.calibratedNoseY + 0.12) {
+                    detected = 'pushup';
+                }
+            }
+        }
+        for (const [key, pill] of Object.entries(posePills)) {
+            pill.className = 'pose-pill';
+            if (key === detected) {
+                pill.classList.add('active', 'active-' + key);
+            }
+        }
+    }
+
+    // =============================================
+    // KEYBOARD FALLBACK CONTROLS
+    // =============================================
+    const keyboardHintEl = document.getElementById('keyboardHint');
+
+    document.addEventListener('keydown', (e) => {
+        if (state.screen !== 'playing') return;
+        ensureAudio();
+        keyboardHintEl.style.display = 'block';
+        if ((e.code === 'Space' || e.code === 'ArrowUp') && char.grounded && state.jumpCooldown <= 0) {
+            e.preventDefault();
+            triggerMove('jump');
+        }
+        else if (e.code === 'ArrowDown' && state.squatCooldown <= 0) {
+            e.preventDefault();
+            triggerMove('squat');
+        }
+        else if ((e.code === 'Enter' || e.code === 'KeyX') && state.smashCooldown <= 0) {
+            e.preventDefault();
+            triggerMove('smash');
+        }
+    });
 
     // =============================================
     // EVENT LISTENERS
