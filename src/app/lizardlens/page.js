@@ -1,18 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 const GO2RTC_URL = 'https://spark-2f53.tail8a7863.ts.net';
 
 function StreamPlayer({ name, emoji, species, streamId }) {
   const videoRef = useRef(null);
   const wsRef = useRef(null);
-  const pcRef = useRef(null);
+  const msRef = useRef(null);
+  const sbRef = useRef(null);
+  const bufferQueue = useRef([]);
   const [status, setStatus] = useState('connecting');
   const [retryCount, setRetryCount] = useState(0);
 
-  const connect = () => {
+  const connect = useCallback(() => {
     setStatus('connecting');
 
     // Clean up previous connection
@@ -20,56 +22,85 @@ function StreamPlayer({ name, emoji, species, streamId }) {
       wsRef.current.close();
       wsRef.current = null;
     }
-    if (pcRef.current) {
-      pcRef.current.close();
-      pcRef.current = null;
+    if (msRef.current) {
+      msRef.current = null;
+      sbRef.current = null;
+      bufferQueue.current = [];
     }
-
-    const pc = new RTCPeerConnection({
-      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
-    });
-    pcRef.current = pc;
-
-    pc.addTransceiver('video', { direction: 'recvonly' });
-    pc.addTransceiver('audio', { direction: 'recvonly' });
-
-    pc.ontrack = (event) => {
-      if (event.track.kind === 'video' && videoRef.current) {
-        videoRef.current.srcObject = event.streams[0];
-        setStatus('live');
-      }
-    };
-
-    pc.oniceconnectionstatechange = () => {
-      if (pc.iceConnectionState === 'disconnected' || pc.iceConnectionState === 'failed') {
-        setStatus('offline');
-      }
-    };
 
     const wsUrl = `${GO2RTC_URL.replace('https://', 'wss://')}/api/ws?src=${streamId}`;
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
+    ws.binaryType = 'arraybuffer';
+
     ws.onopen = () => {
-      pc.createOffer().then((offer) => {
-        pc.setLocalDescription(offer).then(() => {
-          ws.send(JSON.stringify({
-            type: 'webrtc/offer',
-            value: pc.localDescription.sdp,
-          }));
-        });
-      });
+      // Request MSE stream
+      ws.send(JSON.stringify({ type: 'mse' }));
     };
 
     ws.onmessage = (ev) => {
-      const msg = JSON.parse(ev.data);
-      if (msg.type === 'webrtc/answer') {
-        pc.setRemoteDescription(new RTCSessionDescription({
-          type: 'answer',
-          sdp: msg.value,
-        }));
-      } else if (msg.type === 'webrtc/candidate') {
-        pc.addIceCandidate(new RTCIceCandidate(JSON.parse(msg.value)));
+      if (typeof ev.data === 'string') {
+        const msg = JSON.parse(ev.data);
+        if (msg.type === 'mse') {
+          // Got codec info, set up MediaSource
+          const ms = new MediaSource();
+          msRef.current = ms;
+          videoRef.current.src = URL.createObjectURL(ms);
+
+          ms.addEventListener('sourceopen', () => {
+            try {
+              const sb = ms.addSourceBuffer(msg.value);
+              sbRef.current = sb;
+              sb.mode = 'segments';
+
+              sb.addEventListener('updateend', () => {
+                if (bufferQueue.current.length > 0 && !sb.updating) {
+                  try {
+                    sb.appendBuffer(bufferQueue.current.shift());
+                  } catch (e) {
+                    // Buffer full or other error, skip
+                  }
+                }
+
+                // Keep buffer manageable — remove old data
+                if (sb.buffered.length > 0 && videoRef.current) {
+                  const currentTime = videoRef.current.currentTime;
+                  if (currentTime > 10) {
+                    try {
+                      sb.remove(0, currentTime - 5);
+                    } catch (e) {
+                      // Ignore remove errors
+                    }
+                  }
+                }
+              });
+
+              setStatus('live');
+            } catch (e) {
+              console.error('Failed to add source buffer:', e);
+              setStatus('offline');
+            }
+          });
+        }
+      } else {
+        // Binary data — media segment
+        const sb = sbRef.current;
+        if (sb) {
+          try {
+            if (sb.updating || bufferQueue.current.length > 0) {
+              bufferQueue.current.push(ev.data);
+              // Prevent memory buildup
+              if (bufferQueue.current.length > 100) {
+                bufferQueue.current = bufferQueue.current.slice(-50);
+              }
+            } else {
+              sb.appendBuffer(ev.data);
+            }
+          } catch (e) {
+            // Buffer errors, skip frame
+          }
+        }
       }
     };
 
@@ -78,19 +109,16 @@ function StreamPlayer({ name, emoji, species, streamId }) {
     };
 
     ws.onclose = () => {
-      if (status !== 'live') {
-        setStatus('offline');
-      }
+      setStatus('offline');
     };
-  };
+  }, [streamId]);
 
   useEffect(() => {
     connect();
     return () => {
       if (wsRef.current) wsRef.current.close();
-      if (pcRef.current) pcRef.current.close();
     };
-  }, [retryCount]);
+  }, [retryCount, connect]);
 
   const handleRetry = () => {
     setRetryCount((c) => c + 1);
