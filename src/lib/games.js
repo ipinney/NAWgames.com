@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'angry-birds-rebirth',
+    title: 'Angry Birds ReBirth',
+    creator: 'Nolan',
+    description: 'Launch 5 different angry birds at the pigs\' fortresses! Red screams with rage, Chuck speed-boosts, The Blues split into 3, Bomb explodes on command, and Matilda drops egg bombs. Pull back the slingshot, aim, and smash through wood, stone, and ice to rescue the stolen eggs across 8 epic levels!',
+    createdAt: '2026-04-01',
+    thumbnail: '/images/angry-birds-rebirth-preview.png',
+    color: 'from-red-500 to-green-500',
+  },
+  {
     slug: 'word-breaker',
     title: 'Word Breaker',
     creator: 'Ivan',
