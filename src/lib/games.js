@@ -4,12 +4,12 @@
 const GAMES = [
   {
     slug: 'trivia',
-    title: 'Trivia Quest',
+    title: 'BRAIN BLAST!',
     creator: 'Addie',
-    description: 'Pick a category — Math, History, Science, English, or Computers — and test your brain! Answer multiple choice trivia questions against the clock. Play solo or challenge a friend in 2-player mode. Streak bonuses, speed points, and celebrations for every correct answer!',
+    description: 'Step into the spotlight! Climb the 10-question prize ladder from 10 coins to 5,000 coins! Use lifelines like 50/50 and Double Dip, spin the PRIZE WHEEL at the halfway mark, and build streak multipliers for mega points. Pick from Math, Science, History, English, or Computers. How high can you climb?',
     createdAt: '2026-04-02',
     thumbnail: '/images/trivia-preview.png',
-    color: 'from-purple-400 to-pink-500',
+    color: 'from-yellow-400 to-purple-600',
   },
   {
     slug: 'spider-splat',
