@@ -536,46 +536,61 @@
             gap: 20px;
         }
 
-        .wheel {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            border: 8px solid #ffd700;
+        .wheel-canvas-wrap {
             position: relative;
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.5), inset 0 0 40px rgba(255, 215, 0, 0.2);
+            display: inline-block;
         }
 
-        .wheel-segment {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8em;
-            font-weight: bold;
-            color: white;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+        .wheel-canvas-wrap canvas {
+            display: block;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
         }
 
-        .pointer {
+        .wheel-pointer {
             position: absolute;
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid #ffd700;
-            top: -10px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 36px solid #ffd700;
             z-index: 10;
-            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.8));
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.9));
         }
 
-        .wheel-label {
-            font-size: 1.5em;
-            margin-top: 20px;
+        .wheel-spin-btn {
+            margin-top: 24px;
+            padding: 16px 48px;
+            font-size: 1.4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #1a0a2e;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
+            transition: transform 0.2s;
+        }
+
+        .wheel-spin-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .wheel-spin-btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+            transform: none;
+        }
+
+        .wheel-result {
+            font-size: 1.6em;
+            font-weight: 900;
+            color: #ffd700;
+            margin-top: 16px;
+            min-height: 1.6em;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
         }
 
         /* CONFETTI & PARTICLES */
@@ -688,11 +703,13 @@
         <!-- PRIZE WHEEL -->
         <div id="wheelScreen" class="screen">
             <div class="wheel-container">
-                <h2 style="font-size: 2em; margin-bottom: 10px;">PRIZE WHEEL!</h2>
-                <div class="wheel" id="prizeWheel">
-                    <div class="pointer"></div>
+                <h2 style="font-size: 2em; margin-bottom: 10px; color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.5);">🎡 PRIZE WHEEL! 🎡</h2>
+                <div class="wheel-canvas-wrap">
+                    <div class="wheel-pointer"></div>
+                    <canvas id="wheelCanvas" width="320" height="320"></canvas>
                 </div>
-                <div class="wheel-label" id="wheelLabel">Click to Spin!</div>
+                <button class="wheel-spin-btn" id="wheelSpinBtn" onclick="game.spinWheel()">SPIN!</button>
+                <div class="wheel-result" id="wheelResult"></div>
             </div>
         </div>
 
@@ -1236,78 +1253,162 @@
                 badge.classList.add('fire');
             },
 
+            // ── PRIZE WHEEL (Canvas-based) ──
+            wheelSegments: [
+                { label: '+100', color: '#ff6b6b', coins: 100, text: '+100 Bonus Coins!' },
+                { label: '+200', color: '#ff8e53', coins: 200, text: '+200 Bonus Coins!' },
+                { label: '+500', color: '#ffd700', coins: 500, text: '+500 Bonus Coins!' },
+                { label: '2x', color: '#4facfe', coins: 0, text: '2x Next Question!' },
+                { label: 'LIFE', color: '#00d4ff', coins: 0, text: 'Extra Lifeline!' },
+                { label: 'JACKPOT', color: '#ff1493', coins: 1000, text: '🎉 JACKPOT! +1000 Coins! 🎉' }
+            ],
+            wheelAngle: 0,
+            wheelSpinning: false,
+
             spinWheelAfter() {
                 this.currentScreen = 'wheel';
                 document.getElementById('gameplayScreen').classList.remove('active');
                 document.getElementById('wheelScreen').classList.add('active');
-                this.initializeWheel();
+                document.getElementById('wheelSpinBtn').disabled = false;
+                document.getElementById('wheelResult').textContent = '';
+                this.wheelAngle = 0;
+                this.drawWheel(0);
             },
 
-            initializeWheel() {
-                const wheel = document.getElementById('prizeWheel');
-                const segments = [
-                    { label: '+100 Bonus', color: '#ff6b6b' },
-                    { label: '+200 Bonus', color: '#ff8e53' },
-                    { label: '+500 Bonus', color: '#ffd700' },
-                    { label: '2x Next Q', color: '#4facfe' },
-                    { label: 'Extra Life', color: '#00d4ff' },
-                    { label: 'JACKPOT!', color: '#ff1493' }
-                ];
+            drawWheel(rotation) {
+                const canvas = document.getElementById('wheelCanvas');
+                const ctx = canvas.getContext('2d');
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                const r = cx - 10;
+                const segs = this.wheelSegments;
+                const n = segs.length;
+                const sliceAngle = (2 * Math.PI) / n;
 
-                let html = '';
-                segments.forEach((seg, idx) => {
-                    const angle = (idx / segments.length) * 360;
-                    html += '<div class="wheel-segment" style="transform: rotate(' + angle + 'deg) translateY(-75px); background: ' + seg.color + ';">' + seg.label + '</div>';
-                });
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(rotation);
 
-                wheel.innerHTML = '<div class="pointer"></div>' + html;
+                for (let i = 0; i < n; i++) {
+                    const startA = i * sliceAngle;
+                    const endA = startA + sliceAngle;
 
-                const button = document.getElementById('wheelLabel');
-                button.textContent = 'Click to Spin!';
-                button.style.cursor = 'pointer';
-                button.onclick = () => this.spinWheel();
+                    // Draw pie slice
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.arc(0, 0, r, startA, endA);
+                    ctx.closePath();
+                    ctx.fillStyle = segs[i].color;
+                    ctx.fill();
+                    ctx.strokeStyle = '#1a0a2e';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // Draw label
+                    ctx.save();
+                    ctx.rotate(startA + sliceAngle / 2);
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 16px Arial';
+                    ctx.shadowColor = 'rgba(0,0,0,0.7)';
+                    ctx.shadowBlur = 4;
+                    ctx.fillText(segs[i].label, r * 0.6, 0);
+                    ctx.shadowBlur = 0;
+                    ctx.restore();
+                }
+
+                // Center circle
+                ctx.beginPath();
+                ctx.arc(0, 0, 22, 0, 2 * Math.PI);
+                ctx.fillStyle = '#1a0a2e';
+                ctx.fill();
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                ctx.fillStyle = '#ffd700';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('NAW', 0, 0);
+
+                ctx.restore();
+
+                // Gold border ring
+                ctx.beginPath();
+                ctx.arc(cx, cy, r + 4, 0, 2 * Math.PI);
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 6;
+                ctx.stroke();
             },
 
             spinWheel() {
-                const wheel = document.getElementById('prizeWheel');
-                const spins = 5 + Math.random() * 3;
-                const landOn = Math.random();
-                const finalRotation = (360 * spins) + (landOn * 360);
+                if (this.wheelSpinning) return;
+                this.wheelSpinning = true;
+                document.getElementById('wheelSpinBtn').disabled = true;
 
-                wheel.style.transition = 'transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                wheel.style.transform = 'rotate(' + finalRotation + 'deg)';
+                // Pick which segment to land on (pointer is at top = -PI/2)
+                const n = this.wheelSegments.length;
+                const sliceAngle = (2 * Math.PI) / n;
+                const landIndex = Math.floor(Math.random() * n);
 
-                const spinInterval = setInterval(() => {
-                    playSound('wheel');
-                }, 100);
+                // Calculate final angle so pointer (at top, -PI/2) points into the landed segment
+                // Pointer is at angle -PI/2 (top). The segment center at rest is at landIndex * sliceAngle + sliceAngle/2.
+                // We need: finalAngle + segCenter = -PI/2 + 2*PI*k  (modulo alignment)
+                // But we also want clockwise, so we go negative offset
+                const segCenter = landIndex * sliceAngle + sliceAngle / 2;
+                const targetAngle = -segCenter - Math.PI / 2;
+                const fullSpins = (5 + Math.floor(Math.random() * 3)) * 2 * Math.PI;
+                const finalAngle = targetAngle + fullSpins;
 
-                setTimeout(() => {
-                    clearInterval(spinInterval);
-                    playSound('correct');
-                    playCrowd();
-                    this.applyWheelReward(landOn);
-                }, 3000);
+                const duration = 4000;
+                const startTime = performance.now();
+                const startAngle = this.wheelAngle;
+                const totalSpin = finalAngle - startAngle;
+
+                // Tick sound interval (slows down)
+                let lastTickAngle = startAngle;
+
+                const animate = (now) => {
+                    const elapsed = now - startTime;
+                    const t = Math.min(elapsed / duration, 1);
+                    // Ease out cubic
+                    const eased = 1 - Math.pow(1 - t, 3);
+                    const currentAngle = startAngle + totalSpin * eased;
+
+                    this.drawWheel(currentAngle);
+
+                    // Tick sound every ~30 degrees
+                    const angleDiff = Math.abs(currentAngle - lastTickAngle);
+                    if (angleDiff > 0.5) {
+                        playSound('wheel');
+                        lastTickAngle = currentAngle;
+                    }
+
+                    if (t < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        this.wheelAngle = currentAngle;
+                        this.wheelSpinning = false;
+                        this.onWheelLanded(landIndex);
+                    }
+                };
+                requestAnimationFrame(animate);
             },
 
-            applyWheelReward(landOn) {
-                const segmentIndex = Math.floor((1 - landOn) * 6) % 6;
+            onWheelLanded(segIndex) {
+                const seg = this.wheelSegments[segIndex];
+                playSound('correct');
+                playCrowd();
 
-                const rewards = {
-                    0: { coins: 100, text: '+100 Bonus Coins!' },
-                    1: { coins: 200, text: '+200 Bonus Coins!' },
-                    2: { coins: 500, text: '+500 Bonus Coins!' },
-                    3: { coins: 0, text: '2x Next Question!' },
-                    4: { coins: 0, text: 'Extra Lifeline!' },
-                    5: { coins: 1000, text: 'JACKPOT! +1000 Coins!' }
-                };
+                this.coins += seg.coins;
+                document.getElementById('wheelResult').textContent = seg.text;
 
-                const reward = rewards[segmentIndex];
-                this.coins += reward.coins;
-
-                const label = document.getElementById('wheelLabel');
-                label.textContent = reward.text;
-                label.style.cursor = 'default';
-                label.onclick = null;
+                // Flash the canvas border
+                const canvas = document.getElementById('wheelCanvas');
+                canvas.style.filter = 'drop-shadow(0 0 40px rgba(255, 215, 0, 1))';
+                setTimeout(() => { canvas.style.filter = 'drop-shadow(0 0 20px rgba(255, 215, 0, 0.5))'; }, 500);
 
                 setTimeout(() => {
                     this.currentScreen = 'gameplay';
@@ -1315,7 +1416,7 @@
                     document.getElementById('gameplayScreen').classList.add('active');
                     this.questionIndex++;
                     this.nextQuestion();
-                }, 2000);
+                }, 2500);
             },
 
             nextQuestion() {
