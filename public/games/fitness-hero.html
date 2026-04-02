@@ -122,9 +122,9 @@
             opacity: 0; transition: opacity 0.15s;
         }
         #moveIndicator.visible { opacity: 1; }
-        #moveIndicator .move-emoji { font-size: clamp(60px,15vw,120px); display: block; line-height: 1; }
+        #moveIndicator .move-emoji { font-size: clamp(80px,20vw,160px); display: block; line-height: 1; }
         #moveIndicator .move-text {
-            font-size: clamp(28px,7vw,56px); font-weight: 900; color: #FFF;
+            font-size: clamp(36px,9vw,72px); font-weight: 900; color: #FFF;
             text-shadow: 0 0 20px rgba(0,0,0,0.8), 0 0 40px currentColor;
             text-transform: uppercase; letter-spacing: 4px;
             animation: pulse-indicator 0.5s ease-in-out infinite alternate;
@@ -641,7 +641,7 @@
             locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/${file}`,
         });
         poseInstance.setOptions({
-            modelComplexity: 1,
+            modelComplexity: 0,
             smoothLandmarks: true,
             enableSegmentation: false,
             minDetectionConfidence: 0.5,
@@ -688,7 +688,10 @@
 
             cameraInstance = new Camera(video, {
                 onFrame: async () => {
-                    if (poseInstance) await poseInstance.send({ image: video });
+                    if (!poseInstance) return;
+                    if (!this._skip) { this._skip = true; return; }
+                    this._skip = false;
+                    await poseInstance.send({ image: video });
                 },
                 width: 640,
                 height: 480,
@@ -726,9 +729,9 @@
 
         // JUMPING JACK: both wrists above shoulders
         if (state.jumpCooldown <= 0 && lw && rw &&
-            lw.visibility > 0.3 && rw.visibility > 0.3 &&
-            ls.visibility > 0.3 && rs.visibility > 0.3) {
-            if (lw.y < ls.y - 0.1 && rw.y < rs.y - 0.1) {
+            lw.visibility > 0.5 && rw.visibility > 0.5 &&
+            ls.visibility > 0.5 && rs.visibility > 0.5) {
+            if (lw.y < ls.y - 0.15 && rw.y < rs.y - 0.15) {
                 triggerMove('jump');
                 return;
             }
@@ -736,9 +739,9 @@
 
         // SQUAT: hips drop below calibrated position
         if (state.squatCooldown <= 0 && state.calibratedHipY !== null &&
-            lh && rh && lh.visibility > 0.3 && rh.visibility > 0.3) {
+            lh && rh && lh.visibility > 0.5 && rh.visibility > 0.5) {
             const avgHip = (lh.y + rh.y) / 2;
-            if (avgHip > state.calibratedHipY + 0.05) {
+            if (avgHip > state.calibratedHipY + 0.07) {
                 triggerMove('squat');
                 return;
             }
@@ -746,8 +749,8 @@
 
         // PUSHUP: nose/shoulders drop very low (person going to ground)
         if (state.smashCooldown <= 0 && state.calibratedNoseY !== null &&
-            nose && nose.visibility > 0.3) {
-            if (nose.y > state.calibratedNoseY + 0.12) {
+            nose && nose.visibility > 0.5) {
+            if (nose.y > state.calibratedNoseY + 0.16) {
                 triggerMove('smash');
                 return;
             }
@@ -758,7 +761,7 @@
         const groundY = getGroundY();
 
         if (type === 'jump') {
-            state.jumpCooldown = 40;
+            state.jumpCooldown = 55;
             state.jumpCount++;
             char.action = 'jump';
             char.actionTimer = 35;
@@ -777,7 +780,7 @@
             }
         }
         else if (type === 'squat') {
-            state.squatCooldown = 40;
+            state.squatCooldown = 55;
             state.squatCount++;
             char.action = 'duck';
             char.actionTimer = 30;
@@ -788,7 +791,7 @@
             spawnFloat(char.x + char.w / 2, char.y - 20, 'NICE SQUAT!', '#4ECDC4', 26);
         }
         else if (type === 'smash') {
-            state.smashCooldown = 45;
+            state.smashCooldown = 60;
             state.smashCount++;
             char.action = 'smash';
             char.actionTimer = 25;
@@ -1156,12 +1159,12 @@
             ctx.shadowBlur = 0;
 
             // HINT ICON above obstacle
-            ctx.font = '28px Arial';
+            ctx.font = '42px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText(OBS_ICONS[obs.type], obs.x + obs.w / 2, obs.y - 15 + bounce);
+            ctx.fillText(OBS_ICONS[obs.type], obs.x + obs.w / 2, obs.y - 20 + bounce);
 
             // Small label
-            ctx.font = 'bold 12px Arial';
+            ctx.font = 'bold 16px Arial';
             ctx.fillStyle = '#FFF';
             ctx.shadowColor = 'rgba(0,0,0,0.7)';
             ctx.shadowBlur = 3;
@@ -1323,7 +1326,7 @@
         if (!lw || !rw || !ls || !rs) return;
         if (lw.visibility < 0.3 || rw.visibility < 0.3) return;
 
-        if (lw.y < ls.y - 0.1 && rw.y < rs.y - 0.1) {
+        if (lw.y < ls.y - 0.15 && rw.y < rs.y - 0.15) {
             calibJackDetected = true;
             setTimeout(() => {
                 startCountdown();
@@ -1535,19 +1538,19 @@
             const nose = lm[0];
             if (lw && rw && ls && rs &&
                 lw.visibility > 0.3 && rw.visibility > 0.3 &&
-                lw.y < ls.y - 0.1 && rw.y < rs.y - 0.1) {
+                lw.y < ls.y - 0.15 && rw.y < rs.y - 0.15) {
                 detected = 'jumping';
             }
             else if (state.calibratedHipY !== null && lh && rh &&
                      lh.visibility > 0.3 && rh.visibility > 0.3) {
                 const avgHip = (lh.y + rh.y) / 2;
-                if (avgHip > state.calibratedHipY + 0.05) {
+                if (avgHip > state.calibratedHipY + 0.07) {
                     detected = 'squatting';
                 }
             }
             if (detected === 'standing' && state.calibratedNoseY !== null &&
                 nose && nose.visibility > 0.3) {
-                if (nose.y > state.calibratedNoseY + 0.12) {
+                if (nose.y > state.calibratedNoseY + 0.16) {
                     detected = 'pushup';
                 }
             }
