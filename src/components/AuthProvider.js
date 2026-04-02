@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import {
   onAuthStateChanged,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -23,15 +25,45 @@ export function AuthProvider({ children }) {
       setUser(user);
       setLoading(false);
     });
+
+    // Handle redirect result (fires when user returns from signInWithRedirect)
+    getRedirectResult(auth).catch((err) => {
+      // Silently ignore — if there's no redirect result that's fine
+      if (err.code !== 'auth/null-user') {
+        console.warn('Redirect result error:', err.code, err.message);
+      }
+    });
+
     return () => unsubscribe();
   }, []);
 
   const loginWithGoogle = async () => {
     try {
+      // Try popup first — works when third-party cookies aren't blocked
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
-      console.error('Google login error:', error);
-      throw error;
+      // If popup fails due to blocked cookies, popup blocked, or cross-origin issues,
+      // fall back to full-page redirect which doesn't need third-party cookies
+      if (
+        error.code === 'auth/popup-blocked' ||
+        error.code === 'auth/popup-closed-by-user' ||
+        error.code === 'auth/cancelled-popup-request' ||
+        error.code === 'auth/internal-error' ||
+        error.code === 'auth/missing-initial-state' ||
+        error.message?.includes('missing initial state') ||
+        error.message?.includes('Unable to process')
+      ) {
+        console.log('Popup sign-in failed, falling back to redirect:', error.code);
+        try {
+          await signInWithRedirect(auth, googleProvider);
+        } catch (redirectError) {
+          console.error('Redirect sign-in also failed:', redirectError);
+          throw redirectError;
+        }
+      } else {
+        console.error('Google login error:', error);
+        throw error;
+      }
     }
   };
 
