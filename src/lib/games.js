@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'plank-hero',
+    title: 'Plank Hero',
+    creator: 'Ivan',
+    description: 'Get into plank position and play with your REAL body! Camera tracks your pose as targets fly down 3 lanes. Lift your left hand, right hand, or do pushups to smash them! A full core workout disguised as an arcade game. How long can you plank?',
+    createdAt: '2026-04-01',
+    thumbnail: '/images/plank-hero-preview.png',
+    color: 'from-purple-500 to-cyan-500',
+  },
+  {
     slug: 'fitness-hero',
     title: 'Fitness Hero',
     creator: 'Ivan',
