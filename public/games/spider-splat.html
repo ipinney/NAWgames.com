@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spider Splat - NAW Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: #1a1a1a;
+            font-family: 'Arial', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            display: block;
+            background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 50%, #D2B48C 100%);
+        }
+
+        .ui-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .score-display {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .level-display {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            font-weight: bold;
+            color: #FF6B9D;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .lives-display {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #FF4444;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .combo-display {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #00FF00;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .combo-display.active {
+            opacity: 1;
+        }
+
+        .splash-text {
+            position: absolute;
+            font-size: 48px;
+            font-weight: bold;
+            color: #FFD700;
+            pointer-events: none;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .lives-display.lost {
+            animation: pulse 0.3s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-5px, -5px); }
+            50% { transform: translate(5px, 5px); }
+            75% { transform: translate(-5px, 5px); }
+        }
+
+        canvas.shake {
+            animation: shake 0.3s;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF8E72 100%);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .modal-subtitle {
+            font-size: 24px;
+            color: #FFD700;
+            margin-bottom: 30px;
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .modal-stats {
+            font-size: 20px;
+            color: white;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .play-button, .replay-button {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: none;
+            padding: 20px 60px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            font-family: 'Arial Black', sans-serif;
+            pointer-events: all;
+        }
+
+        .play-button:hover, .replay-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .play-button:active, .replay-button:active {
+            transform: scale(0.98);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .subtitle-text {
+            font-size: 18px;
+            color: white;
+            margin-top: 15px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .level-up-container {
+            text-align: center;
+        }
+
+        .level-up-container .modal-title {
+            font-size: 56px;
+            animation: bounce 0.6s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <div class="ui-container">
+        <div class="score-display">Score: <span id="scoreValue">0</span></div>
+        <div class="level-display">Level <span id="levelValue">1</span></div>
+        <div class="lives-display" id="livesDisplay">❤️❤️❤️</div>
+        <div class="combo-display" id="comboDisplay"></div>
+    </div>
+
+    <div class="modal hidden" id="startModal">
+        <div class="modal-content">
+            <div class="modal-title">🕷️ SPIDER SPLAT 🕷️</div>
+            <div class="modal-subtitle">Tap the black spiders! Avoid the red ones!</div>
+            <div class="subtitle-text">
+                <div style="margin: 15px 0;">🕷️ = Good! Squish it!</div>
+                <div style="margin: 15px 0;">🔴 = Bad! Don't tap!</div>
+            </div>
+            <button class="play-button" id="playButton">PLAY</button>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="levelUpModal">
+        <div class="modal-content level-up-container">
+            <div class="modal-title">Level Complete!</div>
+            <div class="modal-stats" id="levelUpStats"></div>
+            <button class="play-button" id="nextLevelButton">NEXT LEVEL</button>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="gameOverModal">
+        <div class="modal-content">
+            <div class="modal-title">Game Over!</div>
+            <div class="modal-stats" id="gameOverStats"></div>
+            <button class="replay-button" id="replayButton">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Game variables
+        let gameState = 'start'; // start, playing, levelup, gameover
+        let score = 0;
+        let level = 1;
+        let lives = 3;
+        let combo = 0;
+        let comboTimer = 0;
+        let shakeIntensity = 0;
+
+        // Arrays (CRITICAL: initialized BEFORE game loop)
+        let spiders = [];
+        let particles = [];
+        let splatEffects = [];
+        let splashTexts = [];
+
+        // Game settings
+        const baseSpiders = 3;
+        let baseRedChance = 0.05;
+        let baseSpiderSpeed = 1.5;
+
+        // Audio context
+        let audioContext = null;
+
+        // UI elements
+        const startModal = document.getElementById('startModal');
+        const levelUpModal = document.getElementById('levelUpModal');
+        const gameOverModal = document.getElementById('gameOverModal');
+        const playButton = document.getElementById('playButton');
+        const nextLevelButton = document.getElementById('nextLevelButton');
+        const replayButton = document.getElementById('replayButton');
+        const scoreValue = document.getElementById('scoreValue');
+        const levelValue = document.getElementById('levelValue');
+        const livesDisplay = document.getElementById('livesDisplay');
+        const comboDisplay = document.getElementById('comboDisplay');
+
+        // Initialize audio context on user interaction
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Sound effects using Web Audio API
+        const sounds = {
+            splat: () => {
+                if (!audioContext) return;
+                const now = audioContext.currentTime;
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.exponentialRampToValueAtTime(50, now + 0.1);
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+
+                osc.start(now);
+                osc.stop(now + 0.1);
+            },
+
+            warning: () => {
+                if (!audioContext) return;
+                const now = audioContext.currentTime;
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.setValueAtTime(600, now + 0.05);
+                osc.frequency.setValueAtTime(800, now + 0.1);
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+
+                osc.start(now);
+                osc.stop(now + 0.2);
+            },
+
+            levelup: () => {
+                if (!audioContext) return;
+                const now = audioContext.currentTime;
+                const notes = [400, 500, 600, 800];
+
+                notes.forEach((freq, i) => {
+                    const osc = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+
+                    osc.connect(gain);
+                    gain.connect(audioContext.destination);
+
+                    osc.frequency.setValueAtTime(freq, now + i * 0.1);
+                    gain.gain.setValueAtTime(0.2, now + i * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.15);
+
+                    osc.start(now + i * 0.1);
+                    osc.stop(now + i * 0.1 + 0.15);
+                });
+            },
+
+            click: () => {
+                if (!audioContext) return;
+                const now = audioContext.currentTime;
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+
+                osc.frequency.setValueAtTime(400, now);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+
+                osc.start(now);
+                osc.stop(now + 0.05);
+            },
+
+            gameover: () => {
+                if (!audioContext) return;
+                const now = audioContext.currentTime;
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.5);
+
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+
+                osc.start(now);
+                osc.stop(now + 0.5);
+            },
+
+            streak: () => {
+                if (!audioContext) return;
+                const now = audioContext.currentTime;
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.setValueAtTime(800, now + 0.05);
+
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+
+                osc.start(now);
+                osc.stop(now + 0.1);
+            }
+        };
+
+        // Spider class
+        class Spider {
+            constructor() {
+                this.isRed = Math.random() < baseRedChance;
+                this.size = this.isRed ? 28 : 24;
+                this.speed = baseSpiderSpeed + (Math.random() - 0.5) * 0.5;
+                this.legAngle = 0;
+                this.legSpeed = 0.15 + Math.random() * 0.1;
+
+                // Spawn from random edge
+                const edge = Math.floor(Math.random() * 4);
+                if (edge === 0) { // top
+                    this.x = Math.random() * canvas.width;
+                    this.y = -this.size;
+                    this.dirX = (Math.random() - 0.5) * 2;
+                    this.dirY = Math.random() * 1 + 0.5;
+                } else if (edge === 1) { // right
+                    this.x = canvas.width + this.size;
+                    this.y = Math.random() * canvas.height;
+                    this.dirX = -Math.random() * 1 - 0.5;
+                    this.dirY = (Math.random() - 0.5) * 2;
+                } else if (edge === 2) { // bottom
+                    this.x = Math.random() * canvas.width;
+                    this.y = canvas.height + this.size;
+                    this.dirX = (Math.random() - 0.5) * 2;
+                    this.dirY = -Math.random() * 1 - 0.5;
+                } else { // left
+                    this.x = -this.size;
+                    this.y = Math.random() * canvas.height;
+                    this.dirX = Math.random() * 1 + 0.5;
+                    this.dirY = (Math.random() - 0.5) * 2;
+                }
+
+                // Wobble effect
+                this.wobbleTime = 0;
+                this.wobbleAmount = 0.3;
+                this.wobbleSpeed = 0.05;
+            }
+
+            update() {
+                this.wobbleTime += this.wobbleSpeed;
+                const wobbleX = Math.sin(this.wobbleTime) * this.wobbleAmount;
+                const wobbleY = Math.cos(this.wobbleTime * 0.7) * this.wobbleAmount;
+
+                this.x += this.dirX * this.speed + wobbleX;
+                this.y += this.dirY * this.speed + wobbleY;
+
+                this.legAngle += this.legSpeed;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+
+                // Draw legs
+                const legLength = this.size * 0.8;
+                const legCount = 8;
+                for (let i = 0; i < legCount; i++) {
+                    const angle = (i / legCount) * Math.PI * 2 + this.legAngle;
+                    const legWiggle = Math.sin(this.legAngle) * 0.2;
+
+                    ctx.strokeStyle = this.isRed ? '#FF6B6B' : '#333';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+
+                    const endX = Math.cos(angle + legWiggle) * legLength;
+                    const endY = Math.sin(angle + legWiggle) * legLength;
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+                }
+
+                // Draw body
+                if (this.isRed) {
+                    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
+                    gradient.addColorStop(0, '#FF8888');
+                    gradient.addColorStop(0.7, '#FF4444');
+                    gradient.addColorStop(1, '#DD0000');
+                    ctx.fillStyle = gradient;
+
+                    // Glow effect for red spider
+                    ctx.shadowColor = '#FF0000';
+                    ctx.shadowBlur = 15;
+                } else {
+                    ctx.fillStyle = '#222';
+                    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                    ctx.shadowBlur = 8;
+                }
+
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Draw eyes
+                ctx.fillStyle = 'white';
+                ctx.shadowColor = 'transparent';
+
+                ctx.beginPath();
+                ctx.arc(-this.size * 0.3, -this.size * 0.2, this.size * 0.25, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(this.size * 0.3, -this.size * 0.2, this.size * 0.25, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Pupils
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(-this.size * 0.3, -this.size * 0.2, this.size * 0.12, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(this.size * 0.3, -this.size * 0.2, this.size * 0.12, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+
+            isOffScreen() {
+                return this.x < -50 || this.x > canvas.width + 50 ||
+                       this.y < -50 || this.y > canvas.height + 50;
+            }
+
+            getHitbox() {
+                return {
+                    x: this.x,
+                    y: this.y,
+                    radius: this.size + 15 // Generous hitbox for kids
+                };
+            }
+        }
+
+        // Particle class
+        class Particle {
+            constructor(x, y, vx, vy, color) {
+                this.x = x;
+                this.y = y;
+                this.vx = vx;
+                this.vy = vy;
+                this.color = color;
+                this.life = 1;
+                this.decay = 0.02;
+                this.size = 6;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.2; // gravity
+                this.life -= this.decay;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.life;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+
+            isDead() {
+                return this.life <= 0;
+            }
+        }
+
+        // Splat effect class
+        class SplatEffect {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 5;
+                this.maxRadius = 50;
+                this.life = 1;
+                this.decay = 0.04;
+            }
+
+            update() {
+                this.radius += (this.maxRadius - this.radius) * 0.15;
+                this.life -= this.decay;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(100, 200, 100, ${this.life * 0.6})`;
+                ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Splat drops
+                for (let i = 0; i < 8; i++) {
+                    const angle = (i / 8) * Math.PI * 2;
+                    const dropX = this.x + Math.cos(angle) * this.radius;
+                    const dropY = this.y + Math.sin(angle) * this.radius;
+
+                    ctx.fillStyle = `rgba(80, 180, 80, ${this.life * 0.4})`;
+                    ctx.beginPath();
+                    ctx.arc(dropX, dropY, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.shadowColor = 'transparent';
+            }
+
+            isDead() {
+                return this.life <= 0;
+            }
+        }
+
+        // Splash text class
+        class SplashText {
+            constructor(x, y, text) {
+                this.x = x;
+                this.y = y;
+                this.text = text;
+                this.life = 1;
+                this.decay = 0.03;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.fillStyle = '#FFD700';
+                ctx.font = 'bold 36px Arial Black';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                ctx.shadowBlur = 4;
+                ctx.fillText(this.text, this.x, this.y - this.decay * 100);
+                ctx.restore();
+            }
+
+            update() {
+                this.life -= this.decay;
+            }
+
+            isDead() {
+                return this.life <= 0;
+            }
+        }
+
+        // Game functions
+        function startGame() {
+            gameState = 'playing';
+            score = 0;
+            level = 1;
+            lives = 3;
+            combo = 0;
+            spiders = [];
+            particles = [];
+            splatEffects = [];
+            splashTexts = [];
+
+            spawnLevel();
+            startModal.classList.add('hidden');
+            sounds.click();
+        }
+
+        function spawnLevel() {
+            spiders = [];
+            const numSpiders = baseSpiders + level - 1;
+            for (let i = 0; i < numSpiders; i++) {
+                spiders.push(new Spider());
+            }
+            // Adjust red spider chance based on level
+            baseRedChance = 0.05 + (level - 1) * 0.02;
+        }
+
+        function squishSpider(spiderIndex) {
+            const spider = spiders[spiderIndex];
+
+            if (spider.isRed) {
+                // Tapped red spider - lose a life
+                sounds.warning();
+                lives--;
+                combo = 0;
+                comboTimer = 0;
+
+                livesDisplay.classList.add('lost');
+                setTimeout(() => livesDisplay.classList.remove('lost'), 300);
+
+                if (lives <= 0) {
+                    endGame();
+                } else {
+                    updateLivesDisplay();
+                }
+            } else {
+                // Squished black spider - gain points
+                sounds.splat();
+                shakeIntensity = 5;
+
+                combo++;
+                comboTimer = 30;
+
+                const basePoints = 10;
+                const comboBonus = Math.floor((combo - 1) * 5);
+                const points = basePoints + comboBonus;
+                score += points;
+
+                // Create splat effect
+                splatEffects.push(new SplatEffect(spider.x, spider.y));
+
+                // Create particles
+                const particleCount = 12;
+                for (let i = 0; i < particleCount; i++) {
+                    const angle = (i / particleCount) * Math.PI * 2;
+                    const speed = 3 + Math.random() * 2;
+                    const vx = Math.cos(angle) * speed;
+                    const vy = Math.sin(angle) * speed;
+                    const color = Math.random() > 0.5 ? '#4CAF50' : '#8B7355';
+                    particles.push(new Particle(spider.x, spider.y, vx, vy, color));
+                }
+
+                // Splash text
+                splashTexts.push(new SplashText(spider.x, spider.y, `+${points}`));
+
+                if (combo > 1) {
+                    sounds.streak();
+                }
+
+                updateScoreDisplay();
+            }
+
+            // Remove spider
+            spiders.splice(spiderIndex, 1);
+
+            // Check if level complete
+            if (spiders.length === 0 && gameState === 'playing') {
+                levelComplete();
+            }
+        }
+
+        function updateScoreDisplay() {
+            scoreValue.textContent = score;
+        }
+
+        function updateLivesDisplay() {
+            let hearts = '';
+            for (let i = 0; i < lives; i++) {
+                hearts += '❤️';
+            }
+            livesDisplay.textContent = hearts;
+        }
+
+        function updateComboDisplay() {
+            if (combo > 1 && comboTimer > 0) {
+                comboDisplay.textContent = `x${combo} Combo!`;
+                comboDisplay.classList.add('active');
+            } else {
+                comboDisplay.classList.remove('active');
+            }
+        }
+
+        function levelComplete() {
+            gameState = 'levelup';
+            sounds.levelup();
+
+            const levelUpStats = document.getElementById('levelUpStats');
+            levelUpStats.innerHTML = `
+                <div>Level ${level} Complete!</div>
+                <div style="margin-top: 20px; font-size: 18px;">Score: ${score}</div>
+            `;
+
+            levelUpModal.classList.remove('hidden');
+        }
+
+        function nextLevel() {
+            level++;
+            baseRedChance = 0.05 + (level - 1) * 0.02;
+            levelValue.textContent = level;
+            spawnLevel();
+            gameState = 'playing';
+            levelUpModal.classList.add('hidden');
+            sounds.click();
+        }
+
+        function endGame() {
+            gameState = 'gameover';
+            sounds.gameover();
+
+            const gameOverStats = document.getElementById('gameOverStats');
+            gameOverStats.innerHTML = `
+                <div>Final Score: ${score}</div>
+                <div style="margin-top: 15px;">Level Reached: ${level}</div>
+            `;
+
+            gameOverModal.classList.remove('hidden');
+        }
+
+        function resetGame() {
+            gameState = 'start';
+            gameOverModal.classList.add('hidden');
+            startModal.classList.remove('hidden');
+            sounds.click();
+        }
+
+        // Draw background
+        function drawBackground() {
+            // Sky gradient already set in CSS
+            // Draw simple floor
+            ctx.fillStyle = '#D4A373';
+            ctx.fillRect(0, canvas.height * 0.7, canvas.width, canvas.height * 0.3);
+
+            // Draw baseboard
+            ctx.fillStyle = '#8B6F47';
+            ctx.fillRect(0, canvas.height * 0.7 - 5, canvas.width, 10);
+        }
+
+        // Touch/click handling
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: (e.clientX || e.touches[0].clientX) - rect.left,
+                y: (e.clientY || e.touches[0].clientY) - rect.top
+            };
+        }
+
+        function handleTap(e) {
+            if (gameState !== 'playing') return;
+
+            initAudio();
+            const pos = getMousePos(e);
+
+            for (let i = spiders.length - 1; i >= 0; i--) {
+                const hitbox = spiders[i].getHitbox();
+                const dx = pos.x - hitbox.x;
+                const dy = pos.y - hitbox.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < hitbox.radius) {
+                    squishSpider(i);
+                    e.preventDefault();
+                    return;
+                }
+            }
+        }
+
+        canvas.addEventListener('mousedown', handleTap);
+        canvas.addEventListener('touchstart', handleTap, { passive: false });
+
+        // Button listeners
+        playButton.addEventListener('click', () => {
+            initAudio();
+            startGame();
+        });
+
+        nextLevelButton.addEventListener('click', () => {
+            initAudio();
+            nextLevel();
+        });
+
+        replayButton.addEventListener('click', () => {
+            initAudio();
+            resetGame();
+        });
+
+        startModal.addEventListener('click', (e) => {
+            if (e.target === startModal) {
+                initAudio();
+                startGame();
+            }
+        });
+
+        // Game loop
+        function update() {
+            // Update spiders
+            for (let i = spiders.length - 1; i >= 0; i--) {
+                spiders[i].update();
+
+                // Check if escaped
+                if (gameState === 'playing' && spiders[i].isOffScreen()) {
+                    if (!spiders[i].isRed) {
+                        // Black spider escaped (maybe mild penalty later)
+                    }
+                    spiders.splice(i, 1);
+                }
+            }
+
+            // Update particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                if (particles[i].isDead()) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            // Update splat effects
+            for (let i = splatEffects.length - 1; i >= 0; i--) {
+                splatEffects[i].update();
+                if (splatEffects[i].isDead()) {
+                    splatEffects.splice(i, 1);
+                }
+            }
+
+            // Update splash texts
+            for (let i = splashTexts.length - 1; i >= 0; i--) {
+                splashTexts[i].update();
+                if (splashTexts[i].isDead()) {
+                    splashTexts.splice(i, 1);
+                }
+            }
+
+            // Update combo timer
+            if (comboTimer > 0) {
+                comboTimer--;
+            } else {
+                combo = 0;
+            }
+
+            updateComboDisplay();
+
+            // Spawn new spiders in playing state
+            if (gameState === 'playing' && Math.random() < 0.02) {
+                spiders.push(new Spider());
+            }
+
+            // Update shake
+            if (shakeIntensity > 0) {
+                canvas.classList.add('shake');
+                shakeIntensity--;
+                if (shakeIntensity === 0) {
+                    canvas.classList.remove('shake');
+                }
+            }
+        }
+
+        function draw() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw background
+            drawBackground();
+
+            // Draw spiders
+            for (let spider of spiders) {
+                spider.draw();
+            }
+
+            // Draw splat effects
+            for (let effect of splatEffects) {
+                effect.draw();
+            }
+
+            // Draw particles
+            for (let particle of particles) {
+                particle.draw();
+            }
+
+            // Draw splash texts
+            for (let text of splashTexts) {
+                text.draw();
+            }
+        }
+
+        function loop() {
+            update();
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        // PRE-INIT: Ensure all arrays are initialized BEFORE game loop starts
+        spiders = [];
+        particles = [];
+        splatEffects = [];
+        splashTexts = [];
+
+        // Spawn attract mode spiders
+        for (let i = 0; i < 5; i++) {
+            spiders.push(new Spider());
+        }
+
+        // Start game loop
+        loop();
+
+        // Show start modal
+        startModal.classList.remove('hidden');
+    </script>
+</body>
+</html>

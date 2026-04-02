@@ -3,6 +3,24 @@
 
 const GAMES = [
   {
+    slug: 'trivia',
+    title: 'Trivia Quest',
+    creator: 'Addie',
+    description: 'Pick a category — Math, History, Science, English, or Computers — and test your brain! Answer multiple choice trivia questions against the clock. Play solo or challenge a friend in 2-player mode. Streak bonuses, speed points, and celebrations for every correct answer!',
+    createdAt: '2026-04-02',
+    thumbnail: '/images/trivia-preview.png',
+    color: 'from-purple-400 to-pink-500',
+  },
+  {
+    slug: 'spider-splat',
+    title: 'Spider Splat',
+    creator: 'Wyatt',
+    description: 'Black spiders are crawling everywhere — tap them to squish them with a satisfying SPLAT! But watch out for the glowing red spiders — tap one and you lose a life! Levels get harder with more spiders and faster crawling. How far can you go?',
+    createdAt: '2026-04-02',
+    thumbnail: '/images/spider-splat-preview.png',
+    color: 'from-red-400 to-orange-500',
+  },
+  {
     slug: 'plank-hero',
     title: 'Plank Hero',
     creator: 'Ivan',
