@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'chicken-nuggets',
+    title: 'Chicken Nuggets',
+    creator: 'Ellen',
+    description: 'Catch the chickens before the hawk does! Run around the farmyard, grab chickens and bring them to the coop. But watch out — a hungry hawk circles overhead and swoops down to snatch them! Save enough chickens to advance through levels with faster hawks and more chickens to rescue.',
+    createdAt: '2026-04-05',
+    thumbnail: '/images/chicken-nuggets-preview.png',
+    color: 'from-yellow-400 to-green-500',
+  },
+  {
     slug: 'trivia',
     title: 'BRAIN BLAST!',
     creator: 'Addie',
