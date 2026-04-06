@@ -3,22 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chicken Nuggets - NAW Games</title>
+    <title>Chicken Nuggets</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
+        body {
             background: #000;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
-
         canvas {
             position: fixed;
             top: 0;
@@ -26,1184 +22,1489 @@
             width: 100vw;
             height: 100vh;
             display: block;
-            background: #87CEEB;
-        }
-
-        #joystickContainer {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            width: 120px;
-            height: 120px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            display: none;
-            z-index: 100;
-            touch-action: none;
-        }
-
-        #joystickThumb {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .mobile-info {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            color: #fff;
-            font-size: 12px;
-            text-align: right;
-            z-index: 99;
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
-    <div id="joystickContainer">
-        <div id="joystickThumb"></div>
-    </div>
-    <div class="mobile-info"></div>
+<canvas id="gameCanvas"></canvas>
+<script>
+// ============================================================================
+// CHICKEN NUGGETS - NAW Games
+// A top-down farmyard rescue game with physics, particles, and sounds
+// ============================================================================
 
-    <script>
-        // ===== GLOBALS & CONFIG =====
-        const CANVAS = document.getElementById('gameCanvas');
-        const CTX = CANVAS.getContext('2d');
-        const WORLD_WIDTH = 1600;
-        const WORLD_HEIGHT = 1200;
-        let SCREEN_WIDTH = window.innerWidth;
-        let SCREEN_HEIGHT = window.innerHeight;
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-        const LEVELS = [
-            { numChickens: 8, targetSave: 5, duration: 60, hawkSwoop: 8 },
-            { numChickens: 10, targetSave: 7, duration: 55, hawkSwoop: 6 },
-            { numChickens: 12, targetSave: 9, duration: 50, hawkSwoop: 5 },
-            { numChickens: 15, targetSave: 11, duration: 50, hawkSwoop: 4 },
-            { numChickens: 18, targetSave: 13, duration: 50, hawkSwoop: 3.5 }
-        ];
+// World constants
+const WORLD_W = 1400;
+const WORLD_H = 1000;
 
-        let gameState = {
-            screen: 'start',
-            level: 0,
-            score: 0,
-            chickensCarrying: 0,
-            chickensSaved: 0,
-            timeLeft: 0,
-            gameTime: 0,
-            isPaused: false
-        };
+let W = window.innerWidth;
+let H = window.innerHeight;
 
-        let player = null;
-        let chickens = [];
-        let hawk = null;
-        let particles = [];
-        let camera = { x: 0, y: 0 };
-        let keys = {};
-        let mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        let joystick = { active: false, x: 0, y: 0 };
+canvas.width = W;
+canvas.height = H;
 
-        // ===== AUDIO ENGINE =====
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+// Game states
+const GAME_STATE = {
+    START: 0,
+    PLAYING: 1,
+    LEVEL_COMPLETE: 2,
+    GAME_OVER: 3
+};
 
-        function playSound(type, options = {}) {
-            try {
-                const now = audioContext.currentTime;
-                const duration = options.duration || 0.2;
+// ============================================================================
+// GLOBAL GAME STATE
+// ============================================================================
 
-                if (type === 'cluck') {
-                    const osc = audioContext.createOscillator();
-                    const gain = audioContext.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioContext.destination);
-                    osc.type = 'square';
-                    osc.frequency.setValueAtTime(400, now);
-                    osc.frequency.exponentialRampToValueAtTime(200, now + duration);
-                    gain.gain.setValueAtTime(0.1, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
-                    osc.start(now);
-                    osc.stop(now + duration);
-                } else if (type === 'screech') {
-                    const osc = audioContext.createOscillator();
-                    const gain = audioContext.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioContext.destination);
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(800, now);
-                    osc.frequency.exponentialRampToValueAtTime(200, now + duration);
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
-                    osc.start(now);
-                    osc.stop(now + duration);
-                } else if (type === 'chime') {
-                    const notes = [261.63, 329.63, 392, 523.25];
-                    notes.forEach((freq, i) => {
-                        const osc = audioContext.createOscillator();
-                        const gain = audioContext.createGain();
-                        osc.connect(gain);
-                        gain.connect(audioContext.destination);
-                        osc.type = 'sine';
-                        osc.frequency.value = freq;
-                        const t = now + i * 0.1;
-                        gain.gain.setValueAtTime(0.1, t);
-                        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
-                        osc.start(t);
-                        osc.stop(t + 0.2);
-                    });
-                } else if (type === 'warning') {
-                    for (let i = 0; i < 3; i++) {
-                        const osc = audioContext.createOscillator();
-                        const gain = audioContext.createGain();
-                        osc.connect(gain);
-                        gain.connect(audioContext.destination);
-                        osc.type = 'sine';
-                        osc.frequency.value = 800;
-                        const t = now + i * 0.15;
-                        gain.gain.setValueAtTime(0.1, t);
-                        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.1);
-                        osc.start(t);
-                        osc.stop(t + 0.1);
-                    }
-                } else if (type === 'footstep') {
-                    const osc = audioContext.createOscillator();
-                    const gain = audioContext.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioContext.destination);
-                    osc.type = 'sine';
-                    osc.frequency.value = 150 + Math.random() * 50;
-                    gain.gain.setValueAtTime(0.05, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-                    osc.start(now);
-                    osc.stop(now + 0.1);
-                } else if (type === 'poof') {
-                    const osc = audioContext.createOscillator();
-                    const gain = audioContext.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioContext.destination);
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(200, now);
-                    osc.frequency.exponentialRampToValueAtTime(50, now + 0.15);
-                    gain.gain.setValueAtTime(0.08, now);
-                    gain.gain.exponentialRampToValueAtValue(0.01, now + 0.15);
-                    osc.start(now);
-                    osc.stop(now + 0.15);
-                } else if (type === 'gameover') {
-                    const osc = audioContext.createOscillator();
-                    const gain = audioContext.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioContext.destination);
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(400, now);
-                    osc.frequency.exponentialRampToValueAtTime(100, now + 0.5);
-                    gain.gain.setValueAtTime(0.1, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-                    osc.start(now);
-                    osc.stop(now + 0.5);
-                } else if (type === 'victory') {
-                    const notes = [523.25, 659.25, 783.99, 1046.5];
-                    notes.forEach((freq, i) => {
-                        const osc = audioContext.createOscillator();
-                        const gain = audioContext.createGain();
-                        osc.connect(gain);
-                        gain.connect(audioContext.destination);
-                        osc.type = 'sine';
-                        osc.frequency.value = freq;
-                        const t = now + i * 0.15;
-                        gain.gain.setValueAtTime(0.12, t);
-                        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.25);
-                        osc.start(t);
-                        osc.stop(t + 0.25);
-                    });
-                }
-            } catch (e) {
-                console.error('Audio error:', e);
-            }
+let gameState = GAME_STATE.START;
+let currentLevel = 1;
+let cameraX = 0;
+let cameraY = 0;
+let particles = [];
+
+// Level config
+const levels = [
+    { chickens: 8, saveTarget: 5, timeLimit: 65, hawkSwoopInterval: 8 },
+    { chickens: 10, saveTarget: 7, timeLimit: 60, hawkSwoopInterval: 6 },
+    { chickens: 12, saveTarget: 9, timeLimit: 55, hawkSwoopInterval: 5 },
+    { chickens: 14, saveTarget: 10, timeLimit: 50, hawkSwoopInterval: 4 },
+];
+
+function getLevelConfig() {
+    const idx = Math.min(currentLevel - 1, levels.length - 1);
+    return levels[idx];
+}
+
+// ============================================================================
+// WORLD GENERATION (at init time, NOT in draw loops)
+// ============================================================================
+
+let grassColors = [];
+let grassTufts = [];
+let flowers = [];
+let hayBales = [];
+let fence = [];
+
+function initWorldGeneration() {
+    // Generate grass color grid (DETERMINISTIC, not random in draw)
+    const GRASS_COLS = Math.ceil(WORLD_W / 40);
+    const GRASS_ROWS = Math.ceil(WORLD_H / 40);
+    grassColors = [];
+
+    for (let r = 0; r < GRASS_ROWS; r++) {
+        grassColors[r] = [];
+        for (let c = 0; c < GRASS_COLS; c++) {
+            // Deterministic hash using row and column, NO Math.random()
+            const shade = 34 + ((r * 7 + c * 13) % 4) * 8;
+            grassColors[r][c] = `rgb(${shade + 10}, ${100 + shade}, ${shade})`;
+        }
+    }
+
+    // Pre-generate grass tufts (small decorative V-shapes)
+    grassTufts = [];
+    for (let i = 0; i < 150; i++) {
+        grassTufts.push({
+            x: seededRandom(i * 17) * WORLD_W,
+            y: seededRandom(i * 23) * WORLD_H,
+            size: seededRandom(i * 41) * 3 + 2
+        });
+    }
+
+    // Pre-generate flowers (small colored dots)
+    flowers = [];
+    const flowerColors = ['#FFD700', '#FFFFFF', '#FFB6C1', '#DDA0DD', '#87CEEB'];
+    for (let i = 0; i < 80; i++) {
+        flowers.push({
+            x: seededRandom(i * 31) * WORLD_W,
+            y: seededRandom(i * 37) * WORLD_H,
+            color: flowerColors[Math.floor(seededRandom(i * 43) * flowerColors.length)],
+            size: seededRandom(i * 47) * 1.5 + 1
+        });
+    }
+
+    // Pre-generate hay bales (6-8 scattered around)
+    hayBales = [];
+    const hayPositions = [
+        { x: 200, y: 150 },
+        { x: 1100, y: 200 },
+        { x: 300, y: 700 },
+        { x: 900, y: 600 },
+        { x: 600, y: 850 },
+        { x: 1200, y: 500 },
+        { x: 250, y: 450 },
+    ];
+    for (let i = 0; i < hayPositions.length; i++) {
+        hayBales.push({
+            x: hayPositions[i].x,
+            y: hayPositions[i].y,
+            w: 50,
+            h: 35,
+        });
+    }
+
+    // Fence around perimeter
+    fence = [];
+    const fenceSpacing = 40;
+    // Top and bottom
+    for (let x = 0; x < WORLD_W; x += fenceSpacing) {
+        fence.push({ x1: x, y1: 10, x2: x + fenceSpacing, y2: 10 });
+        fence.push({ x1: x, y1: WORLD_H - 10, x2: x + fenceSpacing, y2: WORLD_H - 10 });
+    }
+    // Left and right
+    for (let y = 0; y < WORLD_H; y += fenceSpacing) {
+        fence.push({ x1: 10, y1: y, x2: 10, y2: y + fenceSpacing });
+        fence.push({ x1: WORLD_W - 10, y1: y, x2: WORLD_W - 10, y2: y + fenceSpacing });
+    }
+}
+
+// Simple seeded random (deterministic based on seed)
+function seededRandom(seed) {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+}
+
+// ============================================================================
+// PLAYER (FARMER)
+// ============================================================================
+
+class Player {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.speed = 150;
+        this.width = 24;
+        this.height = 40;
+        this.carryingChickens = [];
+        this.direction = 1; // 1 = right, -1 = left
+        this.legOffset = 0;
+        this.animTime = 0;
+    }
+
+    update(dt, inputX, inputY) {
+        // Movement
+        const mag = Math.sqrt(inputX * inputX + inputY * inputY);
+        if (mag > 0.1) {
+            this.vx = (inputX / mag) * this.speed;
+            this.vy = (inputY / mag) * this.speed;
+            if (inputX !== 0) this.direction = inputX > 0 ? 1 : -1;
+        } else {
+            this.vx = 0;
+            this.vy = 0;
         }
 
-        // ===== PARTICLE SYSTEM =====
-        class Particle {
-            constructor(x, y, vx, vy, type = 'feather') {
-                this.x = x;
-                this.y = y;
-                this.vx = vx;
-                this.vy = vy;
-                this.life = 1.0;
-                this.maxLife = type === 'confetti' ? 2.0 : 1.0;
-                this.type = type;
-                this.rotation = Math.random() * Math.PI * 2;
-                this.rotSpeed = (Math.random() - 0.5) * 0.2;
-            }
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
 
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.vy += 0.2;
-                this.life -= 1.0 / (60 * this.maxLife);
-                this.rotation += this.rotSpeed;
-            }
+        // Clamp to world
+        this.x = Math.max(this.width / 2, Math.min(WORLD_W - this.width / 2, this.x));
+        this.y = Math.max(this.height / 2, Math.min(WORLD_H - this.height / 2, this.y));
 
-            draw() {
-                const alpha = Math.max(0, this.life);
-                CTX.save();
-                CTX.globalAlpha = alpha;
-                CTX.fillStyle = this.type === 'feather' ? '#fff' :
-                                this.type === 'dust' ? '#d2a679' :
-                                this.type === 'sparkle' ? '#ffd700' : '#ffcccc';
-                CTX.translate(this.x, this.y);
-                CTX.rotate(this.rotation);
-
-                if (this.type === 'feather') {
-                    CTX.fillRect(-3, -6, 6, 12);
-                } else if (this.type === 'dust') {
-                    CTX.fillRect(-2, -2, 4, 4);
-                } else if (this.type === 'sparkle') {
-                    CTX.fillRect(-2, -2, 4, 4);
-                } else {
-                    CTX.fillRect(-2, -2, 4, 4);
-                }
-
-                CTX.restore();
-            }
+        // Walking animation
+        this.animTime += dt;
+        if (mag > 0.1) {
+            this.legOffset = Math.sin(this.animTime * 8) * 3;
+        } else {
+            this.legOffset = 0;
         }
-
-        function addParticles(x, y, count, type, vxRange = 3, vyRange = 3) {
-            for (let i = 0; i < count; i++) {
-                const angle = (Math.PI * 2 * i) / count;
-                const speed = 2 + Math.random() * 2;
-                const vx = Math.cos(angle) * speed;
-                const vy = Math.sin(angle) * speed - 1;
-                particles.push(new Particle(x, y, vx, vy, type));
-            }
-        }
-
-        // ===== PLAYER CLASS =====
-        class Player {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.width = 30;
-                this.height = 40;
-                this.vx = 0;
-                this.vy = 0;
-                this.friction = 0.85;
-                this.accel = 0.8;
-                this.maxSpeed = 4;
-                this.facing = 1;
-                this.walkAnim = 0;
-                this.carrying = [];
-            }
-
-            update() {
-                let moveX = 0;
-                let moveY = 0;
-
-                if (keys['ArrowLeft'] || keys['a']) moveX -= 1;
-                if (keys['ArrowRight'] || keys['d']) moveX += 1;
-                if (keys['ArrowUp'] || keys['w']) moveY -= 1;
-                if (keys['ArrowDown'] || keys['s']) moveY += 1;
-
-                if (joystick.active) {
-                    const mag = Math.sqrt(joystick.x ** 2 + joystick.y ** 2);
-                    if (mag > 0.1) {
-                        moveX += joystick.x / mag * 0.8;
-                        moveY += joystick.y / mag * 0.8;
-                    }
-                }
-
-                const magnitude = Math.sqrt(moveX ** 2 + moveY ** 2);
-                if (magnitude > 0) {
-                    if (moveX !== 0) this.facing = moveX > 0 ? 1 : -1;
-                    this.vx += (moveX / magnitude) * this.accel;
-                    this.vy += (moveY / magnitude) * this.accel;
-                    this.walkAnim += 0.2;
-                    if (this.walkAnim % (Math.PI * 2) > Math.PI * 1.5) {
-                        playSound('footstep');
-                    }
-                } else {
-                    this.walkAnim = 0;
-                }
-
-                const speed = Math.sqrt(this.vx ** 2 + this.vy ** 2);
-                if (speed > this.maxSpeed) {
-                    this.vx = (this.vx / speed) * this.maxSpeed;
-                    this.vy = (this.vy / speed) * this.maxSpeed;
-                }
-
-                this.vx *= this.friction;
-                this.vy *= this.friction;
-
-                this.x += this.vx;
-                this.y += this.vy;
-
-                this.x = Math.max(this.width / 2, Math.min(WORLD_WIDTH - this.width / 2, this.x));
-                this.y = Math.max(this.height / 2, Math.min(WORLD_HEIGHT - this.height / 2, this.y));
-
-                this.carrying = this.carrying.filter(c => c.alive);
-            }
-
-            draw() {
-                const legOffsetY = Math.sin(this.walkAnim) * 3;
-                CTX.fillStyle = '#FFC0CB';
-                CTX.fillRect(this.x - 8, this.y - 15, 16, 20);
-
-                CTX.fillStyle = '#4169E1';
-                CTX.fillRect(this.x - 12, this.y - 10, 24, 15);
-
-                CTX.fillStyle = '#8B4513';
-                const legY = this.y + 10 + legOffsetY;
-                CTX.fillRect(this.x - 6, legY, 4, 8);
-                CTX.fillRect(this.x + 2, legY, 4, 8);
-
-                CTX.fillStyle = '#FFD700';
-                CTX.beginPath();
-                CTX.arc(this.x + this.facing * 8, this.y - 18, 6, 0, Math.PI * 2);
-                CTX.fill();
-
-                const armOffsetY = Math.sin(this.walkAnim + Math.PI) * 2;
-                CTX.strokeStyle = '#FFC0CB';
-                CTX.lineWidth = 3;
-                CTX.beginPath();
-                CTX.moveTo(this.x - this.facing * 6, this.y - 5);
-                CTX.lineTo(this.x - this.facing * 12, this.y + armOffsetY);
-                CTX.stroke();
-
-                CTX.fillStyle = '#FFC0CB';
-                CTX.beginPath();
-                CTX.arc(this.x - this.facing * 12, this.y + armOffsetY, 3, 0, Math.PI * 2);
-                CTX.fill();
-            }
-
-            pickupChicken(chicken) {
-                if (this.carrying.length < 5) {
-                    this.carrying.push(chicken);
-                    chicken.alive = false;
-                    gameState.chickensCarrying++;
-                    playSound('cluck');
-                    addParticles(chicken.x, chicken.y, 8, 'feather');
-                    playSound('poof');
-                    return true;
-                }
-                return false;
-            }
-        }
-
-        // ===== CHICKEN CLASS =====
-        class Chicken {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.width = 22;
-                this.height = 22;
-                this.vx = 0;
-                this.vy = 0;
-                this.alive = true;
-                this.scared = false;
-                this.scaredTimer = 0;
-                this.wanderTimer = 0;
-                this.wanderDir = Math.random() * Math.PI * 2;
-                this.bobOffset = Math.random() * Math.PI * 2;
-                this.speed = 1.5;
-            }
-
-            update() {
-                this.scaredTimer = Math.max(0, this.scaredTimer - 1);
-                if (this.scaredTimer === 0) this.scared = false;
-
-                this.wanderTimer--;
-                if (this.wanderTimer <= 0) {
-                    this.wanderDir = Math.random() * Math.PI * 2;
-                    this.wanderTimer = 30 + Math.random() * 30;
-                }
-
-                const hawkDist = Math.hypot(this.x - hawk.x, this.y - hawk.y);
-                if (hawkDist < 200 && hawk.state !== 'circling') {
-                    this.scared = true;
-                    this.scaredTimer = 60;
-                }
-
-                if (this.scared && hawk.state === 'swooping') {
-                    const angle = Math.atan2(this.y - hawk.y, this.x - hawk.x);
-                    this.vx += Math.cos(angle) * 0.4;
-                    this.vy += Math.sin(angle) * 0.4;
-                    this.speed = 2.5;
-                } else {
-                    this.vx += Math.cos(this.wanderDir) * 0.1;
-                    this.vy += Math.sin(this.wanderDir) * 0.1;
-                    this.speed = this.scared ? 2.0 : 1.5;
-                }
-
-                const speed = Math.sqrt(this.vx ** 2 + this.vy ** 2);
-                if (speed > this.speed) {
-                    this.vx = (this.vx / speed) * this.speed;
-                    this.vy = (this.vy / speed) * this.speed;
-                }
-
-                this.vx *= 0.9;
-                this.vy *= 0.9;
-
-                this.x += this.vx;
-                this.y += this.vy;
-
-                this.x = Math.max(20, Math.min(WORLD_WIDTH - 20, this.x));
-                this.y = Math.max(20, Math.min(WORLD_HEIGHT - 20, this.y));
-
-                this.bobOffset += 0.05;
-            }
-
-            draw() {
-                if (!this.alive) return;
-
-                const bodyY = this.y + Math.sin(this.bobOffset) * 1;
-
-                CTX.fillStyle = this.scared ? '#fff' : '#fff';
-                CTX.beginPath();
-                CTX.arc(this.x - 4, bodyY - 2, 8, 0, Math.PI * 2);
-                CTX.fill();
-
-                CTX.beginPath();
-                CTX.arc(this.x + 4, bodyY, 7, 0, Math.PI * 2);
-                CTX.fill();
-
-                CTX.fillStyle = '#FF6347';
-                CTX.beginPath();
-                CTX.arc(this.x, bodyY - 8, 3, 0, Math.PI * 2);
-                CTX.fill();
-
-                const direction = Math.atan2(this.vy, this.vx);
-                CTX.fillStyle = '#FFA500';
-                CTX.save();
-                CTX.translate(this.x + 8, bodyY - 1);
-                CTX.rotate(direction);
-                CTX.fillRect(0, -2, 5, 4);
-                CTX.restore();
-
-                if (this.scared) {
-                    CTX.fillStyle = '#000';
-                    CTX.beginPath();
-                    CTX.arc(this.x - 3, bodyY - 4, 2, 0, Math.PI * 2);
-                    CTX.fill();
-                    CTX.beginPath();
-                    CTX.arc(this.x + 3, bodyY - 4, 2, 0, Math.PI * 2);
-                    CTX.fill();
-                } else {
-                    CTX.fillStyle = '#000';
-                    CTX.beginPath();
-                    CTX.arc(this.x - 3, bodyY - 3, 1.5, 0, Math.PI * 2);
-                    CTX.fill();
-                    CTX.beginPath();
-                    CTX.arc(this.x + 3, bodyY - 3, 1.5, 0, Math.PI * 2);
-                    CTX.fill();
-                }
-
-                CTX.fillStyle = '#FFA500';
-                CTX.fillRect(this.x - 5, bodyY + 8, 3, 4);
-                CTX.fillRect(this.x + 2, bodyY + 8, 3, 4);
-            }
-
-            getDistance(x, y) {
-                return Math.hypot(this.x - x, this.y - y);
-            }
-        }
-
-        // ===== HAWK CLASS =====
-        class Hawk {
-            constructor() {
-                this.x = WORLD_WIDTH / 2;
-                this.y = 150;
-                this.radius = 300;
-                this.angle = 0;
-                this.state = 'circling';
-                this.swoopTimer = 0;
-                this.targetChicken = null;
-                this.diveProgress = 0;
-                this.shadowAlpha = 0.3;
-                this.shadowWarnColor = false;
-                this.wingFlap = 0;
-            }
-
-            pickTarget() {
-                if (chickens.length === 0) return;
-                const aliveChickens = chickens.filter(c => c.alive);
-                if (aliveChickens.length === 0) return;
-                this.targetChicken = aliveChickens[Math.floor(Math.random() * aliveChickens.length)];
-                this.shadowWarnColor = true;
-                playSound('warning');
-                this.swoopTimer = 90;
-            }
-
-            update() {
-                this.wingFlap += 0.15;
-
-                if (this.state === 'circling') {
-                    this.angle += 0.03;
-                    this.x = WORLD_WIDTH / 2 + Math.cos(this.angle) * this.radius;
-                    this.y = 150 + Math.sin(this.angle) * 100;
-
-                    this.swoopTimer++;
-                    const level = LEVELS[gameState.level] || LEVELS[LEVELS.length - 1];
-                    const interval = Math.ceil(level.hawkSwoop * 60);
-                    if (this.swoopTimer >= interval) {
-                        this.swoopTimer = 0;
-                        this.pickTarget();
-                        this.state = 'telegraphing';
-                    }
-                } else if (this.state === 'telegraphing') {
-                    this.swoopTimer--;
-                    if (this.swoopTimer <= 0) {
-                        this.state = 'swooping';
-                        this.diveProgress = 0;
-                        playSound('screech');
-                        this.swoopTimer = 30;
-                    }
-                } else if (this.state === 'swooping') {
-                    this.diveProgress += 1 / this.swoopTimer;
-                    if (this.targetChicken && this.targetChicken.alive) {
-                        this.x = this.targetChicken.x + (WORLD_WIDTH / 2 - this.targetChicken.x) * (1 - this.diveProgress);
-                        this.y = 150 + (this.targetChicken.y - 150) * this.diveProgress;
-                    }
-
-                    this.swoopTimer--;
-                    if (this.swoopTimer <= 0) {
-                        if (this.targetChicken && this.targetChicken.alive) {
-                            const dist = Math.hypot(this.x - this.targetChicken.x, this.y - this.targetChicken.y);
-                            if (dist < 40) {
-                                this.targetChicken.alive = false;
-                                addParticles(this.targetChicken.x, this.targetChicken.y, 12, 'feather');
-                                gameState.gameTime = Math.max(0, gameState.gameTime - 2);
-                                CTX.canvas.style.filter = 'brightness(0.8)';
-                                setTimeout(() => {
-                                    CTX.canvas.style.filter = 'brightness(1)';
-                                }, 100);
-                            }
-                        }
-                        this.state = 'circling';
-                        this.swoopTimer = 0;
-                        this.shadowWarnColor = false;
-                    }
-                }
-
-                this.shadowAlpha = this.state === 'telegraphing' ? 0.6 : 0.3;
-            }
-
-            draw() {
-                if (this.state === 'swooping') {
-                    const scale = 0.8 + this.diveProgress * 0.4;
-                    this.drawHawk(scale);
-                } else {
-                    this.drawHawk(1);
-                }
-
-                this.drawShadow();
-            }
-
-            drawHawk(scale = 1) {
-                const size = 60 * scale;
-                CTX.save();
-                CTX.translate(this.x, this.y);
-
-                if (this.x < WORLD_WIDTH / 2) {
-                    CTX.scale(-1, 1);
-                }
-
-                CTX.fillStyle = '#654321';
-                CTX.beginPath();
-                CTX.arc(0, 0, size / 6, 0, Math.PI * 2);
-                CTX.fill();
-
-                CTX.fillStyle = '#8B4513';
-                const flapOffset = Math.sin(this.wingFlap) * 5;
-                CTX.beginPath();
-                CTX.ellipse(-size / 3, flapOffset, size / 2.5, size / 4, -0.3, 0, Math.PI * 2);
-                CTX.fill();
-                CTX.beginPath();
-                CTX.ellipse(size / 3, flapOffset, size / 2.5, size / 4, 0.3, 0, Math.PI * 2);
-                CTX.fill();
-
-                CTX.fillStyle = '#FFD700';
-                CTX.beginPath();
-                CTX.arc(size / 4, -size / 8, size / 12, 0, Math.PI * 2);
-                CTX.fill();
-
-                CTX.restore();
-            }
-
-            drawShadow() {
-                const shadowX = this.x;
-                const shadowY = WORLD_HEIGHT - 100;
-                const shadowScale = this.state === 'swooping' ? 0.5 + (1 - this.diveProgress) * 0.5 : 1;
-                const shadowSize = 40 * shadowScale;
-
-                CTX.save();
-                CTX.globalAlpha = this.shadowWarnColor ? 0.6 : this.shadowAlpha;
-                CTX.fillStyle = this.shadowWarnColor ? '#FF0000' : '#000';
-                CTX.beginPath();
-                CTX.ellipse(shadowX, shadowY, shadowSize, shadowSize / 2, 0, 0, Math.PI * 2);
-                CTX.fill();
-                CTX.restore();
-            }
-        }
-
-        // ===== BARN CLASS =====
-        class Barn {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.width = 120;
-                this.height = 100;
-            }
-
-            update() {}
-
-            draw() {
-                CTX.fillStyle = '#DC143C';
-                CTX.fillRect(this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
-
-                CTX.fillStyle = '#8B4513';
-                CTX.beginPath();
-                CTX.moveTo(this.x - this.width / 2, this.y - this.height / 2);
-                CTX.lineTo(this.x, this.y - this.height / 2 - 30);
-                CTX.lineTo(this.x + this.width / 2, this.y - this.height / 2);
-                CTX.fill();
-
-                CTX.fillStyle = '#333';
-                CTX.fillRect(this.x - 20, this.y - 20, 40, 40);
-
-                CTX.strokeStyle = '#FFD700';
-                CTX.lineWidth = 3;
-                CTX.beginPath();
-                CTX.moveTo(this.x - 10, this.y - 20);
-                CTX.lineTo(this.x + 10, this.y + 20);
-                CTX.stroke();
-                CTX.beginPath();
-                CTX.moveTo(this.x + 10, this.y - 20);
-                CTX.lineTo(this.x - 10, this.y + 20);
-                CTX.stroke();
-
-                CTX.strokeStyle = '#FFD700';
-                CTX.lineWidth = 3;
-                CTX.globalAlpha = 0.3;
-                CTX.beginPath();
-                CTX.arc(this.x, this.y, 80, 0, Math.PI * 2);
-                CTX.stroke();
-                CTX.globalAlpha = 1;
-            }
-
-            contains(x, y) {
-                return (
-                    x > this.x - this.width / 2 &&
-                    x < this.x + this.width / 2 &&
-                    y > this.y - this.height / 2 &&
-                    y < this.y + this.height / 2
-                );
-            }
-        }
-
-        let barn = null;
-
-        // ===== INPUT HANDLING =====
-        window.addEventListener('keydown', (e) => {
-            keys[e.key] = true;
+    }
+
+    draw(ctx) {
+        ctx.save();
+
+        // Dark outline
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 3;
+
+        // Body (blue overalls) - large rounded rectangle
+        ctx.fillStyle = '#003DA5';
+        roundRect(ctx, this.x - 12, this.y - 8, 24, 18, 3);
+        ctx.fill();
+        ctx.stroke();
+
+        // Face (peach circle)
+        ctx.fillStyle = '#E8B88B';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y - 15, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Eyes
+        ctx.fillStyle = '#000';
+        ctx.beginPath();
+        ctx.arc(this.x - 3, this.y - 16, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(this.x + 3, this.y - 16, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Hat (brown straw)
+        ctx.fillStyle = '#8B4513';
+        roundRect(ctx, this.x - 10, this.y - 24, 20, 8, 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Boots (brown)
+        ctx.fillStyle = '#654321';
+        const legOffL = this.legOffset;
+        const legOffR = -this.legOffset;
+        roundRect(ctx, this.x - 7, this.y + 8 + legOffL, 5, 8, 1);
+        ctx.fill();
+        ctx.stroke();
+        roundRect(ctx, this.x + 2, this.y + 8 + legOffR, 5, 8, 1);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+    pickUpChicken(chicken) {
+        this.carryingChickens.push(chicken);
+        addParticles(this.x, this.y, 3, 'sparkle');
+    }
+
+    dropChickens(barn) {
+        const saved = this.carryingChickens.filter(c => {
+            const dx = barn.x - c.x;
+            const dy = barn.y - c.y;
+            return Math.sqrt(dx * dx + dy * dy) < 60;
         });
 
-        window.addEventListener('keyup', (e) => {
-            keys[e.key] = false;
-        });
+        for (let c of saved) {
+            c.saved = true;
+            addParticles(c.x, c.y, 5, 'feather');
+        }
 
-        document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+        this.carryingChickens = this.carryingChickens.filter(c => !c.saved);
+        return saved.length;
+    }
+}
 
-        const joystickContainer = document.getElementById('joystickContainer');
-        const joystickThumb = document.getElementById('joystickThumb');
+// ============================================================================
+// CHICKENS
+// ============================================================================
 
-        joystickContainer.addEventListener('touchstart', (e) => {
-            joystick.active = true;
-        });
+class Chicken {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 60;
+        this.vy = (Math.random() - 0.5) * 60;
+        this.speed = 60;
+        this.width = 20;
+        this.height = 20;
+        this.alive = true;
+        this.saved = false;
+        this.scaredTime = 0;
+        this.bobOffset = Math.random() * Math.PI * 2;
+        this.direction = this.vx > 0 ? 1 : -1;
+    }
 
-        joystickContainer.addEventListener('touchmove', (e) => {
-            const touch = e.touches[0];
-            const rect = joystickContainer.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            const dx = touch.clientX - centerX;
-            const dy = touch.clientY - centerY;
+    update(dt, player, hawk, allChickens) {
+        if (!this.alive || this.saved) return;
+
+        // Scare if hawk is near
+        const dxH = hawk.x - this.x;
+        const dyH = hawk.y - this.y;
+        const distH = Math.sqrt(dxH * dxH + dyH * dyH);
+
+        if (distH < 150) {
+            this.scaredTime = 0.5;
+        }
+
+        if (this.scaredTime > 0) {
+            this.scaredTime -= dt;
+            // Flee from hawk
+            this.vx = (-dxH / distH) * this.speed * 1.5;
+            this.vy = (-dyH / distH) * this.speed * 1.5;
+        } else {
+            // Wander randomly
+            if (Math.random() < 0.02) {
+                this.vx = (Math.random() - 0.5) * this.speed;
+                this.vy = (Math.random() - 0.5) * this.speed;
+            }
+        }
+
+        // Collision with other chickens (simple)
+        for (let other of allChickens) {
+            if (other === this || !other.alive || other.saved) continue;
+            const dx = other.x - this.x;
+            const dy = other.y - this.y;
+            const d = Math.sqrt(dx * dx + dy * dy);
+            if (d < 20) {
+                const angle = Math.atan2(dy, dx);
+                this.vx = -Math.cos(angle) * 30;
+                this.vy = -Math.sin(angle) * 30;
+            }
+        }
+
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+
+        // Clamp to world
+        this.x = Math.max(this.width / 2, Math.min(WORLD_W - this.width / 2, this.x));
+        this.y = Math.max(this.height / 2, Math.min(WORLD_H - this.height / 2, this.y));
+
+        // Update direction
+        if (Math.abs(this.vx) > 5) this.direction = this.vx > 0 ? 1 : -1;
+
+        this.bobOffset += dt * 3;
+    }
+
+    draw(ctx) {
+        ctx.save();
+
+        const bobY = Math.sin(this.bobOffset) * 2;
+        const scared = this.scaredTime > 0;
+
+        // Body (white fluffy circles)
+        ctx.fillStyle = '#FFF';
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 1.5;
+
+        // Front circle
+        ctx.beginPath();
+        ctx.arc(this.x + 3, this.y + bobY, 9, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Back circle
+        ctx.beginPath();
+        ctx.arc(this.x - 5, this.y + bobY, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Comb (red triangle)
+        ctx.fillStyle = '#FF4444';
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y - 10 + bobY);
+        ctx.lineTo(this.x - 3, this.y - 6 + bobY);
+        ctx.lineTo(this.x + 3, this.y - 6 + bobY);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Eyes (bigger if scared)
+        ctx.fillStyle = '#000';
+        const eyeSize = scared ? 2 : 1.5;
+        ctx.beginPath();
+        ctx.arc(this.x + 5, this.y - 2 + bobY, eyeSize, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(this.x + 9, this.y - 2 + bobY, eyeSize, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Beak (orange, pointing in direction)
+        ctx.fillStyle = '#FF8800';
+        const beakDir = this.direction;
+        const beakX = this.x + 10 * beakDir;
+        ctx.beginPath();
+        ctx.moveTo(beakX, this.y + 1 + bobY);
+        ctx.lineTo(beakX + 3 * beakDir, this.y - 1 + bobY);
+        ctx.lineTo(beakX + 3 * beakDir, this.y + 3 + bobY);
+        ctx.closePath();
+        ctx.fill();
+
+        // Feet (orange sticks)
+        ctx.strokeStyle = '#FF8800';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(this.x + 2, this.y + 9 + bobY);
+        ctx.lineTo(this.x + 2, this.y + 13 + bobY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(this.x + 6, this.y + 9 + bobY);
+        ctx.lineTo(this.x + 6, this.y + 13 + bobY);
+        ctx.stroke();
+
+        ctx.restore();
+    }
+}
+
+// ============================================================================
+// HAWK
+// ============================================================================
+
+class Hawk {
+    constructor() {
+        this.centerX = WORLD_W / 2;
+        this.centerY = WORLD_H / 2;
+        this.radius = 250;
+        this.angle = 0;
+        this.x = this.centerX + this.radius;
+        this.y = this.centerY;
+        this.speed = 0.5;
+        this.size = 30;
+
+        this.telegraphTime = 0;
+        this.swoopTime = 0;
+        this.targetChicken = null;
+        this.nextSwoopTime = 0;
+    }
+
+    update(dt, chickens, currentTime) {
+        // Normal circling
+        this.angle += this.speed * dt;
+        this.x = this.centerX + Math.cos(this.angle) * this.radius;
+        this.y = this.centerY + Math.sin(this.angle) * this.radius;
+
+        // Handle swoop sequence
+        if (this.telegraphTime > 0) {
+            this.telegraphTime -= dt;
+            if (this.telegraphTime <= 0) {
+                // Start swoop
+                const alive = chickens.filter(c => c.alive && !c.saved);
+                if (alive.length > 0) {
+                    this.targetChicken = alive[Math.floor(Math.random() * alive.length)];
+                    this.swoopTime = 0.6;
+                    playSound('screech');
+                }
+            }
+        }
+
+        if (this.swoopTime > 0) {
+            this.swoopTime -= dt;
+            if (this.targetChicken) {
+                // Swoop toward target
+                const progress = 1 - (this.swoopTime / 0.6);
+                this.x = this.x + (this.targetChicken.x - this.x) * 0.15;
+                this.y = this.y + (this.targetChicken.y - this.y) * 0.15;
+
+                if (progress > 0.7) {
+                    // Grab attempt
+                    const dx = this.targetChicken.x - this.x;
+                    const dy = this.targetChicken.y - this.y;
+                    if (Math.sqrt(dx * dx + dy * dy) < 30) {
+                        this.targetChicken.alive = false;
+                        addParticles(this.targetChicken.x, this.targetChicken.y, 8, 'feather');
+                    }
+                }
+            }
+        }
+
+        // Schedule next swoop
+        if (currentTime > this.nextSwoopTime) {
+            const config = getLevelConfig();
+            this.nextSwoopTime = currentTime + config.hawkSwoopInterval;
+            this.telegraphTime = 1.0;
+            playSound('warning');
+        }
+    }
+
+    draw(ctx) {
+        ctx.save();
+
+        // Shadow on ground
+        const shadowX = this.x;
+        const shadowY = this.y + 30;
+        const shadowColor = this.telegraphTime > 0 ? 'rgba(255, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.2)';
+        ctx.fillStyle = shadowColor;
+        ctx.beginPath();
+        ctx.ellipse(shadowX, shadowY, this.size * 1.2, this.size * 0.4, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Pulsing glow if telegraphing
+        if (this.telegraphTime > 0) {
+            const pulse = Math.sin(this.telegraphTime * Math.PI * 4) * 0.5 + 0.5;
+            ctx.strokeStyle = `rgba(255, 0, 0, ${pulse * 0.6})`;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(shadowX, shadowY, this.size * 1.2 * (1 + pulse * 0.3), this.size * 0.4 * (1 + pulse * 0.3), 0, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        // Hawk body (dark brown ellipse)
+        ctx.fillStyle = '#3D2817';
+        ctx.beginPath();
+        ctx.ellipse(this.x, this.y, this.size * 0.6, this.size * 0.3, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#2A1810';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Wings (left and right)
+        ctx.fillStyle = '#2A1810';
+        ctx.beginPath();
+        ctx.ellipse(this.x - this.size * 0.7, this.y, this.size * 0.5, this.size * 0.2, -0.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(this.x + this.size * 0.7, this.y, this.size * 0.5, this.size * 0.2, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    isTelegraphing() {
+        return this.telegraphTime > 0;
+    }
+}
+
+// ============================================================================
+// BARN
+// ============================================================================
+
+class Barn {
+    constructor() {
+        this.x = WORLD_W - 80;
+        this.y = WORLD_H / 2;
+        this.w = 60;
+        this.h = 80;
+        this.glowTime = 0;
+    }
+
+    update(dt) {
+        this.glowTime += dt;
+    }
+
+    draw(ctx) {
+        ctx.save();
+
+        // Glow ring
+        const glowPulse = Math.sin(this.glowTime * 2) * 0.5 + 0.5;
+        ctx.strokeStyle = `rgba(255, 215, 0, ${glowPulse * 0.4})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 120, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Barn body (red)
+        ctx.fillStyle = '#D32F2F';
+        ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2 + 10, this.w, this.h - 20);
+
+        // Roof (brown triangle)
+        ctx.fillStyle = '#8B4513';
+        ctx.beginPath();
+        ctx.moveTo(this.x - this.w / 2 - 5, this.y - this.h / 2 + 10);
+        ctx.lineTo(this.x, this.y - this.h / 2 - 15);
+        ctx.lineTo(this.x + this.w / 2 + 5, this.y - this.h / 2 + 10);
+        ctx.closePath();
+        ctx.fill();
+
+        // Door with X pattern (white)
+        ctx.strokeStyle = '#FFF';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(this.x - 12, this.y - 10, 24, 30);
+        ctx.beginPath();
+        ctx.moveTo(this.x - 12, this.y - 10);
+        ctx.lineTo(this.x + 12, this.y + 20);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(this.x + 12, this.y - 10);
+        ctx.lineTo(this.x - 12, this.y + 20);
+        ctx.stroke();
+
+        // "COOP" text
+        ctx.fillStyle = '#FFF';
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.shadowColor = '#000';
+        ctx.shadowBlur = 3;
+        ctx.shadowOffsetY = 1;
+        ctx.fillText('COOP', this.x, this.y - this.h / 2 - 10);
+
+        ctx.restore();
+    }
+}
+
+// ============================================================================
+// PARTICLES
+// ============================================================================
+
+class Particle {
+    constructor(x, y, type) {
+        this.x = x;
+        this.y = y;
+        this.type = type;
+        this.life = 1;
+        this.maxLife = type === 'feather' ? 2 : type === 'sparkle' ? 0.5 : 1.5;
+
+        if (type === 'feather') {
+            this.vx = (Math.random() - 0.5) * 80;
+            this.vy = -Math.random() * 60 - 20;
+            this.spinSpeed = Math.random() * 8;
+            this.spin = 0;
+            this.size = 4;
+        } else if (type === 'sparkle') {
+            this.vx = (Math.random() - 0.5) * 120;
+            this.vy = (Math.random() - 0.5) * 120;
+            this.size = 3;
+        } else if (type === 'dust') {
+            this.vx = (Math.random() - 0.5) * 40;
+            this.vy = Math.random() * 20;
+            this.size = 2 + Math.random() * 2;
+        }
+    }
+
+    update(dt) {
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+        this.life -= dt / this.maxLife;
+
+        if (this.type === 'feather') {
+            this.spin += this.spinSpeed * dt;
+            this.vy += 20 * dt; // gravity
+        }
+    }
+
+    draw(ctx) {
+        const alpha = Math.max(0, this.life);
+
+        if (this.type === 'feather') {
+            ctx.save();
+            ctx.globalAlpha = alpha * 0.7;
+            ctx.fillStyle = '#FFF';
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.spin);
+            ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+            ctx.restore();
+        } else if (this.type === 'sparkle') {
+            ctx.save();
+            ctx.globalAlpha = alpha * 0.8;
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        } else if (this.type === 'dust') {
+            ctx.save();
+            ctx.globalAlpha = alpha * 0.5;
+            ctx.fillStyle = '#8B7355';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+}
+
+function addParticles(x, y, count, type) {
+    for (let i = 0; i < count; i++) {
+        particles.push(new Particle(x, y, type));
+    }
+}
+
+// ============================================================================
+// INPUT HANDLING
+// ============================================================================
+
+let inputX = 0;
+let inputY = 0;
+let keys = {};
+
+document.addEventListener('keydown', e => {
+    keys[e.key.toLowerCase()] = true;
+});
+
+document.addEventListener('keyup', e => {
+    keys[e.key.toLowerCase()] = false;
+});
+
+document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+
+let touchX = 0;
+let touchY = 0;
+let touching = false;
+
+document.addEventListener('touchstart', e => {
+    const touch = e.touches[0];
+    touchX = touch.clientX;
+    touchY = touch.clientY;
+    touching = true;
+}, { passive: true });
+
+document.addEventListener('touchmove', e => {
+    if (!touching) return;
+    const touch = e.touches[0];
+    touchX = touch.clientX;
+    touchY = touch.clientY;
+}, { passive: true });
+
+document.addEventListener('touchend', e => {
+    touching = false;
+}, { passive: true });
+
+function updateInput() {
+    inputX = 0;
+    inputY = 0;
+
+    if (keys['w'] || keys['arrowup']) inputY -= 1;
+    if (keys['s'] || keys['arrowdown']) inputY += 1;
+    if (keys['a'] || keys['arrowleft']) inputX -= 1;
+    if (keys['d'] || keys['arrowright']) inputX += 1;
+
+    // Mobile joystick (bottom-left)
+    if (touching && W > 600) { // Only on touch devices
+        const joyX = 50;
+        const joyY = H - 50;
+        const dx = touchX - joyX;
+        const dy = touchY - joyY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > 10) {
+            inputX = dx / Math.max(30, dist);
+            inputY = dy / Math.max(30, dist);
+        }
+    }
+}
+
+// ============================================================================
+// SOUNDS (Web Audio API)
+// ============================================================================
+
+let audioCtx = null;
+
+function initAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+function playSound(type) {
+    if (!audioCtx) return;
+    try {
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        gain.gain.setValueAtTime(0.1, now);
+
+        if (type === 'cluck') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(200, now + 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+            osc.start(now);
+            osc.stop(now + 0.15);
+        } else if (type === 'screech') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(800, now);
+            osc.frequency.exponentialRampToValueAtTime(200, now + 0.4);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+            osc.start(now);
+            osc.stop(now + 0.4);
+        } else if (type === 'warning') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            osc.start(now);
+            osc.stop(now + 0.1);
+        } else if (type === 'footstep') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(150, now);
+            gain.gain.setValueAtTime(0.02, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+            osc.start(now);
+            osc.stop(now + 0.05);
+        } else if (type === 'victory') {
+            const notes = [261.63, 329.63, 392, 523.25];
+            for (let i = 0; i < notes.length; i++) {
+                const noteOsc = audioCtx.createOscillator();
+                const noteGain = audioCtx.createGain();
+                noteOsc.connect(noteGain);
+                noteGain.connect(audioCtx.destination);
+                noteOsc.type = 'sine';
+                noteOsc.frequency.setValueAtTime(notes[i], now + i * 0.15);
+                noteGain.gain.setValueAtTime(0.1, now + i * 0.15);
+                noteGain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.15 + 0.15);
+                noteOsc.start(now + i * 0.15);
+                noteOsc.stop(now + i * 0.15 + 0.15);
+            }
+        } else if (type === 'gameover') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(100, now + 0.5);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+            osc.start(now);
+            osc.stop(now + 0.5);
+        } else if (type === 'chime') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now);
+            osc.stop(now + 0.3);
+        }
+    } catch (e) {
+        // Silently fail if audio fails
+    }
+}
+
+// ============================================================================
+// DRAWING HELPERS
+// ============================================================================
+
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+}
+
+// ============================================================================
+// GAME WORLD DRAWING
+// ============================================================================
+
+function drawWorld(ctx) {
+    ctx.save();
+
+    // Translate to camera
+    ctx.translate(-cameraX, -cameraY);
+
+    // Draw grass (read from pre-generated color array, NO randomization)
+    const GRASS_SIZE = 40;
+    const GRASS_COLS = Math.ceil(WORLD_W / GRASS_SIZE);
+    const GRASS_ROWS = Math.ceil(WORLD_H / GRASS_SIZE);
+
+    for (let r = 0; r < GRASS_ROWS; r++) {
+        for (let c = 0; c < GRASS_COLS; c++) {
+            ctx.fillStyle = grassColors[r][c];
+            ctx.fillRect(c * GRASS_SIZE, r * GRASS_SIZE, GRASS_SIZE, GRASS_SIZE);
+        }
+    }
+
+    // Draw fence (brown lines)
+    ctx.strokeStyle = '#8B4513';
+    ctx.lineWidth = 3;
+    for (let f of fence) {
+        ctx.beginPath();
+        ctx.moveTo(f.x1, f.y1);
+        ctx.lineTo(f.x2, f.y2);
+        ctx.stroke();
+    }
+
+    // Draw hay bales
+    for (let bale of hayBales) {
+        ctx.fillStyle = '#E8D76B';
+        roundRect(ctx, bale.x - bale.w / 2, bale.y - bale.h / 2, bale.w, bale.h, 3);
+        ctx.fill();
+
+        // Straw texture (horizontal lines)
+        ctx.strokeStyle = '#D4AF37';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < bale.h; i += 4) {
+            ctx.beginPath();
+            ctx.moveTo(bale.x - bale.w / 2, bale.y - bale.h / 2 + i);
+            ctx.lineTo(bale.x + bale.w / 2, bale.y - bale.h / 2 + i);
+            ctx.stroke();
+        }
+    }
+
+    // Draw flowers
+    for (let flower of flowers) {
+        ctx.fillStyle = flower.color;
+        ctx.beginPath();
+        ctx.arc(flower.x, flower.y, flower.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Draw grass tufts (decorative)
+    ctx.strokeStyle = '#2D5016';
+    ctx.lineWidth = 1;
+    for (let tuft of grassTufts) {
+        ctx.beginPath();
+        ctx.moveTo(tuft.x - tuft.size, tuft.y + tuft.size);
+        ctx.lineTo(tuft.x, tuft.y - tuft.size);
+        ctx.lineTo(tuft.x + tuft.size, tuft.y + tuft.size);
+        ctx.stroke();
+    }
+
+    // Draw barn
+    barn.draw(ctx);
+
+    // Draw hawk
+    if (hawk) hawk.draw(ctx);
+
+    // Draw chickens
+    for (let chicken of chickens) {
+        chicken.draw(ctx);
+    }
+
+    // Draw player
+    if (player) player.draw(ctx);
+
+    // Draw carried chickens trailing behind
+    for (let i = 0; i < player.carryingChickens.length; i++) {
+        const c = player.carryingChickens[i];
+        const trailX = player.x - (i + 1) * 12 * player.direction;
+        const trailY = player.y;
+
+        ctx.save();
+        ctx.globalAlpha = 0.6;
+
+        // Mini chicken icon
+        ctx.fillStyle = '#FFF';
+        ctx.beginPath();
+        ctx.arc(trailX, trailY, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(trailX - 2, trailY, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#FF4444';
+        ctx.beginPath();
+        ctx.moveTo(trailX - 1, trailY - 4);
+        ctx.lineTo(trailX - 2, trailY - 2);
+        ctx.lineTo(trailX, trailY - 2);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    // Draw particles
+    for (let p of particles) {
+        p.draw(ctx);
+    }
+
+    ctx.restore();
+}
+
+// ============================================================================
+// HUD / UI DRAWING
+// ============================================================================
+
+function drawHUD(ctx, elapsedTime, gameTime, savedCount) {
+    // HUD is in screen space, not world space
+    ctx.save();
+
+    ctx.font = 'bold 24px Arial';
+    ctx.textBaseline = 'top';
+
+    // Level
+    ctx.fillStyle = '#FFF';
+    ctx.shadowColor = '#000';
+    ctx.shadowBlur = 4;
+    ctx.shadowOffsetY = 2;
+    ctx.textAlign = 'left';
+    ctx.fillText(`Level ${currentLevel}`, 20, 20);
+
+    // Saved chickens
+    ctx.font = 'bold 20px Arial';
+    ctx.textAlign = 'center';
+    const config = getLevelConfig();
+    ctx.fillText(`Saved: ${savedCount} / ${config.saveTarget}`, W / 2, 20);
+
+    // Timer
+    const timeLeft = Math.max(0, gameTime - elapsedTime);
+    ctx.font = 'bold 24px Arial';
+    ctx.textAlign = 'right';
+
+    let timerColor = '#FFF';
+    if (timeLeft < 10) timerColor = '#FF4444';
+    else if (timeLeft < 20) timerColor = '#FFDD00';
+
+    ctx.fillStyle = timerColor;
+    ctx.shadowColor = '#000';
+    ctx.shadowBlur = 4;
+    ctx.shadowOffsetY = 2;
+    ctx.fillText(`${Math.ceil(timeLeft)}s`, W - 20, 20);
+
+    // Carrying count (bottom-left)
+    ctx.font = 'bold 16px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#FFF';
+    ctx.shadowColor = '#000';
+    ctx.shadowBlur = 3;
+    ctx.shadowOffsetY = 1;
+    const carryText = 'Carrying: ' + player.carryingChickens.length + ' chickens';
+    ctx.fillText(carryText, 20, H - 40);
+
+    // Hawk warning (center, big)
+    if (hawk.isTelegraphing()) {
+        ctx.font = 'bold 40px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#FF4444';
+        ctx.shadowColor = '#000';
+        ctx.shadowBlur = 6;
+        ctx.shadowOffsetY = 2;
+        ctx.fillText('HAWK INCOMING!', W / 2, H / 3);
+    }
+
+    // Minimap (bottom-right)
+    drawMinimap(ctx, savedCount);
+
+    ctx.restore();
+}
+
+function drawMinimap(ctx, savedCount) {
+    const mmW = 160;
+    const mmH = 115;
+    const mmX = W - mmW - 20;
+    const mmY = H - mmH - 20;
+
+    // Background
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.fillRect(mmX, mmY, mmW, mmH);
+
+    // Border
+    ctx.strokeStyle = '#999';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(mmX, mmY, mmW, mmH);
+
+    // Scale factors
+    const scaleX = mmW / WORLD_W;
+    const scaleY = mmH / WORLD_H;
+
+    // Player (green dot)
+    ctx.fillStyle = '#00FF00';
+    ctx.fillRect(
+        mmX + player.x * scaleX - 2,
+        mmY + player.y * scaleY - 2,
+        4, 4
+    );
+
+    // Alive chickens (yellow dots)
+    ctx.fillStyle = '#FFFF00';
+    for (let chicken of chickens) {
+        if (chicken.alive && !chicken.saved) {
+            ctx.fillRect(
+                mmX + chicken.x * scaleX - 1.5,
+                mmY + chicken.y * scaleY - 1.5,
+                3, 3
+            );
+        }
+    }
+
+    // Hawk (red dot)
+    ctx.fillStyle = '#FF0000';
+    ctx.fillRect(
+        mmX + hawk.x * scaleX - 2,
+        mmY + hawk.y * scaleY - 2,
+        4, 4
+    );
+
+    // Barn (white rect)
+    ctx.fillStyle = '#FFF';
+    ctx.fillRect(
+        mmX + (barn.x - barn.w / 2) * scaleX,
+        mmY + (barn.y - barn.h / 2) * scaleY,
+        barn.w * scaleX,
+        barn.h * scaleY
+    );
+
+    // Camera viewport rect (correct formula, NOT divided by 64)
+    const vpW = W * scaleX;
+    const vpH = H * scaleY;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(
+        mmX + cameraX * scaleX,
+        mmY + cameraY * scaleY,
+        vpW,
+        vpH
+    );
+}
+
+// ============================================================================
+// GAME STATE SCREENS
+// ============================================================================
+
+function drawStartScreen(ctx) {
+    // Semi-transparent overlay
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect(0, 0, W, H);
+
+    // Title
+    ctx.font = 'bold 80px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#FFD700';
+    ctx.shadowColor = '#000';
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetY = 4;
+    ctx.fillText('CHICKEN NUGGETS', W / 2, H / 2 - 100);
+
+    // Subtitle
+    ctx.font = '20px Arial';
+    ctx.fillStyle = '#FFF';
+    ctx.shadowColor = '#000';
+    ctx.shadowBlur = 4;
+    ctx.shadowOffsetY = 2;
+    ctx.fillText('Rescue chickens from the hawk!', W / 2, H / 2 - 20);
+
+    // Instructions
+    ctx.font = '16px Arial';
+    ctx.fillStyle = '#CCC';
+    ctx.fillText('Use WASD or Arrow Keys to move', W / 2, H / 2 + 30);
+    ctx.fillText('Pick up chickens and deliver to the COOP', W / 2, H / 2 + 60);
+
+    // Play button
+    const btnX = W / 2 - 60;
+    const btnY = H / 2 + 120;
+    const btnW = 120;
+    const btnH = 50;
+
+    ctx.fillStyle = '#FFD700';
+    roundRect(ctx, btnX, btnY, btnW, btnH, 5);
+    ctx.fill();
+
+    ctx.font = 'bold 24px Arial';
+    ctx.fillStyle = '#000';
+    ctx.textAlign = 'center';
+    ctx.fillText('PLAY', W / 2, btnY + 15);
+
+    // Store button bounds for click detection
+    startBtn = { x: btnX, y: btnY, w: btnW, h: btnH };
+}
+
+function drawLevelCompleteScreen(ctx, savedCount, stats) {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(0, 0, W, H);
+
+    const percent = (savedCount / stats.target) * 100;
+    const stars = percent >= 100 ? 3 : percent >= 70 ? 2 : 1;
+
+    ctx.font = 'bold 60px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#FFD700';
+    ctx.shadowColor = '#000';
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetY = 4;
+    ctx.fillText('LEVEL COMPLETE', W / 2, H / 2 - 80);
+
+    // Stars
+    ctx.font = '80px Arial';
+    ctx.fillText(''.padEnd(stars, '★'), W / 2, H / 2);
+
+    // Stats
+    ctx.font = '20px Arial';
+    ctx.fillStyle = '#FFF';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Saved: ${savedCount} / ${stats.target}`, W / 2, H / 2 + 100);
+    ctx.fillText(`Time: ${Math.round(stats.timeTaken)}s`, W / 2, H / 2 + 130);
+
+    // Next button
+    const btnX = W / 2 - 60;
+    const btnY = H / 2 + 180;
+    const btnW = 120;
+    const btnH = 50;
+
+    ctx.fillStyle = '#00AA00';
+    roundRect(ctx, btnX, btnY, btnW, btnH, 5);
+    ctx.fill();
+
+    ctx.font = 'bold 24px Arial';
+    ctx.fillStyle = '#FFF';
+    ctx.textAlign = 'center';
+    ctx.fillText('NEXT', W / 2, btnY + 15);
+
+    nextBtn = { x: btnX, y: btnY, w: btnW, h: btnH };
+}
+
+function drawGameOverScreen(ctx, savedCount, stats) {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.font = 'bold 60px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#FF4444';
+    ctx.shadowColor = '#000';
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetY = 4;
+    ctx.fillText('GAME OVER', W / 2, H / 2 - 80);
+
+    // Stats
+    ctx.font = '20px Arial';
+    ctx.fillStyle = '#FFF';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Saved: ${savedCount} / ${stats.target}`, W / 2, H / 2);
+    ctx.fillText(`Level ${currentLevel}`, W / 2, H / 2 + 40);
+
+    // Retry button
+    const btnX = W / 2 - 60;
+    const btnY = H / 2 + 120;
+    const btnW = 120;
+    const btnH = 50;
+
+    ctx.fillStyle = '#FF8800';
+    roundRect(ctx, btnX, btnY, btnW, btnH, 5);
+    ctx.fill();
+
+    ctx.font = 'bold 24px Arial';
+    ctx.fillStyle = '#FFF';
+    ctx.textAlign = 'center';
+    ctx.fillText('RETRY', W / 2, btnY + 15);
+
+    retryBtn = { x: btnX, y: btnY, w: btnW, h: btnH };
+}
+
+// ============================================================================
+// GAME INITIALIZATION
+// ============================================================================
+
+let player;
+let chickens = [];
+let hawk;
+let barn;
+
+let startBtn = null;
+let nextBtn = null;
+let retryBtn = null;
+
+let elapsedTime = 0;
+let savedCount = 0;
+let lastSavedCount = 0;
+
+function initGame() {
+    const config = getLevelConfig();
+
+    // Create player
+    player = new Player(200, 500);
+
+    // Create chickens scattered around
+    chickens = [];
+    for (let i = 0; i < config.chickens; i++) {
+        let x, y, valid;
+        do {
+            valid = true;
+            x = 100 + Math.random() * (WORLD_W - 200);
+            y = 100 + Math.random() * (WORLD_H - 200);
+
+            // Don't spawn too close to barn
+            const dx = barn.x - x;
+            const dy = barn.y - y;
+            if (Math.sqrt(dx * dx + dy * dy) < 200) valid = false;
+        } while (!valid);
+
+        chickens.push(new Chicken(x, y));
+    }
+
+    // Create hawk
+    hawk = new Hawk();
+
+    // Reset timers
+    elapsedTime = 0;
+    savedCount = 0;
+    lastSavedCount = 0;
+    particles = [];
+}
+
+// ============================================================================
+// MAIN GAME LOOP
+// ============================================================================
+
+let lastFrameTime = Date.now();
+
+function update(dt) {
+    updateInput();
+
+    if (gameState === GAME_STATE.PLAYING) {
+        // Update player
+        player.update(dt, inputX, inputY);
+
+        // Update chickens
+        for (let chicken of chickens) {
+            chicken.update(dt, player, hawk, chickens);
+        }
+
+        // Update hawk
+        hawk.update(dt, chickens, elapsedTime);
+
+        // Update barn
+        barn.update(dt);
+
+        // Check collisions: player picking up chickens
+        for (let chicken of chickens) {
+            if (!chicken.alive || chicken.saved) continue;
+
+            const dx = chicken.x - player.x;
+            const dy = chicken.y - player.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            const maxDist = rect.width / 2 - 25;
-            if (dist > maxDist) {
-                const ratio = maxDist / dist;
-                joystick.x = dx * ratio;
-                joystick.y = dy * ratio;
-            } else {
-                joystick.x = dx;
-                joystick.y = dy;
+
+            if (dist < 25) {
+                if (player.carryingChickens.length < 5) {
+                    chicken.alive = false;
+                    player.pickUpChicken(chicken);
+                    playSound('cluck');
+                }
             }
+        }
+
+        // Check barn delivery
+        const newSaved = player.dropChickens(barn);
+        if (newSaved > 0) {
+            savedCount += newSaved;
+            playSound('chime');
+        }
+
+        // Update particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+            particles[i].update(dt);
+            if (particles[i].life <= 0) {
+                particles.splice(i, 1);
+            }
+        }
+
+        elapsedTime += dt;
+
+        // Check level complete
+        const config = getLevelConfig();
+        if (savedCount >= config.saveTarget) {
+            gameState = GAME_STATE.LEVEL_COMPLETE;
+            playSound('victory');
+        }
+
+        // Check game over (time limit)
+        if (elapsedTime > config.timeLimit) {
+            gameState = GAME_STATE.GAME_OVER;
+            playSound('gameover');
+        }
+    }
+}
+
+function draw() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+
+    // Update camera (CORRECT formula, NO /64)
+    if (player) {
+        cameraX += (player.x - W / 2 - cameraX) * 0.1;
+        cameraY += (player.y - H / 2 - cameraY) * 0.1;
+    }
+
+    // Clamp camera to world (CORRECT formula)
+    cameraX = Math.max(0, Math.min(WORLD_W - W, cameraX));
+    cameraY = Math.max(0, Math.min(WORLD_H - H, cameraY));
+
+    // Draw world
+    drawWorld(ctx);
+
+    // Draw HUD (in screen space)
+    if (gameState === GAME_STATE.PLAYING) {
+        const config = getLevelConfig();
+        drawHUD(ctx, elapsedTime, config.timeLimit, savedCount);
+    }
+
+    // Draw screen overlays
+    if (gameState === GAME_STATE.START) {
+        drawStartScreen(ctx);
+    } else if (gameState === GAME_STATE.LEVEL_COMPLETE) {
+        const config = getLevelConfig();
+        drawLevelCompleteScreen(ctx, savedCount, {
+            target: config.saveTarget,
+            timeTaken: elapsedTime
         });
-
-        joystickContainer.addEventListener('touchend', () => {
-            joystick.active = false;
-            joystick.x = 0;
-            joystick.y = 0;
+    } else if (gameState === GAME_STATE.GAME_OVER) {
+        const config = getLevelConfig();
+        drawGameOverScreen(ctx, savedCount, {
+            target: config.saveTarget
         });
+    }
+}
 
-        // ===== INIT / LEVEL SETUP =====
-        function initLevel(levelNum) {
-            gameState.level = Math.min(levelNum, LEVELS.length - 1);
-            const levelConfig = LEVELS[gameState.level];
+function gameLoop() {
+    try {
+        const now = Date.now();
+        const dt = Math.min((now - lastFrameTime) / 1000, 0.05);
+        lastFrameTime = now;
 
-            gameState.timeLeft = levelConfig.duration;
-            gameState.gameTime = 0;
-            gameState.chickensCarrying = 0;
-            gameState.chickensSaved = 0;
+        update(dt);
+        draw();
+    } catch (e) {
+        console.error('Game error:', e);
+    }
 
-            player = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT - 200);
-            chickens = [];
-            particles = [];
+    requestAnimationFrame(gameLoop);
+}
 
-            for (let i = 0; i < levelConfig.numChickens; i++) {
-                let x, y, valid;
-                do {
-                    valid = true;
-                    x = 200 + Math.random() * (WORLD_WIDTH - 400);
-                    y = 200 + Math.random() * (WORLD_HEIGHT - 400);
-                    for (let c of chickens) {
-                        if (Math.hypot(c.x - x, c.y - y) < 50) {
-                            valid = false;
-                            break;
-                        }
-                    }
-                } while (!valid);
-                chickens.push(new Chicken(x, y));
-            }
+// ============================================================================
+// MOUSE CLICK HANDLING
+// ============================================================================
 
-            hawk = new Hawk();
-            barn = new Barn(1500, WORLD_HEIGHT - 150);
+canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
 
-            if (mobile) {
-                joystickContainer.style.display = 'block';
-            }
+    if (gameState === GAME_STATE.START && startBtn) {
+        if (mx > startBtn.x && mx < startBtn.x + startBtn.w &&
+            my > startBtn.y && my < startBtn.y + startBtn.h) {
+            gameState = GAME_STATE.PLAYING;
+            initGame();
+            initAudio();
         }
-
-        // ===== UPDATE FUNCTIONS =====
-        function updateGame() {
-            gameState.gameTime += 1 / 60;
-            gameState.timeLeft = Math.max(0, LEVELS[gameState.level].duration - gameState.gameTime);
-
-            player.update();
-
-            for (let c of chickens) {
-                if (c.alive) {
-                    c.update();
-                    const dist = Math.hypot(c.x - player.x, c.y - player.y);
-                    if (dist < 30) {
-                        player.pickupChicken(c);
-                    }
-                }
-            }
-
-            if (barn.contains(player.x, player.y) && player.carrying.length > 0) {
-                const saved = player.carrying.length;
-                gameState.chickensSaved += saved;
-                player.carrying = [];
-                gameState.chickensCarrying = 0;
-                playSound('chime');
-                addParticles(barn.x, barn.y, 20, 'sparkle');
-            }
-
-            hawk.update();
-
-            particles = particles.filter(p => p.life > 0);
-            for (let p of particles) {
-                p.update();
-            }
-
-            camera.x += (player.x - SCREEN_WIDTH / 2 - camera.x) * 0.08;
-            camera.y += (player.y - SCREEN_HEIGHT / 2 - camera.y) * 0.08;
-
-            camera.x = Math.max(0, Math.min(WORLD_WIDTH - SCREEN_WIDTH / 64, camera.x));
-            camera.y = Math.max(0, Math.min(WORLD_HEIGHT - SCREEN_HEIGHT / 64, camera.y));
-
-            if (gameState.timeLeft <= 0) {
-                if (gameState.chickensSaved >= LEVELS[gameState.level].targetSave) {
-                    gameState.screen = 'levelcomplete';
-                    playSound('victory');
-                } else {
-                    gameState.screen = 'gameover';
-                    playSound('gameover');
-                }
-            }
+    } else if (gameState === GAME_STATE.LEVEL_COMPLETE && nextBtn) {
+        if (mx > nextBtn.x && mx < nextBtn.x + nextBtn.w &&
+            my > nextBtn.y && my < nextBtn.y + nextBtn.h) {
+            currentLevel++;
+            gameState = GAME_STATE.PLAYING;
+            initGame();
         }
-
-        // ===== DRAW FUNCTIONS =====
-        function drawWorld() {
-            CTX.fillStyle = '#87CEEB';
-            CTX.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-            CTX.save();
-            CTX.translate(-camera.x, -camera.y);
-
-            CTX.fillStyle = '#228B22';
-            const grassVariation = 15;
-            for (let x = 0; x < WORLD_WIDTH; x += 50) {
-                for (let y = 0; y < WORLD_HEIGHT; y += 50) {
-                    CTX.fillStyle = ['#228B22', '#2E8B57', '#3CB371'][Math.floor(Math.random() * 3)];
-                    CTX.fillRect(x, y, 50, 50);
-                }
-            }
-
-            CTX.fillStyle = '#FFD700';
-            for (let i = 0; i < 200; i++) {
-                const x = (i * 73) % WORLD_WIDTH;
-                const y = ((i * 97) % WORLD_HEIGHT);
-                if (Math.sin(i) > 0.5) {
-                    CTX.beginPath();
-                    CTX.arc(x, y, 2, 0, Math.PI * 2);
-                    CTX.fill();
-                }
-            }
-
-            CTX.strokeStyle = '#8B4513';
-            CTX.lineWidth = 3;
-            CTX.strokeRect(10, 10, WORLD_WIDTH - 20, WORLD_HEIGHT - 20);
-
-            CTX.fillStyle = '#8B7355';
-            for (let i = 0; i < 8; i++) {
-                for (let j = 0; j < 6; j++) {
-                    const x = 150 + i * 180;
-                    const y = 150 + j * 150;
-                    CTX.fillRect(x, y, 80, 60);
-                }
-            }
-
-            barn.draw();
-
-            for (let c of chickens) {
-                c.draw();
-            }
-
-            player.draw();
-            hawk.draw();
-
-            for (let p of particles) {
-                p.draw();
-            }
-
-            CTX.restore();
+    } else if (gameState === GAME_STATE.GAME_OVER && retryBtn) {
+        if (mx > retryBtn.x && mx < retryBtn.x + retryBtn.w &&
+            my > retryBtn.y && my < retryBtn.y + retryBtn.h) {
+            gameState = GAME_STATE.PLAYING;
+            initGame();
         }
+    }
+});
 
-        function drawHUD() {
-            const padding = 20;
-            CTX.fillStyle = '#000';
-            CTX.font = 'bold 24px Arial';
-            CTX.textAlign = 'left';
-            CTX.fillText(`Level ${gameState.level + 1}`, padding, padding + 30);
+// Touch button detection
+canvas.addEventListener('touchstart', (e) => {
+    if (!e.touches.length) return;
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const mx = touch.clientX - rect.left;
+    const my = touch.clientY - rect.top;
 
-            const level = LEVELS[gameState.level];
-            CTX.font = '20px Arial';
-            CTX.textAlign = 'center';
-            const chickensText = `🐔 ${gameState.chickensSaved}/${level.targetSave}`;
-            CTX.fillText(chickensText, SCREEN_WIDTH / 2, padding + 30);
-
-            CTX.textAlign = 'right';
-            const timeColor = gameState.timeLeft < 10 ? '#FF0000' : gameState.timeLeft < 20 ? '#FFD700' : '#00AA00';
-            CTX.fillStyle = timeColor;
-            CTX.font = 'bold 20px Arial';
-            const timeText = Math.ceil(gameState.timeLeft).toString().padStart(2, '0');
-            CTX.fillText(timeText, SCREEN_WIDTH - padding, padding + 30);
-
-            if (gameState.chickensCarrying > 0) {
-                CTX.fillStyle = '#000';
-                CTX.font = '16px Arial';
-                CTX.textAlign = 'left';
-                let carryText = 'Carrying: ';
-                for (let i = 0; i < gameState.chickensCarrying; i++) {
-                    carryText += '🐔';
-                }
-                CTX.fillText(carryText, padding, SCREEN_HEIGHT - padding);
-            }
-
-            if (hawk.state === 'telegraphing') {
-                CTX.fillStyle = '#FF0000';
-                CTX.font = 'bold 24px Arial';
-                CTX.textAlign = 'center';
-                CTX.fillText('⚠️ HAWK INCOMING!', SCREEN_WIDTH / 2, 80);
-            }
-
-            drawMinimap();
+    if (gameState === GAME_STATE.START && startBtn) {
+        if (mx > startBtn.x && mx < startBtn.x + startBtn.w &&
+            my > startBtn.y && my < startBtn.y + startBtn.h) {
+            gameState = GAME_STATE.PLAYING;
+            initGame();
+            initAudio();
         }
-
-        function drawMinimap() {
-            const minimapX = SCREEN_WIDTH - 170;
-            const minimapY = SCREEN_HEIGHT - 140;
-            const minimapW = 150;
-            const minimapH = 120;
-
-            CTX.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            CTX.fillRect(minimapX, minimapY, minimapW, minimapH);
-            CTX.strokeStyle = '#fff';
-            CTX.lineWidth = 2;
-            CTX.strokeRect(minimapX, minimapY, minimapW, minimapH);
-
-            const scaleX = minimapW / WORLD_WIDTH;
-            const scaleY = minimapH / WORLD_HEIGHT;
-
-            CTX.fillStyle = '#0F0';
-            const playerMmX = minimapX + player.x * scaleX;
-            const playerMmY = minimapY + player.y * scaleY;
-            CTX.fillRect(playerMmX - 2, playerMmY - 2, 4, 4);
-
-            CTX.fillStyle = '#FF0';
-            for (let c of chickens) {
-                if (c.alive) {
-                    CTX.fillRect(minimapX + c.x * scaleX - 1, minimapY + c.y * scaleY - 1, 2, 2);
-                }
-            }
-
-            CTX.fillStyle = '#F00';
-            CTX.fillRect(minimapX + hawk.x * scaleX - 2, minimapY + hawk.y * scaleY - 2, 4, 4);
-
-            CTX.fillStyle = '#FFF';
-            CTX.fillRect(minimapX + barn.x * scaleX - 4, minimapY + barn.y * scaleY - 3, 8, 6);
-
-            const vpX = minimapX + (camera.x) * scaleX;
-            const vpY = minimapY + (camera.y) * scaleY;
-            const vpW = (SCREEN_WIDTH / 64) * scaleX;
-            const vpH = (SCREEN_HEIGHT / 64) * scaleY;
-            CTX.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-            CTX.lineWidth = 1;
-            CTX.strokeRect(vpX, vpY, vpW, vpH);
+    } else if (gameState === GAME_STATE.LEVEL_COMPLETE && nextBtn) {
+        if (mx > nextBtn.x && mx < nextBtn.x + nextBtn.w &&
+            my > nextBtn.y && my < nextBtn.y + nextBtn.h) {
+            currentLevel++;
+            gameState = GAME_STATE.PLAYING;
+            initGame();
         }
-
-        function drawStartScreen() {
-            CTX.fillStyle = '#87CEEB';
-            CTX.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-            CTX.fillStyle = '#228B22';
-            for (let x = 0; x < SCREEN_WIDTH; x += 50) {
-                for (let y = 0; y < SCREEN_HEIGHT; y += 50) {
-                    CTX.fillStyle = ['#228B22', '#2E8B57', '#3CB371'][Math.floor(Math.random() * 3)];
-                    CTX.fillRect(x, y, 50, 50);
-                }
-            }
-
-            for (let c of chickens) {
-                if (c.alive) {
-                    c.x += (Math.random() - 0.5) * 2;
-                    c.y += (Math.random() - 0.5) * 2;
-                    c.bobOffset += 0.02;
-                }
-            }
-
-            for (let c of chickens) {
-                c.draw();
-            }
-
-            if (hawk) {
-                hawk.angle += 0.02;
-                hawk.x = SCREEN_WIDTH / 2 + Math.cos(hawk.angle) * 150;
-                hawk.y = 100 + Math.sin(hawk.angle) * 60;
-                hawk.wingFlap += 0.1;
-                hawk.drawHawk(0.8);
-            }
-
-            CTX.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            CTX.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-            CTX.fillStyle = '#FFD700';
-            CTX.font = 'bold 80px Arial';
-            CTX.textAlign = 'center';
-            CTX.fillText('CHICKEN NUGGETS', SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 80);
-
-            CTX.fillStyle = '#FFF';
-            CTX.font = '32px Arial';
-            CTX.fillText('Save the chickens from the hawk!', SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 20);
-
-            const buttonY = SCREEN_HEIGHT / 2 + 100;
-            const buttonW = 200;
-            const buttonH = 60;
-            const buttonX = SCREEN_WIDTH / 2 - buttonW / 2;
-
-            CTX.fillStyle = '#FF6347';
-            CTX.fillRect(buttonX, buttonY, buttonW, buttonH);
-            CTX.fillStyle = '#FFF';
-            CTX.font = 'bold 28px Arial';
-            CTX.textAlign = 'center';
-            CTX.fillText('TAP TO PLAY', SCREEN_WIDTH / 2, buttonY + 45);
-
-            gameState.startButtonRect = { x: buttonX, y: buttonY, w: buttonW, h: buttonH };
+    } else if (gameState === GAME_STATE.GAME_OVER && retryBtn) {
+        if (mx > retryBtn.x && mx < retryBtn.x + retryBtn.w &&
+            my > retryBtn.y && my < retryBtn.y + retryBtn.h) {
+            gameState = GAME_STATE.PLAYING;
+            initGame();
         }
+    }
+}, { passive: true });
 
-        function drawLevelComplete() {
-            CTX.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            CTX.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+// ============================================================================
+// WINDOW RESIZE HANDLING
+// ============================================================================
 
-            CTX.fillStyle = '#FFD700';
-            CTX.font = 'bold 60px Arial';
-            CTX.textAlign = 'center';
-            CTX.fillText('LEVEL COMPLETE!', SCREEN_WIDTH / 2, 100);
+window.addEventListener('resize', () => {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+});
 
-            const level = LEVELS[gameState.level];
-            CTX.fillStyle = '#FFF';
-            CTX.font = '24px Arial';
-            CTX.fillText(`Saved ${gameState.chickensSaved}/${level.targetSave} chickens`, SCREEN_WIDTH / 2, 180);
+// ============================================================================
+// STARTUP
+// ============================================================================
 
-            const timeBonus = Math.max(0, Math.floor(gameState.timeLeft * 10));
-            CTX.fillText(`Time bonus: +${timeBonus} points`, SCREEN_WIDTH / 2, 220);
+// Initialize world generation (before any drawing)
+barn = new Barn();
+initWorldGeneration();
 
-            const stars = gameState.chickensSaved >= level.targetSave ? '⭐⭐⭐' : '⭐⭐';
-            CTX.fillStyle = '#FFD700';
-            CTX.font = 'bold 40px Arial';
-            CTX.fillText(stars, SCREEN_WIDTH / 2, 300);
+// Initialize game for attract mode
+initGame();
 
-            const nextButtonY = SCREEN_HEIGHT / 2 + 120;
-            const buttonW = 200;
-            const buttonH = 60;
-            const buttonX = SCREEN_WIDTH / 2 - buttonW / 2;
+// Start game loop
+gameLoop();
 
-            CTX.fillStyle = '#228B22';
-            CTX.fillRect(buttonX, nextButtonY, buttonW, buttonH);
-            CTX.fillStyle = '#FFF';
-            CTX.font = 'bold 28px Arial';
-            CTX.textAlign = 'center';
-            CTX.fillText('NEXT LEVEL', SCREEN_WIDTH / 2, nextButtonY + 45);
-
-            gameState.nextButtonRect = { x: buttonX, y: nextButtonY, w: buttonW, h: buttonH };
-        }
-
-        function drawGameOver() {
-            CTX.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            CTX.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-            CTX.fillStyle = '#FF0000';
-            CTX.font = 'bold 60px Arial';
-            CTX.textAlign = 'center';
-            CTX.fillText('TIME\'S UP!', SCREEN_WIDTH / 2, 100);
-
-            const level = LEVELS[gameState.level];
-            CTX.fillStyle = '#FFF';
-            CTX.font = '24px Arial';
-            CTX.fillText(`You saved ${gameState.chickensSaved}/${level.targetSave} chickens`, SCREEN_WIDTH / 2, 180);
-            CTX.fillText(`Need ${level.targetSave} to advance`, SCREEN_WIDTH / 2, 220);
-
-            const retryButtonY = SCREEN_HEIGHT / 2 + 100;
-            const buttonW = 200;
-            const buttonH = 60;
-            const buttonX = SCREEN_WIDTH / 2 - buttonW / 2;
-
-            CTX.fillStyle = '#FF6347';
-            CTX.fillRect(buttonX, retryButtonY, buttonW, buttonH);
-            CTX.fillStyle = '#FFF';
-            CTX.font = 'bold 28px Arial';
-            CTX.textAlign = 'center';
-            CTX.fillText('PLAY AGAIN', SCREEN_WIDTH / 2, retryButtonY + 45);
-
-            gameState.retryButtonRect = { x: buttonX, y: retryButtonY, w: buttonW, h: buttonH };
-        }
-
-        // ===== GAME LOOP =====
-        function gameLoop() {
-            try {
-                if (gameState.screen === 'start') {
-                    if (!chickens || chickens.length === 0) {
-                        initLevel(0);
-                        for (let c of chickens) {
-                            c.x = Math.random() * SCREEN_WIDTH;
-                            c.y = Math.random() * SCREEN_HEIGHT;
-                        }
-                    }
-                    drawStartScreen();
-                } else if (gameState.screen === 'playing') {
-                    updateGame();
-                    drawWorld();
-                    drawHUD();
-                } else if (gameState.screen === 'levelcomplete') {
-                    drawLevelComplete();
-                } else if (gameState.screen === 'gameover') {
-                    drawGameOver();
-                }
-            } catch (e) {
-                console.error('Game loop error:', e);
-            }
-
-            requestAnimationFrame(gameLoop);
-        }
-
-        // ===== SCREEN MANAGEMENT =====
-        window.addEventListener('click', (e) => {
-            const x = e.clientX;
-            const y = e.clientY;
-
-            if (gameState.screen === 'start' && gameState.startButtonRect) {
-                const btn = gameState.startButtonRect;
-                if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-                    gameState.screen = 'playing';
-                    initLevel(0);
-                }
-            } else if (gameState.screen === 'levelcomplete' && gameState.nextButtonRect) {
-                const btn = gameState.nextButtonRect;
-                if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-                    gameState.screen = 'playing';
-                    initLevel(gameState.level + 1);
-                }
-            } else if (gameState.screen === 'gameover' && gameState.retryButtonRect) {
-                const btn = gameState.retryButtonRect;
-                if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-                    gameState.screen = 'playing';
-                    initLevel(gameState.level);
-                }
-            }
-        });
-
-        window.addEventListener('touchstart', (e) => {
-            const touch = e.touches[0];
-            const x = touch.clientX;
-            const y = touch.clientY;
-
-            if (gameState.screen === 'start' && gameState.startButtonRect) {
-                const btn = gameState.startButtonRect;
-                if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-                    gameState.screen = 'playing';
-                    initLevel(0);
-                }
-            } else if (gameState.screen === 'levelcomplete' && gameState.nextButtonRect) {
-                const btn = gameState.nextButtonRect;
-                if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-                    gameState.screen = 'playing';
-                    initLevel(gameState.level + 1);
-                }
-            } else if (gameState.screen === 'gameover' && gameState.retryButtonRect) {
-                const btn = gameState.retryButtonRect;
-                if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-                    gameState.screen = 'playing';
-                    initLevel(gameState.level);
-                }
-            }
-        });
-
-        window.addEventListener('resize', () => {
-            SCREEN_WIDTH = window.innerWidth;
-            SCREEN_HEIGHT = window.innerHeight;
-            CANVAS.width = SCREEN_WIDTH;
-            CANVAS.height = SCREEN_HEIGHT;
-        });
-
-        // ===== BOOTSTRAP =====
-        CANVAS.width = SCREEN_WIDTH;
-        CANVAS.height = SCREEN_HEIGHT;
-
-        gameState.screen = 'start';
-        chickens = [];
-        particles = [];
-        initLevel(0);
-        for (let c of chickens) {
-            c.x = Math.random() * SCREEN_WIDTH;
-            c.y = Math.random() * SCREEN_HEIGHT;
-        }
-
-        gameLoop();
-    </script>
+</script>
 </body>
 </html>
