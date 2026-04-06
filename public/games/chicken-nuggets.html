@@ -89,16 +89,20 @@ let fence = [];
 
 function initWorldGeneration() {
     // Generate grass color grid (DETERMINISTIC, not random in draw)
-    const GRASS_COLS = Math.ceil(WORLD_W / 40);
-    const GRASS_ROWS = Math.ceil(WORLD_H / 40);
+    // Use 20px tiles with VERY subtle color variation — just 3-5 RGB units
+    const GRASS_COLS = Math.ceil(WORLD_W / 20);
+    const GRASS_ROWS = Math.ceil(WORLD_H / 20);
     grassColors = [];
 
     for (let r = 0; r < GRASS_ROWS; r++) {
         grassColors[r] = [];
         for (let c = 0; c < GRASS_COLS; c++) {
-            // Deterministic hash using row and column, NO Math.random()
-            const shade = 34 + ((r * 7 + c * 13) % 4) * 8;
-            grassColors[r][c] = `rgb(${shade + 10}, ${100 + shade}, ${shade})`;
+            // Deterministic hash, subtle variation only
+            const hash = ((r * 7 + c * 13 + r * c * 3) % 6);
+            // Base green: rgb(76, 153, 56) with +/- 5 variation
+            const g = 148 + hash * 2;      // 148-158 range
+            const rb = 54 + hash;           // 54-59 range
+            grassColors[r][c] = `rgb(${rb + 18}, ${g}, ${rb})`;
         }
     }
 
@@ -215,46 +219,88 @@ class Player {
     draw(ctx) {
         ctx.save();
 
-        // Dark outline
+        // Glow ring so player pops against background
+        ctx.fillStyle = 'rgba(255, 255, 100, 0.15)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y - 4, 28, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Shadow on ground
+        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+        ctx.beginPath();
+        ctx.ellipse(this.x, this.y + 16, 14, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dark outline for all parts
         ctx.strokeStyle = '#222';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2.5;
 
         // Body (blue overalls) - large rounded rectangle
         ctx.fillStyle = '#003DA5';
-        roundRect(ctx, this.x - 12, this.y - 8, 24, 18, 3);
+        roundRect(ctx, this.x - 14, this.y - 10, 28, 22, 4);
         ctx.fill();
         ctx.stroke();
 
-        // Face (peach circle)
-        ctx.fillStyle = '#E8B88B';
+        // Overall straps
+        ctx.strokeStyle = '#0050CC';
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(this.x, this.y - 15, 8, 0, Math.PI * 2);
+        ctx.moveTo(this.x - 8, this.y - 10);
+        ctx.lineTo(this.x - 5, this.y - 15);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(this.x + 8, this.y - 10);
+        ctx.lineTo(this.x + 5, this.y - 15);
+        ctx.stroke();
+
+        // Face (peach circle)
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 2.5;
+        ctx.fillStyle = '#F0C8A0';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y - 18, 10, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
 
         // Eyes
         ctx.fillStyle = '#000';
         ctx.beginPath();
-        ctx.arc(this.x - 3, this.y - 16, 1.5, 0, Math.PI * 2);
+        ctx.arc(this.x - 3, this.y - 19, 2, 0, Math.PI * 2);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(this.x + 3, this.y - 16, 1.5, 0, Math.PI * 2);
+        ctx.arc(this.x + 3, this.y - 19, 2, 0, Math.PI * 2);
         ctx.fill();
 
-        // Hat (brown straw)
-        ctx.fillStyle = '#8B4513';
-        roundRect(ctx, this.x - 10, this.y - 24, 20, 8, 2);
+        // Smile
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y - 16, 4, 0.2, Math.PI - 0.2);
+        ctx.stroke();
+
+        // Hat (brown straw, wider than face)
+        ctx.fillStyle = '#C47A2C';
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 2;
+        // Hat brim
+        roundRect(ctx, this.x - 14, this.y - 28, 28, 6, 2);
+        ctx.fill();
+        ctx.stroke();
+        // Hat crown
+        roundRect(ctx, this.x - 8, this.y - 34, 16, 8, 2);
         ctx.fill();
         ctx.stroke();
 
         // Boots (brown)
         ctx.fillStyle = '#654321';
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 2;
         const legOffL = this.legOffset;
         const legOffR = -this.legOffset;
-        roundRect(ctx, this.x - 7, this.y + 8 + legOffL, 5, 8, 1);
+        roundRect(ctx, this.x - 9, this.y + 10 + legOffL, 7, 10, 2);
         ctx.fill();
         ctx.stroke();
-        roundRect(ctx, this.x + 2, this.y + 8 + legOffR, 5, 8, 1);
+        roundRect(ctx, this.x + 2, this.y + 10 + legOffR, 7, 10, 2);
         ctx.fill();
         ctx.stroke();
 
@@ -862,7 +908,7 @@ function drawWorld(ctx) {
     ctx.translate(-cameraX, -cameraY);
 
     // Draw grass (read from pre-generated color array, NO randomization)
-    const GRASS_SIZE = 40;
+    const GRASS_SIZE = 20;
     const GRASS_COLS = Math.ceil(WORLD_W / GRASS_SIZE);
     const GRASS_ROWS = Math.ceil(WORLD_H / GRASS_SIZE);
 
@@ -883,19 +929,28 @@ function drawWorld(ctx) {
         ctx.stroke();
     }
 
-    // Draw hay bales
+    // Draw hay bales (golden yellow with rounded shape and shadow)
     for (let bale of hayBales) {
-        ctx.fillStyle = '#E8D76B';
-        roundRect(ctx, bale.x - bale.w / 2, bale.y - bale.h / 2, bale.w, bale.h, 3);
+        // Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.15)';
+        roundRect(ctx, bale.x - bale.w / 2 + 3, bale.y - bale.h / 2 + 3, bale.w, bale.h, 8);
         ctx.fill();
-
+        // Main bale body
+        ctx.fillStyle = '#E8D44D';
+        roundRect(ctx, bale.x - bale.w / 2, bale.y - bale.h / 2, bale.w, bale.h, 8);
+        ctx.fill();
+        // Dark outline
+        ctx.strokeStyle = '#C4A830';
+        ctx.lineWidth = 2;
+        roundRect(ctx, bale.x - bale.w / 2, bale.y - bale.h / 2, bale.w, bale.h, 8);
+        ctx.stroke();
         // Straw texture (horizontal lines)
-        ctx.strokeStyle = '#D4AF37';
+        ctx.strokeStyle = 'rgba(180, 140, 20, 0.4)';
         ctx.lineWidth = 1;
-        for (let i = 0; i < bale.h; i += 4) {
+        for (let i = 5; i < bale.h - 4; i += 5) {
             ctx.beginPath();
-            ctx.moveTo(bale.x - bale.w / 2, bale.y - bale.h / 2 + i);
-            ctx.lineTo(bale.x + bale.w / 2, bale.y - bale.h / 2 + i);
+            ctx.moveTo(bale.x - bale.w / 2 + 4, bale.y - bale.h / 2 + i);
+            ctx.lineTo(bale.x + bale.w / 2 - 4, bale.y - bale.h / 2 + i);
             ctx.stroke();
         }
     }
