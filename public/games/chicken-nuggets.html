@@ -749,28 +749,55 @@ document.addEventListener('keyup', e => {
     keys[e.key.toLowerCase()] = false;
 });
 
+// Prevent scroll/zoom on mobile
 document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 
-let touchX = 0;
-let touchY = 0;
-let touching = false;
+// Virtual joystick state
+let joystickActive = false;
+let joystickBaseX = 0;  // Where finger first touched (center of joystick)
+let joystickBaseY = 0;
+let joystickThumbX = 0; // Current finger position
+let joystickThumbY = 0;
+const JOYSTICK_RADIUS = 50; // Max distance thumb can move from base
+const JOYSTICK_DEADZONE = 8;
+let isTouchDevice = false;
 
-document.addEventListener('touchstart', e => {
+canvas.addEventListener('touchstart', e => {
+    if (gameState !== GAME_STATE.PLAYING) return;
+    isTouchDevice = true;
     const touch = e.touches[0];
-    touchX = touch.clientX;
-    touchY = touch.clientY;
-    touching = true;
+    // Place joystick wherever the user touches
+    joystickBaseX = touch.clientX;
+    joystickBaseY = touch.clientY;
+    joystickThumbX = touch.clientX;
+    joystickThumbY = touch.clientY;
+    joystickActive = true;
+    initAudio();
 }, { passive: true });
 
-document.addEventListener('touchmove', e => {
-    if (!touching) return;
+canvas.addEventListener('touchmove', e => {
+    if (!joystickActive) return;
     const touch = e.touches[0];
-    touchX = touch.clientX;
-    touchY = touch.clientY;
+    joystickThumbX = touch.clientX;
+    joystickThumbY = touch.clientY;
+    // Clamp thumb to max radius from base
+    const dx = joystickThumbX - joystickBaseX;
+    const dy = joystickThumbY - joystickBaseY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist > JOYSTICK_RADIUS) {
+        joystickThumbX = joystickBaseX + (dx / dist) * JOYSTICK_RADIUS;
+        joystickThumbY = joystickBaseY + (dy / dist) * JOYSTICK_RADIUS;
+    }
 }, { passive: true });
 
-document.addEventListener('touchend', e => {
-    touching = false;
+canvas.addEventListener('touchend', e => {
+    if (e.touches.length === 0) {
+        joystickActive = false;
+    }
+}, { passive: true });
+
+canvas.addEventListener('touchcancel', e => {
+    joystickActive = false;
 }, { passive: true });
 
 function updateInput() {
@@ -782,16 +809,17 @@ function updateInput() {
     if (keys['a'] || keys['arrowleft']) inputX -= 1;
     if (keys['d'] || keys['arrowright']) inputX += 1;
 
-    // Mobile joystick (bottom-left)
-    if (touching && W > 600) { // Only on touch devices
-        const joyX = 50;
-        const joyY = H - 50;
-        const dx = touchX - joyX;
-        const dy = touchY - joyY;
+    // Mobile virtual joystick
+    if (joystickActive) {
+        const dx = joystickThumbX - joystickBaseX;
+        const dy = joystickThumbY - joystickBaseY;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist > 10) {
-            inputX = dx / Math.max(30, dist);
-            inputY = dy / Math.max(30, dist);
+        if (dist > JOYSTICK_DEADZONE) {
+            inputX = dx / JOYSTICK_RADIUS;
+            inputY = dy / JOYSTICK_RADIUS;
+            // Clamp to -1..1
+            inputX = Math.max(-1, Math.min(1, inputX));
+            inputY = Math.max(-1, Math.min(1, inputY));
         }
     }
 }
@@ -1065,7 +1093,7 @@ function drawHUD(ctx, elapsedTime, gameTime, savedCount) {
     ctx.shadowOffsetY = 2;
     ctx.fillText(`${Math.ceil(timeLeft)}s`, W - 20, 20);
 
-    // Carrying count (bottom-left)
+    // Carrying count (below level text, top-left)
     ctx.font = 'bold 16px Arial';
     ctx.textAlign = 'left';
     ctx.fillStyle = '#FFF';
@@ -1073,7 +1101,7 @@ function drawHUD(ctx, elapsedTime, gameTime, savedCount) {
     ctx.shadowBlur = 3;
     ctx.shadowOffsetY = 1;
     const carryText = 'Carrying: ' + player.carryingChickens.length + ' chickens';
-    ctx.fillText(carryText, 20, H - 40);
+    ctx.fillText(carryText, 20, 50);
 
     // Hawk warning (center, big)
     if (hawk.isTelegraphing()) {
@@ -1089,7 +1117,38 @@ function drawHUD(ctx, elapsedTime, gameTime, savedCount) {
     // Minimap (bottom-right)
     drawMinimap(ctx, savedCount);
 
+    // Virtual joystick overlay (mobile only)
+    if (joystickActive || isTouchDevice) {
+        drawVirtualJoystick(ctx);
+    }
+
     ctx.restore();
+}
+
+function drawVirtualJoystick(ctx) {
+    if (!joystickActive) return;
+
+    // Base circle (semi-transparent)
+    ctx.globalAlpha = 0.3;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.arc(joystickBaseX, joystickBaseY, JOYSTICK_RADIUS, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Thumb circle
+    ctx.globalAlpha = 0.6;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.arc(joystickThumbX, joystickThumbY, 20, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.globalAlpha = 1.0;
 }
 
 function drawMinimap(ctx, savedCount) {
@@ -1504,9 +1563,10 @@ canvas.addEventListener('click', (e) => {
     }
 });
 
-// Touch button detection
+// Touch button detection for menu screens
 canvas.addEventListener('touchstart', (e) => {
     if (!e.touches.length) return;
+    isTouchDevice = true;
     const touch = e.touches[0];
     const rect = canvas.getBoundingClientRect();
     const mx = touch.clientX - rect.left;
