@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zombie Escape - Survive the Apocalypse</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #0a0a0a;
+      font-family: Arial, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    canvas {
+      display: block;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+
+    #hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .hud-text {
+      position: absolute;
+      color: #00ff00;
+      font-weight: bold;
+      text-shadow: 0 0 5px #00ff00;
+      font-family: monospace;
+    }
+
+    #healthBar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 200px;
+      height: 30px;
+      border: 2px solid #00ff00;
+      background: #0a0a0a;
+    }
+
+    #healthFill {
+      height: 100%;
+      background: #00ff00;
+      width: 100%;
+      box-shadow: 0 0 10px #00ff00;
+    }
+
+    #stats {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      color: #00ff00;
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      text-shadow: 0 0 5px #00ff00;
+    }
+
+    #weaponDisplay {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: #00ff00;
+      font-family: monospace;
+      font-size: 16px;
+      text-shadow: 0 0 5px #00ff00;
+    }
+
+    #waveMessage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ff0000;
+      font-size: 48px;
+      font-weight: bold;
+      text-shadow: 0 0 20px #ff0000;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    #minimap {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 150px;
+      height: 150px;
+      border: 2px solid #00ff00;
+      background: rgba(10, 10, 10, 0.8);
+    }
+
+    .control-btn {
+      position: absolute;
+      background: rgba(0, 255, 0, 0.3);
+      border: 2px solid #00ff00;
+      color: #00ff00;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      z-index: 100;
+      pointer-events: auto;
+      user-select: none;
+    }
+
+    .control-btn:hover {
+      background: rgba(0, 255, 0, 0.5);
+      box-shadow: 0 0 10px #00ff00;
+    }
+
+    .control-btn:active {
+      transform: scale(0.95);
+    }
+
+    #fireBtn {
+      bottom: 20px;
+      right: 20px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      font-size: 24px;
+    }
+
+    #vehicleBtn {
+      bottom: 110px;
+      right: 20px;
+      width: 80px;
+      height: 50px;
+      display: none;
+    }
+
+    .joystick-container {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      width: 120px;
+      height: 120px;
+      background: rgba(0, 255, 0, 0.1);
+      border: 2px solid #00ff00;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .joystick-container.mobile {
+      display: flex;
+    }
+
+    .joystick-stick {
+      width: 50px;
+      height: 50px;
+      background: #00ff00;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00ff00;
+    }
+
+    #startScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 10, 0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    #startScreen.hidden {
+      display: none;
+    }
+
+    #gameTitle {
+      font-size: 72px;
+      font-weight: bold;
+      color: #ff0000;
+      text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
+      margin-bottom: 20px;
+      letter-spacing: 3px;
+    }
+
+    #startSubtitle {
+      font-size: 24px;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
+      margin-bottom: 40px;
+    }
+
+    #playBtn {
+      padding: 20px 50px;
+      font-size: 28px;
+      background: #00ff00;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+      box-shadow: 0 0 20px #00ff00;
+    }
+
+    #playBtn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px #00ff00;
+    }
+
+    #playBtn:active {
+      transform: scale(0.95);
+    }
+
+    #gameOverScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 10, 0.95);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+    }
+
+    #gameOverScreen.active {
+      display: flex;
+    }
+
+    #gameOverTitle {
+      font-size: 64px;
+      font-weight: bold;
+      color: #ff0000;
+      text-shadow: 0 0 20px #ff0000;
+      margin-bottom: 40px;
+    }
+
+    #gameOverStats {
+      font-size: 28px;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
+      margin-bottom: 40px;
+      text-align: center;
+      line-height: 2;
+    }
+
+    #playAgainBtn {
+      padding: 20px 50px;
+      font-size: 24px;
+      background: #00ff00;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+      box-shadow: 0 0 20px #00ff00;
+    }
+
+    #playAgainBtn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px #00ff00;
+    }
+
+    @media (max-width: 768px) {
+      #gameTitle {
+        font-size: 48px;
+      }
+      #startSubtitle {
+        font-size: 18px;
+      }
+      #playBtn {
+        font-size: 20px;
+        padding: 15px 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div id="hud">
+    <div id="healthBar">
+      <div id="healthFill"></div>
+    </div>
+    <div id="stats"></div>
+    <div id="weaponDisplay"></div>
+    <div id="waveMessage"></div>
+    <canvas id="minimap"></canvas>
+    <div class="joystick-container" id="joystickContainer">
+      <div class="joystick-stick" id="joystickStick"></div>
+    </div>
+  </div>
+
+  <button id="fireBtn" class="control-btn">FIRE</button>
+  <button id="vehicleBtn" class="control-btn">ENTER</button>
+
+  <div id="startScreen">
+    <div id="gameTitle">ZOMBIE ESCAPE</div>
+    <div id="startSubtitle">Survive the Apocalypse</div>
+    <button id="playBtn">PLAY</button>
+  </div>
+
+  <div id="gameOverScreen">
+    <div id="gameOverTitle">GAME OVER</div>
+    <div id="gameOverStats"></div>
+    <button id="playAgainBtn">PLAY AGAIN</button>
+  </div>
+
+  <script>
+    // Canvas setup
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+
+    function resize() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Game state
+    let gameState = 'start'; // start, playing, gameOver
+    let player = { x: 1000, y: 1000, width: 22, height: 22, speed: 4, vx: 0, vy: 0, health: 100, maxHealth: 100, weapon: 'pistol', angle: 0 };
+    let camera = { x: 0, y: 0 };
+    let wave = 1;
+    let waveZombiesKilled = 0;
+    let totalZombiesKilled = 0;
+    let gameStartTime = 0;
+    let gameEndTime = 0;
+    let inVehicle = false;
+    let currentVehicle = null;
+    let screenShake = 0;
+    let waveCompleteTime = 0;
+    let nextWaveTime = 0;
+    let safeZoneTime = 0;
+
+    // World constants
+    const WORLD_WIDTH = 2000;
+    const WORLD_HEIGHT = 2000;
+    const SPAWN_DISTANCE = 500;
+
+    // Arrays (CRITICAL: initialized before game loop)
+    let zombies = [];
+    let bullets = [];
+    let particles = [];
+    let pickups = [];
+    let vehicles = [];
+    let messages = [];
+    let buildings = [];
+    let debris = [];
+
+    // Input handling
+    let keys = {};
+    let mousePos = { x: 0, y: 0 };
+    let touchPos = { x: 0, y: 0 };
+    let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    window.addEventListener('keydown', (e) => {
+      keys[e.key.toLowerCase()] = true;
+      if (e.key === 'e' || e.key === 'E') {
+        toggleVehicle();
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      keys[e.key.toLowerCase()] = false;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      mousePos.x = e.clientX;
+      mousePos.y = e.clientY;
+    });
+
+    // Touch controls
+    const joystickContainer = document.getElementById('joystickContainer');
+    const joystickStick = document.getElementById('joystickStick');
+    const fireBtn = document.getElementById('fireBtn');
+    const vehicleBtn = document.getElementById('vehicleBtn');
+
+    if (isMobile) {
+      joystickContainer.classList.add('mobile');
+    }
+
+    let joystickActive = false;
+    let joystickStartX = 0;
+    let joystickStartY = 0;
+
+    joystickContainer.addEventListener('touchstart', (e) => {
+      joystickActive = true;
+      joystickStartX = e.touches[0].clientX;
+      joystickStartY = e.touches[0].clientY;
+    });
+
+    joystickContainer.addEventListener('touchmove', (e) => {
+      if (!joystickActive) return;
+      const dx = e.touches[0].clientX - joystickStartX;
+      const dy = e.touches[0].clientY - joystickStartY;
+      const dist = Math.hypot(dx, dy);
+      const maxDist = 50;
+
+      joystickStick.style.transform = `translate(${Math.min(dx, maxDist)}px, ${Math.min(dy, maxDist)}px)`;
+    });
+
+    joystickContainer.addEventListener('touchend', () => {
+      joystickActive = false;
+      joystickStick.style.transform = 'translate(0, 0)';
+    });
+
+    document.addEventListener('touchmove', (e) => {
+      if (e.target.classList.contains('joystick-container') || e.target.classList.contains('joystick-stick')) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    fireBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      fire();
+    });
+
+    fireBtn.addEventListener('click', fire);
+
+    vehicleBtn.addEventListener('click', toggleVehicle);
+
+    // Sound synthesis
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(freq, duration, type = 'sine', volume = 0.1) {
+      try {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.5, audioContext.currentTime + duration);
+
+        gain.gain.setValueAtTime(volume, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+        osc.start(audioContext.currentTime);
+        osc.stop(audioContext.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playPistolShot() {
+      playSound(200, 0.1, 'square', 0.15);
+      playSound(100, 0.15, 'triangle', 0.1);
+    }
+
+    function playShotgunShot() {
+      playSound(150, 0.2, 'square', 0.2);
+      playSound(75, 0.25, 'sawtooth', 0.15);
+    }
+
+    function playBowShot() {
+      playSound(400, 0.08, 'sine', 0.08);
+    }
+
+    function playRifleShot() {
+      playSound(250, 0.05, 'square', 0.18);
+    }
+
+    function playZombieGroan() {
+      playSound(60 + Math.random() * 30, 0.3, 'sine', 0.08);
+    }
+
+    function playZombieDeath() {
+      playSound(120, 0.2, 'sine', 0.15);
+      playSound(60, 0.3, 'sine', 0.1);
+    }
+
+    function playPickup() {
+      playSound(800, 0.05, 'sine', 0.1);
+      playSound(1000, 0.05, 'sine', 0.1);
+    }
+
+    function playWaveComplete() {
+      playSound(400, 0.1, 'sine', 0.15);
+      playSound(600, 0.1, 'sine', 0.15);
+    }
+
+    // World generation
+    function generateWorld() {
+      buildings = [];
+      debris = [];
+
+      for (let i = 0; i < 20; i++) {
+        buildings.push({
+          x: Math.random() * WORLD_WIDTH,
+          y: Math.random() * WORLD_HEIGHT,
+          width: 80 + Math.random() * 120,
+          height: 80 + Math.random() * 120,
+          color: `rgba(${80 + Math.random() * 40}, ${80 + Math.random() * 40}, ${80 + Math.random() * 40}, 0.7)`
+        });
+      }
+
+      for (let i = 0; i < 50; i++) {
+        debris.push({
+          x: Math.random() * WORLD_WIDTH,
+          y: Math.random() * WORLD_HEIGHT,
+          width: 20 + Math.random() * 50,
+          height: 20 + Math.random() * 50,
+          rotation: Math.random() * Math.PI * 2,
+          color: `rgba(${60 + Math.random() * 40}, ${60 + Math.random() * 40}, ${60 + Math.random() * 40}, 0.6)`
+        });
+      }
+
+      generateVehicles();
+    }
+
+    function generateVehicles() {
+      vehicles = [];
+      for (let i = 0; i < 3; i++) {
+        vehicles.push({
+          x: 200 + Math.random() * (WORLD_WIDTH - 400),
+          y: 200 + Math.random() * (WORLD_HEIGHT - 400),
+          width: 50,
+          height: 80,
+          health: 100,
+          maxHealth: 100,
+          color: ['#ff0000', '#0000ff', '#ffff00'][Math.floor(Math.random() * 3)]
+        });
+      }
+    }
+
+    // Zombie spawning
+    function spawnZombies(count) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 300 + Math.random() * 200;
+        const spawnX = player.x + Math.cos(angle) * distance;
+        const spawnY = player.y + Math.sin(angle) * distance;
+
+        const type = wave > 6 ? (Math.random() < 0.3 ? 'runner' : 'normal') : 'normal';
+        const bossSpawn = wave > 9 && Math.random() < 0.1;
+
+        zombies.push({
+          x: spawnX,
+          y: spawnY,
+          width: bossSpawn ? 40 : 18,
+          height: bossSpawn ? 40 : 18,
+          health: bossSpawn ? 50 : 20,
+          maxHealth: bossSpawn ? 50 : 20,
+          speed: type === 'runner' ? (bossSpawn ? 1 : 2) : (bossSpawn ? 1.5 : 1),
+          type: bossSpawn ? 'boss' : type,
+          vx: 0,
+          vy: 0,
+          groanTimer: Math.random() * 2
+        });
+      }
+    }
+
+    // Firing
+    function fire() {
+      if (gameState !== 'playing' || inVehicle) return;
+
+      const target = findNearestZombie();
+      if (!target) return;
+
+      const dx = target.x - player.x;
+      const dy = target.y - player.y;
+      const dist = Math.hypot(dx, dy);
+      player.angle = Math.atan2(dy, dx);
+
+      if (player.weapon === 'pistol') {
+        playPistolShot();
+        addBullet(player.x, player.y, player.angle, 'pistol');
+        screenShake = 3;
+      } else if (player.weapon === 'shotgun') {
+        playShotgunShot();
+        for (let i = -0.3; i <= 0.3; i += 0.15) {
+          addBullet(player.x, player.y, player.angle + i, 'shotgun');
+        }
+        screenShake = 8;
+      } else if (player.weapon === 'bow') {
+        playBowShot();
+        addBullet(player.x, player.y, player.angle, 'bow');
+        screenShake = 2;
+      } else if (player.weapon === 'rifle') {
+        playRifleShot();
+        addBullet(player.x, player.y, player.angle, 'rifle');
+        screenShake = 4;
+      }
+    }
+
+    function findNearestZombie() {
+      let nearest = null;
+      let minDist = Infinity;
+
+      for (let z of zombies) {
+        const dx = z.x - player.x;
+        const dy = z.y - player.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < minDist) {
+          minDist = dist;
+          nearest = z;
+        }
+      }
+      return nearest;
+    }
+
+    function addBullet(x, y, angle, weapon) {
+      const speed = weapon === 'rifle' ? 8 : weapon === 'shotgun' ? 6 : weapon === 'bow' ? 7 : 5;
+      const damage = weapon === 'shotgun' ? 40 : weapon === 'rifle' ? 35 : weapon === 'bow' ? 30 : 15;
+      const ammo = { pistol: -1, shotgun: 2, bow: 1, rifle: 3 };
+
+      if (ammo[weapon] > 0 && player[weapon + 'Ammo'] > 0) {
+        player[weapon + 'Ammo']--;
+      }
+
+      bullets.push({
+        x, y, angle,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        weapon, damage,
+        pierce: weapon === 'bow' ? 3 : 1,
+        life: 60
+      });
+
+      addMuzzleFlash(x, y, angle);
+    }
+
+    function addMuzzleFlash(x, y, angle) {
+      for (let i = 0; i < 5; i++) {
+        const spreadAngle = angle + (Math.random() - 0.5) * 0.5;
+        particles.push({
+          x, y,
+          vx: Math.cos(spreadAngle) * (3 + Math.random() * 2),
+          vy: Math.sin(spreadAngle) * (3 + Math.random() * 2),
+          life: 10,
+          color: `rgba(255, ${150 + Math.random() * 105}, 0, 1)`,
+          size: 3 + Math.random() * 4
+        });
+      }
+    }
+
+    // Zombies
+    function updateZombies() {
+      for (let i = zombies.length - 1; i >= 0; i--) {
+        const z = zombies[i];
+
+        const dx = player.x - z.x;
+        const dy = player.y - z.y;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist > 0) {
+          z.vx = (dx / dist) * z.speed;
+          z.vy = (dy / dist) * z.speed;
+        }
+
+        z.x += z.vx;
+        z.y += z.vy;
+
+        // Collision with buildings
+        for (let b of buildings) {
+          if (z.x > b.x && z.x < b.x + b.width && z.y > b.y && z.y < b.y + b.height) {
+            z.x -= z.vx;
+            z.y -= z.vy;
+            break;
+          }
+        }
+
+        // Clamp to world
+        z.x = Math.max(0, Math.min(WORLD_WIDTH, z.x));
+        z.y = Math.max(0, Math.min(WORLD_HEIGHT, z.y));
+
+        // Sound
+        z.groanTimer -= 0.016;
+        if (z.groanTimer <= 0) {
+          if (Math.random() < 0.3) playZombieGroan();
+          z.groanTimer = 2 + Math.random() * 3;
+        }
+
+        // Remove if dead
+        if (z.health <= 0) {
+          zombies.splice(i, 1);
+          waveZombiesKilled++;
+          totalZombiesKilled++;
+          playZombieDeath();
+
+          // Green blood splatter
+          for (let j = 0; j < 12; j++) {
+            const angle = (j / 12) * Math.PI * 2;
+            particles.push({
+              x: z.x, y: z.y,
+              vx: Math.cos(angle) * (3 + Math.random() * 3),
+              vy: Math.sin(angle) * (3 + Math.random() * 3),
+              life: 30,
+              color: `rgba(0, 200, 50, 0.8)`,
+              size: 4 + Math.random() * 4
+            });
+          }
+
+          // Drop pickups
+          if (Math.random() < 0.4) {
+            const pickupType = Math.random() < 0.5 ? 'ammo' : 'health';
+            pickups.push({
+              x: z.x, y: z.y,
+              type: pickupType,
+              timer: 0
+            });
+          }
+        }
+      }
+    }
+
+    // Bullets
+    function updateBullets() {
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        const b = bullets[i];
+        b.x += b.vx;
+        b.y += b.vy;
+        b.life--;
+
+        if (b.life <= 0 || b.x < 0 || b.x > WORLD_WIDTH || b.y < 0 || b.y > WORLD_HEIGHT) {
+          bullets.splice(i, 1);
+          continue;
+        }
+
+        // Collision with zombies
+        for (let j = zombies.length - 1; j >= 0; j--) {
+          const z = zombies[j];
+          if (distance(b.x, b.y, z.x, z.y) < z.width / 2 + 5) {
+            z.health -= b.damage;
+            screenShake += 2;
+
+            // Damage number
+            messages.push({
+              x: z.x, y: z.y,
+              text: Math.floor(b.damage),
+              life: 20,
+              color: '#ffff00'
+            });
+
+            if (b.pierce > 1) {
+              b.pierce--;
+            } else {
+              bullets.splice(i, 1);
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // Particles
+    function updateParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        p.vy += 0.1; // gravity
+
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+    }
+
+    // Pickups
+    function updatePickups() {
+      for (let i = pickups.length - 1; i >= 0; i--) {
+        const p = pickups[i];
+        p.timer++;
+
+        if (distance(player.x, player.y, p.x, p.y) < 40) {
+          if (p.type === 'health') {
+            player.health = Math.min(player.maxHealth, player.health + 30);
+          } else {
+            player.pistolAmmo += 20;
+            player.shotgunAmmo += 5;
+            player.bowAmmo += 10;
+            player.rifleAmmo += 15;
+          }
+          playPickup();
+          pickups.splice(i, 1);
+        } else if (p.timer > 600) {
+          pickups.splice(i, 1);
+        }
+      }
+    }
+
+    // Vehicle logic
+    function toggleVehicle() {
+      if (gameState !== 'playing') return;
+
+      if (inVehicle && currentVehicle) {
+        player.x = currentVehicle.x;
+        player.y = currentVehicle.y;
+        inVehicle = false;
+        currentVehicle = null;
+        vehicleBtn.style.display = 'none';
+      } else {
+        for (let v of vehicles) {
+          if (distance(player.x, player.y, v.x, v.y) < 60) {
+            currentVehicle = v;
+            inVehicle = true;
+            vehicleBtn.style.display = 'block';
+            vehicleBtn.textContent = 'EXIT';
+            break;
+          }
+        }
+      }
+    }
+
+    function updateVehicle() {
+      if (!inVehicle || !currentVehicle) return;
+
+      const v = currentVehicle;
+
+      // Vehicle movement
+      let vx = 0, vy = 0;
+      if (keys['w'] || keys['arrowup']) vy -= 6;
+      if (keys['s'] || keys['arrowdown']) vy += 6;
+      if (keys['a'] || keys['arrowleft']) vx -= 6;
+      if (keys['d'] || keys['arrowright']) vx += 6;
+
+      v.x += vx;
+      v.y += vy;
+      v.x = Math.max(0, Math.min(WORLD_WIDTH, v.x));
+      v.y = Math.max(0, Math.min(WORLD_HEIGHT, v.y));
+
+      player.x = v.x;
+      player.y = v.y;
+
+      // Run over zombies
+      for (let i = zombies.length - 1; i >= 0; i--) {
+        const z = zombies[i];
+        if (distance(v.x, v.y, z.x, z.y) < 50) {
+          z.health = 0;
+          screenShake = 5;
+        }
+      }
+
+      // Vehicle damage/destruction
+      if (vx !== 0 || vy !== 0) {
+        v.health -= 0.3;
+
+        // Smoke particles
+        if (Math.random() < 0.2) {
+          particles.push({
+            x: v.x + (Math.random() - 0.5) * 50,
+            y: v.y + (Math.random() - 0.5) * 50,
+            vx: (Math.random() - 0.5) * 1,
+            vy: Math.random() * -1,
+            life: 40,
+            color: `rgba(150, 150, 150, 0.5)`,
+            size: 5 + Math.random() * 10
+          });
+        }
+      }
+
+      if (v.health <= 0) {
+        inVehicle = false;
+        currentVehicle = null;
+        vehicleBtn.style.display = 'none';
+
+        // Explosion
+        for (let j = 0; j < 20; j++) {
+          const angle = (j / 20) * Math.PI * 2;
+          particles.push({
+            x: v.x, y: v.y,
+            vx: Math.cos(angle) * (4 + Math.random() * 3),
+            vy: Math.sin(angle) * (4 + Math.random() * 3),
+            life: 50,
+            color: `rgba(255, ${100 + Math.random() * 155}, 0, 0.8)`,
+            size: 5 + Math.random() * 10
+          });
+        }
+        generateVehicles();
+      }
+    }
+
+    // Player movement
+    function updatePlayer() {
+      if (inVehicle) return;
+
+      let vx = 0, vy = 0;
+      if (keys['w'] || keys['arrowup']) vy -= player.speed;
+      if (keys['s'] || keys['arrowdown']) vy += player.speed;
+      if (keys['a'] || keys['arrowleft']) vx -= player.speed;
+      if (keys['d'] || keys['arrowright']) vx += player.speed;
+
+      // Mobile joystick
+      if (joystickActive) {
+        const dx = touchPos.x - joystickStartX;
+        const dy = touchPos.y - joystickStartY;
+        const mag = Math.hypot(dx, dy);
+        if (mag > 10) {
+          vx += (dx / mag) * player.speed;
+          vy += (dy / mag) * player.speed;
+        }
+      }
+
+      player.x += vx;
+      player.y += vy;
+
+      // Collision with buildings
+      for (let b of buildings) {
+        if (player.x > b.x && player.x < b.x + b.width && player.y > b.y && player.y < b.y + b.height) {
+          player.x -= vx;
+          player.y -= vy;
+          break;
+        }
+      }
+
+      // Clamp to world
+      player.x = Math.max(player.width / 2, Math.min(WORLD_WIDTH - player.width / 2, player.x));
+      player.y = Math.max(player.height / 2, Math.min(WORLD_HEIGHT - player.height / 2, player.y));
+
+      // Zombie collision (damage)
+      for (let z of zombies) {
+        if (distance(player.x, player.y, z.x, z.y) < 30) {
+          player.health -= 0.5;
+        }
+      }
+
+      if (player.health <= 0) {
+        endGame();
+      }
+    }
+
+    function distance(x1, y1, x2, y2) {
+      return Math.hypot(x2 - x1, y2 - y1);
+    }
+
+    // Wave management
+    function updateWaves() {
+      if (wave === 1 && zombies.length === 0 && waveZombiesKilled === 0) {
+        spawnZombies(5);
+      } else if (zombies.length === 0 && waveZombiesKilled > 0) {
+        waveCompleteTime = Date.now();
+        showWaveMessage(`WAVE ${wave} COMPLETE!`);
+        playWaveComplete();
+        wave++;
+        waveZombiesKilled = 0;
+        safeZoneTime = 3; // 3 second safe zone
+
+        // Spawn next wave after delay
+        setTimeout(() => {
+          const zombieCount = Math.min(5 + wave * 3, 40);
+          spawnZombies(zombieCount);
+        }, 3000);
+      }
+
+      // Auto-fire
+      if (gameState === 'playing' && !inVehicle && zombies.length > 0 && Math.random() < 0.08) {
+        fire();
+      }
+    }
+
+    function showWaveMessage(text) {
+      const msg = document.getElementById('waveMessage');
+      msg.textContent = text;
+      msg.style.opacity = 1;
+      setTimeout(() => {
+        msg.style.opacity = 0;
+      }, 2000);
+    }
+
+    // Game over
+    function endGame() {
+      gameState = 'gameOver';
+      gameEndTime = Date.now();
+
+      const timeSurvived = Math.floor((gameEndTime - gameStartTime) / 1000);
+      const minutes = Math.floor(timeSurvived / 60);
+      const seconds = timeSurvived % 60;
+
+      document.getElementById('gameOverStats').innerHTML = `
+        Waves Survived: ${wave}<br>
+        Zombies Killed: ${totalZombiesKilled}<br>
+        Time: ${minutes}m ${seconds}s
+      `;
+      document.getElementById('gameOverScreen').classList.add('active');
+    }
+
+    // Rendering
+    function renderWorld() {
+      // Dark background
+      ctx.fillStyle = '#0a0a0a';
+      ctx.fillRect(0, 0, W, H);
+
+      // Subtle grid
+      ctx.strokeStyle = 'rgba(0, 255, 0, 0.05)';
+      ctx.lineWidth = 1;
+      const gridSize = 100;
+      const gridOffsetX = -camera.x % gridSize;
+      const gridOffsetY = -camera.y % gridSize;
+
+      for (let x = gridOffsetX; x < W; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, H);
+        ctx.stroke();
+      }
+      for (let y = gridOffsetY; y < H; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(W, y);
+        ctx.stroke();
+      }
+
+      // Buildings
+      for (let b of buildings) {
+        const x = b.x - camera.x;
+        const y = b.y - camera.y;
+        ctx.fillStyle = b.color;
+        ctx.fillRect(x, y, b.width, b.height);
+        ctx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, b.width, b.height);
+      }
+
+      // Debris
+      for (let d of debris) {
+        const x = d.x - camera.x;
+        const y = d.y - camera.y;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(d.rotation);
+        ctx.fillStyle = d.color;
+        ctx.fillRect(-d.width / 2, -d.height / 2, d.width, d.height);
+        ctx.restore();
+      }
+
+      // Vehicles
+      for (let v of vehicles) {
+        const x = v.x - camera.x;
+        const y = v.y - camera.y;
+        ctx.fillStyle = v.color;
+        ctx.fillRect(x - v.width / 2, y - v.height / 2, v.width, v.height);
+
+        // Headlights
+        ctx.fillStyle = '#ffff00';
+        ctx.fillRect(x - 10, y - v.height / 2 - 5, 8, 5);
+        ctx.fillRect(x + 2, y - v.height / 2 - 5, 8, 5);
+
+        // Health bar
+        const barWidth = 40;
+        ctx.fillStyle = '#333';
+        ctx.fillRect(x - barWidth / 2, y + v.height / 2 + 5, barWidth, 5);
+        ctx.fillStyle = '#00ff00';
+        ctx.fillRect(x - barWidth / 2, y + v.height / 2 + 5, (v.health / v.maxHealth) * barWidth, 5);
+      }
+
+      // Pickups
+      for (let p of pickups) {
+        const x = p.x - camera.x;
+        const y = p.y - camera.y;
+        ctx.fillStyle = p.type === 'health' ? '#ff0000' : '#00ff00';
+        ctx.beginPath();
+        ctx.arc(x, y, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = p.type === 'health' ? 'rgba(255, 0, 0, 0.5)' : 'rgba(0, 255, 0, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      // Zombies
+      for (let z of zombies) {
+        const x = z.x - camera.x;
+        const y = z.y - camera.y;
+
+        ctx.fillStyle = z.type === 'boss' ? '#00ff00' : '#228833';
+        ctx.fillRect(x - z.width / 2, y - z.height / 2, z.width, z.height);
+
+        // Eyes
+        ctx.fillStyle = '#ff0000';
+        const eyeSize = z.type === 'boss' ? 5 : 3;
+        ctx.fillRect(x - z.width / 4, y - 3, eyeSize, eyeSize);
+        ctx.fillRect(x + z.width / 4 - eyeSize, y - 3, eyeSize, eyeSize);
+
+        // Health bar
+        const barWidth = z.width + 10;
+        ctx.fillStyle = '#333';
+        ctx.fillRect(x - barWidth / 2, y - z.height / 2 - 8, barWidth, 3);
+        ctx.fillStyle = z.health / z.maxHealth > 0.5 ? '#00ff00' : '#ff0000';
+        ctx.fillRect(x - barWidth / 2, y - z.height / 2 - 8, (z.health / z.maxHealth) * barWidth, 3);
+      }
+
+      // Bullets
+      for (let b of bullets) {
+        const x = b.x - camera.x;
+        const y = b.y - camera.y;
+        ctx.fillStyle = b.weapon === 'bow' ? '#ffff00' : '#ffaa00';
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Particles
+      for (let p of particles) {
+        const x = p.x - camera.x;
+        const y = p.y - camera.y;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(x, y, p.size / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Player
+      if (!inVehicle) {
+        const px = player.x - camera.x;
+        const py = player.y - camera.y;
+        ctx.fillStyle = '#00ffff';
+        ctx.beginPath();
+        ctx.arc(px, py, player.width, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Weapon indicator
+        ctx.strokeStyle = '#ff00ff';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.lineTo(px + Math.cos(player.angle) * 20, py + Math.sin(player.angle) * 20);
+        ctx.stroke();
+      }
+
+      // Messages
+      for (let m of messages) {
+        const x = m.x - camera.x;
+        const y = m.y - camera.y;
+        ctx.fillStyle = m.color;
+        ctx.font = 'bold 16px Arial';
+        ctx.globalAlpha = m.life / 20;
+        ctx.fillText(m.text, x, y);
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    function updateMessages() {
+      for (let i = messages.length - 1; i >= 0; i--) {
+        messages[i].y -= 1;
+        messages[i].life--;
+        if (messages[i].life <= 0) {
+          messages.splice(i, 1);
+        }
+      }
+    }
+
+    function updateCamera() {
+      const targetX = player.x - W / 2;
+      const targetY = player.y - H / 2;
+
+      camera.x += (targetX - camera.x) * 0.1;
+      camera.y += (targetY - camera.y) * 0.1;
+
+      camera.x = Math.max(0, Math.min(WORLD_WIDTH - W, camera.x));
+      camera.y = Math.max(0, Math.min(WORLD_HEIGHT - H, camera.y));
+    }
+
+    function updateHUD() {
+      const healthBar = document.getElementById('healthFill');
+      healthBar.style.width = (player.health / player.maxHealth) * 100 + '%';
+
+      const stats = document.getElementById('stats');
+      stats.innerHTML = `
+        AMMO<br>
+        Pistol: &infin;<br>
+        Shotgun: ${player.shotgunAmmo}<br>
+        Bow: ${player.bowAmmo}<br>
+        Rifle: ${player.rifleAmmo}
+      `;
+
+      const weapon = document.getElementById('weaponDisplay');
+      const weaponNames = { pistol: 'PISTOL', shotgun: 'SHOTGUN', bow: 'BOW', rifle: 'RIFLE' };
+      weapon.textContent = `Weapon: ${weaponNames[player.weapon]}`;
+
+      // Weapon switching
+      if (keys['1']) player.weapon = 'pistol';
+      if (keys['2'] && player.shotgunAmmo > 0) player.weapon = 'shotgun';
+      if (keys['3'] && player.bowAmmo > 0) player.weapon = 'bow';
+      if (keys['4'] && player.rifleAmmo > 0) player.weapon = 'rifle';
+    }
+
+    function updateMinimap() {
+      const minimap = document.getElementById('minimap');
+      const mmCtx = minimap.getContext('2d');
+
+      const scale = 150 / WORLD_WIDTH;
+
+      mmCtx.fillStyle = 'rgba(10, 10, 10, 0.9)';
+      mmCtx.fillRect(0, 0, 150, 150);
+
+      // Zombies
+      mmCtx.fillStyle = 'rgba(0, 200, 50, 0.8)';
+      for (let z of zombies) {
+        mmCtx.fillRect(z.x * scale, z.y * scale, 2, 2);
+      }
+
+      // Player
+      mmCtx.fillStyle = '#00ffff';
+      mmCtx.fillRect(player.x * scale - 2, player.y * scale - 2, 4, 4);
+
+      // Vehicles
+      mmCtx.fillStyle = '#ffff00';
+      for (let v of vehicles) {
+        mmCtx.fillRect(v.x * scale - 2, v.y * scale - 2, 4, 4);
+      }
+
+      mmCtx.strokeStyle = '#00ff00';
+      mmCtx.lineWidth = 1;
+      mmCtx.strokeRect(0, 0, 150, 150);
+    }
+
+    // Game loop
+    function loop() {
+      try {
+        if (gameState === 'playing') {
+          updatePlayer();
+          updateVehicle();
+          updateZombies();
+          updateBullets();
+          updateParticles();
+          updatePickups();
+          updateMessages();
+          updateWaves();
+          updateCamera();
+          updateHUD();
+
+          if (screenShake > 0) {
+            screenShake *= 0.8;
+          }
+        } else if (gameState === 'start') {
+          // Attract mode - zombies wandering around
+          if (zombies.length === 0) {
+            spawnZombies(8);
+          }
+          updateZombies();
+          updateParticles();
+          updateCamera();
+
+          // Keep zombies in frame
+          for (let z of zombies) {
+            if (distance(z.x, z.y, player.x, player.y) > 1500) {
+              z.x = player.x + (Math.random() - 0.5) * 800;
+              z.y = player.y + (Math.random() - 0.5) * 800;
+            }
+          }
+        }
+
+        // Rendering
+        ctx.save();
+        if (screenShake > 0) {
+          ctx.translate((Math.random() - 0.5) * screenShake * 2, (Math.random() - 0.5) * screenShake * 2);
+        }
+        renderWorld();
+        ctx.restore();
+        updateMinimap();
+
+        requestAnimationFrame(loop);
+      } catch (e) {
+        console.error('Game error:', e);
+        requestAnimationFrame(loop);
+      }
+    }
+
+    // UI Event handlers
+    document.getElementById('playBtn').addEventListener('click', () => {
+      document.getElementById('startScreen').classList.add('hidden');
+      gameState = 'playing';
+      gameStartTime = Date.now();
+
+      // Initialize ammo
+      player.pistolAmmo = -1;
+      player.shotgunAmmo = 10;
+      player.bowAmmo = 20;
+      player.rifleAmmo = 15;
+
+      spawnZombies(5);
+    });
+
+    document.getElementById('playAgainBtn').addEventListener('click', () => {
+      location.reload();
+    });
+
+    // Initialize world and start
+    generateWorld();
+
+    // CRITICAL: Initialize all arrays
+    zombies = [];
+    bullets = [];
+    particles = [];
+    pickups = [];
+    vehicles = [];
+    messages = [];
+
+    loop();
+  </script>
+</body>
+</html>

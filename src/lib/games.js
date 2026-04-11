@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'zombie-escape',
+    title: 'Zombie Escape',
+    creator: 'Nolan',
+    description: 'You are the last survivor on Earth! Blast zombies with guns, bows, and shotguns. Find cool cars to drive and run over the undead horde. Survive wave after wave of increasingly dangerous zombies — from slow shamblers to terrifying bosses. How long can you last?',
+    createdAt: '2026-04-11',
+    thumbnail: '/images/zombie-escape-preview.png',
+    color: 'from-green-400 to-red-600',
+  },
+  {
     slug: 'chicken-nuggets',
     title: 'Chicken Nuggets',
     creator: 'Ellen',
