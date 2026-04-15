@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'color-cube',
+    title: 'Color Cube',
+    creator: 'Wyatt',
+    description: 'Tap colors and paint pixel art! Pick a color from the palette, then tap and drag to fill in the numbered squares. Watch as cute pixel art — hearts, cats, dinosaurs, rockets and more — appears before your eyes! Earn stars for speed and unlock all 8 puzzles.',
+    createdAt: '2026-04-15',
+    thumbnail: '/images/color-cube-preview.png',
+    color: 'from-pink-400 to-purple-500',
+  },
+  {
     slug: 'zombie-escape',
     title: 'Zombie Escape',
     creator: 'Nolan',

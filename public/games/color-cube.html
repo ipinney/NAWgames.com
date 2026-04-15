@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Cube - A Color-by-Number Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe6f0 100%);
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* START SCREEN */
+        #startScreen {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+            animation: bounce 2s ease-in-out infinite;
+            letter-spacing: 3px;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+        }
+
+        .title-gradient {
+            background: linear-gradient(90deg, #FF4444, #FFDD44, #44DD44, #4488FF, #BB44FF, #FF8844);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .attract-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            margin: 40px 0;
+            height: 150px;
+        }
+
+        .attract-char {
+            font-size: 5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .attract-char:nth-child(1) { animation-delay: 0s; }
+        .attract-char:nth-child(2) { animation-delay: 0.3s; }
+        .attract-char:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(-2deg); }
+            50% { transform: translateY(0px) rotate(0deg); }
+            75% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #FF4444 0%, #FFDD44 100%);
+            border: none;
+            color: white;
+            padding: 20px 60px;
+            font-size: 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 0 rgba(0,0,0,0.2);
+            transition: all 0.1s;
+            margin-top: 40px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .start-button:active {
+            box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+            transform: translateY(5px);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* PUZZLE SELECT SCREEN */
+        #puzzleSelectScreen {
+            flex-direction: column;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe6f0 100%);
+            overflow-y: auto;
+        }
+
+        .puzzle-select-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .puzzle-select-header h1 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .puzzle-tile {
+            aspect-ratio: 1;
+            background: white;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .puzzle-tile:active {
+            transform: scale(0.95);
+        }
+
+        .puzzle-tile.locked {
+            background: #f0f0f0;
+            border-color: #999;
+            opacity: 0.5;
+        }
+
+        .puzzle-tile.locked::after {
+            content: '🔒';
+            font-size: 2rem;
+        }
+
+        .puzzle-tile-name {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .puzzle-stars {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        /* GAMEPLAY SCREEN */
+        #gameplayScreen {
+            flex-direction: column;
+            padding: 15px;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe6f0 100%);
+        }
+
+        .gameplay-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .puzzle-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .menu-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .progress-container {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #44DD44, #4488FF, #BB44FF);
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 15px;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            gap: 20px;
+        }
+
+        .grid-container {
+            display: inline-block;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .grid {
+            display: grid;
+            gap: 2px;
+            background: #ddd;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+            touch-action: none;
+            position: relative;
+        }
+
+        .cell.filled {
+            color: transparent;
+            font-size: 0;
+        }
+
+        .cell.wrong {
+            animation: shake 0.3s;
+            background: #ffcccc !important;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .cell.pop {
+            animation: pop 0.3s ease-out;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .sparkle-dot {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #FFD700;
+            border-radius: 50%;
+            animation: sparkle 0.6s ease-out forwards;
+        }
+
+        .palette {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 600px;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .color-button {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .color-button:active {
+            transform: scale(0.9);
+        }
+
+        .color-button.selected {
+            border: 5px solid #333;
+            transform: scale(1.1);
+            animation: glow 0.6s ease-out;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 0 0 rgba(0,0,0,0.3); }
+            100% { box-shadow: 0 0 0 10px rgba(0,0,0,0); }
+        }
+
+        /* COMPLETION SCREEN */
+        #completionScreen {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            gap: 30px;
+        }
+
+        .completion-art {
+            font-size: 8rem;
+            animation: celebrate 0.8s ease-in-out infinite;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(-2deg); }
+            75% { transform: scale(1.1) rotate(2deg); }
+        }
+
+        .star-display {
+            font-size: 3rem;
+            letter-spacing: 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .completion-message {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        .confetti-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confetti-fall 2s ease-in forwards;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .next-button {
+            background: linear-gradient(135deg, #44DD44 0%, #4488FF 100%);
+            border: none;
+            color: white;
+            padding: 20px 60px;
+            font-size: 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 0 rgba(0,0,0,0.2);
+            transition: all 0.1s;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .next-button:active {
+            box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+            transform: translateY(5px);
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+
+            .cell {
+                width: 50px;
+                height: 50px;
+            }
+
+            .color-button {
+                width: 50px;
+                height: 50px;
+            }
+
+            .puzzle-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cell {
+                width: 45px;
+                height: 45px;
+                font-size: 0.7rem;
+            }
+
+            .color-button {
+                width: 45px;
+                height: 45px;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .puzzle-grid {
+                grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen" class="screen active">
+    <div class="title"><span class="title-gradient">COLOR CUBE</span></div>
+
+    <div class="attract-container">
+        <div class="attract-char">😸</div>
+        <div class="attract-char">🌟</div>
+        <div class="attract-char">🎨</div>
+    </div>
+
+    <button class="start-button" onclick="startGame()">TAP TO PLAY</button>
+</div>
+
+<!-- PUZZLE SELECT SCREEN -->
+<div id="puzzleSelectScreen" class="screen">
+    <div class="puzzle-select-header">
+        <h1>Select a Puzzle</h1>
+    </div>
+    <div id="puzzleGridContainer" class="puzzle-grid"></div>
+</div>
+
+<!-- GAMEPLAY SCREEN -->
+<div id="gameplayScreen" class="screen">
+    <div class="gameplay-header">
+        <div class="puzzle-title" id="puzzleName">Puzzle</div>
+        <button class="menu-button" onclick="showPuzzleSelect()">Menu</button>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <div class="grid-container">
+            <div id="grid" class="grid"></div>
+        </div>
+        <div class="palette" id="palette"></div>
+    </div>
+</div>
+
+<!-- COMPLETION SCREEN -->
+<div id="completionScreen" class="screen">
+    <div class="completion-art" id="completionArt">😸</div>
+    <div class="completion-message">Puzzle Complete!</div>
+    <div class="star-display" id="starDisplay">⭐ ⭐ ⭐</div>
+    <button class="next-button" onclick="nextPuzzle()">NEXT PUZZLE!</button>
+</div>
+
+<div id="confettiContainer" class="confetti-container"></div>
+
+<script>
+    // ===== AUDIO SYNTHESIS =====
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+        try {
+            const now = audioContext.currentTime;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+            switch(type) {
+                case 'tap':
+                    osc.frequency.setValueAtTime(800, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.1);
+                    osc.stop(now + 0.1);
+                    break;
+                case 'fill':
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
+                    osc.stop(now + 0.15);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    break;
+                case 'wrong':
+                    osc.frequency.setValueAtTime(200, now);
+                    osc.type = 'square';
+                    osc.stop(now + 0.2);
+                    break;
+                case 'complete':
+                    const freqs = [523, 659, 784, 1047];
+                    const dur = 0.15;
+                    freqs.forEach((freq, idx) => {
+                        const o = audioContext.createOscillator();
+                        const g = audioContext.createGain();
+                        o.connect(g);
+                        g.connect(audioContext.destination);
+                        o.frequency.setValueAtTime(freq, now + idx * dur);
+                        g.gain.setValueAtTime(0.3, now + idx * dur);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + idx * dur + dur);
+                        o.stop(now + idx * dur + dur);
+                    });
+                    return;
+                case 'select':
+                    osc.frequency.setValueAtTime(1000, now);
+                    osc.stop(now + 0.08);
+                    break;
+            }
+        } catch(e) {
+            // Audio context may not be available on all devices
+        }
+    }
+
+    // ===== PUZZLE DEFINITIONS =====
+    const COLORS = {
+        1: '#FF4444',
+        2: '#4488FF',
+        3: '#FFDD44',
+        4: '#44DD44',
+        5: '#BB44FF',
+        6: '#FF8844'
+    };
+
+    const COLOR_NAMES = {
+        1: 'Red',
+        2: 'Blue',
+        3: 'Yellow',
+        4: 'Green',
+        5: 'Purple',
+        6: 'Orange'
+    };
+
+    const PUZZLES = [
+        {
+            name: 'Heart',
+            emoji: '❤️',
+            colors: 3,
+            grid: [
+                [0, 0, 1, 1, 0, 0, 1, 1],
+                [0, 1, 1, 1, 1, 1, 1, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 1, 0, 0],
+                [0, 0, 0, 1, 1, 0, 0, 0]
+            ]
+        },
+        {
+            name: 'Star',
+            emoji: '⭐',
+            colors: 3,
+            grid: [
+                [0, 0, 0, 1, 1, 0, 0, 0],
+                [0, 0, 1, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 1, 0, 0],
+                [0, 0, 0, 1, 1, 0, 0, 0]
+            ]
+        },
+        {
+            name: 'Cat Face',
+            emoji: '😸',
+            colors: 4,
+            grid: [
+                [0, 0, 2, 2, 2, 2, 0, 0, 0, 0],
+                [0, 2, 1, 1, 1, 1, 2, 0, 0, 0],
+                [2, 1, 1, 3, 1, 1, 1, 2, 0, 0],
+                [2, 1, 1, 3, 1, 1, 1, 2, 0, 0],
+                [2, 1, 1, 1, 1, 1, 1, 2, 0, 0],
+                [2, 1, 1, 1, 1, 1, 1, 2, 0, 0],
+                [0, 2, 1, 1, 1, 1, 2, 0, 0, 0],
+                [0, 0, 2, 2, 2, 2, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ]
+        },
+        {
+            name: 'Dinosaur',
+            emoji: '🦕',
+            colors: 5,
+            grid: [
+                [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
+                [0, 0, 0, 0, 2, 2, 3, 2, 2, 0],
+                [0, 0, 0, 2, 2, 2, 2, 2, 2, 0],
+                [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+                [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+                [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+                [0, 0, 1, 1, 0, 0, 0, 1, 1, 0],
+                [0, 0, 1, 1, 0, 0, 0, 1, 1, 0],
+                [0, 0, 1, 1, 0, 0, 0, 1, 1, 0],
+                [0, 0, 1, 1, 0, 0, 0, 1, 1, 0]
+            ]
+        },
+        {
+            name: 'Rocket',
+            emoji: '🚀',
+            colors: 4,
+            grid: [
+                [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+                [0, 0, 1, 1, 2, 1, 1, 1, 0, 0],
+                [0, 1, 1, 2, 2, 2, 1, 1, 1, 0],
+                [1, 1, 2, 2, 2, 2, 2, 1, 1, 1],
+                [1, 1, 2, 2, 2, 2, 2, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 3, 0, 0, 0, 0, 3, 0, 0],
+                [0, 3, 3, 0, 0, 0, 0, 3, 3, 0],
+                [3, 3, 3, 0, 0, 0, 0, 3, 3, 3]
+            ]
+        },
+        {
+            name: 'Rainbow',
+            emoji: '🌈',
+            colors: 6,
+            grid: [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+                [0, 2, 2, 2, 2, 2, 2, 2, 0, 0],
+                [3, 3, 3, 3, 3, 3, 3, 3, 3, 0],
+                [4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+                [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+                [6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ]
+        },
+        {
+            name: 'Fish',
+            emoji: '🐠',
+            colors: 5,
+            grid: [
+                [0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+                [0, 0, 0, 3, 3, 3, 3, 3, 3, 0],
+                [0, 0, 3, 3, 3, 3, 3, 3, 3, 3],
+                [0, 3, 3, 3, 1, 1, 3, 3, 3, 3],
+                [3, 3, 3, 3, 1, 1, 3, 3, 3, 2],
+                [0, 3, 3, 3, 1, 1, 3, 3, 3, 3],
+                [0, 0, 3, 3, 3, 3, 3, 3, 3, 3],
+                [0, 0, 0, 3, 3, 3, 3, 3, 3, 0],
+                [0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ]
+        },
+        {
+            name: 'Robot',
+            emoji: '🤖',
+            colors: 6,
+            grid: [
+                [0, 0, 2, 2, 2, 2, 2, 2, 0, 0],
+                [0, 0, 2, 1, 1, 1, 1, 2, 0, 0],
+                [0, 0, 2, 1, 1, 1, 1, 2, 0, 0],
+                [0, 0, 2, 2, 2, 2, 2, 2, 0, 0],
+                [3, 3, 4, 4, 4, 4, 4, 4, 5, 5],
+                [3, 3, 4, 4, 4, 4, 4, 4, 5, 5],
+                [0, 0, 6, 6, 0, 0, 6, 6, 0, 0],
+                [0, 0, 6, 6, 0, 0, 6, 6, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ]
+        }
+    ];
+
+    // ===== GAME STATE =====
+    let gameState = {
+        currentPuzzleIndex: 0,
+        completedPuzzles: 0,
+        selectedColor: null,
+        filledCells: new Set(),
+        isDragging: false,
+        startTime: 0,
+        puzzleStars: {}
+    };
+
+    // ===== UI FUNCTIONS =====
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    function startGame() {
+        playSound('tap');
+        switchScreen('puzzleSelectScreen');
+        renderPuzzleSelect();
+    }
+
+    function showPuzzleSelect() {
+        playSound('tap');
+        switchScreen('puzzleSelectScreen');
+        renderPuzzleSelect();
+    }
+
+    function nextPuzzle() {
+        playSound('tap');
+        gameState.currentPuzzleIndex++;
+        if (gameState.currentPuzzleIndex >= PUZZLES.length) {
+            gameState.currentPuzzleIndex = 0;
+        }
+        startPuzzle(gameState.currentPuzzleIndex);
+    }
+
+    // ===== PUZZLE SELECT SCREEN =====
+    function renderPuzzleSelect() {
+        const container = document.getElementById('puzzleGridContainer');
+        container.innerHTML = '';
+
+        PUZZLES.forEach((puzzle, idx) => {
+            const tile = document.createElement('div');
+            tile.className = 'puzzle-tile';
+
+            const stars = gameState.puzzleStars[idx] || 0;
+            const starStr = '⭐'.repeat(stars);
+
+            tile.innerHTML = `
+                <div class="puzzle-tile-name">${puzzle.name}</div>
+                <div style="font-size: 2rem; margin: 5px 0;">${puzzle.emoji}</div>
+                <div class="puzzle-stars">${starStr || 'New'}</div>
+            `;
+
+            tile.onclick = () => {
+                playSound('select');
+                startPuzzle(idx);
+            };
+
+            container.appendChild(tile);
+        });
+    }
+
+    // ===== GAMEPLAY SETUP =====
+    function startPuzzle(puzzleIndex) {
+        gameState.currentPuzzleIndex = puzzleIndex;
+        gameState.selectedColor = null;
+        gameState.filledCells = new Set();
+        gameState.isDragging = false;
+        gameState.startTime = Date.now();
+
+        const puzzle = PUZZLES[puzzleIndex];
+        document.getElementById('puzzleName').textContent = puzzle.name;
+
+        switchScreen('gameplayScreen');
+        renderGrid(puzzle);
+        renderPalette(puzzle.colors);
+    }
+
+    // ===== GRID RENDERING =====
+    function renderGrid(puzzle) {
+        const gridEl = document.getElementById('grid');
+        gridEl.innerHTML = '';
+
+        const rows = puzzle.grid.length;
+        const cols = puzzle.grid[0].length;
+
+        gridEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        gridEl.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
+        puzzle.grid.forEach((row, rowIdx) => {
+            row.forEach((cellValue, colIdx) => {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.value = cellValue;
+                cell.dataset.row = rowIdx;
+                cell.dataset.col = colIdx;
+
+                if (cellValue === 0) {
+                    cell.style.background = 'white';
+                    cell.textContent = '';
+                } else {
+                    cell.textContent = cellValue;
+                }
+
+                cell.addEventListener('mousedown', handleCellInteraction);
+                cell.addEventListener('touchstart', handleCellInteraction);
+                cell.addEventListener('mouseover', handleCellDrag);
+                cell.addEventListener('touchmove', handleCellDrag);
+                cell.addEventListener('mouseup', stopDragging);
+                cell.addEventListener('touchend', stopDragging);
+
+                gridEl.appendChild(cell);
+            });
+        });
+    }
+
+    // ===== CELL INTERACTION =====
+    function handleCellInteraction(e) {
+        e.preventDefault();
+        gameState.isDragging = true;
+        fillCell(e.currentTarget);
+    }
+
+    function handleCellDrag(e) {
+        e.preventDefault();
+        if (!gameState.isDragging) return;
+
+        if (e.touches) {
+            const touch = e.touches[0];
+            const el = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (el && el.classList.contains('cell')) {
+                fillCell(el);
+            }
+        }
+    }
+
+    function stopDragging() {
+        gameState.isDragging = false;
+    }
+
+    function fillCell(cellEl) {
+        if (!gameState.selectedColor) return;
+        if (gameState.filledCells.has(cellEl)) return;
+
+        const cellValue = parseInt(cellEl.dataset.value);
+        const selectedColorNum = parseInt(gameState.selectedColor);
+
+        if (cellValue === 0) return;
+
+        if (cellValue === selectedColorNum) {
+            // Correct color
+            playSound('fill');
+            cellEl.style.background = COLORS[selectedColorNum];
+            cellEl.classList.add('pop');
+            cellEl.classList.add('filled');
+            gameState.filledCells.add(cellEl);
+
+            // Add sparkles
+            createSparkles(cellEl);
+
+            // Update progress
+            updateProgress();
+
+            // Check for completion
+            checkCompletion();
+        } else {
+            // Wrong color
+            playSound('wrong');
+            cellEl.classList.add('wrong');
+            setTimeout(() => cellEl.classList.remove('wrong'), 300);
+        }
+    }
+
+    function createSparkles(cellEl) {
+        const sparkleContainer = document.createElement('div');
+        sparkleContainer.className = 'sparkle';
+
+        for (let i = 0; i < 6; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'sparkle-dot';
+            const angle = (Math.PI * 2 * i) / 6;
+            const distance = 15;
+            dot.style.left = (distance * Math.cos(angle) + 15) + 'px';
+            dot.style.top = (distance * Math.sin(angle) + 15) + 'px';
+            sparkleContainer.appendChild(dot);
+        }
+
+        cellEl.appendChild(sparkleContainer);
+        setTimeout(() => sparkleContainer.remove(), 600);
+    }
+
+    // ===== PROGRESS TRACKING =====
+    function updateProgress() {
+        const totalCells = document.querySelectorAll('.cell[data-value!="0"]').length;
+        const filledCount = gameState.filledCells.size;
+        const progress = (filledCount / totalCells) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+    }
+
+    function checkCompletion() {
+        const totalCells = document.querySelectorAll('.cell[data-value!="0"]').length;
+        if (gameState.filledCells.size === totalCells) {
+            completepuzzle();
+        }
+    }
+
+    function completepuzzle() {
+        playSound('complete');
+
+        const elapsed = Date.now() - gameState.startTime;
+        let stars = 1;
+        if (elapsed < 60000) stars = 3;
+        else if (elapsed < 120000) stars = 2;
+
+        gameState.puzzleStars[gameState.currentPuzzleIndex] = Math.max(
+            gameState.puzzleStars[gameState.currentPuzzleIndex] || 0,
+            stars
+        );
+        gameState.completedPuzzles++;
+
+        showCompletionScreen(stars);
+    }
+
+    // ===== COMPLETION SCREEN =====
+    function showCompletionScreen(stars) {
+        const puzzle = PUZZLES[gameState.currentPuzzleIndex];
+        document.getElementById('completionArt').textContent = puzzle.emoji;
+        document.getElementById('starDisplay').textContent = '⭐'.repeat(stars);
+
+        switchScreen('completionScreen');
+        createConfetti();
+    }
+
+    function createConfetti() {
+        const container = document.getElementById('confettiContainer');
+        container.innerHTML = '';
+
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = Object.values(COLORS)[Math.floor(Math.random() * 6)];
+            confetti.style.animation = `confetti-fall ${1 + Math.random()}s ease-in forwards`;
+            confetti.style.animationDelay = Math.random() * 0.3 + 's';
+            container.appendChild(confetti);
+        }
+    }
+
+    // ===== PALETTE RENDERING =====
+    function renderPalette(numColors) {
+        const palette = document.getElementById('palette');
+        palette.innerHTML = '';
+
+        for (let i = 1; i <= numColors; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'color-button';
+            btn.style.background = COLORS[i];
+            btn.dataset.color = i;
+
+            btn.addEventListener('click', () => selectColor(btn, i));
+            palette.appendChild(btn);
+        }
+    }
+
+    function selectColor(btnEl, colorNum) {
+        playSound('select');
+
+        document.querySelectorAll('.color-button').forEach(b => b.classList.remove('selected'));
+        btnEl.classList.add('selected');
+        gameState.selectedColor = colorNum;
+    }
+
+    // ===== INITIALIZATION =====
+    window.addEventListener('load', () => {
+        playSound('tap');
+    });
+
+    // Prevent default touch behaviors
+    document.addEventListener('touchmove', (e) => {
+        if (e.target.classList.contains('cell')) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+</script>
+
+</body>
+</html>
