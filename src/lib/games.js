@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'critter-quest',
+    title: 'Critter Quest',
+    creator: 'Claude',
+    description: 'Catch \'em all on Willow Island! Explore 5 wild biomes, battle critters with super-effective type moves, then time the shrinking ring to throw a PERFECT catch! Fill your Critterdex with all 14 critters, evolve your team, beat the 4 Guardians, and awaken the legendary rainbow critter Prisma. Your buddy critter follows you everywhere — and your adventure auto-saves!',
+    createdAt: '2026-08-07',
+    thumbnail: '/images/critter-quest-preview.png',
+    color: 'from-green-400 to-purple-500',
+  },
+  {
     slug: 'color-cube',
     title: 'Color Cube',
     creator: 'Wyatt',
