@@ -3,6 +3,33 @@
 
 const GAMES = [
   {
+    slug: 'subway-dash',
+    title: 'Subway Dash',
+    creator: 'Nolan',
+    description: 'Sprint through a neon downtown with a determined guard hot on your heels! Swipe or use the arrows to switch lanes, jump the barriers, and slide under the scaffolding while scooping up coins. Grab Shield, Magnet and Jetpack power-ups \u2014 but crash and the guard closes in, so keep the run alive across four shifting city zones and chase a new best score.',
+    createdAt: '2026-08-11',
+    thumbnail: '/images/subway-dash-preview.png',
+    color: 'from-amber-400 to-indigo-600',
+  },
+  {
+    slug: 'backyard-baseball',
+    title: 'Backyard Baseball Bash',
+    creator: 'Nolan',
+    description: 'Draft three quirky neighborhood kids \u2014 each with their own power, speed and pitching stats plus a signature perk \u2014 and take them into a five-team season ladder. At the plate, tap the moment the timing ring flashes GOLD to launch a tape-measure home run; on defense, pick your pitch and tap to snag the catch. Three-inning sandlot games, synthesized bat cracks and crowd cheers, and a season trophy waiting at the end.',
+    createdAt: '2026-08-11',
+    thumbnail: '/images/backyard-baseball-preview.png',
+    color: 'from-lime-400 to-emerald-600',
+  },
+  {
+    slug: 'rocket-racing',
+    title: 'Rocket Racing: Moon Rally',
+    creator: 'Nolan & Lev',
+    description: 'Seven rockets, one dusty crater track, and sixty seconds of low-gravity mayhem. Race the pack across the moon grabbing power-up pads \u2014 hit the speed boost, lob a burrito bomb to splat rivals into a slow-motion crawl, blast them with guns to send them spinning, or pop a shield and dive through the chaos untouched. Auto-thrust and smart steering mean anyone can drive it, but only one rocket takes the podium.',
+    createdAt: '2026-08-11',
+    thumbnail: '/images/rocket-racing-preview.png',
+    color: 'from-cyan-400 to-slate-700',
+  },
+  {
     slug: 'critter-quest',
     title: 'Critter Quest',
     creator: 'Claude',
