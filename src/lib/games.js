@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'amongst',
+    title: 'Amongst: Castle Rescue',
+    creator: 'Addie',
+    description: 'Sneak into the zombie castle where every little bean looks exactly the same. Hold the X-RAY to see what is hiding inside them — a green heart means a friendly human, a red skull means a zombie. Blast the zombies with your goo cannon to cure them back into happy crewmates, but never zap a human by mistake! Dodge spike traps, gargoyle fire jets and swinging axes across eight castle rooms, watch out for a sneaky zombie that fakes being human, and de-zombify the King Zombie on his throne.',
+    createdAt: '2026-08-14',
+    thumbnail: '/images/amongst-preview.png',
+    color: 'from-violet-500 to-rose-700',
+  },
+  {
     slug: 'subway-dash',
     title: 'Subway Dash',
     creator: 'Nolan',
