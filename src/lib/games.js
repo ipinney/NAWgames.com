@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'geometry-jump',
+    title: 'Geometry Jump',
+    creator: 'Nolan',
+    description: 'One tap. One cube. Six levels of spikes. Your cube auto-runs to the beat \u2014 tap to jump, hold to keep bouncing, hit yellow orbs mid-air for a second jump and launch pads for huge leaps. Fly through rocket portals in Ship mode, flip upside down with gravity portals, and grab the three hidden coins in every level. Every death respawns instantly with a progress percent so you can beat your best, and Practice mode adds checkpoints when a level gets tough. Customize your cube color and face, then climb from Stereo Start all the way to Neon Nightmare.',
+    createdAt: '2026-09-08',
+    thumbnail: '/images/geometry-jump-preview.png',
+    color: 'from-yellow-400 to-blue-700',
+  },
+  {
     slug: 'amongst',
     title: 'Amongst: Castle Rescue',
     creator: 'Addie',
