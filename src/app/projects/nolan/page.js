@@ -5,6 +5,18 @@ import { useState } from 'react';
 
 const PROJECTS = [
   {
+    slug: 'dusty-build-guide',
+    title: 'How To Build Dusty',
+    subject: 'Build Guide',
+    emoji: '🔧',
+    description:
+      'Step by step, from a pile of parts to a working robot. Every part explained, every step drawn, plus what to do when it misbehaves.',
+    dueDate: '2026-11-16',
+    dueLabel: 'Nov 16, 2026',
+    color: 'from-slate-700 to-blue-500',
+    file: '/projects/nolan/dusty-build-guide.html',
+  },
+  {
     slug: 'dusty',
     title: 'Dusty',
     subject: 'Invention Project',
