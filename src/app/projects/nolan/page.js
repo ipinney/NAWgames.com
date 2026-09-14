@@ -15,8 +15,26 @@ const PROJECTS = [
     dueLabel: 'Nov 16, 2026',
     color: 'from-slate-700 to-orange-500',
     file: '/projects/nolan/dusty.html',
-    pdf: '/projects/nolan/dusty-parts-list.pdf',
-    pdfLabel: 'Parts List PDF',
+    links: [
+      { href: '/projects/nolan/dusty-parts-list.pdf', label: '↓ Parts List PDF' },
+      { href: '/projects/nolan/invention-packet.html', label: '📋 Packet Guide' },
+    ],
+  },
+  {
+    slug: 'invention-packet',
+    title: 'The Packet',
+    subject: 'Invention Convention',
+    emoji: '📋',
+    description:
+      'Every page of the school packet in order, with the Dusty facts for each answer, the rubric, the five due dates, and the trifold board layout. Plus big print-outs for the board.',
+    dueDate: '2026-11-16',
+    dueLabel: 'Nov 16, 2026',
+    color: 'from-blue-800 to-cyan-500',
+    file: '/projects/nolan/invention-packet.html',
+    links: [
+      { href: '/projects/nolan/board-prints.html', label: '🖨️ Board Print-Outs' },
+      { href: '/projects/nolan/dusty.html', label: '🤖 Build Plan' },
+    ],
   },
 ];
 
@@ -47,17 +65,18 @@ export default function NolanProjectsPage() {
                 <span className="text-naw-orange text-sm font-semibold">Due {viewing.dueLabel}</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 self-start">
-              {viewing.pdf && (
+            <div className="flex items-center gap-2 self-start flex-wrap">
+              {(viewing.links || []).map((link) => (
                 <a
-                  href={viewing.pdf}
+                  key={link.href}
+                  href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-naw-orange/20 border border-naw-orange/40 text-naw-orange px-4 py-2 rounded-lg text-sm font-semibold hover:bg-naw-orange/30 transition-colors"
                 >
-                  ↓ {viewing.pdfLabel}
+                  {link.label}
                 </a>
-              )}
+              ))}
               <button
                 onClick={() => setIsFullscreen(!isFullscreen)}
                 className="bg-naw-purple/20 border border-naw-purple/30 text-white px-4 py-2 rounded-lg text-sm hover:bg-naw-purple/30 transition-colors"
@@ -82,7 +101,7 @@ export default function NolanProjectsPage() {
               src={viewing.file}
               className={`w-full bg-white ${isFullscreen ? 'h-full' : 'h-[600px] sm:h-[750px]'}`}
               title={viewing.title}
-              sandbox="allow-scripts allow-same-origin"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals"
             />
           </div>
         </div>

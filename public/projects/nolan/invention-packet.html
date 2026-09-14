@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dusty - Invention Convention Packet Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ground: #EAEFF5;
+    --card: #FFFFFF;
+    --ink: #15202E;
+    --ink-2: #53667E;
+    --ink-3: #8A9AAF;
+    --line: #D4DEE9;
+    --orange: #E2662A;
+    --orange-soft: #FDF0E8;
+    --blue: #2A6BC4;
+    --blue-soft: #E9F1FB;
+    --green: #0E8A62;
+    --green-soft: #E6F5EF;
+    --purple: #6B4AA8;
+    --purple-soft: #F0EBFA;
+  }
+
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    background: var(--ground);
+    color: var(--ink);
+    padding: 18px;
+    line-height: 1.55;
+  }
+
+  .wrap { max-width: 880px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+
+  h1, h2, h3, h4, .badge, .eyebrow { font-family: 'Fredoka', 'Nunito', sans-serif; }
+
+  .hero {
+    background: linear-gradient(140deg, #1B3350 0%, #294B73 62%, #B24E1F 150%);
+    color: #fff; border: none; text-align: center; padding: 30px 22px 26px;
+  }
+  .hero .robot { font-size: 46px; display: block; line-height: 1; margin-bottom: 10px; }
+  .hero h1 { font-size: clamp(26px, 6vw, 40px); font-weight: 700; letter-spacing: 0.02em; margin-bottom: 6px; }
+  .hero p { color: rgba(255,255,255,0.84); font-size: 15.5px; max-width: 50ch; margin: 0 auto; }
+  .hero .who { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 14px; }
+  .due {
+    display: inline-flex; align-items: center; gap: 9px; background: var(--orange); color: #fff;
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+    padding: 9px 16px; border-radius: 999px; margin-top: 18px; text-transform: uppercase;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--orange); margin-bottom: 4px;
+  }
+  h2 { font-size: 25px; font-weight: 600; margin-bottom: 10px; line-height: 1.2; }
+  h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  h4 { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+  p.lead { color: var(--ink-2); font-size: 15.5px; }
+
+  /* rules strip */
+  .rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 13px; margin-top: 14px; }
+  .rule { background: var(--orange-soft); border-radius: 11px; padding: 15px 16px; }
+  .rule .ico { font-size: 22px; display: block; margin-bottom: 6px; }
+  .rule h3 { font-size: 15.5px; color: #A8471B; }
+  .rule p { font-size: 14px; color: var(--ink-2); }
+
+  /* due dates */
+  .dates { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+  .date { display: grid; grid-template-columns: 104px 1fr; gap: 16px; background: var(--ground); border-radius: 11px; padding: 14px 16px; align-items: start; }
+  .date.final { background: #1B3350; }
+  .date.final .when { color: #FFB27A; }
+  .date.final h3, .date.final p { color: #fff; }
+  .date.final p { color: rgba(255,255,255,0.72); }
+  .date .when { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; font-weight: 600; color: var(--orange); line-height: 1.35; padding-top: 2px; }
+  .date h3 { font-size: 16.5px; }
+  .date p { font-size: 14.5px; color: var(--ink-2); }
+
+  /* worksheet blocks */
+  .sheet { border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-top: 14px; }
+  .sheet > .tag {
+    display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em;
+    text-transform: uppercase; background: var(--blue-soft); color: var(--blue); padding: 4px 9px; border-radius: 999px; margin-bottom: 9px;
+  }
+  .sheet h3 { font-size: 19px; margin-bottom: 6px; }
+  .sheet .ask { font-size: 14.5px; color: var(--ink-2); }
+  .prompt { background: var(--blue-soft); border-left: 4px solid var(--blue); border-radius: 0 9px 9px 0; padding: 12px 14px; margin-top: 12px; }
+  .prompt h4 { color: var(--blue); }
+  .prompt p, .prompt li { font-size: 14px; color: var(--ink-2); }
+  .prompt ul, .facts ul { margin: 4px 0 0 18px; }
+  .prompt li, .facts li { margin-bottom: 4px; }
+  .facts { background: var(--green-soft); border-left: 4px solid var(--green); border-radius: 0 9px 9px 0; padding: 12px 14px; margin-top: 10px; }
+  .facts h4 { color: var(--green); }
+  .facts p, .facts li { font-size: 14px; color: var(--ink-2); }
+  .pick { background: var(--purple-soft); border-left: 4px solid var(--purple); border-radius: 0 9px 9px 0; padding: 12px 14px; margin-top: 10px; }
+  .pick h4 { color: var(--purple); }
+  .pick p, .pick li { font-size: 14px; color: var(--ink-2); }
+
+  .qlist { counter-reset: q; margin-top: 12px; display: flex; flex-direction: column; gap: 9px; }
+  .qq { background: var(--ground); border-radius: 10px; padding: 12px 14px; display: grid; grid-template-columns: 26px 1fr; gap: 11px; align-items: start; }
+  .qq .n { font-family: 'IBM Plex Mono', monospace; font-weight: 600; color: var(--orange); font-size: 15px; }
+  .qq p { font-size: 15px; font-weight: 600; }
+  .qq small { display: block; font-size: 13px; color: var(--ink-3); font-weight: 400; margin-top: 2px; }
+
+  /* rubric */
+  table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  td.pts { font-family: 'IBM Plex Mono', monospace; font-weight: 600; color: var(--orange); white-space: nowrap; }
+  td.crit { font-weight: 700; }
+  tr.sum td { border-bottom: none; border-top: 2px solid var(--ink); font-family: 'IBM Plex Mono', monospace; font-weight: 600; padding-top: 12px; }
+
+  /* board */
+  .board-wrap { overflow-x: auto; margin-top: 14px; }
+  svg.board { display: block; width: 100%; min-width: 520px; height: auto; }
+  .panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 13px; margin-top: 14px; }
+  .panel { border: 2px dashed var(--line); border-radius: 11px; padding: 15px 16px; }
+  .panel h3 { font-size: 15.5px; color: var(--blue); }
+  .panel ol { margin: 6px 0 0 18px; font-size: 14px; color: var(--ink-2); }
+  .panel li { margin-bottom: 4px; }
+
+  .biglink { display: block; margin-top: 14px; background: var(--orange); color: #fff; text-decoration: none; font-weight: 700; font-size: 16px; text-align: center; padding: 15px 16px; border-radius: 11px; }
+  .biglink small { display: block; font-weight: 400; font-size: 13px; color: rgba(255,255,255,0.8); margin-top: 3px; }
+  .biglink.blue { background: var(--blue); }
+
+  footer { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: 0.06em; padding: 4px 0 10px; }
+
+  @media (max-width: 520px) {
+    body { padding: 12px; }
+    .card { padding: 17px; }
+    .date { grid-template-columns: 1fr; gap: 5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card hero">
+    <span class="robot">📋</span>
+    <div class="who">Nolan Pinney &nbsp;&middot;&nbsp; #16 &nbsp;&middot;&nbsp; 4th Grade Science</div>
+    <h1>THE PACKET</h1>
+    <p>Everything the Invention Convention packet asks for, in order, with the Dusty facts you need to answer it. You still write it. This just means you never stare at a blank line.</p>
+    <div class="due">🎪 Showcase Nov 16 &middot; 2:15-3:00 &middot; Parish Hall</div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Read this first</p>
+    <h2>The four rules</h2>
+    <p class="lead">Driving question for the whole project: <strong>How can a real-world problem be changed by an invention you create?</strong></p>
+    <div class="rules">
+      <div class="rule">
+        <span class="ico">✍️</span>
+        <h3>Cursive, by hand</h3>
+        <p>Every single thing written in the packet must be handwritten and in cursive. No typing, no printing. This one is easy to forget and easy to lose points on.</p>
+      </div>
+      <div class="rule">
+        <span class="ico">📅</span>
+        <h3>Five separate grades</h3>
+        <p>Each part is taken as a science classwork grade on its own due date. A late part is a zero on that grade, not just a late project.</p>
+      </div>
+      <div class="rule">
+        <span class="ico">🖨️</span>
+        <h3>The board can be typed</h3>
+        <p>The trifold is the opposite of the packet. Board text may be typed and printed, and titles may be typed or stickers. Only the sketch has to be hand drawn.</p>
+      </div>
+      <div class="rule">
+        <span class="ico">🤖</span>
+        <h3>Working is a bonus</h3>
+        <p>The rules say the prototype does not have to work, it just has to show what the invention looks like. Dusty is going to actually work. That is extra, not required.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Turn-in schedule</p>
+    <h2>Five due dates</h2>
+    <div class="dates">
+      <div class="date">
+        <div class="when">Wed<br>Sep 17</div>
+        <div>
+          <h3>Research Question</h3>
+          <p>The Research Question page. Topic, why it is interesting, Know and Need to know boxes, and three research questions that are not yes or no questions.</p>
+        </div>
+      </div>
+      <div class="date">
+        <div class="when">Wed<br>Oct 1</div>
+        <div>
+          <h3>Design Thinking Plan</h3>
+          <p>Both Design Thinking pages. Page 23 is the five questions about what it is and who it is for. Page 24 is the labeled drawing plus size, weight, materials, cost, and how it operates.</p>
+        </div>
+      </div>
+      <div class="date">
+        <div class="when">Wed<br>Oct 8</div>
+        <div>
+          <h3>Impact on Society</h3>
+          <p>The top half of the Impact page. Who it helps and what changes in the real world if a lot of people have one.</p>
+        </div>
+      </div>
+      <div class="date">
+        <div class="when">Wed<br>Oct 15</div>
+        <div>
+          <h3>Catholic Connection</h3>
+          <p>The bottom half of the Impact page. A saint your invention relates to, or a spiritual or corporal work of mercy, explained thoughtfully.</p>
+        </div>
+      </div>
+      <div class="date final">
+        <div class="when">Mon<br>Nov 16</div>
+        <div>
+          <h3>Prototype + Trifold + whole packet</h3>
+          <p>Robot, board, and the packet all turned in. Showcase is that afternoon from 2:15 to 3:00 in the Parish Hall. The Research Resources page is due with this, so the two books need to be checked out well before then.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Part 1 &middot; due Sep 17</p>
+    <h2>Research Question page</h2>
+
+    <div class="sheet">
+      <span class="tag">Topic</span>
+      <h3>Topic and why it is interesting</h3>
+      <p class="ask">Two blank lines under "This topic is interesting because."</p>
+      <div class="facts">
+        <h4>Topic to write</h4>
+        <p>Robots that clean, and how a robot knows where the edge of a table is.</p>
+      </div>
+      <div class="prompt">
+        <h4>For the two lines, use your own reason</h4>
+        <p>Something true, in your own words. Things that are actually true for you: you eat at the table and at the desk, crumbs get wiped onto the floor, robot vacuums only work on floors, and you wanted to find out how a robot can see a drop-off when it has no eyes.</p>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Know / Need to know</span>
+      <h3>The two boxes</h3>
+      <p class="ask">Two large boxes. Fill both. Do not leave the Need to know box short, it is the one that shows you are actually researching.</p>
+      <div class="facts">
+        <h4>Know (things you can already say)</h4>
+        <ul>
+          <li>Crumbs on a table get pushed to the floor when you wipe with your hand.</li>
+          <li>Robot vacuums exist but they only work on floors.</li>
+          <li>Robots can be programmed with a micro:bit using code blocks.</li>
+          <li>Infrared light bounces off surfaces and sensors can measure the bounce.</li>
+          <li>Motors turn wheels, and turning one wheel faster than the other steers.</li>
+        </ul>
+      </div>
+      <div class="prompt">
+        <h4>Need to know (real open questions)</h4>
+        <ul>
+          <li>How far ahead of the wheels does a sensor have to sit to stop in time.</li>
+          <li>Whether a dark tablecloth tricks an infrared sensor into thinking it is a cliff.</li>
+          <li>How fast is too fast to stop safely.</li>
+          <li>What kind of brush picks crumbs up instead of shoving them off the side.</li>
+          <li>How long four AA batteries can run two motors and a brush.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Three questions</span>
+      <h3>Write 3 strong research questions</h3>
+      <p class="ask">They cannot be yes or no questions. Good ones start with How, What, or Which and have an answer you could measure.</p>
+      <div class="qlist">
+        <div class="qq"><span class="n">1</span><div><p>How fast can a robot drive and still stop before the edge of a table?</p><small>This is the main experiment. It gets measured in millimeters and in falls out of 20 runs.</small></div></div>
+        <div class="qq"><span class="n">2</span><div><p>How does the color of a table surface change how well an infrared cliff sensor works?</p><small>White paper, bare wood, black placemat. Same robot, three surfaces.</small></div></div>
+        <div class="qq"><span class="n">3</span><div><p>Which sweeper design collects the most crumbs instead of pushing them off the table?</p><small>Measured by weighing the tray after a set number of passes.</small></div></div>
+      </div>
+      <div class="prompt">
+        <h4>Why these three work</h4>
+        <p>Each one has a number at the end of it. A question you can answer with a number is a question a judge can see you actually tested.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Part 2 &middot; due Oct 1</p>
+    <h2>Design Thinking Plan, page 23</h2>
+
+    <div class="sheet">
+      <span class="tag">Question 1</span>
+      <h3>What will you invent and what is it called?</h3>
+      <div class="facts">
+        <p>My invention is a small robot that drives around on a table, sweeps crumbs into a tray, and stops itself at the edge instead of falling off. I call it Dusty.</p>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Box</span>
+      <h3>How will you learn more about this topic?</h3>
+      <div class="facts">
+        <ul>
+          <li>Books from the library about robots and about the micro:bit.</li>
+          <li>The micro:bit website and the guides from the companies that make the sensors.</li>
+          <li>Building it and testing it, which is the real answer. Twenty runs at four different speeds.</li>
+          <li>Asking my dad when a part does not work the way the guide says.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Question 2</span>
+      <h3>What does it do and what problem does it solve?</h3>
+      <div class="facts">
+        <p>I hope to solve the problem of crumbs on tables and desks. Right now people wipe crumbs onto the floor with their hand, which moves the mess instead of cleaning it, and it brings ants. A robot vacuum cannot help because it would drive off the side of the table. Dusty sweeps the crumbs into a tray you can empty, and it stops at the edge.</p>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Question 3</span>
+      <h3>How does it make life better or easier?</h3>
+      <div class="facts">
+        <ul>
+          <li>You push one button instead of getting up for a towel and a dustpan.</li>
+          <li>Crumbs end up in a tray in the trash instead of on the floor.</li>
+          <li>Fewer crumbs on the floor means fewer ants and less sweeping later.</li>
+          <li>It cleans while you do something else, so nobody has to stop what they are doing.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Question 4</span>
+      <h3>Who would use this product?</h3>
+      <div class="facts">
+        <p>Families with little kids, people who eat lunch at a desk, gamers who snack at their setup, teachers with craft tables, older people who have trouble reaching all the way across a table, and restaurants or coffee shops cleaning tables between customers.</p>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Question 5</span>
+      <h3>Three describing words</h3>
+      <div class="pick">
+        <h4>Pick three you actually like</h4>
+        <p>Automatic, safe, tiny, smart, helpful, quiet, clever, hardworking. Pick the three that sound the most like your robot. "Safe" is a strong one because stopping at the edge is the whole point of the design.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Part 2 &middot; due Oct 1</p>
+    <h2>Design Thinking Plan, page 24</h2>
+
+    <div class="sheet">
+      <span class="tag">Drawing</span>
+      <h3>Drawing of the invention with detailed labels</h3>
+      <p class="ask">Big box at the top. Labels are worth as much as the drawing. Draw it from the side so the sensor boom and the brush both show.</p>
+      <div class="facts">
+        <h4>Labels to include</h4>
+        <ul>
+          <li>micro:bit brain with the 25 LED screen</li>
+          <li>Two drive wheels and the motors</li>
+          <li>Ball caster at the back</li>
+          <li>Two infrared cliff sensors on the boom, 20 mm in front of the wheels</li>
+          <li>Whisker switch, the backup cliff detector</li>
+          <li>Paddle brush at the front</li>
+          <li>Crumb tray you can slide out</li>
+          <li>4 AA battery pack and the on/off switch</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Box</span>
+      <h3>What is the size and weight?</h3>
+      <div class="facts">
+        <p>Smaller than 5 inches by 5 inches, which is about the size of a sandwich. Under 300 grams, about the weight of a full can of soda.</p>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Box</span>
+      <h3>What is it made of?</h3>
+      <div class="facts">
+        <p>Foam board body, plastic wheels with rubber tires, a metal and plastic ball caster, a micro:bit circuit board, two small metal gearmotors, two infrared sensor boards, a metal whisker switch, a plastic brush, a plastic tray, and a battery pack with four AA batteries.</p>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Box</span>
+      <h3>Cost per unit</h3>
+      <div class="facts">
+        <p>About $125 to build this first one from US stores, or about $78 buying the cheaper versions of the same parts. A factory building thousands at a time would pay much less per robot, because the electronics get far cheaper in big batches.</p>
+      </div>
+      <div class="prompt">
+        <p>Saying both numbers, the real one and the factory one, is a better answer than just one number. It shows you know a prototype costs more than a product.</p>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Box</span>
+      <h3>How will it operate?</h3>
+      <div class="facts">
+        <p>Flip the switch on. Press button A and it drives in straight lines and turns a random direction whenever it reaches an edge. Press button B and it drives in a spiral that gets bigger. The brush spins the whole time and flicks crumbs into the tray. The infrared sensors look down at the table 25 times a second. When the light stops bouncing back, the table is gone, so the micro:bit stops the motors, backs up, and turns. Slide the tray out and dump it in the trash.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Part 3 &middot; due Oct 8</p>
+    <h2>Possible Impact on Society</h2>
+    <p class="lead">Eight lines. This is a "what if everyone had one" question, not a "what does mine do" question. Go wider than your own kitchen table.</p>
+    <div class="facts">
+      <h4>Ideas worth using</h4>
+      <ul>
+        <li>Food on the floor brings ants and roaches. Less food on the floor means less bug spray in houses and restaurants.</li>
+        <li>People who use a wheelchair or who have trouble bending and reaching cannot clean the far side of a table. A robot can get there.</li>
+        <li>Restaurants and school cafeterias clean hundreds of tables a day. Saving a minute each time adds up to hours.</li>
+        <li>It shows that robots are useful for small boring jobs, not just big factory jobs.</li>
+        <li>Honest downside worth saying out loud: it costs money, it uses batteries, and batteries are trash if you do not recycle them. Naming a downside makes the rest of the answer more believable.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Part 4 &middot; due Oct 15</p>
+    <h2>Catholic Connection</h2>
+    <p class="lead">The prompt lets you do either one: a saint your invention relates to and why, or an explanation of how your invention is a spiritual or corporal work of mercy. Pick one and explain it thoughtfully. The rubric wants a strong connection <em>with an explanation</em>, not just a name.</p>
+
+    <div class="pick">
+      <h4>Option 1 &middot; Saint Zita</h4>
+      <p>She was a housekeeper who did ordinary cleaning work her whole life and did it with love and care instead of treating it as beneath her. She is the patron saint of housekeepers and domestic workers. Dusty does the smallest, least glamorous cleaning job there is. The connection: small work done well still matters.</p>
+    </div>
+    <div class="pick">
+      <h4>Option 2 &middot; Saint Martha</h4>
+      <p>Martha is the one in the Gospel serving and preparing the house and the meal while everyone else sits. She is the patron of cooks and homemakers. Dusty works on the table where the family eats. There is also the line in Matthew about the crumbs that fall from the master's table, which is a crumb in Scripture, and you could use it.</p>
+    </div>
+    <div class="pick">
+      <h4>Option 3 &middot; Saint Carlo Acutis</h4>
+      <p>A teenager who taught himself to program computers and used that skill to serve other people instead of just for himself. Canonized in 2025 and connected with computers and the internet. Dusty is a programming project. The connection: you can use coding to help your family, not just to play.</p>
+    </div>
+    <div class="prompt">
+      <h4>Or go the works of mercy route</h4>
+      <p>Feeding the hungry is a corporal work of mercy. The table is where a family gets fed. Keeping it clean is a small part of serving the people who eat there. Serving other people without being asked and without getting credit is the idea to write about.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Due with the packet Nov 16</p>
+    <h2>Research Resources</h2>
+    <p class="lead">This page is a bibliography and it is worth 10 points on its own. It has slots for <strong>two books</strong> and <strong>three websites</strong>. The books are the part that can go wrong, so get them from the library early.</p>
+
+    <div class="sheet">
+      <span class="tag">Books &times; 2</span>
+      <h3>What each book slot needs</h3>
+      <p class="ask">Author last name then first name, title, publication or copyright date, publisher. All four, all in cursive. The copyright date is on the back of the title page near the little &copy; symbol.</p>
+      <div class="prompt">
+        <h4>What to search for at the library</h4>
+        <p>Search the catalog for "micro:bit", "coding for kids", "robotics for kids", and "how robots work". Any two real books you actually hold count. Do not write down a book you did not open.</p>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <span class="tag">Websites &times; 3</span>
+      <h3>What each website slot needs</h3>
+      <p class="ask">Author if there is one, title of the article, publication date, name of the website, and the full URL.</p>
+      <div class="facts">
+        <h4>Three real ones you are actually using</h4>
+        <ul>
+          <li>microbit.org, the official micro:bit site, for how the board and the code blocks work.</li>
+          <li>pololu.com, the QTR-1A reflectance sensor page, for how the infrared cliff sensor works and its range.</li>
+          <li>sparkfun.com, the moto:bit hookup guide, for how the motor driver connects to the micro:bit.</li>
+        </ul>
+      </div>
+      <div class="prompt">
+        <p>If a page has no author, leave the author blank rather than making one up. Write the date you read it if there is no publication date.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Due Nov 16</p>
+    <h2>The trifold board</h2>
+    <p class="lead">The packet says the layout of the board <strong>must</strong> match their diagram exactly. Here it is. Nothing gets moved around.</p>
+
+    <div class="board-wrap">
+      <svg class="board" viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Trifold board layout">
+        <!-- left panel -->
+        <polygon points="40,70 200,40 200,290 40,320" fill="#F7F9FC" stroke="#15202E" stroke-width="2"/>
+        <text x="120" y="95" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="19" fill="#2A6BC4">Purpose</text>
+        <text x="120" y="120" text-anchor="middle" font-family="Nunito, sans-serif" font-size="11" fill="#8A9AAF">why we need it</text>
+        <text x="120" y="142" text-anchor="middle" font-family="Nunito, sans-serif" font-size="11" fill="#8A9AAF">who it is for</text>
+        <text x="120" y="164" text-anchor="middle" font-family="Nunito, sans-serif" font-size="11" fill="#8A9AAF">how it helps people</text>
+        <text x="120" y="205" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="19" fill="#2A6BC4">Why</text>
+        <text x="120" y="262" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="17" fill="#2A6BC4">How does it work?</text>
+
+        <!-- center panel -->
+        <rect x="200" y="40" width="360" height="250" fill="#FFFFFF" stroke="#15202E" stroke-width="2"/>
+        <text x="380" y="85" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="30" font-weight="700" fill="#15202E">DUSTY</text>
+        <rect x="245" y="110" width="270" height="150" fill="#FDF0E8" stroke="#E2662A" stroke-width="2" stroke-dasharray="6 5"/>
+        <text x="380" y="180" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="17" fill="#E2662A">Invention Sketch</text>
+        <text x="380" y="203" text-anchor="middle" font-family="Nunito, sans-serif" font-size="12" fill="#A8471B">hand drawn, with labels</text>
+
+        <!-- right panel -->
+        <polygon points="560,40 720,70 720,320 560,290" fill="#F7F9FC" stroke="#15202E" stroke-width="2"/>
+        <text x="640" y="105" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="17" fill="#2A6BC4">Impact on Society</text>
+        <text x="640" y="185" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="17" fill="#2A6BC4">Catholic Connection</text>
+        <text x="640" y="265" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="17" fill="#2A6BC4">Research Resources</text>
+      </svg>
+    </div>
+
+    <div class="panels">
+      <div class="panel">
+        <h3>Left panel</h3>
+        <ol>
+          <li>Purpose, which is three small answers: why we need it, who it is for, how it helps people</li>
+          <li>Why</li>
+          <li>How does it work?</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h3>Center panel</h3>
+        <ol>
+          <li>Invention name, big</li>
+          <li>The sketch, hand drawn, with labels</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <h3>Right panel</h3>
+        <ol>
+          <li>Impact on Society</li>
+          <li>Catholic Connection</li>
+          <li>Research Resources, the bibliography</li>
+        </ol>
+      </div>
+    </div>
+
+    <a class="biglink" href="/projects/nolan/board-prints.html" target="_blank" rel="noopener">🖨️ Open the board print-outs
+      <small>Big section titles and a sketch frame, one per page, ready to print and glue on</small>
+    </a>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">How it gets graded</p>
+    <h2>The rubric, 100 points</h2>
+    <p class="lead">Eight rows. Seven are worth 10 and the prototype is worth 30. Here is what full points looks like in each row.</p>
+    <table>
+      <thead>
+        <tr><th>Criteria</th><th>Pts</th><th>Full points means</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="crit">Purpose of Invention</td><td class="pts">10</td><td>A clear strong purpose that is easy to understand. One sentence someone can repeat back to you.</td></tr>
+        <tr><td class="crit">Reason for Creation</td><td class="pts">10</td><td>A strong explanation of why the invention is needed. The crumbs-onto-the-floor problem, and why a robot vacuum cannot do it.</td></tr>
+        <tr><td class="crit">How It Works</td><td class="pts">10</td><td>A detailed step-by-step explanation. Sensors, motors, brush, tray, in order, not just a list of parts.</td></tr>
+        <tr><td class="crit">Impact on Society</td><td class="pts">10</td><td>Thoughtful and clear. Beyond your own house.</td></tr>
+        <tr><td class="crit">Catholic Connection</td><td class="pts">10</td><td>A strong connection to a saint or a work of mercy, with the explanation. Naming a saint with no reason is not full points.</td></tr>
+        <tr><td class="crit">Sketch</td><td class="pts">10</td><td>Detailed, neat, labeled. Neat counts. Draw it in pencil first.</td></tr>
+        <tr><td class="crit">Bibliography</td><td class="pts">10</td><td>Complete and correctly formatted. Two books and three websites, every field filled in.</td></tr>
+        <tr><td class="crit">Prototype</td><td class="pts">30</td><td>Creative, well built, clearly represents the invention. Worth more than any three other rows combined.</td></tr>
+        <tr class="sum"><td>Total</td><td class="pts">100</td><td></td></tr>
+      </tbody>
+    </table>
+    <div class="prompt">
+      <h4>Where the easy points are</h4>
+      <p>Bibliography and Sketch are 20 points together and neither one depends on the robot working. Do them carefully and early. The prototype is 30 points, and a robot that drives and stops at the edge gets there even if the brush is not perfect yet.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <a class="biglink blue" href="/projects/nolan/dusty.html">🤖 Back to the Dusty build plan
+      <small>Parts, schedule, the experiment, and what to do each weekend</small>
+    </a>
+    <a class="biglink" href="/projects/nolan/board-prints.html" target="_blank" rel="noopener">🖨️ Board print-outs
+      <small>Section titles at full size, one per page</small>
+    </a>
+  </div>
+
+  <footer>NOLAN PINNEY &middot; #16 &middot; INVENTION CONVENTION PART 2 &middot; DUE NOV 16 2026</footer>
+</div>
+</body>
+</html>

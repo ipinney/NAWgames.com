@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dusty - Parts and Materials List</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  @page { size: letter; margin: 0; }
+
+  :root {
+    --ground: #12171F;
+    --card: #1A212C;
+    --card-2: #212A38;
+    --line: #2E3A4B;
+    --ink: #E7EDF5;
+    --ink-2: #94A5BB;
+    --ink-3: #6B7C93;
+    --amber: #EFA43C;
+    --amber-dim: #8A6224;
+    --green: #4FB287;
+    --red: #E2705F;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { background: #12171F; }
+
+  body {
+    font-family: 'IBM Plex Sans', 'DejaVu Sans', sans-serif;
+    background: var(--ground);
+    padding: 11mm 10mm;
+    color: var(--ink);
+    font-size: 9.6pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  h1, h2, h3, .tag, .eyebrow { font-family: 'Barlow Condensed', 'DejaVu Sans Condensed', sans-serif; }
+  .mono, a.url, .price, .sku { font-family: 'IBM Plex Mono', 'DejaVu Sans Mono', monospace; }
+
+  header {
+    border-bottom: 2px solid var(--amber);
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  header h1 { flex: 1 1 auto; min-width: 0; font-size: 30pt; font-weight: 700; line-height: 0.95; letter-spacing: 0.01em; }
+  header h1 small { display: block; font-family: 'IBM Plex Sans', sans-serif; font-size: 10pt; font-weight: 500; color: var(--amber); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 3px; }
+  header .meta { flex: none; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 7.6pt; color: var(--ink-3); line-height: 1.7; white-space: nowrap; }
+  header .meta b { color: var(--ink); font-weight: 500; }
+  header .meta .due { color: var(--amber); }
+
+  .intro { display: grid; grid-template-columns: 1.35fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .note { background: var(--card); border-left: 2px solid var(--amber); border-radius: 0 7px 7px 0; padding: 11px 13px; }
+  .note h3 { font-size: 12pt; font-weight: 600; margin-bottom: 4px; }
+  .note p { color: var(--ink-2); font-size: 9pt; }
+  .note p + p { margin-top: 5px; }
+
+  .budget { background: var(--card); border-radius: 7px; padding: 11px 13px; }
+  .budget h3 { font-size: 12pt; font-weight: 600; margin-bottom: 7px; }
+  .brow { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 4px 0; border-bottom: 1px dotted var(--line); }
+  .brow:last-of-type { border-bottom: none; }
+  .brow .lab { font-size: 8.6pt; color: var(--ink-2); }
+  .brow .lab b { display: block; color: var(--ink); font-weight: 600; font-size: 9.4pt; }
+  .brow .amt { font-family: 'IBM Plex Mono', monospace; font-size: 12pt; font-weight: 600; color: var(--amber); white-space: nowrap; }
+
+  .sec {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 8.4pt;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 4px;
+    margin: 13px 0 8px;
+  }
+
+  .part {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 9px 12px 8px;
+    margin-bottom: 7px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .part-head { display: flex; align-items: baseline; gap: 9px; margin-bottom: 3px; }
+  .part-head .n {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 7.6pt;
+    font-weight: 600;
+    color: var(--amber);
+    border: 1px solid var(--amber-dim);
+    border-radius: 3px;
+    padding: 1px 5px;
+    flex: none;
+  }
+  .part-head h3 { font-size: 13.5pt; font-weight: 600; line-height: 1.1; }
+  .part-head .qty { margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 8.4pt; color: var(--ink-3); white-space: nowrap; }
+  .job { color: var(--ink-2); font-size: 9pt; margin-bottom: 6px; }
+
+  .opt { display: grid; grid-template-columns: 62px 1fr auto; gap: 9px; align-items: baseline; padding: 6px 0; border-top: 1px solid var(--line); }
+  .tag {
+    font-size: 7.4pt;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 5px;
+    border-radius: 3px;
+    text-align: center;
+  }
+  .tag.p { background: var(--amber); color: #1A1207; }
+  .tag.s { background: transparent; color: var(--ink-2); border: 1px solid var(--line); }
+  .tag.o { background: transparent; color: var(--green); border: 1px solid var(--green); }
+  .opt .name { font-weight: 600; font-size: 9.4pt; }
+  .opt .vend { color: var(--ink-3); font-weight: 400; font-size: 8.6pt; }
+  a.url { display: block; color: var(--green); font-size: 7.4pt; text-decoration: none; word-break: break-all; margin-top: 1px; }
+  .opt .price { font-size: 10.5pt; font-weight: 600; color: var(--ink); white-space: nowrap; text-align: right; }
+  .opt .price small { display: block; font-size: 7.2pt; color: var(--ink-3); font-weight: 400; }
+
+  .flag { margin-top: 6px; padding: 5px 9px; background: var(--card-2); border-radius: 5px; font-size: 8.4pt; color: var(--ink-2); border-left: 2px solid var(--amber-dim); }
+  .flag b { color: var(--amber); font-weight: 600; }
+  .flag.warn { border-left-color: var(--red); }
+  .flag.warn b { color: var(--red); }
+
+  .gotchas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .g { background: var(--card); border-radius: 7px; padding: 10px 12px; page-break-inside: avoid; }
+  .g h3 { font-size: 11pt; font-weight: 600; margin-bottom: 3px; color: var(--amber); }
+  .g p { font-size: 8.6pt; color: var(--ink-2); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+  th { text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 7.4pt; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; padding: 5px 9px; border-bottom: 1px solid var(--line); }
+  td { padding: 5px 9px; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+  td:first-child { color: var(--ink); }
+  td.r { text-align: right; font-family: 'IBM Plex Mono', monospace; color: var(--ink); white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+
+  footer { margin-top: 16px; padding-top: 8px; border-top: 1px solid var(--line); font-family: 'IBM Plex Mono', monospace; font-size: 7.2pt; color: var(--ink-3); letter-spacing: 0.05em; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><small>Parts and Materials</small>DUSTY</h1>
+  <div class="meta">
+    Tabletop sweeping robot<br>
+    4th grade invention project<br>
+    <b>Nolan Pinney</b><br>
+    Due <span class="due">Mon Nov 16, 2026</span><br>
+    Links checked <b>Sep 14, 2026</b>
+  </div>
+</header>
+
+<div class="intro">
+  <div class="note">
+    <h3>How to read this</h3>
+    <p>Every part has a <b>primary</b> and a <b>backup</b> from a different vendor, so a single out-of-stock item cannot stall the build. Every link on this list was opened and checked on the date above. Prices are what the vendor showed that day.</p>
+    <p>Amazon is deliberately absent. Those listings rotate sellers and cannot be verified reliably, and a dead link in a parts list is worse than no link.</p>
+  </div>
+  <div class="budget">
+    <h3>Two ways to buy it</h3>
+    <div class="brow">
+      <span class="lab"><b>Path A: all US vendors</b>Adafruit, SparkFun, Pololu. Fastest and simplest.</span>
+      <span class="amt">$97</span>
+    </div>
+    <div class="brow">
+      <span class="lab"><b>Path B: budget</b>Cheaper motors and driver, mixed vendors, slower shipping.</span>
+      <span class="amt">$49</span>
+    </div>
+    <div class="brow">
+      <span class="lab"><b>Plus consumables</b>Both paths. Foam board, batteries, glue, tape.</span>
+      <span class="amt">$28</span>
+    </div>
+  </div>
+</div>
+
+<div class="flag warn" style="margin-bottom:14px;"><b>Heads up on the budget.</b> The design doc estimated $72 from typical marketplace pricing. Verified vendor pricing lands higher: about $125 all-in on Path A, about $78 on Path B. The difference is mostly the motors and the driver board, which are the two places where buying the cheap version causes the most grief.</div>
+
+<div class="sec">Brain and control</div>
+
+<div class="part">
+  <div class="part-head"><span class="n">01</span><h3>micro:bit v2</h3><span class="qty">Qty 1</span></div>
+  <p class="job">Runs the whole robot. Block coding so Nolan writes the program himself, and 25 LEDs on the front so he can read sensor values on the table without a laptop plugged in.</p>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">BBC micro:bit v2</span> <span class="vend">&middot; Adafruit #4781 &middot; in stock</span><a class="url" href="https://www.adafruit.com/product/4781">https://www.adafruit.com/product/4781</a></span>
+    <span class="price">$17.95</span>
+  </div>
+  <div class="opt">
+    <span class="tag s">Backup</span>
+    <span><span class="name">micro:bit v2 Board</span> <span class="vend">&middot; SparkFun DEV-17287 &middot; in stock</span><a class="url" href="https://www.sparkfun.com/micro-bit-v2-board.html">https://www.sparkfun.com/micro-bit-v2-board.html</a></span>
+    <span class="price">$16.50</span>
+  </div>
+  <div class="flag"><b>Board only.</b> Neither listing includes a USB cable or batteries. The micro:bit v2 uses <b>micro-USB</b>, not USB-C. There is almost certainly one in a drawer already.</div>
+</div>
+
+<div class="part">
+  <div class="part-head"><span class="n">02</span><h3>Motor driver board</h3><span class="qty">Qty 1</span></div>
+  <p class="job">The micro:bit cannot power motors directly. This sits between them. Both options use an edge connector, so the micro:bit slides in and nothing needs soldering.</p>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">SparkFun moto:bit Carrier Board (Qwiic)</span> <span class="vend">&middot; SparkFun &middot; in stock</span><a class="url" href="https://www.sparkfun.com/sparkfun-moto-bit-micro-bit-carrier-board-qwiic.html">https://www.sparkfun.com/sparkfun-moto-bit-micro-bit-carrier-board-qwiic.html</a></span>
+    <span class="price">$28.50<small>3 to 11V</small></span>
+  </div>
+  <div class="opt">
+    <span class="tag s">Backup</span>
+    <span><span class="name">Kitronik Compact Motor Driver Board</span> <span class="vend">&middot; Kitronik #5698 &middot; in stock, ships UK to US</span><a class="url" href="https://kitronik.co.uk/products/5698-compact-motor-driver-board-for-the-bbc-micro-bit">https://kitronik.co.uk/products/5698-compact-motor-driver-board-for-the-bbc-micro-bit</a></span>
+    <span class="price">&pound;10.45<small>ex VAT, ~$13</small></span>
+  </div>
+  <div class="flag warn"><b>Two dead ends found.</b> Chicago Electronic Distributors comes up first in searches for this board and has stopped accepting orders entirely. PiShop's Kitronik motor driver page returns a 404. Order the Kitronik direct from Kitronik, or take the SparkFun primary and stay domestic.</div>
+  <div class="flag"><b>This choice decides part 10.</b> moto:bit takes power through a barrel jack. The Kitronik takes bare wires into screw terminals. Match the battery holder to whichever board is ordered.</div>
+</div>
+
+<div class="sec">Drive</div>
+
+<div class="part">
+  <div class="part-head"><span class="n">03</span><h3>Drive motors</h3><span class="qty">Qty 2</span></div>
+  <p class="job">One motor per side. Running them in opposite directions is what lets the robot spin in place, and spinning in place is how it gets away from an edge.</p>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">N20 DC Motor with Magnetic Encoder, 6V 1:298</span> <span class="vend">&middot; Adafruit #4641 &middot; in stock</span><a class="url" href="https://www.adafruit.com/product/4641">https://www.adafruit.com/product/4641</a></span>
+    <span class="price">$12.50<small>each</small></span>
+  </div>
+  <div class="opt">
+    <span class="tag s">Backup</span>
+    <span><span class="name">150:1 Micro Metal Gearmotor HP 6V</span> <span class="vend">&middot; Pololu #997 &middot; active &middot; 210 RPM</span><a class="url" href="https://www.pololu.com/product/997">https://www.pololu.com/product/997</a></span>
+    <span class="price">$23.95<small>each</small></span>
+  </div>
+  <div class="opt">
+    <span class="tag o">Budget</span>
+    <span><span class="name">GA12-N20 Gear Motor with Wheel, 100 RPM 6V</span> <span class="vend">&middot; Electropeak &middot; in stock &middot; wheel and bracket included</span><a class="url" href="https://electropeak.com/n20-gear-motor-with-wheel">https://electropeak.com/n20-gear-motor-with-wheel</a></span>
+    <span class="price">$2.25<small>each</small></span>
+  </div>
+  <div class="flag"><b>The budget option covers parts 03, 04 and 05 in one.</b> At $2.25 with a wheel and a mounting bracket in the box it is a tenth the price of the primary path. The catch: their shipping page would not load, so transit time to Houston is unknown. Fine given three buffer weekends, risky if the schedule slips.</div>
+  <div class="flag"><b>The encoder on the primary is not wasted.</b> It counts wheel rotations, which is what a neat back-and-forth mowing pattern would need. That pattern was ruled out of Rev A for being too hard, and the encoder quietly leaves the door open for Rev B.</div>
+</div>
+
+<div class="part">
+  <div class="part-head"><span class="n">04</span><h3>Wheels</h3><span class="qty">Qty 1 pair</span></div>
+  <p class="job">Press onto the motor shafts. Wheel size sets the speed, and speed is the variable the whole experiment measures, so this is not a cosmetic choice.</p>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">Pololu Wheel 32&times;7mm Pair, black</span> <span class="vend">&middot; Pololu #1087 &middot; active</span><a class="url" href="https://www.pololu.com/product/1087">https://www.pololu.com/product/1087</a></span>
+    <span class="price">$4.45<small>32 mm</small></span>
+  </div>
+  <div class="opt">
+    <span class="tag s">Backup</span>
+    <span><span class="name">Pololu Wheel 60&times;8mm Pair, black</span> <span class="vend">&middot; Pololu #1420 &middot; active</span><a class="url" href="https://www.pololu.com/product/1420">https://www.pololu.com/product/1420</a></span>
+    <span class="price">$6.75<small>60 mm</small></span>
+  </div>
+  <div class="flag"><b>Take the 32 mm.</b> Both press-fit onto 3 mm D shafts, which is what the N20 motors have. The 60 mm wheel nearly doubles the travel speed for the same motor, which eats the stopping-distance margin the design depends on. If the 60 mm gets used, redo the speed arithmetic first.</div>
+</div>
+
+<div class="part">
+  <div class="part-head"><span class="n">05</span><h3>Motor brackets</h3><span class="qty">Qty 1 pair</span></div>
+  <p class="job">Holds the motors square to the chassis. Motors glued on by eye end up pointing slightly different directions and the robot drives in a curve.</p>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">Micro Metal Gearmotor Bracket Extended Pair</span> <span class="vend">&middot; Pololu #1089 &middot; active &middot; screws and nuts included</span><a class="url" href="https://www.pololu.com/product/1089">https://www.pololu.com/product/1089</a></span>
+    <span class="price">$4.95</span>
+  </div>
+  <div class="flag"><b>Skip this line</b> if the Electropeak budget motors are ordered, since a bracket comes with each one.</div>
+</div>
+
+<div class="part">
+  <div class="part-head"><span class="n">06</span><h3>Rear ball caster</h3><span class="qty">Qty 1</span></div>
+  <p class="job">The third point of contact. Two wheels and a caster is stable and turns cleanly. Four wheels would fight every turn.</p>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">Pololu Ball Caster with 3/8" Metal Ball</span> <span class="vend">&middot; Pololu #951 &middot; active &middot; height 0.4" to 0.6"</span><a class="url" href="https://www.pololu.com/product/951">https://www.pololu.com/product/951</a></span>
+    <span class="price">$2.95</span>
+  </div>
+  <div class="opt">
+    <span class="tag s">Backup</span>
+    <span><span class="name">Pololu Ball Caster with 3/8" Plastic Ball</span> <span class="vend">&middot; Pololu #950 &middot; same height range, lighter</span><a class="url" href="https://www.pololu.com/product-info-merged/950">https://www.pololu.com/product-info-merged/950</a></span>
+    <span class="price">~$2.50</span>
+  </div>
+  <div class="flag"><b>Use every spacer in the bag.</b> A 32 mm wheel puts the axle 0.63" off the table. The caster tops out at 0.60" with all its spacers fitted, which leaves the robot tipped forward by about a millimeter. That is fine, and it is the correct direction to be off, because it points the sensors slightly down. Build it with no spacers and the robot sits nose-up and the sensors read wrong.</div>
+</div>
+
+<div class="sec">Sensing</div>
+
+<div class="part">
+  <div class="part-head"><span class="n">07</span><h3>Cliff sensors</h3><span class="qty">Qty 2</span></div>
+  <p class="job">The heart of the project. Each one shines infrared down at the table and measures the bounce. Table there, light comes back. Table gone, nothing comes back. Two of them, one at each front corner, because a corner arrives at one side well before the other.</p>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">QTR-1A Reflectance Sensor, 2-pack</span> <span class="vend">&middot; Pololu #2458 &middot; active &middot; analog out, 5V</span><a class="url" href="https://www.pololu.com/product/2458">https://www.pololu.com/product/2458</a></span>
+    <span class="price">$5.65<small>2-pack</small></span>
+  </div>
+  <div class="opt">
+    <span class="tag s">Backup</span>
+    <span><span class="name">TCRT5000 IR Reflective Optical Sensor, 2-pack</span> <span class="vend">&middot; ProtoSupplies &middot; 46 in stock &middot; bare sensor</span><a class="url" href="https://protosupplies.com/product/tcrt5000-ir-reflective-optical-sensor/">https://protosupplies.com/product/tcrt5000-ir-reflective-optical-sensor/</a></span>
+    <span class="price">$0.49<small>2-pack</small></span>
+  </div>
+  <div class="flag"><b>Mount them 3 mm above the table.</b> The QTR-1A is sharpest at 3 mm and unreliable past 6 mm, which is tighter than it sounds. Build the sensor boom so the height can be shimmed, and check it with a ruler before every test run.</div>
+  <div class="flag warn"><b>The backup is cheap because it is not finished.</b> The ProtoSupplies part is the raw sensor with no circuit around it. It needs a 150 ohm resistor on the emitter and a 4.7k on the receiver, wired by hand. A fine afternoon of learning, a bad surprise the weekend the sensors were supposed to just work.</div>
+</div>
+
+<div class="part">
+  <div class="part-head"><span class="n">08</span><h3>Backup whisker switch</h3><span class="qty">Qty 1</span></div>
+  <p class="job">A stiff wire dragging on the table holding a switch closed. When the table ends the whisker drops and the switch opens. It cannot be fooled by a dark placemat or a shiny finish, because it is not looking at anything, it is touching.</p>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">Micro Switch with Roller Lever, three terminal</span> <span class="vend">&middot; Adafruit #819 &middot; in stock</span><a class="url" href="https://www.adafruit.com/product/819">https://www.adafruit.com/product/819</a></span>
+    <span class="price">$1.95</span>
+  </div>
+  <div class="flag"><b>Two methods, one job.</b> Optical and mechanical fail in completely different situations, which is exactly why both are on the robot. Real safety systems are built this way, and it is the best answer Nolan has for a judge asking what happens when the sensor is wrong.</div>
+</div>
+
+<div class="sec">Cleaning and power</div>
+
+<div class="part">
+  <div class="part-head"><span class="n">09</span><h3>Sweeper brush motor</h3><span class="qty">Qty 1</span></div>
+  <p class="job">Spins the brush that flicks crumbs up and backward into the tray. It only ever runs one direction at one speed, so it wires straight to the battery through its own small switch instead of needing a third driver channel.</p>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">DC Toy / Hobby Motor, 130 size</span> <span class="vend">&middot; Adafruit #711 &middot; in stock &middot; 4.5 to 9V</span><a class="url" href="https://www.adafruit.com/product/711">https://www.adafruit.com/product/711</a></span>
+    <span class="price">$1.95</span>
+  </div>
+  <div class="flag"><b>Current check.</b> 70 mA unloaded, 250 mA loaded, 500 mA if the brush jams on something. A 4xAA pack handles that comfortably, so the robot slows down rather than browning out when the brush catches.</div>
+</div>
+
+<div class="part">
+  <div class="part-head"><span class="n">10</span><h3>Battery holder</h3><span class="qty">Qty 1</span></div>
+  <p class="job">Four AA batteries, about 6V fresh. No charging circuit and no lithium cell sitting next to a hot glue gun and a nine year old. The pack is also most of the robot's weight, and it sits over the drive wheels where that weight helps grip.</p>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">4 x AA Holder, 2.1mm Plug and On/Off Switch</span> <span class="vend">&middot; Adafruit #3788 &middot; 84 in stock &middot; for moto:bit</span><a class="url" href="https://www.adafruit.com/product/3788">https://www.adafruit.com/product/3788</a></span>
+    <span class="price">$3.95</span>
+  </div>
+  <div class="opt">
+    <span class="tag s">Alt</span>
+    <span><span class="name">4 x AA Holder with On/Off Switch</span> <span class="vend">&middot; Adafruit #830 &middot; in stock &middot; for Kitronik</span><a class="url" href="https://www.adafruit.com/product/830">https://www.adafruit.com/product/830</a></span>
+    <span class="price">$2.95</span>
+  </div>
+  <div class="flag warn"><b>These are not interchangeable.</b> The #3788 ends in a 5.5/2.1mm barrel plug, which is what the moto:bit's power jack wants. The #830 ends in bare jumper wires, which is what the Kitronik's screw terminals want. Ordering the wrong one means cutting the connector off a brand new cable.</div>
+</div>
+
+<div class="sec">Optional, Rev B only</div>
+
+<div class="part">
+  <div class="part-head"><span class="n">11</span><h3>Laser distance sensor</h3><span class="qty">Optional</span></div>
+  <p class="job">Measures the real distance to the table in millimeters using a laser, so a black placemat and white paper look identical to it. This is the correct engineering answer to the dark-surface problem and a strong "what I would do next" slide.</p>
+  <div class="opt">
+    <span class="tag o">Optional</span>
+    <span><span class="name">Adafruit VL53L0X Time of Flight Distance Sensor</span> <span class="vend">&middot; Adafruit #3317 &middot; in stock</span><a class="url" href="https://www.adafruit.com/product/3317">https://www.adafruit.com/product/3317</a></span>
+    <span class="price">$14.95</span>
+  </div>
+  <div class="flag warn"><b>It cannot sit where the other sensors sit.</b> Its minimum range is about 30 mm, so mounted 3 mm above the table it reads nothing but garbage. It has to go on a small mast roughly 40 mm up, pointing straight down: table present reads about 40 mm, table gone reads the floor at 700 mm or more. That is an unmistakable difference, but it changes the front end of the robot, so it is a Rev B job and not a drop-in swap.</div>
+</div>
+
+<div class="sec">Not electronics, buy locally</div>
+
+<div class="part">
+  <table>
+    <thead><tr><th>Item</th><th>What it is for</th><th class="r">Est.</th></tr></thead>
+    <tbody>
+      <tr><td>Foam board sheet</td><td>Rev A chassis. Cuts in seconds, which is the whole point of Rev A.</td><td class="r">$4</td></tr>
+      <tr><td>Shallow plastic food container</td><td>Rev B chassis. Flat floor, straight walls, and the lid becomes the debris tray.</td><td class="r">$4</td></tr>
+      <tr><td>AA batteries, 8-pack</td><td>One set in the robot, one spare set for the fair.</td><td class="r">$8</td></tr>
+      <tr><td>Hot glue sticks</td><td>Mounting everything.</td><td class="r">$4</td></tr>
+      <tr><td>Zip ties, small</td><td>Cable management. Loose wires are what snag the brush.</td><td class="r">$4</td></tr>
+      <tr><td>Double-sided foam tape</td><td>Mounting the battery pack so it can still come off.</td><td class="r">$4</td></tr>
+      <tr><td>Paintbrush, toothbrushes, pipe cleaners, felt</td><td>Brush material. Buy three kinds and test them, that is a data point.</td><td class="r">$6</td></tr>
+      <tr><td>Micro-USB cable</td><td>Programming the micro:bit. Check the drawer first.</td><td class="r">$0</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="sec">Order checks before clicking buy</div>
+
+<div class="gotchas">
+  <div class="g">
+    <h3>Match the battery to the board</h3>
+    <p>Barrel plug for moto:bit, bare wires for Kitronik. The single easiest way to end up with a part that does not fit.</p>
+  </div>
+  <div class="g">
+    <h3>Do not buy an L298N</h3>
+    <p>It is in half the tutorials online and it throws away about 2 volts as heat. Harmless on a 12V robot, crippling on a 4.8V pack.</p>
+  </div>
+  <div class="g">
+    <h3>32 mm wheels, not 60 mm</h3>
+    <p>The bigger wheel nearly doubles the speed, and the stopping-distance margin is exactly what this project measures.</p>
+  </div>
+  <div class="g">
+    <h3>Buy one spare motor</h3>
+    <p>At $2.25 on the budget path there is no reason not to. One will fail, and it will fail the weekend before it is due.</p>
+  </div>
+  <div class="g">
+    <h3>The micro:bit is micro-USB</h3>
+    <p>Not USB-C. Worth confirming before the first weekend rather than discovering it that morning.</p>
+  </div>
+  <div class="g">
+    <h3>Order everything in one go</h3>
+    <p>Three vendors arriving on three different days costs a whole weekend. One order per vendor, all placed the same day.</p>
+  </div>
+</div>
+
+<footer>
+  <span>DUSTY &middot; PARTS AND MATERIALS &middot; REV A</span>
+  <span>ALL LINKS VERIFIED 14 SEP 2026</span>
+</footer>
+
+</body>
+</html>
