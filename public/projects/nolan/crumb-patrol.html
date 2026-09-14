@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crumb Patrol - Build Plan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ground: #EAEFF5;
+    --card: #FFFFFF;
+    --ink: #15202E;
+    --ink-2: #53667E;
+    --ink-3: #8A9AAF;
+    --line: #D4DEE9;
+    --orange: #E2662A;
+    --orange-soft: #FDF0E8;
+    --blue: #2A6BC4;
+    --blue-soft: #E9F1FB;
+    --green: #0E8A62;
+    --green-soft: #E6F5EF;
+  }
+
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    background: var(--ground);
+    color: var(--ink);
+    padding: 18px;
+    line-height: 1.55;
+  }
+
+  .wrap { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px;
+  }
+
+  h1, h2, h3, .badge, .eyebrow { font-family: 'Fredoka', 'Nunito', sans-serif; }
+
+  /* ---- hero ---- */
+  .hero {
+    background: linear-gradient(140deg, #1B3350 0%, #294B73 62%, #B24E1F 150%);
+    color: #fff;
+    border: none;
+    text-align: center;
+    padding: 30px 22px 26px;
+  }
+  .hero .robot { font-size: 52px; display: block; line-height: 1; margin-bottom: 10px; }
+  .hero h1 {
+    font-size: clamp(30px, 7vw, 46px);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+  .hero p { color: rgba(255,255,255,0.82); font-size: 15.5px; max-width: 46ch; margin: 0 auto; }
+
+  .due {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: var(--orange);
+    color: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 9px 16px;
+    border-radius: 999px;
+    margin-top: 18px;
+    text-transform: uppercase;
+  }
+
+  /* ---- section heads ---- */
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 4px;
+  }
+  h2 { font-size: 25px; font-weight: 600; margin-bottom: 12px; line-height: 1.2; }
+  h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  p.lead { color: var(--ink-2); font-size: 15.5px; }
+
+  /* ---- three tiles ---- */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-top: 14px; }
+  .tile { background: var(--ground); border-radius: 11px; padding: 16px; }
+  .tile .ico { font-size: 27px; display: block; margin-bottom: 7px; }
+  .tile h3 { font-size: 16px; }
+  .tile p { font-size: 14px; color: var(--ink-2); }
+
+  /* ---- question ---- */
+  .question {
+    background: var(--blue-soft);
+    border: 1px solid #C9DDF5;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 14px;
+  }
+  .question .q {
+    font-family: 'Fredoka', sans-serif;
+    font-size: clamp(19px, 3.6vw, 24px);
+    font-weight: 600;
+    color: var(--blue);
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .question p { font-size: 15px; color: var(--ink-2); }
+  .qgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-top: 16px; padding-top: 14px; border-top: 1px dashed #BFD5EE; }
+  .qgrid dt { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); margin-bottom: 3px; }
+  .qgrid dd { font-size: 14px; color: var(--ink-2); }
+
+  /* ---- diagram ---- */
+  .diagram-wrap { overflow-x: auto; margin-top: 14px; }
+  svg.diagram { display: block; width: 100%; min-width: 480px; height: auto; }
+
+  /* ---- checklists ---- */
+  ul.check { list-style: none; display: flex; flex-direction: column; gap: 2px; margin-top: 12px; }
+  ul.check li { border-bottom: 1px solid var(--line); }
+  ul.check li:last-child { border-bottom: none; }
+  ul.check label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 2px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+  ul.check input { appearance: none; -webkit-appearance: none; flex: none; width: 21px; height: 21px; margin-top: 1px; border: 2px solid var(--ink-3); border-radius: 6px; background: #fff; cursor: pointer; position: relative; }
+  ul.check input:checked { background: var(--green); border-color: var(--green); }
+  ul.check input:checked::after { content: ""; position: absolute; left: 5.5px; top: 1.5px; width: 5px; height: 10px; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(42deg); }
+  ul.check input:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+  ul.check .what { flex: 1; }
+  ul.check .why { display: block; font-size: 13.5px; color: var(--ink-3); }
+  ul.check .cost { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--ink-3); flex: none; }
+  ul.check input:checked ~ .what { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--ink-3); }
+
+  .total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 14px; padding-top: 13px; border-top: 2px solid var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; }
+  .total span:last-child { color: var(--orange); font-size: 19px; }
+
+  /* ---- schedule ---- */
+  .weeks { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+  .week { display: grid; grid-template-columns: 96px 1fr; gap: 16px; background: var(--ground); border-radius: 11px; padding: 14px 16px; align-items: start; }
+  .week.spare { background: var(--card); border: 1px dashed var(--line); }
+  .week .when { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; color: var(--orange); line-height: 1.35; padding-top: 2px; }
+  .week.spare .when { color: var(--ink-3); }
+  .week h3 { font-size: 16.5px; }
+  .week p { font-size: 14.5px; color: var(--ink-2); }
+  .week .goal { display: inline-block; margin-top: 7px; background: var(--green-soft); color: var(--green); font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+
+  /* ---- problems ---- */
+  .probs { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 13px; margin-top: 14px; }
+  .prob { background: var(--orange-soft); border-radius: 11px; padding: 15px 16px; }
+  .prob h3 { font-size: 15.5px; color: #A8471B; }
+  .prob p { font-size: 14px; color: var(--ink-2); }
+  .prob .fix { display: block; margin-top: 7px; font-size: 14px; color: var(--green); font-weight: 700; }
+
+  /* ---- jobs ---- */
+  .jobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 13px; margin-top: 14px; }
+  .job { border: 2px dashed var(--line); border-radius: 11px; padding: 15px 16px; }
+  .job h3 { font-size: 15.5px; color: var(--blue); }
+  .job p { font-size: 14px; color: var(--ink-2); }
+
+  footer { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: 0.06em; padding: 4px 0 10px; }
+
+  @media (max-width: 520px) {
+    body { padding: 12px; }
+    .card { padding: 17px; }
+    .week { grid-template-columns: 1fr; gap: 5px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card hero">
+    <span class="robot">🤖</span>
+    <h1>CRUMB PATROL</h1>
+    <p>A little robot that lives on the table, sweeps up crumbs, and stops itself right at the edge instead of driving off.</p>
+    <div class="due">⏰ Due Monday, November 16</div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">The idea</p>
+    <h2>What it does</h2>
+    <p class="lead">A robot vacuum can't work on a table, because it would drive straight off the side. Crumb Patrol is built for exactly that job.</p>
+    <div class="tiles">
+      <div class="tile">
+        <span class="ico">🧹</span>
+        <h3>Sweeps</h3>
+        <p>A spinning brush at the front flicks crumbs up into a little tray, the same way a dustpan works.</p>
+      </div>
+      <div class="tile">
+        <span class="ico">👀</span>
+        <h3>Sees the edge</h3>
+        <p>Two invisible infrared beams point down at the table. When the bounce stops coming back, the table is gone.</p>
+      </div>
+      <div class="tile">
+        <span class="ico">🛑</span>
+        <h3>Stops in time</h3>
+        <p>It backs up, spins a random amount, and drives off in a new direction. It has 20 mm to stop and only needs 8.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">The experiment</p>
+    <h2>The question I am answering</h2>
+    <div class="question">
+      <p class="q">How fast can a robot drive and still stop before it falls off the table?</p>
+      <p>Going faster means less time to react. That is true for elevators, for cars that brake by themselves, and for my robot. A robot alone is just a cool thing. A robot plus a graph is a science project.</p>
+      <dl class="qgrid">
+        <div>
+          <dt>What I change</dt>
+          <dd>Motor speed. Four settings, from slow to full power.</dd>
+        </div>
+        <div>
+          <dt>What I measure</dt>
+          <dd>How many millimeters it takes to stop, and how many times out of 20 it falls.</dd>
+        </div>
+        <div>
+          <dt>What stays the same</dt>
+          <dd>Same table, same batteries, same sensor height, same running start.</dd>
+        </div>
+        <div>
+          <dt>My prediction</dt>
+          <dd>At full speed it needs about 20 mm to stop, and it only has 20 mm. So it goes over.</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">How it works</p>
+    <h2>The sensor gets there first</h2>
+    <p class="lead">The sensor sticks out 20 mm in front of the wheels. That head start is the whole trick. By the time the wheels reach the edge, the robot already stopped.</p>
+    <div class="diagram-wrap">
+      <svg class="diagram" viewBox="0 0 700 250" role="img" aria-label="Side view of the robot near a table edge, showing the sensor sticking out 20 millimeters in front of the wheel and the 8 millimeters it needs to stop">
+        <rect x="20" y="168" width="480" height="13" fill="#D4DEE9"/>
+        <line x1="20" y1="168" x2="500" y2="168" stroke="#53667E" stroke-width="2.5"/>
+        <line x1="500" y1="168" x2="500" y2="181" stroke="#53667E" stroke-width="2.5"/>
+        <text x="30" y="160" fill="#8A9AAF" font-family="IBM Plex Mono, monospace" font-size="11">TABLE</text>
+        <text x="514" y="196" fill="#E2662A" font-family="IBM Plex Mono, monospace" font-size="11">EDGE</text>
+
+        <rect x="336" y="96" width="140" height="44" rx="6" fill="#294B73"/>
+        <text x="356" y="124" fill="#FFFFFF" font-family="Fredoka, sans-serif" font-size="17" font-weight="600">CRUMB PATROL</text>
+        <rect x="342" y="140" width="46" height="9" fill="#15202E"/>
+        <text x="330" y="148" fill="#8A9AAF" font-family="IBM Plex Mono, monospace" font-size="10" text-anchor="end">TRAY</text>
+
+        <circle cx="444" cy="152" r="16" fill="#FFFFFF" stroke="#15202E" stroke-width="2.5"/>
+        <circle cx="444" cy="152" r="3.5" fill="#53667E"/>
+        <circle cx="358" cy="161" r="7" fill="#FFFFFF" stroke="#53667E" stroke-width="2"/>
+        <circle cx="422" cy="156" r="10" fill="none" stroke="#E2662A" stroke-width="1.5" stroke-dasharray="3 4"/>
+
+        <line x1="476" y1="118" x2="500" y2="118" stroke="#53667E" stroke-width="3"/>
+        <rect x="490" y="118" width="20" height="13" rx="2" fill="#E2662A"/>
+        <text x="520" y="115" fill="#E2662A" font-family="IBM Plex Mono, monospace" font-size="11">SENSOR</text>
+
+        <path d="M500,131 L490,214 L516,214 Z" fill="#E2662A" opacity="0.16"/>
+        <line x1="500" y1="131" x2="493" y2="214" stroke="#E2662A" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="500" y1="131" x2="513" y2="214" stroke="#E2662A" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="524" y="218" fill="#E2662A" font-family="IBM Plex Mono, monospace" font-size="11">NOTHING BOUNCES BACK</text>
+
+        <line x1="444" y1="168" x2="444" y2="242" stroke="#D4DEE9" stroke-width="1"/>
+        <line x1="500" y1="181" x2="500" y2="242" stroke="#D4DEE9" stroke-width="1"/>
+        <line x1="444" y1="236" x2="500" y2="236" stroke="#53667E" stroke-width="1.5"/>
+        <text x="472" y="230" fill="#53667E" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="middle">20 mm head start</text>
+
+        <line x1="466" y1="168" x2="466" y2="208" stroke="#D4DEE9" stroke-width="1"/>
+        <line x1="444" y1="204" x2="466" y2="204" stroke="#0E8A62" stroke-width="2"/>
+        <text x="438" y="208" fill="#0E8A62" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="end">8 mm to stop</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Shopping list</p>
+    <h2>Parts to order</h2>
+    <p class="lead">Check these off as they show up in the mail.</p>
+    <ul class="check" id="parts">
+      <li><label><input type="checkbox" data-k="p1"><span class="what">micro:bit v2 <span class="why">The brain. It has 25 little lights on the front so I can see what it is thinking.</span></span><span class="cost">$18</span></label></li>
+      <li><label><input type="checkbox" data-k="p2"><span class="what">Kitronik motor driver board <span class="why">The micro:bit is too weak to run motors by itself. This does the heavy lifting. No soldering.</span></span><span class="cost">$12</span></label></li>
+      <li><label><input type="checkbox" data-k="p3"><span class="what">2 x N20 gear motors with wheels <span class="why">One motor per side. Run them opposite directions and the robot spins in place.</span></span><span class="cost">$14</span></label></li>
+      <li><label><input type="checkbox" data-k="p4"><span class="what">Ball caster <span class="why">A little rolling ball at the back so the robot does not tip over backward.</span></span><span class="cost">$2</span></label></li>
+      <li><label><input type="checkbox" data-k="p5"><span class="what">2 x TCRT5000 infrared sensors <span class="why">The cliff detectors. One at each front corner, because corners sneak up on one side first.</span></span><span class="cost">$4</span></label></li>
+      <li><label><input type="checkbox" data-k="p6"><span class="what">Lever microswitch and stiff wire <span class="why">A whisker that drags on the table. Backup in case the infrared gets fooled.</span></span><span class="cost">$2</span></label></li>
+      <li><label><input type="checkbox" data-k="p7"><span class="what">Small motor and brush <span class="why">The sweeper. Flicks crumbs up and backward into the tray.</span></span><span class="cost">$6</span></label></li>
+      <li><label><input type="checkbox" data-k="p8"><span class="what">4 x AA battery holder with a switch <span class="why">Plain AA batteries. No charging, nothing that can catch fire.</span></span><span class="cost">$4</span></label></li>
+      <li><label><input type="checkbox" data-k="p9"><span class="what">Foam board, plastic container, zip ties, glue <span class="why">The body. Foam board for the rough version, plastic container for the real one.</span></span><span class="cost">$10</span></label></li>
+    </ul>
+    <div class="total"><span>Total</span><span>$72</span></div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">The plan</p>
+    <h2>Six weekends, then three spare</h2>
+    <p class="lead">Every weekend ends with something that actually works, not a half-finished pile. Three empty weekends at the end on purpose, because something always goes wrong.</p>
+    <div class="weeks">
+      <div class="week">
+        <div class="when">THIS WEEK<br>Sep 14</div>
+        <div>
+          <h3>Order the parts</h3>
+          <p>Nothing else can start until the box shows up. Order everything at once so it all arrives together.</p>
+          <span class="goal">Done when: it is ordered</span>
+        </div>
+      </div>
+      <div class="week">
+        <div class="when">WEEKEND 1<br>Sep 19-20</div>
+        <div>
+          <h3>Make it drive</h3>
+          <p>Foam board base, two motors, wheels, the caster, batteries, micro:bit. No sensors and no brush yet. Just forward, backward, and spin.</p>
+          <span class="goal">Done when: it drives across the kitchen floor</span>
+        </div>
+      </div>
+      <div class="week">
+        <div class="when">WEEKEND 2<br>Sep 26-27</div>
+        <div>
+          <h3>Teach it about edges</h3>
+          <p>Mount the sensors out front, wire the whisker, write the code that stops and turns. Then put it on the table and find out.</p>
+          <span class="goal">Done when: 20 tries, 20 stops, written down</span>
+        </div>
+      </div>
+      <div class="week">
+        <div class="when">WEEKEND 3<br>Oct 3-4</div>
+        <div>
+          <h3>Make it clean</h3>
+          <p>Add the brush, the lip, and the tray. Weigh out 5 grams of crushed cereal, run the robot, then weigh what ended up in the tray.</p>
+          <span class="goal">Done when: there is a number for how much it caught</span>
+        </div>
+      </div>
+      <div class="week">
+        <div class="when">WEEKEND 4<br>Oct 10-11</div>
+        <div>
+          <h3>Run the experiment</h3>
+          <p>Four speeds, 20 runs each, measuring how far it takes to stop and counting the falls. This is the weekend that makes the graphs.</p>
+          <span class="goal">Done when: there is a data table and two charts</span>
+        </div>
+      </div>
+      <div class="week">
+        <div class="when">WEEKEND 5<br>Oct 17-18</div>
+        <div>
+          <h3>Build the real one</h3>
+          <p>Move everything out of the foam board and into the plastic container. Give it a face on the LED screen. Keep the ugly first version.</p>
+          <span class="goal">Done when: version 2 works as well as version 1</span>
+        </div>
+      </div>
+      <div class="week">
+        <div class="when">WEEKEND 6<br>Oct 24-25</div>
+        <div>
+          <h3>Build the display board</h3>
+          <p>Question, prediction, method, graphs, photos, and both robots on the table. Practice saying the whole thing out loud.</p>
+          <span class="goal">Done when: I can explain it without notes</span>
+        </div>
+      </div>
+      <div class="week spare">
+        <div class="when">SPARE<br>Oct 31-Nov 1</div>
+        <div>
+          <h3>Buffer weekend</h3>
+          <p>Halloween. Left empty on purpose.</p>
+        </div>
+      </div>
+      <div class="week spare">
+        <div class="when">SPARE<br>Nov 7-8</div>
+        <div>
+          <h3>Buffer weekend</h3>
+          <p>For whatever broke, or for redoing a test that came out messy.</p>
+        </div>
+      </div>
+      <div class="week spare">
+        <div class="when">SPARE<br>Nov 14-15</div>
+        <div>
+          <h3>Last check</h3>
+          <p>Fresh batteries, run the demo three times, pack it up carefully.</p>
+        </div>
+      </div>
+      <div class="week">
+        <div class="when">DUE<br>Nov 16</div>
+        <div>
+          <h3>Turn it in</h3>
+          <p>Monday. Robot, display board, and the build log.</p>
+          <span class="goal">Done when: it is handed in</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Watch out</p>
+    <h2>Things that will probably go wrong</h2>
+    <p class="lead">Writing these down now, so that when they happen it looks like I planned for them. Which I did.</p>
+    <div class="probs">
+      <div class="prob">
+        <h3>A dark table looks like a cliff</h3>
+        <p>The sensors work by bouncing invisible light off the table. Black placemats swallow the light, so the robot thinks the table ended and refuses to move.</p>
+        <span class="fix">Fix: press A to calibrate it on whatever table it is sitting on.</span>
+      </div>
+      <div class="prob">
+        <h3>Shiny tables bounce light sideways</h3>
+        <p>Glass is the worst case. The light hits it like a mirror and goes off at an angle instead of coming back.</p>
+        <span class="fix">Fix: test on glass early and just say honestly that it does not work there.</span>
+      </div>
+      <div class="prob">
+        <h3>The brush throws crumbs on the sensors</h3>
+        <p>A spinning brush sprays stuff everywhere, and one crumb sitting on a sensor blinds it completely.</p>
+        <span class="fix">Fix: put the sensors in front of the brush, never behind it.</span>
+      </div>
+      <div class="prob">
+        <h3>Batteries get weak at the fair</h3>
+        <p>After a few hours on the display table the motors slow down.</p>
+        <span class="fix">Fix: none needed. Slower means it stops sooner, so it actually gets safer.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">My calls</p>
+    <h2>Stuff I get to decide</h2>
+    <div class="jobs">
+      <div class="job">
+        <h3>The name</h3>
+        <p>Crumb Patrol is just a placeholder. Whatever I pick goes on the board and on the robot.</p>
+      </div>
+      <div class="job">
+        <h3>The face</h3>
+        <p>25 LEDs on the front of the micro:bit. Eyes, a mood, a battery meter, whatever I want.</p>
+      </div>
+      <div class="job">
+        <h3>The brush</h3>
+        <p>Cut-up paintbrush, toothbrush heads, pipe cleaners, or felt strips. Test three and keep the numbers.</p>
+      </div>
+      <div class="job">
+        <h3>How it searches</h3>
+        <p>Random bouncing on button A, spirals on button B. Or my own pattern, which would be a better experiment.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>CRUMB PATROL &middot; 4TH GRADE INVENTION PROJECT &middot; DUE NOV 16, 2026</footer>
+
+</div>
+
+<script>
+(function () {
+  var boxes = document.querySelectorAll('input[type="checkbox"][data-k]');
+  var KEY = 'crumb-patrol-progress';
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { saved = {}; }
+  function save() {
+    var out = {};
+    boxes.forEach(function (b) { if (b.checked) { out[b.dataset.k] = 1; } });
+    try { localStorage.setItem(KEY, JSON.stringify(out)); } catch (e) {}
+  }
+  boxes.forEach(function (b) {
+    if (saved && saved[b.dataset.k]) { b.checked = true; }
+    b.addEventListener('change', save);
+  });
+})();
+</script>
+</body>
+</html>

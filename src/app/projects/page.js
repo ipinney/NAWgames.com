@@ -11,8 +11,8 @@ const KIDS = [
     borderColor: 'border-naw-cyan/30',
     hoverBg: 'hover:bg-naw-cyan/10',
     textColor: 'text-naw-cyan',
-    description: 'Coming soon!',
-    projectCount: 0,
+    description: 'School projects and presentations',
+    projectCount: 1,
   },
   {
     name: 'Addie',
