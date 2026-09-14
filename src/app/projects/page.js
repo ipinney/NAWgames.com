@@ -12,7 +12,7 @@ const KIDS = [
     hoverBg: 'hover:bg-naw-cyan/10',
     textColor: 'text-naw-cyan',
     description: 'School projects and presentations',
-    projectCount: 2,
+    projectCount: 4,
   },
   {
     name: 'Addie',
