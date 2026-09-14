@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dusty - Research Notes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ground: #EAEFF5;
+    --card: #FFFFFF;
+    --ink: #15202E;
+    --ink-2: #53667E;
+    --ink-3: #8A9AAF;
+    --line: #D4DEE9;
+    --orange: #E2662A;
+    --orange-soft: #FDF0E8;
+    --blue: #2A6BC4;
+    --blue-soft: #E9F1FB;
+    --green: #0E8A62;
+    --green-soft: #E6F5EF;
+    --purple: #6B4AA8;
+    --purple-soft: #F0EBFA;
+  }
+
+  body { font-family: 'Nunito', system-ui, sans-serif; background: var(--ground); color: var(--ink); padding: 18px; line-height: 1.55; }
+  .wrap { max-width: 880px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  h1, h2, h3, h4, .eyebrow { font-family: 'Fredoka', 'Nunito', sans-serif; }
+
+  .hero { background: linear-gradient(140deg, #1B3350 0%, #294B73 62%, #B24E1F 150%); color: #fff; border: none; text-align: center; padding: 30px 22px 26px; }
+  .hero .ico { font-size: 46px; display: block; line-height: 1; margin-bottom: 10px; }
+  .hero h1 { font-size: clamp(26px, 6vw, 40px); font-weight: 700; letter-spacing: 0.02em; margin-bottom: 8px; }
+  .hero p { color: rgba(255,255,255,0.84); font-size: 15.5px; max-width: 52ch; margin: 0 auto; }
+  .due { display: inline-flex; align-items: center; gap: 9px; background: var(--orange); color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; padding: 9px 16px; border-radius: 999px; margin-top: 18px; text-transform: uppercase; }
+
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--orange); margin-bottom: 4px; }
+  h2 { font-size: 25px; font-weight: 600; margin-bottom: 10px; line-height: 1.2; }
+  h3 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  h4 { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+  p.lead { color: var(--ink-2); font-size: 15.5px; }
+  p.body { font-size: 15.5px; margin-top: 10px; }
+
+  .facts { background: var(--green-soft); border-left: 4px solid var(--green); border-radius: 0 9px 9px 0; padding: 12px 14px; margin-top: 12px; }
+  .facts h4 { color: var(--green); }
+  .facts li { font-size: 14.5px; color: var(--ink-2); margin-bottom: 5px; }
+  .facts ul { margin: 4px 0 0 18px; }
+
+  .useit { background: var(--blue-soft); border-left: 4px solid var(--blue); border-radius: 0 9px 9px 0; padding: 12px 14px; margin-top: 10px; }
+  .useit h4 { color: var(--blue); }
+  .useit p { font-size: 14.5px; color: var(--ink-2); }
+
+  .src { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line); font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-3); line-height: 1.7; }
+  .src a { color: var(--blue); text-decoration: none; word-break: break-all; }
+  .src strong { color: var(--ink-2); font-weight: 600; }
+
+  .num { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 9px; background: var(--orange); color: #fff; font-family: 'Fredoka', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+
+  /* glossary */
+  .gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 14px; }
+  .term { background: var(--ground); border-radius: 11px; padding: 14px 15px; }
+  .term h3 { font-size: 15px; color: var(--blue); }
+  .term p { font-size: 14px; color: var(--ink-2); }
+
+  /* bibliography slips */
+  .slip { border: 2px dashed var(--line); border-radius: 11px; padding: 15px 16px; margin-top: 12px; }
+  .slip dl { display: grid; grid-template-columns: 130px 1fr; gap: 4px 12px; font-size: 14px; }
+  .slip dt { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); padding-top: 3px; }
+  .slip dd { color: var(--ink); word-break: break-word; }
+
+  .pick { background: var(--purple-soft); border-left: 4px solid var(--purple); border-radius: 0 9px 9px 0; padding: 12px 14px; margin-top: 12px; }
+  .pick h4 { color: var(--purple); }
+  .pick p, .pick li { font-size: 14.5px; color: var(--ink-2); }
+  .pick ul { margin: 4px 0 0 18px; }
+
+  .biglink { display: block; margin-top: 12px; background: var(--blue); color: #fff; text-decoration: none; font-weight: 700; font-size: 16px; text-align: center; padding: 15px 16px; border-radius: 11px; }
+  .biglink.orange { background: var(--orange); }
+  .biglink small { display: block; font-weight: 400; font-size: 13px; color: rgba(255,255,255,0.82); margin-top: 3px; }
+
+  footer { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: 0.06em; padding: 4px 0 10px; }
+
+  @media (max-width: 520px) {
+    body { padding: 12px; }
+    .card { padding: 17px; }
+    .slip dl { grid-template-columns: 1fr; gap: 1px; }
+    .slip dt { padding-top: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card hero">
+    <span class="ico">🔎</span>
+    <h1>RESEARCH</h1>
+    <p>Six things worth knowing before you build a table robot, written out so you can read them and then say them in your own words. The sources are real and the links work. Read it, then fill in the Know and Need to know boxes.</p>
+    <div class="due">📅 Research Question page due Wed Sep 17</div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Topic 1</p>
+    <span class="num">1</span>
+    <h2>Somebody already built the floor version</h2>
+    <p class="body">The robot vacuum you have seen is called a Roomba. It is made by a company called iRobot, which was started in 1990 by three robot scientists from MIT. The first Roomba went on sale in September 2002 and cost about $199, which was cheap compared to the other robot vacuums at the time.</p>
+    <p class="body">Here is the funny part. Before it was called Roomba, the team called it DustPuppy.</p>
+    <div class="facts">
+      <h4>What matters for Dusty</h4>
+      <ul>
+        <li>Robot vacuums are for floors. Nobody made the table version, which is the gap your invention fills.</li>
+        <li>The first Roomba had a dirt tray you empty instead of a vacuum bag, the same idea as Dusty's crumb tray.</li>
+        <li>iRobot gave the Roomba three separate safety systems just to keep it from falling down stairs. Falling is the number one danger for a driving robot, and that was true in 2002 and it is true for you.</li>
+      </ul>
+    </div>
+    <div class="useit">
+      <h4>Where this goes in the packet</h4>
+      <p>Know box, and the Reason for Creation part of the board. You can say a robot vacuum cannot help on a table because it would drive off the side, and that is exactly why a table robot has to be built differently.</p>
+    </div>
+    <div class="src">
+      <strong>Sources</strong><br>
+      IEEE Spectrum Robots Guide, Roomba entry &middot; <a href="https://robotsguide.com/robots/roomba/" target="_blank" rel="noopener">robotsguide.com/robots/roomba/</a><br>
+      Smithsonian National Museum of American History, Roomba Robot Vacuum Cleaner &middot; <a href="https://americanhistory.si.edu/collections/object/nmah_1448432" target="_blank" rel="noopener">americanhistory.si.edu</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Topic 2</p>
+    <span class="num">2</span>
+    <h2>How a robot sees a cliff with no eyes</h2>
+    <p class="body">A cliff sensor is two tiny parts sitting next to each other. One is an infrared LED that shines invisible light straight down. The other is a detector that measures how much of that light bounces back.</p>
+    <p class="body">On a table, the light hits the wood and bounces straight back up into the detector, so the reading is strong. At the edge of the table there is nothing underneath except air and the floor four feet down. The light goes out and never comes back. The reading drops to almost nothing. That sudden drop is the robot's word for "cliff."</p>
+    <div class="facts">
+      <h4>Numbers to know</h4>
+      <ul>
+        <li>Infrared is real light, just past the red end of the rainbow. Your eyes cannot see it, but a phone camera sometimes can.</li>
+        <li>A white or light surface bounces back roughly 60 to 80 percent of the infrared light. A black surface bounces back only about 10 to 20 percent.</li>
+        <li>These sensors work best very close to the surface, a few millimeters, not a few centimeters. Too high up and the reading gets weak and unreliable. That is why Dusty's sensor boom has to be shimmable.</li>
+        <li>Sunlight has infrared in it, so bright sun on the table can mess with the reading. Testing in the same light every time is one of the controlled variables.</li>
+      </ul>
+    </div>
+    <div class="useit">
+      <h4>Where this goes in the packet</h4>
+      <p>How It Works, on the board and on the Design Thinking page. This is the paragraph that makes a judge nod. Say it in the order: shine down, measure the bounce, no bounce means no table, stop the motors.</p>
+    </div>
+    <div class="src">
+      <strong>Sources</strong><br>
+      Science Buddies, Line-Following Robot lesson plan &middot; <a href="https://www.sciencebuddies.org/teacher-resources/lesson-plans/line-following-robot" target="_blank" rel="noopener">sciencebuddies.org</a><br>
+      SparkFun Learn, RedBot experiment 6, IR reflectance sensors &middot; <a href="https://learn.sparkfun.com/tutorials/sparkfun-inventors-kit-for-redbot/experiment-6-line-following-with-ir-sensors" target="_blank" rel="noopener">learn.sparkfun.com</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Topic 3</p>
+    <span class="num">3</span>
+    <h2>The black tablecloth problem is real</h2>
+    <p class="body">Since a dark surface swallows most of the infrared light, a cliff sensor looking at black carpet sees almost the same weak reading it would see looking off the edge of a stair. The robot thinks there is a cliff where there is only a dark rug.</p>
+    <p class="body">This is not a made-up worry. It happens to real Roombas. Owners find that their robot refuses to drive onto black or very dark carpets, because the cliff sensors keep false-triggering.</p>
+    <div class="facts">
+      <h4>Why this is good news for you</h4>
+      <ul>
+        <li>Your second experiment, testing white paper against bare wood against a black placemat, is testing a weakness that a billion-dollar company still has not fully solved.</li>
+        <li>Your two fixes are the right ones: calibrate at startup by sampling the actual surface and setting the threshold from that, and add a mechanical whisker switch that does not care about color at all.</li>
+        <li>When a judge asks "what if the sensor is wrong," the answer is that there are two different kinds of sensor and they fail for different reasons. That is called redundancy.</li>
+      </ul>
+    </div>
+    <div class="useit">
+      <h4>Where this goes in the packet</h4>
+      <p>Need to know box, and research question number 2. This is the strongest thing in your whole project, because it is a real problem you found before you built anything.</p>
+    </div>
+    <div class="src">
+      <strong>Sources</strong><br>
+      Wikipedia, Roomba, sensors section &middot; <a href="https://en.wikipedia.org/wiki/Roomba" target="_blank" rel="noopener">en.wikipedia.org/wiki/Roomba</a><br>
+      Science Buddies, BlueBot line-following project &middot; <a href="https://www.sciencebuddies.org/science-fair-projects/project-ideas/Robotics_p023/robotics/line-following-robot" target="_blank" rel="noopener">sciencebuddies.org</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Topic 4</p>
+    <span class="num">4</span>
+    <h2>Dumb driving beats smart driving</h2>
+    <p class="body">You would think a cleaning robot needs a map. The first Roomba did not have one. It drove in straight lines, bumped into something, turned a random direction, and drove again. People called it zigzagging. It looked ridiculous and it worked, because if you bounce around a room long enough you eventually cover all of it.</p>
+    <p class="body">The expensive competitor at the time tried to map the room with sound, like a bat, and cost about seven times more. The cheap random one is the one that sold a million a year.</p>
+    <div class="facts">
+      <h4>What matters for Dusty</h4>
+      <ul>
+        <li>Random bounce on button A is not the lazy option. It is the option the real product shipped with.</li>
+        <li>A spiral on button B covers the middle of the table fast. Racing the two patterns and timing which one finds all the crumbs first turns your robot into a second experiment for free.</li>
+        <li>Simple code that never crashes beats clever code that fails at the science fair.</li>
+      </ul>
+    </div>
+    <div class="useit">
+      <h4>Where this goes in the packet</h4>
+      <p>How will it operate, on Design Thinking page 24, and How Does It Work on the board.</p>
+    </div>
+    <div class="src">
+      <strong>Sources</strong><br>
+      IEEE Spectrum Robots Guide, Roomba entry &middot; <a href="https://robotsguide.com/robots/roomba/" target="_blank" rel="noopener">robotsguide.com/robots/roomba/</a><br>
+      MIT Technology Review, review of the original iRobot Roomba, Oct 2002 &middot; <a href="https://www.technologyreview.com/2002/10/09/234680/irobot-roomba/" target="_blank" rel="noopener">technologyreview.com</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Topic 5</p>
+    <span class="num">5</span>
+    <h2>What the brain actually is</h2>
+    <p class="body">The micro:bit is a whole computer on one small board, about 4 cm by 5 cm, which is smaller than a credit card. It was made to teach kids to code, and it is the brain you are using.</p>
+    <div class="facts">
+      <h4>The parts you are going to use</h4>
+      <ul>
+        <li>25 red LEDs in a 5 by 5 grid. You can scroll numbers across them, which means you can read your sensor values standing at the table with no laptop plugged in. This is the reason you picked the micro:bit instead of an Arduino.</li>
+        <li>Button A and button B. Two search patterns, one button each.</li>
+        <li>The edge connector, the gold stripes along the bottom, which is how the motor driver board and the sensors connect.</li>
+        <li>A processor, the actual brain chip, which runs your blocks about as fast as you will ever need.</li>
+        <li>A plug for a battery pack so it runs with no computer attached.</li>
+      </ul>
+    </div>
+    <div class="useit">
+      <h4>Where this goes in the packet</h4>
+      <p>What is it made of, on Design Thinking page 24, and the labels on your sketch. Rubric requirement R6 from your own build plan also applies here: you have to be able to explain every wire.</p>
+    </div>
+    <div class="src">
+      <strong>Sources</strong><br>
+      Micro:bit Educational Foundation, features overview &middot; <a href="https://microbit.org/get-started/features/overview/" target="_blank" rel="noopener">microbit.org/get-started/features/overview/</a><br>
+      Micro:bit developer community, hardware &middot; <a href="https://tech.microbit.org/hardware/" target="_blank" rel="noopener">tech.microbit.org/hardware/</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Topic 6</p>
+    <span class="num">6</span>
+    <h2>Why crumbs are worth cleaning up</h2>
+    <p class="body">Crumbs are not just messy. Ants and cockroaches find food by scouting, and when one scout finds crumbs it leaves a scent trail so the rest of the colony can follow it. Pest control advice is almost always the same first step: wipe the table and sweep the floor right after people eat, because even a very small crumb is enough of a reason for bugs to come in.</p>
+    <p class="body">Now think about what people actually do. They brush the crumbs off the table with their hand. The crumbs land on the floor. The mess did not go away, it moved somewhere harder to reach.</p>
+    <div class="facts">
+      <h4>The argument for your invention, in three steps</h4>
+      <ul>
+        <li>Crumbs on a table attract pests.</li>
+        <li>Wiping with a hand moves them to the floor instead of removing them.</li>
+        <li>Dusty picks them up into a tray you can dump in the trash, so the crumbs actually leave the house.</li>
+      </ul>
+    </div>
+    <div class="useit">
+      <h4>Where this goes in the packet</h4>
+      <p>This topic is interesting because, on the Research Question page. Also Purpose and Impact on Society on the board. If you want to cite this one, look for a university extension service page rather than a pest company's ad, because a company selling bug spray is not a neutral source.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Vocabulary</p>
+    <h2>Words to use out loud</h2>
+    <p class="lead">Using the real word and then explaining it in normal language is what makes a presentation sound like you know the thing.</p>
+    <div class="gloss">
+      <div class="term"><h3>Infrared</h3><p>Light just past red that people cannot see. Sensors can.</p></div>
+      <div class="term"><h3>Reflectance sensor</h3><p>An emitter and a detector together. Shines light, measures the bounce.</p></div>
+      <div class="term"><h3>Threshold</h3><p>The cutoff number. Above it means table, below it means cliff.</p></div>
+      <div class="term"><h3>Calibration</h3><p>Measuring the surface at startup so the threshold fits that table.</p></div>
+      <div class="term"><h3>Redundancy</h3><p>Two different sensors doing the same job so one can fail.</p></div>
+      <div class="term"><h3>Differential steering</h3><p>Turning by running one wheel faster than the other. No steering wheel.</p></div>
+      <div class="term"><h3>Microcontroller</h3><p>A small computer that runs one program forever. The micro:bit.</p></div>
+      <div class="term"><h3>Autonomous</h3><p>It decides for itself. No remote control, no driver.</p></div>
+      <div class="term"><h3>Prototype</h3><p>The first one you build to find out what is wrong with the idea.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Bibliography</p>
+    <h2>Three websites, already filled in</h2>
+    <p class="lead">The Research Resources page wants author, article title, publication date, website name, and URL for each website. Here are three you are genuinely using. Copy them in cursive. If a page has no author or no date, leave that blank instead of making one up, and you can write the date you read it.</p>
+
+    <div class="slip">
+      <dl>
+        <dt>Author</dt><dd>(none listed)</dd>
+        <dt>Title of article</dt><dd>Features Overview</dd>
+        <dt>Publication date</dt><dd>(none listed, write the date you read it)</dd>
+        <dt>Website</dt><dd>Micro:bit Educational Foundation</dd>
+        <dt>URL</dt><dd>https://microbit.org/get-started/features/overview/</dd>
+      </dl>
+    </div>
+
+    <div class="slip">
+      <dl>
+        <dt>Author</dt><dd>(none listed)</dd>
+        <dt>Title of article</dt><dd>Line-Following Robot Lesson Plan</dd>
+        <dt>Publication date</dt><dd>(none listed, write the date you read it)</dd>
+        <dt>Website</dt><dd>Science Buddies</dd>
+        <dt>URL</dt><dd>https://www.sciencebuddies.org/teacher-resources/lesson-plans/line-following-robot</dd>
+      </dl>
+    </div>
+
+    <div class="slip">
+      <dl>
+        <dt>Author</dt><dd>(none listed)</dd>
+        <dt>Title of article</dt><dd>Roomba</dd>
+        <dt>Publication date</dt><dd>(none listed, write the date you read it)</dd>
+        <dt>Website</dt><dd>IEEE Spectrum Robots Guide</dd>
+        <dt>URL</dt><dd>https://robotsguide.com/robots/roomba/</dd>
+      </dl>
+    </div>
+
+    <div class="pick">
+      <h4>The two books are still on you</h4>
+      <ul>
+        <li>The form has slots for two books and websites do not count for those slots.</li>
+        <li>Search the library catalog for micro:bit, coding for kids, robotics for kids, and how robots work.</li>
+        <li>Each book slot needs author last name and first name, title, copyright date, and publisher. The copyright date is on the back of the title page next to the little &copy;.</li>
+        <li>Do not write down a book you did not open. Read at least a few pages of each one.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Now go write it</p>
+    <h2>What to do with all of this</h2>
+    <p class="lead">Reading research does not count as doing research until it is on paper. The Research Question page is due Wednesday Sep 17 and it has to be in cursive.</p>
+    <a class="biglink" href="/projects/nolan/invention-packet.html">📋 Packet guide, Part 1
+      <small>The Research Question page, box by box, with what to write in each one</small>
+    </a>
+    <a class="biglink orange" href="/projects/nolan/dusty.html">🤖 The Dusty build plan
+      <small>Parts, weekend schedule, the experiment, the cliff math</small>
+    </a>
+  </div>
+
+  <footer>NOLAN PINNEY &middot; #16 &middot; RESEARCH NOTES &middot; INVENTION CONVENTION 2026</footer>
+</div>
+</body>
+</html>

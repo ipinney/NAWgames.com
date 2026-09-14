@@ -33,7 +33,22 @@ const PROJECTS = [
     file: '/projects/nolan/invention-packet.html',
     links: [
       { href: '/projects/nolan/board-prints.html', label: '🖨️ Board Print-Outs' },
-      { href: '/projects/nolan/dusty.html', label: '🤖 Build Plan' },
+      { href: '/projects/nolan/research.html', label: '🔎 Research Notes' },
+    ],
+  },
+  {
+    slug: 'research',
+    title: 'Research Notes',
+    subject: 'Invention Convention',
+    emoji: '🔎',
+    description:
+      'Six research topics with real sources: the Roomba story, how a cliff sensor sees an edge, the dark surface problem, random driving, the micro:bit, and why crumbs matter. Plus vocabulary and three filled-in bibliography entries.',
+    dueDate: '2026-09-17',
+    dueLabel: 'Sep 17, 2026',
+    color: 'from-emerald-800 to-cyan-500',
+    file: '/projects/nolan/research.html',
+    links: [
+      { href: '/projects/nolan/invention-packet.html', label: '📋 Packet Guide' },
     ],
   },
 ];
