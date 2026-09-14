@@ -5,16 +5,18 @@ import { useState } from 'react';
 
 const PROJECTS = [
   {
-    slug: 'crumb-patrol',
-    title: 'Crumb Patrol',
+    slug: 'dusty',
+    title: 'Dusty',
     subject: 'Invention Project',
     emoji: '🤖',
     description:
-      'A palm-sized robot that sweeps crumbs off the table and stops itself at the edge instead of driving off. Build plan, parts list, and the experiment.',
+      'A palm-sized robot that sweeps crumbs off the table and stops itself at the edge instead of driving off. Build plan, verified parts list, and the experiment.',
     dueDate: '2026-11-16',
     dueLabel: 'Nov 16, 2026',
     color: 'from-slate-700 to-orange-500',
-    file: '/projects/nolan/crumb-patrol.html',
+    file: '/projects/nolan/dusty.html',
+    pdf: '/projects/nolan/dusty-parts-list.pdf',
+    pdfLabel: 'Parts List PDF',
   },
 ];
 
@@ -45,12 +47,24 @@ export default function NolanProjectsPage() {
                 <span className="text-naw-orange text-sm font-semibold">Due {viewing.dueLabel}</span>
               </div>
             </div>
-            <button
-              onClick={() => setIsFullscreen(!isFullscreen)}
-              className="bg-naw-purple/20 border border-naw-purple/30 text-white px-4 py-2 rounded-lg text-sm hover:bg-naw-purple/30 transition-colors self-start"
-            >
-              {isFullscreen ? '↙ Exit Fullscreen' : '↗ Fullscreen'}
-            </button>
+            <div className="flex items-center gap-2 self-start">
+              {viewing.pdf && (
+                <a
+                  href={viewing.pdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-naw-orange/20 border border-naw-orange/40 text-naw-orange px-4 py-2 rounded-lg text-sm font-semibold hover:bg-naw-orange/30 transition-colors"
+                >
+                  ↓ {viewing.pdfLabel}
+                </a>
+              )}
+              <button
+                onClick={() => setIsFullscreen(!isFullscreen)}
+                className="bg-naw-purple/20 border border-naw-purple/30 text-white px-4 py-2 rounded-lg text-sm hover:bg-naw-purple/30 transition-colors"
+              >
+                {isFullscreen ? '↙ Exit Fullscreen' : '↗ Fullscreen'}
+              </button>
+            </div>
           </div>
         </div>
 
