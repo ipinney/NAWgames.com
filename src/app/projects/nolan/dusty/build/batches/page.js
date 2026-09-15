@@ -24,7 +24,7 @@ const V3D = `${F}/dusty-components-3d.html`;
 
 const SETTINGS = [
   ['Printer', 'FlashForge Adventurer 5M, 0.4 mm nozzle, textured PEI plate'],
-  ['Software', 'Orca-Flashforge or OrcaSlicer. Open the .3mf; every setting below is already in it.'],
+  ['Software', 'Easiest: the .gcode is already sliced for the Adventurer 5M with every setting below. Put it on a USB stick or send it from FlashPrint. The .3mf opens in Flash Studio or OrcaSlicer to change settings.'],
   ['Material', 'Flashforge Generic PLA profile: nozzle 220°C, bed 60°C'],
   ['Layers', '0.2 mm, 3 walls, 5 top and 4 bottom layers, 20% gyroid infill'],
   ['Brim', '5 mm, except none on the three gears and 8 mm on the tall roller'],
@@ -268,7 +268,8 @@ export default function DustyBatchesPage() {
                 <div className="text-white text-sm font-semibold">{b.pieces}</div>
                 <p className="text-white/60 text-sm mt-2">{b.why}</p>
                 <div className="flex flex-wrap gap-2 mt-4">
-                  <Btn href={`${F}/${b.stem}.3mf`} primary download>Plate file (.3mf)</Btn>
+                  <Btn href={`${F}/${b.stem}.gcode`} primary download>Ready to print (.gcode)</Btn>
+                  <Btn href={`${F}/${b.stem}.3mf`} download>Plate file (.3mf)</Btn>
                   <Btn href={`${F}/${b.stem}.stl`} download>Plate (.stl)</Btn>
                   <Btn href={V3D}>See the parts in 3D</Btn>
                 </div>
