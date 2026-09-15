@@ -23,8 +23,8 @@ const PLAN = '/projects/addie/mosquito-turret.html';
 const PHASES = [
   { title: 'Brainstorm', when: 'Done Sep 15', status: 'done', text: 'Air cannon, vacuum, and light beam ideas. The family picked lasers.', link: `${PLAN}#brainstorm` },
   { title: 'Requirements', when: 'Done Sep 15', status: 'done', text: 'Laser, sound effects, trainable fishing-line mosquito, proven hits, self-recorded data, and the name: MS-2000.', link: `${PLAN}#requirements` },
-  { title: 'Pick a design', when: 'September', status: 'now', text: 'Addie picks the pan and tilt, pan-only, or sensor turret, and says why. Ask the teacher about laser rules.', link: `${PLAN}#pick` },
-  { title: 'Lock in the design', when: 'Late September', status: 'next', text: 'Draw the MS-2000 by hand with labels.', link: `${PLAN}#design` },
+  { title: 'Pick a design', when: 'Done Sep 15', status: 'done', text: 'Addie picked Design A, the Pan and Tilt Camera Turret.', link: `${PLAN}#pick` },
+  { title: 'Lock in the design', when: 'Late September', status: 'now', text: 'Write why Design A, draw the MS-2000 by hand with labels, and ask the teacher about laser rules.', link: `${PLAN}#design` },
   { title: 'Parts list and order', when: 'Early October', status: 'next', text: 'Final list with a backup for every part, then order.', link: `${PLAN}#parts` },
   { title: 'Build', when: 'October to November', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head and camera training, then the flight zone, then the code and sound effects.', link: `${PLAN}#prints` },
   { title: 'Practice runs and fixes', when: 'December', status: 'next', text: 'Make sure the data saves correctly and the MS-2000 hits reliably.' },
