@@ -41,7 +41,7 @@ az = meshes['axle'].vertices[:, 2]; print('axle bed contact verts', int((az < 0.
 # plate layout on 220 x 220 (Adventurer 5M)
 place = [  # (name, x, y, rotz)
  ('base', -62, 0, 0),
- ('deck', 50, 65, 0),
+ ('deck', 51, 69, 0),
  ('tray', 30, -8, 90),
  ('roller', -4.75, 55, 0),
  ('roller_gear', -4.75, 82, 0),

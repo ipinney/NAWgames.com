@@ -81,8 +81,13 @@ ball = trimesh.creation.icosphere(subdivisions=2, radius=4.76); ball.apply_trans
 ghosts['ball caster'] = trimesh.util.concatenate([cast, ball])
 ghosts['4xAA pack'] = boxc(-BAT[0]/2, BAT[0]/2, BAT_Y0, BAT_Y1, PL_Z1, PL_Z1 + BAT[2])
 mb_z = DECK_Z0 + DECK_T + 1.6
-ghosts['moto:bit'] = boxc(-MB[0]/2, MB[0]/2, DECK_Y[0] + 1, DECK_Y[0] + 1 + MB[1], DECK_Z0 + DECK_T, mb_z)
-ghosts['micro:bit'] = boxc(-26, 26, DECK_Y[0] + 3, DECK_Y[0] + 4.6, mb_z + 6, mb_z + 6 + 42)
+ghosts['moto:bit'] = trimesh.util.concatenate([
+    boxc(-MB[0]/2, MB[0]/2, MB_Y0, MB_Y1, DECK_Z0 + DECK_T, mb_z),
+    boxc(-27, 27, MB_Y0, MB_Y0 + 6, mb_z, mb_z + 5)])            # right-angle edge connector
+# micro:bit v2 (52 x 42) lies flat, plugged 4 mm into the connector, overhanging the front
+ghosts['micro:bit'] = trimesh.util.concatenate([
+    boxc(-26, 26, MB_Y0 + 4 - 42, MB_Y0 + 4, mb_z + 2.0, mb_z + 3.6),
+    boxc(-9, 9, MB_Y0 + 4 - 34, MB_Y0 + 4 - 12, mb_z + 3.6, mb_z + 4.4)])
 _mc = along_x(m.Manifold.cylinder(MOT_LEN, 10, 10, 40), MOT_FACE_X - MOT_LEN, MOT_Y, MOT_Z) ^ box(-50, 50, MOT_Y - 11, MOT_Y + 11, MOT_Z - 7.5, MOT_Z + 7.5)
 mot130 = tm_of(_mc)
 shaft = cyl_x(1.0, MOT_FACE_X, P1[1] + 0.5, MOT_Y, MOT_Z, 12)

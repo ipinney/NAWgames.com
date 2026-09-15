@@ -57,7 +57,9 @@ PLATE_Y1 = BAT_Y1
 CASTER_Y = p('CASTER_Y', 106.0); CASTER_H = 10.16; CASTER_DX = 13.46/2
 DECK_Z0 = p('DECK_Z0', PL_Z1 + BAT[2] + 2.5); DECK_T = 2.5
 DECK_Y = (50.0, BAT_Y1); DECK_X = 39.5
-MB = (76.0, 62.0)                           # moto:bit board
+MB = (62.0, 76.0)                           # moto:bit v2 (DEV-15713): 62 wide (connector edge, front) x 76 deep
+MB_Y0 = 36.0; MB_Y1 = MB_Y0 + MB[1]         # board sits flush against the rear stop
+DECK_NOSE_Y = 37.0                          # deck extends forward under the board
 POSTS = [(sx*36.5, y) for y in (53.0, 111.0) for sx in (-1, 1)]
 POST_D = 5.6; PEG_D = 4.0
 WIDE_Y0 = 47.0; FRONT_HALF = SP_X1; WIDE_HALF = 39.5
@@ -199,24 +201,22 @@ def cradle():
 # ================= DECK + POSTS =================
 def deck():
     z0, z1 = DECK_Z0, DECK_Z0 + DECK_T
+    hx = MB[0] / 2
     s = box(-DECK_X, DECK_X, DECK_Y[0], DECK_Y[1], z0, z1)
-    mby0 = DECK_Y[0] + 1.0; mby1 = mby0 + MB[1]
-    corners = []
-    for sx in (-1, 1):
-        for (yy, sy) in ((mby0, -1), (mby1, 1)):
-            x = sx*MB[0]/2
-            xa, xb = sorted([x, x + sx*2.0]); ya, yb = sorted([yy, yy + sy*2.0])
-            corners.append(box(min(xa, x - sx*8), max(xb, x - sx*8), ya, yb, z1, z1 + 3.0))
-            corners.append(box(xa, xb, min(ya, yy - sy*8), max(yb, yy - sy*8), z1, z1 + 3.0))
-    s = union([s] + corners)
-    # keep corners inside deck: clip
-    s = s ^ box(-DECK_X - 3, DECK_X + 3, DECK_Y[0] - 3, DECK_Y[1] + 3, z0, z1 + 3)
+    s = s + box(-hx - 2.0, hx + 2.0, DECK_NOSE_Y, DECK_Y[0] + 1, z0, z1)      # nose under the moto:bit
+    parts = [s]
+    for sx in (-1, 1):                                                        # side guides
+        xa, xb = sorted([sx * hx, sx * (hx + 2.0)])
+        parts.append(box(xa, xb, DECK_NOSE_Y + 2.0, MB_Y1 - 4.0, z1, z1 + 3.0))
+    parts.append(box(-hx, hx, MB_Y1, MB_Y1 + 2.0, z1, z1 + 3.0))              # rear stop
+    s = union(parts)
     for (x, y) in POSTS:
         s = s - cyl(x, y, z0 - 1, z1 + 1, SCREW_HOLE) - cyl(x, y, z1 - 1.2, z1 + 5, 4.4)
-    # zip tie slots and wire windows
+    # zip-tie slots just outside the side guides; the ties go over the board
     for sx in (-1, 1):
-        s = s - box(min(sx*30, sx*27), max(sx*30, sx*27), 58, 62, z0 - 1, z1 + 1)
-        s = s - box(min(sx*30, sx*27), max(sx*30, sx*27), 100, 104, z0 - 1, z1 + 1)
+        xa, xb = sorted([sx * (hx + 2.5), sx * (hx + 5.0)])
+        s = s - box(xa, xb, 60, 64, z0 - 1, z1 + 1)
+        s = s - box(xa, xb, 96, 100, z0 - 1, z1 + 1)
     s = s - box(-20, 20, 72, 94, z0 - 1, z1 + 1)       # wire pass-through / weight
     return s
 

@@ -260,7 +260,7 @@
       <span class="fact">DUE <b>NOV 16</b></span>
       <span class="fact">CHASSIS <b>3D PRINTED</b></span>
       <span class="fact">SCREWS <b>19 &times; M2</b></span>
-      <span class="fact">SOLDERING <b>NONE</b></span>
+      <span class="fact">SOLDERING <b>A LITTLE</b></span>
     </div>
   </div>
 
@@ -269,6 +269,7 @@
     <ul>
       <li><b>A grown-up runs the 3D printer.</b> The nozzle is about 210&deg;C and the bed about 60&deg;C. Never touch either while it is printing or cooling.</li>
       <li><b>Hands off while it prints.</b> The printer moves fast and on its own. Watch through the door.</li>
+      <li><b>A grown-up does the soldering.</b> The iron tip is hotter than the printer nozzle. Always put it back in its stand, and wash hands after touching solder.</li>
       <li><b>Tiny screws and nuts are choking hazards.</b> Keep them in a cup, and away from little brothers.</li>
       <li><b>Never plug batteries in backwards.</b> Backwards can cook the micro:bit.</li>
       <li><b>Unplug the battery before changing any wire.</b> Every single time.</li>
@@ -285,6 +286,7 @@
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="6" width="44" height="44" rx="4" fill="#fff" stroke="#566A83" stroke-width="2.5"/><path d="M14 16 h32" stroke="#566A83" stroke-width="2.5"/><path d="M26 16 v10 h8 v-10" fill="#B9C4D1" stroke="#566A83" stroke-width="2"/><rect x="18" y="38" width="24" height="5" fill="#F0B43C"/></svg><b>3D printer</b><span>Grown-up runs it</span></div>
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M30 6 v30" stroke="#566A83" stroke-width="3"/><path d="M24 36 h12 v14 h-12 Z" fill="#D95B21" stroke="#566A83" stroke-width="2.5" stroke-linejoin="round"/><path d="M26 6 h8" stroke="#566A83" stroke-width="5" stroke-linecap="round"/></svg><b>Small screwdriver</b><span>Phillips #0 for M2</span></div>
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M20 50 L28 26 M40 50 L32 26" stroke="#D95B21" stroke-width="5" stroke-linecap="round"/><path d="M28 26 L30 6 L32 26" fill="#8E9CAC" stroke="#566A83" stroke-width="2"/></svg><b>Needle-nose pliers</b><span>To hold the nuts</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M10 46 L36 20" stroke="#D95B21" stroke-width="7" stroke-linecap="round"/><path d="M36 20 L50 8" stroke="#8E9CAC" stroke-width="3" stroke-linecap="round"/></svg><b>Soldering iron</b><span>Grown-up only</span></div>
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="24" width="44" height="12" rx="2" fill="#fff" stroke="#566A83" stroke-width="2.5"/><path d="M16 24 v7 M24 24 v5 M32 24 v7 M40 24 v5 M48 24 v7" stroke="#566A83" stroke-width="2"/></svg><b>Ruler</b><span>Millimeters matter</span></div>
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="26" width="44" height="20" rx="4" fill="#fff" stroke="#566A83" stroke-width="2.5"/><rect x="20" y="16" width="20" height="10" rx="2" fill="#D2DCE7" stroke="#566A83" stroke-width="2"/><text x="30" y="41" font-family="IBM Plex Mono" font-size="10" text-anchor="middle" fill="#14202F">5.0g</text></svg><b>Kitchen scale</b><span>To weigh crumbs</span></div>
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="10" y="18" width="40" height="22" rx="4" fill="#fff" stroke="#566A83" stroke-width="2.5"/><path d="M18 29 h24" stroke="#D95B21" stroke-width="3" stroke-linecap="round"/><path d="M30 23 v12" stroke="#D95B21" stroke-width="3" stroke-linecap="round"/></svg><b>Laptop</b><span>To load the code</span></div>
@@ -325,7 +327,7 @@
           <h3>micro:bit v2</h3>
           <p class="what">A tiny computer the size of a credit card cut in half. The 25 red squares are little lights called LEDs. The gold stripes at the bottom are how it plugs into other boards.</p>
           <p class="does"><b>Its job:</b> it is Dusty's brain. It reads the sensors, decides what to do, and tells the motors to go.</p>
-          <p class="spec">STANDS UP IN THE MOTO:BIT &middot; LEDS FACE FORWARD</p>
+          <p class="spec">PLUGS IN FLAT &middot; LEDS FACE UP</p>
         </div>
       </div>
 <div class="pcard">
@@ -350,7 +352,7 @@
         </div>
         <div class="pbody">
           <h3>moto:bit motor board</h3>
-          <p class="what">A blue board with a slot the micro:bit stands up in, a round hole for the battery plug, connectors for two motors, and rows of pins for sensors.</p>
+          <p class="what">A red board with a connector on its front edge that the micro:bit plugs into flat, a round hole for the battery plug, connectors for two motors, a STOP/RUN motor switch, and rows of pins for sensors.</p>
           <p class="does"><b>Its job:</b> the middleman. The micro:bit is far too weak to run motors directly, so it whispers instructions to this board, and this board does the heavy lifting.</p>
           <p class="spec">3 TO 11 VOLTS &middot; DRIVES 2 MOTORS</p>
         </div>
@@ -791,11 +793,12 @@
     <p class="why">The battery lives under the deck, and the moto:bit and micro:bit sit on top. Keep the battery switch OFF for this whole step.</p>
     <ol class="do">
       <li>Put four AA batteries in the holder and switch it OFF.<span class="tip">Check the + and &minus; marks inside the holder.</span></li>
-      <li>Lay the battery holder flat in the middle of the base, behind the motors. Hold it with a hook-and-loop strap through the slots.<span class="tip">Switch facing out to the side, where you can reach it.</span></li>
+      <li>Stick a 2 inch piece of hook-and-loop tape to the middle of the base, behind the motors, and the other half to the bottom of the battery holder. Press the holder down.<span class="tip">Switch facing out to the side, where you can reach it. To change batteries later, peel it off and slide it out.</span></li>
       <li>Push the four posts into the holes around the battery.<span class="tip">The pegs on the bottom of each post drop into the base.</span></li>
       <li>Set the deck on the posts and drive an M2 &times; 8 screw down into each one.<span class="tip">Four screws.</span></li>
-      <li>Clip the moto:bit into the corner guides on the deck, and add two zip ties through the slots.<span class="tip"></span></li>
-      <li>Stand the micro:bit up in the moto:bit slot, LEDs facing the front of the robot.<span class="tip">It only fits one way. If it feels wrong, turn it around rather than pushing harder.</span></li>
+      <li>Slide the moto:bit onto the deck between the two side guides, connector edge toward the front, until it touches the stop at the back.<span class="tip">The deck has a nose that sticks out in front to hold the front of the board.</span></li>
+      <li>Loop two zip ties through the slots beside the guides and over the board. Snug, not crushing.<span class="tip"></span></li>
+      <li>Slide the micro:bit into the connector on the front of the moto:bit, LEDs and buttons facing up.<span class="tip">It lies flat and sticks out over the brush, like a little roof. The gold stripes go in. If it will not go, flip it over rather than pushing harder.</span></li>
       <li>A grown-up connects the power splitter: battery plug into the splitter, one end into the moto:bit.<span class="tip">The second end is for the brush motor in Step 9. Leave it tucked away for now.</span></li>
       <li>Switch the battery on. The micro:bit should light up.<span class="tip">Nothing? Switch off and check the plug and the batteries.</span></li>
     </ol>
@@ -863,7 +866,8 @@
     <ol class="do">
       <li>Switch the battery off.</li>
       <li>Find the two motor wires on each motor.<span class="tip">Check the label on the motor&rsquo;s little board or the product page. A grown-up helps with this one.</span></li>
-      <li>Connect the left motor to the moto:bit LEFT motor connector, and the right motor to RIGHT.</li>
+      <li>Connect the left motor to the moto:bit LEFT MOTOR pins, and the right motor to RIGHT MOTOR.<span class="tip">The board marks which pin is red and which is black.</span></li>
+      <li>Slide the moto:bit switch to <b>RUN MOTORS</b>.<span class="tip">STOP MOTORS keeps the wheels still while you work, even with the battery on.</span></li>
       <li>Open MakeCode, start a new project, and add the <b>moto:bit</b> extension.<span class="tip">Extensions is at the bottom of the block list. Search for moto:bit.</span></li>
       <li>Build the test program below and download it to the micro:bit.</li>
       <li>Hold Dusty in the air, switch on, and press A.<span class="tip">In the air, not on the table. It does not know about edges yet.</span></li>
@@ -922,6 +926,7 @@
       <p class="caption">THE SENSOR SEES THE EDGE 62 MM BEFORE THE WHEELS GET THERE.</p>
     </div>
     <ol class="do">
+      <li>A grown-up solders the three header pins onto each sensor.<span class="tip">Push the short ends of the pins through from the side without the two tiny bumps, so the pins point up when the sensor faces the table. Heat pin and pad together, then feed in the solder.</span></li>
       <li>Put a QTR-1A sensor face down in the foot of each arm, and hold it with an M2 &times; 6 screw and nut.<span class="tip">The two tiny bumps must look down through the window.</span></li>
       <li>Hold the right arm against the outside of the right ear at the front of the base.<span class="tip">The left arm, with the extra pad, goes on the left.</span></li>
       <li>Push an M2 &times; 8 screw through the slot and the ear, and add a nut on the inside. Snug, not tight.</li>
@@ -1045,7 +1050,7 @@
     <ol class="do">
       <li>Screw the switch to the pad on the left sensor arm with two M2 &times; 10 screws and nuts.<span class="tip">Arm pointing down, little wheel toward the front.</span></li>
       <li>Set Dusty on the table. The wheel should rest on the table and push the arm in with a click.<span class="tip">No click? Loosen the arm slot and lower it a little.</span></li>
-      <li>Slide two jumper wires onto the <b>C</b> and <b>NO</b> tabs. A grown-up adds a dab of hot glue to hold them.<span class="tip">C is common, NO is normally open.</span></li>
+      <li>A grown-up solders two wires to the <b>C</b> and <b>NO</b> tabs. Cut the far ends off two jumper wires so the other ends still plug onto pins.<span class="tip">C is common, NO is normally open. Solder the switch before screwing it on, so the heat cannot soften the plastic arm.</span></li>
       <li>Plug the wires into the moto:bit: C to GND, NO to <b>P2</b>.</li>
       <li>In on start, add <b>set pull pin P2 to up</b>. In the forever loop, add: if digital read P2 = 1, stop both motors.</li>
       <li>Test it with both infrared sensors covered by tape.<span class="tip">Only the whisker is working now. Does Dusty still stop?</span></li>

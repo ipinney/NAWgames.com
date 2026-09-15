@@ -25,12 +25,12 @@ const P = '/projects/nolan';
 const STEPS = [
   {
     title: 'Get the parts',
-    text: 'A micro:bit, a motor board, two small motors, wheels, two cliff sensors, a switch and a battery pack. The list has links and prices.',
+    text: 'A micro:bit, a motor board, three small motors, wheels, two cliff sensors, switches, a battery pack, M2 screws, and a little soldering. The list has links and prices.',
     action: { href: `${P}/dusty-parts-list.pdf`, label: 'Parts list (PDF)' },
   },
   {
     title: 'Print the chassis',
-    text: '19 pieces, about 53 g of PLA. Everything fits on one 220 mm print bed with no supports.',
+    text: '19 pieces, about 55 g of PLA. Everything fits on one 220 mm print bed with no supports.',
     action: { href: `${F}/dusty-chassis-revA-stl.zip`, label: 'All print files (ZIP)', download: true },
   },
   {
@@ -65,7 +65,7 @@ const VIEWERS = [
 // size in mm (as printed), grams of PLA each at normal infill
 const PARTS = [
   ['base', 'Base plate', 1, '85 × 122 × 28', '28', 'Top face down'],
-  ['deck', 'Electronics deck', 1, '80 × 66 × 6', '8', ''],
+  ['deck', 'Electronics deck', 1, '79 × 77 × 6', '10', ''],
   ['post', 'Deck post', 4, '6 × 6 × 25', '0.4', 'Peg up'],
   ['cradle', 'Brush motor cradle', 1, '29 × 26 × 17', '1.6', ''],
   ['dowel', 'Cradle dowel', 2, '3 × 3 × 3', '<0.1', ''],
@@ -220,7 +220,7 @@ export default function DustyBuildPage() {
             </table>
           </div>
           <p className="text-white/40 text-xs mt-3">
-            Also needed and not printed: M2 screws, jumper wires, pipe cleaners for the brush, and a KCD11 mini rocker switch.
+            Also needed and not printed: M2 screws and nuts, female jumper wires, pipe cleaners, a KCD11 mini rocker switch, a 5.5 × 2.1 mm Y splitter and screw-terminal jack, hook-and-loop tape, and small zip ties.
           </p>
         </Section>
 

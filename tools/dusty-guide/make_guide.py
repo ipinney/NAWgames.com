@@ -58,9 +58,9 @@ def newcard(title, svg, what, does, spec):
       </div>'''
 
 C = cards
-C['micro:bit v2'] = retext(C['micro:bit v2'], spec='STANDS UP IN THE MOTO:BIT &middot; LEDS FACE FORWARD')
+C['micro:bit v2'] = retext(C['micro:bit v2'], spec='PLUGS IN FLAT &middot; LEDS FACE UP')
 C['Motor driver board'] = retext(C['Motor driver board'], title='moto:bit motor board',
-    what='A blue board with a slot the micro:bit stands up in, a round hole for the battery plug, connectors for two motors, and rows of pins for sensors.')
+    what='A red board with a connector on its front edge that the micro:bit plugs into flat, a round hole for the battery plug, connectors for two motors, a STOP/RUN motor switch, and rows of pins for sensors.')
 C['N20 gear motor &times;2'] = retext(C['N20 gear motor &times;2'],
     what='A small silver can with a gold gearbox and a flat-sided metal shaft. Yours have a tiny circuit board on the back and six wires.',
     does='one drives the left wheel, one the right. Only two of the six wires power the motor. The other four are for the encoder, a turn counter Dusty does not use yet.',
@@ -378,11 +378,12 @@ steps.append(step(3, 'Add the ball caster', 'Sat Sep 19 &middot; about 10 minute
 steps.append(step(4, 'Add the deck, the brain and the power', 'Sat Sep 19 &middot; about 45 minutes',
     'The battery lives under the deck, and the moto:bit and micro:bit sit on top. Keep the battery switch OFF for this whole step.',
     do(('Put four AA batteries in the holder and switch it OFF.', 'Check the + and &minus; marks inside the holder.'),
-       ('Lay the battery holder flat in the middle of the base, behind the motors. Hold it with a hook-and-loop strap through the slots.', 'Switch facing out to the side, where you can reach it.'),
+       ('Stick a 2 inch piece of hook-and-loop tape to the middle of the base, behind the motors, and the other half to the bottom of the battery holder. Press the holder down.', 'Switch facing out to the side, where you can reach it. To change batteries later, peel it off and slide it out.'),
        ('Push the four posts into the holes around the battery.', 'The pegs on the bottom of each post drop into the base.'),
        ('Set the deck on the posts and drive an M2 &times; 8 screw down into each one.', 'Four screws.'),
-       ('Clip the moto:bit into the corner guides on the deck, and add two zip ties through the slots.', ''),
-       ('Stand the micro:bit up in the moto:bit slot, LEDs facing the front of the robot.', 'It only fits one way. If it feels wrong, turn it around rather than pushing harder.'),
+       ('Slide the moto:bit onto the deck between the two side guides, connector edge toward the front, until it touches the stop at the back.', 'The deck has a nose that sticks out in front to hold the front of the board.'),
+       ('Loop two zip ties through the slots beside the guides and over the board. Snug, not crushing.', ''),
+       ('Slide the micro:bit into the connector on the front of the moto:bit, LEDs and buttons facing up.', 'It lies flat and sticks out over the brush, like a little roof. The gold stripes go in. If it will not go, flip it over rather than pushing harder.'),
        ('A grown-up connects the power splitter: battery plug into the splitter, one end into the moto:bit.', 'The second end is for the brush motor in Step 9. Leave it tucked away for now.'),
        ('Switch the battery on. The micro:bit should light up.', 'Nothing? Switch off and check the plug and the batteries.')) + '\n' +
     reused_explain + '\n' +
@@ -396,7 +397,8 @@ steps.append(step(5, 'Wire the motors and make it drive', 'Sun Sep 20 &middot; a
     figure(diag_wire, 'LEFT MOTOR TO THE LEFT CONNECTOR, RIGHT MOTOR TO THE RIGHT. WRITE IT DOWN.') + '\n' +
     do('Switch the battery off.',
        ('Find the two motor wires on each motor.', 'Check the label on the motor&rsquo;s little board or the product page. A grown-up helps with this one.'),
-       'Connect the left motor to the moto:bit LEFT motor connector, and the right motor to RIGHT.',
+       ('Connect the left motor to the moto:bit LEFT MOTOR pins, and the right motor to RIGHT MOTOR.', 'The board marks which pin is red and which is black.'),
+       ('Slide the moto:bit switch to <b>RUN MOTORS</b>.', 'STOP MOTORS keeps the wheels still while you work, even with the battery on.'),
        ('Open MakeCode, start a new project, and add the <b>moto:bit</b> extension.', 'Extensions is at the bottom of the block list. Search for moto:bit.'),
        'Build the test program below and download it to the micro:bit.',
        ('Hold Dusty in the air, switch on, and press A.', 'In the air, not on the table. It does not know about edges yet.')) + '\n' +
@@ -417,7 +419,8 @@ steps.append(step(5, 'Wire the motors and make it drive', 'Sun Sep 20 &middot; a
 steps.append(step(6, 'Mount the sensor arms', 'Sat Sep 26 &middot; about 45 minutes',
     'The two pink arms carry the cliff sensors out in front of the wheels. That head start is what lets Dusty stop in time.',
     figure(svg_arm, 'THE SENSOR SEES THE EDGE 62 MM BEFORE THE WHEELS GET THERE.') + '\n' +
-    do(('Put a QTR-1A sensor face down in the foot of each arm, and hold it with an M2 &times; 6 screw and nut.', 'The two tiny bumps must look down through the window.'),
+    do(('A grown-up solders the three header pins onto each sensor.', 'Push the short ends of the pins through from the side without the two tiny bumps, so the pins point up when the sensor faces the table. Heat pin and pad together, then feed in the solder.'),
+       ('Put a QTR-1A sensor face down in the foot of each arm, and hold it with an M2 &times; 6 screw and nut.', 'The two tiny bumps must look down through the window.'),
        ('Hold the right arm against the outside of the right ear at the front of the base.', 'The left arm, with the extra pad, goes on the left.'),
        'Push an M2 &times; 8 screw through the slot and the ear, and add a nut on the inside. Snug, not tight.',
        ('Set Dusty on the table. Slide each arm until the sensor is 3 mm above the table, then tighten.', 'Two US pennies stacked up are almost exactly 3 mm. Slide them under the sensor, push the arm down onto them, tighten, pull the pennies out.'),
@@ -454,7 +457,7 @@ steps.append(step(8, 'Add the whisker', 'Sun Sep 27 &middot; about 30 minutes',
     figure(diag_whisk, 'IT IS NOT LOOKING. IT IS TOUCHING. A DARK TABLE CANNOT FOOL IT.') + '\n' +
     do(('Screw the switch to the pad on the left sensor arm with two M2 &times; 10 screws and nuts.', 'Arm pointing down, little wheel toward the front.'),
        ('Set Dusty on the table. The wheel should rest on the table and push the arm in with a click.', 'No click? Loosen the arm slot and lower it a little.'),
-       ('Slide two jumper wires onto the <b>C</b> and <b>NO</b> tabs. A grown-up adds a dab of hot glue to hold them.', 'C is common, NO is normally open.'),
+       ('A grown-up solders two wires to the <b>C</b> and <b>NO</b> tabs. Cut the far ends off two jumper wires so the other ends still plug onto pins.', 'C is common, NO is normally open. Solder the switch before screwing it on, so the heat cannot soften the plastic arm.'),
        'Plug the wires into the moto:bit: C to GND, NO to <b>P2</b>.',
        'In on start, add <b>set pull pin P2 to up</b>. In the forever loop, add: if digital read P2 = 1, stop both motors.',
        ('Test it with both infrared sensors covered by tape.', 'Only the whisker is working now. Does Dusty still stop?')) + '\n' +
@@ -621,7 +624,7 @@ hero = '''
       <span class="fact">DUE <b>NOV 16</b></span>
       <span class="fact">CHASSIS <b>3D PRINTED</b></span>
       <span class="fact">SCREWS <b>19 &times; M2</b></span>
-      <span class="fact">SOLDERING <b>NONE</b></span>
+      <span class="fact">SOLDERING <b>A LITTLE</b></span>
     </div>
   </div>
 
@@ -630,6 +633,7 @@ hero = '''
     <ul>
       <li><b>A grown-up runs the 3D printer.</b> The nozzle is about 210&deg;C and the bed about 60&deg;C. Never touch either while it is printing or cooling.</li>
       <li><b>Hands off while it prints.</b> The printer moves fast and on its own. Watch through the door.</li>
+      <li><b>A grown-up does the soldering.</b> The iron tip is hotter than the printer nozzle. Always put it back in its stand, and wash hands after touching solder.</li>
       <li><b>Tiny screws and nuts are choking hazards.</b> Keep them in a cup, and away from little brothers.</li>
       <li><b>Never plug batteries in backwards.</b> Backwards can cook the micro:bit.</li>
       <li><b>Unplug the battery before changing any wire.</b> Every single time.</li>
@@ -646,6 +650,7 @@ hero = '''
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="6" width="44" height="44" rx="4" fill="#fff" stroke="#566A83" stroke-width="2.5"/><path d="M14 16 h32" stroke="#566A83" stroke-width="2.5"/><path d="M26 16 v10 h8 v-10" fill="#B9C4D1" stroke="#566A83" stroke-width="2"/><rect x="18" y="38" width="24" height="5" fill="#F0B43C"/></svg><b>3D printer</b><span>Grown-up runs it</span></div>
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M30 6 v30" stroke="#566A83" stroke-width="3"/><path d="M24 36 h12 v14 h-12 Z" fill="#D95B21" stroke="#566A83" stroke-width="2.5" stroke-linejoin="round"/><path d="M26 6 h8" stroke="#566A83" stroke-width="5" stroke-linecap="round"/></svg><b>Small screwdriver</b><span>Phillips #0 for M2</span></div>
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M20 50 L28 26 M40 50 L32 26" stroke="#D95B21" stroke-width="5" stroke-linecap="round"/><path d="M28 26 L30 6 L32 26" fill="#8E9CAC" stroke="#566A83" stroke-width="2"/></svg><b>Needle-nose pliers</b><span>To hold the nuts</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M10 46 L36 20" stroke="#D95B21" stroke-width="7" stroke-linecap="round"/><path d="M36 20 L50 8" stroke="#8E9CAC" stroke-width="3" stroke-linecap="round"/></svg><b>Soldering iron</b><span>Grown-up only</span></div>
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="24" width="44" height="12" rx="2" fill="#fff" stroke="#566A83" stroke-width="2.5"/><path d="M16 24 v7 M24 24 v5 M32 24 v7 M40 24 v5 M48 24 v7" stroke="#566A83" stroke-width="2"/></svg><b>Ruler</b><span>Millimeters matter</span></div>
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="26" width="44" height="20" rx="4" fill="#fff" stroke="#566A83" stroke-width="2.5"/><rect x="20" y="16" width="20" height="10" rx="2" fill="#D2DCE7" stroke="#566A83" stroke-width="2"/><text x="30" y="41" font-family="IBM Plex Mono" font-size="10" text-anchor="middle" fill="#14202F">5.0g</text></svg><b>Kitchen scale</b><span>To weigh crumbs</span></div>
       <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="10" y="18" width="40" height="22" rx="4" fill="#fff" stroke="#566A83" stroke-width="2.5"/><path d="M18 29 h24" stroke="#D95B21" stroke-width="3" stroke-linecap="round"/><path d="M30 23 v12" stroke="#D95B21" stroke-width="3" stroke-linecap="round"/></svg><b>Laptop</b><span>To load the code</span></div>
