@@ -6,15 +6,15 @@ import { useState } from 'react';
 const PROJECTS = [
   {
     slug: 'mosquito-turret',
-    title: 'Mosquito Turret',
+    title: 'Laser Mosquito Turret',
     subject: 'Science Fair',
     emoji: '🦟',
     description:
-      'A turret that spots a mosquito, turns to face it, and blasts it with a ring of air. Brainstorm, design choices, the experiment, and the parts.',
+      'A turret that finds a mosquito, aims by itself, and tags it with a safe laser. Requirements, design choices, the experiment, and the parts.',
     dueLabel: 'TBD',
     color: 'from-fuchsia-700 to-lime-500',
     href: '/projects/addie/mosquito-turret',
-    tags: ['Brainstorm', 'Pick a design', 'Experiment', 'Parts', 'Build'],
+    tags: ['Requirements', 'Pick a design', 'Experiment', 'Laser safety', 'Parts'],
   },
   {
     slug: 'herbert-hoover',

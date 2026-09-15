@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-const TITLE = "Mosquito Turret: Addie's science fair project";
+const TITLE = "Laser Mosquito Turret: Addie's science fair project";
 const DESC =
-  'A turret that spots a mosquito, turns to face it, and blasts it with a ring of air. Brainstorm, design choices, the experiment, and the parts.';
+  'A turret that finds a mosquito, aims by itself, and tags it with a safe Class 2 laser. Requirements, design choices, the experiment, laser safety, and the parts.';
 
 export const metadata = {
   title: `${TITLE} | NAW Games`,
@@ -21,13 +21,14 @@ const PLAN = '/projects/addie/mosquito-turret.html';
 
 // status: done | now | next
 const PHASES = [
-  { title: 'Brainstorm', when: 'This week', status: 'now', text: 'Read the plan together, try the free cup-and-balloon air cannon, add new ideas.', link: `${PLAN}#brainstorm` },
-  { title: 'Pick a design', when: 'This week', status: 'next', text: 'Addie picks Air Cannon, Vacuum Catcher, or Light Beam, and says why.', link: `${PLAN}#pick` },
-  { title: 'Lock in the design', when: 'Week 2', status: 'next', text: 'Name it, draw it by hand with labels, choose the three hole sizes.', link: `${PLAN}#design` },
+  { title: 'Brainstorm', when: 'Done Sep 15', status: 'done', text: 'Air cannon, vacuum, and light beam ideas. The family picked lasers.', link: `${PLAN}#brainstorm` },
+  { title: 'Requirements', when: 'This week', status: 'now', text: 'Agree on the must-have list, including the laser safety rules. Ask the teacher for the fair date and laser rules.', link: `${PLAN}#requirements` },
+  { title: 'Pick a design', when: 'This week', status: 'next', text: 'Addie picks Camera, Sensor, or Sky laser turret, and says why.', link: `${PLAN}#pick` },
+  { title: 'Lock in the design', when: 'Week 2', status: 'next', text: 'Name it and draw it by hand with labels.', link: `${PLAN}#design` },
   { title: 'Parts list', when: 'Week 2', status: 'next', text: 'Final list with a backup for every part.', link: `${PLAN}#parts` },
-  { title: 'Order', when: 'Week 2', status: 'next', text: 'Adafruit and DFRobot in one order.' },
-  { title: 'Build', when: 'Weeks 3 to 5', status: 'next', text: 'Cannon first, then the turntable, then the camera, then the code.' },
-  { title: 'Test and experiment', when: 'Weeks 5 to 6', status: 'next', text: '60 shots, the data table, and the graph.', link: `${PLAN}#experiment` },
+  { title: 'Order', when: 'Week 2', status: 'next', text: 'DigiKey, Adafruit, and DFRobot.' },
+  { title: 'Build', when: 'Weeks 3 to 5', status: 'next', text: 'Arena and glowing mosquito first, then the turret and camera, then the code.' },
+  { title: 'Test and experiment', when: 'Weeks 5 to 6', status: 'next', text: '15 runs at three mosquito speeds, the data table, and the graph.', link: `${PLAN}#experiment` },
   { title: 'Board and practice', when: 'Week 7', status: 'next', text: 'The trifold board and the 30-second demo.', link: `${PLAN}#demo` },
 ];
 
@@ -56,15 +57,15 @@ export default function MosquitoTurretPage() {
               <span className="bg-naw-orange/20 text-naw-orange text-xs font-semibold px-2 py-0.5 rounded-full">3rd grade</span>
             </div>
             <h1 className="font-game text-3xl sm:text-4xl glow mt-4">
-              <span className="bg-gradient-to-r from-naw-pink to-naw-green bg-clip-text text-transparent">MOSQUITO TURRET</span>
+              <span className="bg-gradient-to-r from-naw-pink to-naw-green bg-clip-text text-transparent">LASER MOSQUITO TURRET</span>
             </h1>
             <p className="text-white text-lg sm:text-xl font-semibold mt-4 leading-snug">
-              A turret that spots a mosquito, turns to face it, and knocks it out of the air with a ring of wind.
+              A turret that finds a mosquito by itself, aims, and tags it with a laser. The mosquito glows when it is hit.
             </p>
             <div className="mt-5 rounded-2xl border border-naw-green/30 bg-naw-green/10 p-4">
               <div className="text-naw-green text-xs font-semibold">The big idea</div>
               <div className="text-white font-semibold mt-1">
-                Mosquitoes fly 1 to 1.5 mph. A house fan blows about 15 mph. Wind is their weakness, so this turret shoots air.
+                Scientists built the Photonic Fence, a turret that shoots mosquitoes with lasers. This is a safe version: a Class 2 laser, inside a walled arena, that tags the mosquito instead of hurting it.
               </div>
             </div>
             <a
