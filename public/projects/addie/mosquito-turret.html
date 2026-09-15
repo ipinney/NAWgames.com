@@ -152,7 +152,7 @@
 <div class="card hero">
   <div class="eyebrow">Addie Pinney &middot; 3rd grade science fair</div>
   <h1>Laser Mosquito <span>Turret</span></h1>
-  <p>A turret that finds a mosquito by itself, turns to aim, and tags it with a laser. The mosquito lights up when it is hit.</p>
+  <p>A turret that learns what a mosquito looks like, follows it as it swings on a fishing line, and tags it with a laser. The mosquito lights up and buzzes when it is hit.</p>
   <div class="chips">
     <span class="chip">1: Brainstorm</span>
     <span class="chip on">2: Requirements</span>
@@ -168,10 +168,11 @@
 
 <div class="jump">
   <a href="#requirements">Requirements</a>
+  <a href="#lethal">Can a laser kill a mosquito?</a>
   <a href="#problem">The problem</a>
-  <a href="#brainstorm">Brainstorm</a>
   <a href="#pick">Pick a design</a>
   <a href="#design">How it works</a>
+  <a href="#prints">What we print</a>
   <a href="#experiment">The experiment</a>
   <a href="#demo">Fair demo</a>
   <a href="#parts">Parts</a>
@@ -182,20 +183,54 @@
 <!-- REQUIREMENTS -->
 <div class="card" id="requirements">
   <h2>Requirements</h2>
-  <p class="sub">The turret must do all of these. Every design choice gets checked against this list.</p>
+  <p class="sub">The turret must do all of these. Every design choice gets checked against this list. Updated Sep 15 (v3).</p>
   <ul class="req">
-    <li><b>It shoots a laser.</b><span class="why">Decided Sep 15. Real mosquito turrets use lasers, so ours does too.</span></li>
-    <li><b>It finds and aims at the mosquito by itself.</b><span class="why">No hands on the controls. A manual mode with the micro:bit buttons is a bonus.</span></li>
-    <li><b>It knows when it hit.</b><span class="why">A light sensor inside the mosquito feels the laser and sends a "hit" message by radio. The turret keeps score.</span></li>
-    <li><b>The mosquito moves.</b><span class="why">A motor swings it back and forth, so the turret has to track it.</span></li>
-    <li class="safety"><b>Class 2 laser, under 1 milliwatt, with the maker's label on it.</b><span class="why">The weakest visible laser class. Science fair rules require a manufacturer label so the power can be checked.</span></li>
-    <li class="safety"><b>Mounted, never handheld, and the beam cannot leave the box.</b><span class="why">The turret only turns left and right, at mosquito height, inside a walled arena that is taller than the beam. It cannot point up at a face.</span></li>
-    <li class="safety"><b>The laser only turns on when it is locked on a mosquito, for one second at a time.</b><span class="why">Plus an arm switch that has to be on before it can fire at all.</span></li>
+    <li><b>It shoots a laser.</b><span class="why">Real mosquito turrets use lasers, so ours does too.</span></li>
+    <li><b>It learns a fake mosquito and finds it by itself.</b><span class="why">Addie trains the camera on her mosquito by holding the learn button and turning the mosquito so the camera sees every side. After that the turret aims with no hands on the controls.</span></li>
+    <li><b>The mosquito hangs from a fishing line and can be held and moved by a person.</b><span class="why">A "mosquito wand": a short rod, a thin line, a mosquito on the end. The turret has to follow it up, down, left, and right.</span></li>
+    <li><b>A hit is proven, not guessed.</b><span class="why">A light sensor inside the mosquito feels the laser. The mosquito's eyes flash, the wand buzzes and shows an X, and the turret adds a point. Every hit is counted by the machine, which is what the experiment needs.</span></li>
+    <li><b>The test can be repeated the same way every time.</b><span class="why">For the experiment, the wand clips onto a hook so the mosquito swings like a pendulum from a marked starting angle.</span></li>
+    <li class="safety"><b>Class 2 laser, under 1 milliwatt, with the maker's label on it.</b><span class="why">No stronger laser, even though a stronger one is what it would take to kill a real mosquito. See the next section for the math.</span></li>
+    <li class="safety"><b>Mounted, never handheld, and the beam cannot leave the flight zone.</b><span class="why">The mosquito flies inside a black box with a top and a back. The turret's tilt has a printed stop so it cannot aim above the box. The person holding the wand stands to the side, behind the turret line.</span></li>
+    <li class="safety"><b>The laser only turns on when it is locked on the mosquito, for a short flash, and only with the arm switch on.</b></li>
+    <li><b>Everything sits in 3D printed housings.</b><span class="why">Turret base, pan and tilt head, laser and camera mount, mosquito body, wand handle, and the flight zone corners.</span></li>
     <li><b>The best moment happens in the first 30 seconds of the demo.</b></li>
-    <li><b>It has a real experiment with numbers.</b><span class="why">Question, hypothesis, repeated trials, a graph.</span></li>
-    <li><b>Addie does the coding, the mosquitoes, and the testing.</b><span class="why">MakeCode blocks. Dad does the 3D printing and wiring.</span></li>
-    <li><b>Parts cost about $140 or less.</b></li>
+    <li><b>Addie does the training, coding, mosquitoes, and testing.</b><span class="why">MakeCode blocks. Dad does the printing and wiring.</span></li>
+    <li><b>Budget is flexible.</b><span class="why">Current estimate about $160.</span></li>
   </ul>
+</div>
+
+<!-- LETHAL -->
+<div class="card" id="lethal">
+  <h2>Can a laser kill a mosquito?</h2>
+  <p class="sub">Yes, but not a safe one. Scientists measured exactly how much laser energy it takes, and the answer is a great fact for the board.</p>
+  <div class="facts">
+    <div class="fact"><div class="num">7 J/cm&sup2;</div><div class="lbl">Energy per spot that killed 90% of mosquitoes (blue or green laser, 1/40 of a second flash).</div></div>
+    <div class="fact"><div class="num">~14 watts</div><div class="lbl">Laser power that takes, for a 2.5 mm spot in that 1/40 of a second.</div></div>
+    <div class="fact"><div class="num">0.001 watts</div><div class="lbl">Our Class 2 laser.</div></div>
+    <div class="fact"><div class="num">14,000&times;</div><div class="lbl">How much weaker ours is than a mosquito-killing flash.</div></div>
+  </div>
+  <div class="two" style="margin-top:14px">
+    <div class="box">
+      <h3>Why we don't use a stronger laser</h3>
+      <ul>
+        <li>A 14 watt laser is Class 4, the most dangerous class. It can blind an eye instantly, even from a reflection off a shiny surface, and it can start fires.</li>
+        <li>Science fair rules (ISEF) allow only Class 1, 2, 3A, and 3R. Class 3B and Class 4 are not on the list.</li>
+        <li>Going up to the strongest allowed class (5 mW) still leaves us about 2,800 times too weak. It adds risk and does not kill anything.</li>
+        <li>Holding our 1 mW beam on one spot does not add up either: the scientists found longer, weaker flashes kill less, because the heat leaks away.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>How the real Photonic Fence stays safe</h3>
+      <ul>
+        <li>It is built by grown-up laser scientists and works 30 meters away.</li>
+        <li>It will not fire if a person or animal is in the zone.</li>
+        <li>The newer systems use a laser color that is safer for the retina.</li>
+      </ul>
+      <p class="small muted" style="margin-top:8px">Addie's turret does the same finding, tracking, and hit-proving as the real one. The only thing it leaves out is the power, on purpose. That choice goes on the board as part of the science.</p>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:10px">Math: 7.1 J/cm&sup2; &times; area of a 2.5 mm spot (0.049 cm&sup2;) = 0.35 J. Delivered in 0.025 s = 14 W. 14 W / 0.001 W = 14,000. Source: Keller et al., Scientific Reports, 2020.</p>
 </div>
 
 <!-- PROBLEM -->
@@ -203,200 +238,214 @@
   <h2>The problem</h2>
   <p class="sub">Houston has a lot of mosquitoes. They bite, they itch, and some carry diseases. Scientists have built machines that shoot them out of the air with lasers.</p>
   <div class="facts">
-    <div class="fact"><div class="num">Under 0.1 s</div><div class="lbl">How fast the Photonic Fence, a real laser turret, finds a mosquito and fires.</div></div>
-    <div class="fact"><div class="num">Wingbeats</div><div class="lbl">The Photonic Fence tells mosquitoes from other bugs by how fast their wings flap, plus size and flight.</div></div>
+    <div class="fact"><div class="num">Under 0.1 s</div><div class="lbl">How fast the Photonic Fence finds a mosquito and fires.</div></div>
+    <div class="fact"><div class="num">Wingbeats</div><div class="lbl">It tells mosquitoes from other bugs by how fast their wings flap, plus size and flight.</div></div>
     <div class="fact"><div class="num">1 to 1.5 mph</div><div class="lbl">How fast a mosquito flies. Slower than you walk.</div></div>
     <div class="fact"><div class="num">Only girls</div><div class="lbl">Only female mosquitoes bite. Males drink flower nectar.</div></div>
     <div class="fact"><div class="num">35 meters</div><div class="lbl">How far away a mosquito can smell the carbon dioxide you breathe out.</div></div>
     <div class="fact"><div class="num">174</div><div class="lbl">Kinds of mosquitoes in the United States. About 2,700 in the world.</div></div>
-  </div>
-  <div class="bigidea"><b>Our version:</b> a real laser turret uses a laser strong enough to hurt a bug, which is only safe for grown-up scientists. Addie's turret does the same three jobs (find, aim, fire) with a laser so weak it can only <b>tag</b> the mosquito. A sensor inside the mosquito proves the hit.</div>
-</div>
-
-<!-- BRAINSTORM -->
-<div class="card" id="brainstorm">
-  <h2>Brainstorm</h2>
-  <p class="sub">The laser is decided. Two questions are still open: how does it aim, and how does it know it hit?</p>
-  <div class="tablewrap">
-  <table>
-    <tr><th>How does it aim?</th><th>Keep?</th><th>Why</th></tr>
-    <tr><td>AI camera that learns the mosquito</td><td class="yes">Yes</td><td>Sees the mosquito and says exactly where it is. Has a screen judges can watch.</td></tr>
-    <tr><td>Two distance sensors (left and right)</td><td class="yes">Backup</td><td>Cheaper and simple. Only knows "more left" or "more right", so it aims less exactly.</td></tr>
-    <tr><td>Joystick or buttons</td><td class="yes">Bonus mode</td><td>Not automatic, so not the main idea. Fun as "Can you beat the robot?"</td></tr>
-    <tr><td>Camera that sees the red dot</td><td class="no">No</td><td>Hard to program and the dot is tiny.</td></tr>
-  </table>
-  <table style="margin-top:14px">
-    <tr><th>How does it know it hit?</th><th>Keep?</th><th>Why</th></tr>
-    <tr><td>Light sensor inside a see-through mosquito</td><td class="yes">Yes</td><td>The white body glows red when the laser hits it, the sensor inside feels it, and a second micro:bit radios "HIT".</td></tr>
-    <tr><td>Paper target, people watch</td><td class="no">No</td><td>No proof and no score.</td></tr>
-    <tr><td>Balloon that pops</td><td class="no">No</td><td>A safe laser is far too weak to pop anything.</td></tr>
-  </table>
   </div>
 </div>
 
 <!-- PICK -->
 <div class="card" id="pick">
   <h2>Pick a design</h2>
-  <p class="sub">All three are laser turrets that meet the requirements. They differ in how they aim and how hard they are to build.</p>
+  <p class="sub">All three meet the requirements. They differ in how they aim.</p>
   <div class="opts">
     <div class="opt rec">
       <span class="badge">Best for first place</span>
       <div class="letter">DESIGN A</div>
-      <h3>Camera Laser Turret</h3>
-      <p class="small muted">The AI camera finds the mosquito. The turret turns until the mosquito is in the middle, then fires. The mosquito glows and the score goes up.</p>
+      <h3>Pan and Tilt Camera Turret</h3>
+      <p class="small muted">Turns left, right, up, and down to follow the mosquito wherever the wand moves it. The camera and laser point the same way, so when the mosquito is in the middle of the camera, the laser is on it.</p>
       <dl>
-        <dt>At the fair</dt><dd>Judges watch the camera screen draw a box on the mosquito, then the turret tags it while it swings.</dd>
+        <dt>At the fair</dt><dd>A judge swings the mosquito. The turret chases it, flashes, and the mosquito lights up.</dd>
         <dt>The science</dt><dd>Does a faster mosquito get hit less?</dd>
         <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span> Medium-hard</dd>
-        <dt>Cost</dt><dd>About $140</dd>
+        <dt>Cost</dt><dd>About $160</dd>
       </dl>
     </div>
     <div class="opt">
       <div class="letter">DESIGN B</div>
-      <h3>Sensor Laser Turret</h3>
-      <p class="small muted">Two distance sensors look left and right. The turret turns toward whichever side sees the mosquito and fires when both see it the same.</p>
+      <h3>Pan-Only Camera Turret</h3>
+      <p class="small muted">Only turns left and right. The mosquito wand has to keep the mosquito at one height, marked by a line on the flight zone.</p>
       <dl>
-        <dt>At the fair</dt><dd>Works, but misses more. Nothing to show on a screen.</dd>
-        <dt>The science</dt><dd>How close does the mosquito have to be for the sensors to find it?</dd>
+        <dt>At the fair</dt><dd>Simpler and very reliable, but judges must keep the mosquito at the line.</dd>
+        <dt>The science</dt><dd>Same speed test.</dd>
         <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i></i><i></i></span> Medium</dd>
-        <dt>Cost</dt><dd>About $115</dd>
+        <dt>Cost</dt><dd>About $150</dd>
       </dl>
     </div>
     <div class="opt">
       <div class="letter">DESIGN C</div>
-      <h3>Sky Laser Turret</h3>
-      <p class="small muted">Tilts up and down too, to hit mosquitoes hanging on strings at different heights.</p>
+      <h3>Sensor Turret</h3>
+      <p class="small muted">No camera. Two distance sensors say "more left" or "more right". Cannot be trained on the mosquito.</p>
       <dl>
-        <dt>At the fair</dt><dd>Looks the coolest, but the beam can point up, so it needs a closed box with a lid and a window. Much harder to keep safe.</dd>
-        <dt>The science</dt><dd>Is it harder to hit mosquitoes that are higher up?</dd>
-        <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span> Hard</dd>
-        <dt>Cost</dt><dd>About $165</dd>
+        <dt>At the fair</dt><dd>Works, but misses more, and it fails the "learns the mosquito" requirement.</dd>
+        <dt>The science</dt><dd>How close does the mosquito need to be?</dd>
+        <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i></i><i></i></span> Medium</dd>
+        <dt>Cost</dt><dd>About $125</dd>
       </dl>
     </div>
   </div>
   <div class="pickline">Addie's pick: <span class="blank">&nbsp;</span> &nbsp; because <span class="blank" style="min-width:220px">&nbsp;</span></div>
-  <p class="small muted" style="margin-top:10px">Why A is the favorite: it meets every requirement, the camera screen shows judges how the turret "thinks", and keeping the beam flat inside the arena makes the safety simple. B is the fallback if the camera gives us trouble; the same turret can switch to it.</p>
+  <p class="small muted" style="margin-top:10px">A and B use the same parts except for one servo, so we can build A and fall back to B by locking the tilt if it gives us trouble.</p>
 </div>
 
 <!-- DESIGN -->
 <div class="card" id="design">
   <h2>How Design A works</h2>
-  <p class="sub">Looking down from above. Everything lives inside a walled arena, and the beam stays below the top of the walls.</p>
+  <p class="sub">Side view. The mosquito flies inside the flight zone, a black box open toward the turret. The beam can only end on the black back wall.</p>
   <div class="diagram">
-  <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" font-family="Nunito, sans-serif" font-size="13" font-weight="700">
-    <!-- arena walls -->
-    <rect x="30" y="40" width="700" height="320" rx="8" fill="#141C2E" stroke="#74839B" stroke-width="10"/>
-    <!-- back wall (beam stop) -->
-    <rect x="712" y="45" width="14" height="310" fill="#05070C"/>
+  <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" font-family="Nunito, sans-serif" font-size="13" font-weight="700">
+    <!-- table -->
+    <line x1="10" y1="370" x2="750" y2="370" stroke="#2B3650" stroke-width="3"/>
     <!-- turret base -->
-    <circle cx="130" cy="200" r="52" fill="#243152" stroke="#5DB7F0" stroke-width="2.5"/>
-    <rect x="105" y="182" width="70" height="36" rx="6" fill="#3A2150" stroke="#F0609E" stroke-width="2.5"/>
-    <rect x="175" y="194" width="22" height="12" rx="2" fill="#F0605E"/>
-    <rect x="112" y="160" width="40" height="18" rx="4" fill="#1F2940" stroke="#5DB7F0" stroke-width="2"/>
-    <!-- pan arc -->
-    <path d="M205 120 A110 110 0 0 1 205 280" fill="none" stroke="#F5B642" stroke-width="2" stroke-dasharray="5 5"/>
+    <rect x="60" y="315" width="130" height="55" rx="8" fill="#243152" stroke="#5DB7F0" stroke-width="2"/>
+    <text x="125" y="340" text-anchor="middle" fill="#EEF2F8" font-size="12">Printed base</text>
+    <text x="125" y="356" text-anchor="middle" fill="#A9B6CA" font-size="11">micro:bit, batteries</text>
+    <!-- pan servo -->
+    <rect x="105" y="295" width="40" height="20" rx="3" fill="#F5B642"/>
+    <!-- tilt yoke -->
+    <path d="M100 295 L100 245 M150 295 L150 245" stroke="#F5B642" stroke-width="5"/>
+    <circle cx="125" cy="250" r="6" fill="#F5B642"/>
+    <!-- head: camera + laser -->
+    <g transform="rotate(-6 125 250)">
+      <rect x="92" y="222" width="66" height="30" rx="5" fill="#1F2940" stroke="#5DB7F0" stroke-width="2.5"/>
+      <circle cx="158" cy="237" r="7" fill="#5DB7F0"/>
+      <rect x="100" y="254" width="62" height="12" rx="3" fill="#3A2150" stroke="#F0609E" stroke-width="2"/>
+      <rect x="162" y="256" width="10" height="8" fill="#F0605E"/>
+    </g>
+    <!-- tilt stop -->
+    <path d="M100 232 l-14 -10" stroke="#F0605E" stroke-width="4"/>
     <!-- beam -->
-    <line x1="197" y1="200" x2="598" y2="168" stroke="#F0605E" stroke-width="3"/>
-    <!-- sweep arm pivot -->
-    <circle cx="620" cy="300" r="14" fill="#1F2940" stroke="#A9B6CA" stroke-width="2"/>
-    <line x1="620" y1="300" x2="604" y2="172" stroke="#A9B6CA" stroke-width="4"/>
-    <path d="M540 190 A110 110 0 0 1 690 205" fill="none" stroke="#9BE15D" stroke-width="2" stroke-dasharray="5 5"/>
+    <line x1="173" y1="243" x2="560" y2="202" stroke="#F0605E" stroke-width="3"/>
+    <!-- flight zone box -->
+    <rect x="420" y="90" width="300" height="280" fill="none" stroke="#74839B" stroke-width="3" stroke-dasharray="0"/>
+    <rect x="705" y="90" width="15" height="280" fill="#05070C" stroke="#74839B" stroke-width="2"/>
+    <rect x="420" y="80" width="300" height="12" fill="#05070C" stroke="#74839B" stroke-width="2"/>
+    <!-- rod and line -->
+    <line x1="722" y1="42" x2="590" y2="60" stroke="#A9B6CA" stroke-width="5"/>
+    <rect x="718" y="30" width="30" height="22" rx="4" fill="#1F2940" stroke="#9BE15D" stroke-width="2"/>
+    <line x1="590" y1="60" x2="590" y2="80" stroke="#EEF2F8" stroke-width="1.5"/>
+    <line x1="590" y1="92" x2="572" y2="196" stroke="#EEF2F8" stroke-width="1.5"/>
     <!-- mosquito glowing -->
-    <circle cx="600" cy="166" r="26" fill="#F0605E" opacity=".25"/>
-    <ellipse cx="600" cy="166" rx="18" ry="9" fill="#FCE7F1"/>
-    <circle cx="583" cy="165" r="6" fill="#FCE7F1"/>
-    <ellipse cx="604" cy="154" rx="12" ry="5" fill="#EEF2F8" opacity=".5"/>
-    <ellipse cx="604" cy="178" rx="12" ry="5" fill="#EEF2F8" opacity=".5"/>
-    <!-- arena micro:bit -->
-    <rect x="648" y="318" width="50" height="30" rx="4" fill="#1F2940" stroke="#9BE15D" stroke-width="2"/>
-    <!-- radio -->
-    <path d="M640 330 q-20 -8 -40 0 M630 342 q-12 -6 -24 0" fill="none" stroke="#9BE15D" stroke-width="2"/>
+    <circle cx="570" cy="204" r="26" fill="#F0605E" opacity=".25"/>
+    <ellipse cx="570" cy="204" rx="20" ry="9" fill="#FCE7F1"/>
+    <circle cx="549" cy="202" r="6" fill="#FCE7F1"/>
+    <circle cx="546" cy="200" r="2.5" fill="#F0605E"/>
+    <line x1="543" y1="203" x2="528" y2="207" stroke="#FCE7F1" stroke-width="2"/>
+    <ellipse cx="576" cy="192" rx="14" ry="5" fill="#EEF2F8" opacity=".5"/>
+    <line x1="560" y1="212" x2="552" y2="228" stroke="#FCE7F1" stroke-width="1.5"/>
+    <line x1="570" y1="213" x2="568" y2="230" stroke="#FCE7F1" stroke-width="1.5"/>
+    <line x1="580" y1="212" x2="588" y2="228" stroke="#FCE7F1" stroke-width="1.5"/>
+    <!-- slot note -->
     <!-- labels -->
-    <text x="130" y="275" text-anchor="middle" fill="#5DB7F0">Turret on a</text>
-    <text x="130" y="291" text-anchor="middle" fill="#5DB7F0">turntable</text>
-    <text x="132" y="138" text-anchor="middle" fill="#5DB7F0" font-size="12">AI camera</text>
-    <text x="200" y="228" text-anchor="start" fill="#F0605E" font-size="12">Laser</text>
-    <text x="235" y="110" text-anchor="middle" fill="#F5B642">Turns left and right only</text>
-    <text x="400" y="172" text-anchor="middle" fill="#F0605E">Beam, 3 inches off the floor</text>
-    <text x="600" y="125" text-anchor="middle" fill="#F0609E">Mosquito glows when hit</text>
-    <text x="520" y="250" text-anchor="middle" fill="#9BE15D">Swing arm moves it</text>
-    <text x="560" y="385" text-anchor="middle" fill="#9BE15D">2nd micro:bit radios "HIT"</text>
-    <text x="730" y="28" text-anchor="end" fill="#A9B6CA">Black back wall stops the beam</text>
-    <text x="380" y="385" text-anchor="middle" fill="#74839B">Arena walls 8 inches tall</text>
+    <text x="45" y="210" fill="#5DB7F0">Camera</text>
+    <text x="90" y="282" text-anchor="end" fill="#F0609E">Laser (under</text>
+    <text x="90" y="297" text-anchor="end" fill="#F0609E">the camera)</text>
+    <text x="210" y="300" fill="#F5B642">Pan and tilt servos</text>
+    <text x="30" y="160" fill="#F0605E">Printed tilt stop:</text>
+    <text x="30" y="176" fill="#F0605E">can't aim above the box</text>
+    <text x="300" y="212" text-anchor="middle" fill="#F0605E">Short laser flash</text>
+    <text x="570" y="260" text-anchor="middle" fill="#F0609E">Eyes flash when hit</text>
+    <text x="600" y="120" text-anchor="start" fill="#EEF2F8" font-size="12">Thin line with wires</text>
+    <text x="600" y="135" text-anchor="start" fill="#EEF2F8" font-size="12">to the sensor</text>
+    <text x="745" y="20" text-anchor="end" fill="#9BE15D">Wand handle: 2nd micro:bit</text>
+    <text x="425" y="72" text-anchor="start" fill="#A9B6CA" font-size="12">Black top (slot for the line)</text>
+    <text x="690" y="395" text-anchor="end" fill="#A9B6CA">Black back wall stops the beam</text>
+    <text x="570" y="345" text-anchor="middle" fill="#74839B">Flight zone box</text>
   </svg>
   </div>
 
   <ol class="steps">
-    <li><b>See.</b> The AI camera (HuskyLens) learns the mosquito when Addie points it at it and presses one button. It draws a box around it on its screen.</li>
-    <li><b>Turn.</b> Mosquito left of center: the servo turns the turret left. Right of center: turn right.</li>
-    <li><b>Lock on.</b> When the mosquito is in the middle, the micro:bit shows a target and beeps.</li>
-    <li><b>Fire.</b> If the arm switch is on, the laser turns on for one second.</li>
-    <li><b>Hit.</b> The red dot lands on the mosquito's white body and it glows. The light sensor inside jumps, the arena micro:bit radios "HIT", and the turret adds a point and plays a sound.</li>
+    <li><b>Train.</b> Addie points the camera at the mosquito, holds the learn button, and slowly turns the mosquito so the camera learns it from every side and distance. Then she saves it.</li>
+    <li><b>Track.</b> The camera reports where the mosquito is on its screen (320 by 240 dots). Too far left, the pan servo turns left. Too high, the tilt servo tips up, but never past the printed stop.</li>
+    <li><b>Lock on.</b> When the mosquito is inside a small box in the middle of the screen, the micro:bit shows a target and beeps.</li>
+    <li><b>Fire.</b> If the arm switch is on, the laser flashes for a quarter of a second.</li>
+    <li><b>Prove it.</b> The laser dot lands on the mosquito's white body and it glows. The light sensor inside jumps. The wand micro:bit flashes the mosquito's red eyes, buzzes, shows an X, and radios "HIT". The turret adds a point.</li>
   </ol>
 
   <div class="two" style="margin-top:16px">
     <div class="box">
       <h3>Addie's jobs</h3>
       <ul>
-        <li>Make the mosquitoes (printed white body, pipe-cleaner legs, wings)</li>
-        <li>Teach the camera what a mosquito is</li>
-        <li>Code the turret: turn, lock, fire, score</li>
-        <li>Code the arena: swing the arm, feel the hit, send "HIT"</li>
-        <li>Name the turret and decorate the arena</li>
+        <li>Decorate the mosquitoes (legs, wings, stripes)</li>
+        <li>Train the camera on the mosquito</li>
+        <li>Code the turret: track, lock, fire, score</li>
+        <li>Code the wand: feel the hit, flash, buzz, send "HIT"</li>
+        <li>Name the turret and decorate the flight zone</li>
         <li>Run every test, write down the numbers, make the graph</li>
       </ul>
     </div>
     <div class="box">
       <h3>Dad's jobs</h3>
       <ul>
-        <li>3D print the turret, laser holder, mosquito bodies, and swing arm</li>
-        <li>Build the arena box</li>
-        <li>Wire the laser, servos, and sensors</li>
-        <li>Check every safety requirement before the laser is ever switched on</li>
+        <li>Print every housing (list below)</li>
+        <li>Wire the laser, servos, sensor, and eye LEDs</li>
+        <li>Line up the laser with the center of the camera</li>
+        <li>Check every safety requirement before the laser is switched on</li>
         <li>Help with the tricky code</li>
       </ul>
     </div>
   </div>
 </div>
 
+<!-- PRINTS -->
+<div class="card" id="prints">
+  <h2>What we 3D print</h2>
+  <p class="sub">Every part of the equipment sits in something printed.</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>Print</th><th>What it holds</th><th>Notes</th></tr>
+    <tr><td>Turret base</td><td>micro:bit, micro:Driver, 3xAA pack, arm switch</td><td>Window so the micro:bit lights show. Heavy infill so it does not tip.</td></tr>
+    <tr><td>Pan and tilt head</td><td>Two servos, the tilt axle</td><td>Tilt stop built in: the head physically cannot point above the flight zone.</td></tr>
+    <tr><td>Sensor mount</td><td>HuskyLens on top, laser underneath</td><td>Laser in an adjustable clamp so it can be lined up with the camera's center.</td></tr>
+    <tr><td>Servo covers</td><td>Servo gears and horns</td><td>Covers pinch points (fair rule).</td></tr>
+    <tr><td>Mosquito body (x3)</td><td>Light sensor inside, two red LED eyes</td><td>White PLA, thin walls so it glows. Two halves that snap together. Line loop on top.</td></tr>
+    <tr><td>Wand handle</td><td>Second micro:bit and a 2xAAA pack</td><td>Rod socket on one end. The micro:bit's speaker does the buzz.</td></tr>
+    <tr><td>Flight zone corners and pendulum hook</td><td>Dowels and black foam board</td><td>Hook holds the wand for repeatable swings, with an angle scale printed on it.</td></tr>
+  </table>
+  </div>
+</div>
+
 <!-- EXPERIMENT -->
 <div class="card" id="experiment">
   <h2>The experiment</h2>
-  <p class="sub">Real mosquito turrets have to be fast. This tests how speed changes our turret's aim.</p>
+  <p class="sub">A mosquito that swings farther moves faster. The pendulum hook makes each swing the same.</p>
   <div class="qbox">Question: Does a faster mosquito get hit less often by the laser turret?</div>
   <div class="two" style="margin-top:14px">
     <div class="box">
       <h3>Hypothesis</h3>
-      <p>If the mosquito moves faster, then the turret will get <span class="blank">&nbsp;</span> hits, because <span class="blank" style="min-width:160px">&nbsp;</span>.</p>
+      <p>If the mosquito swings faster, then the turret will get <span class="blank">&nbsp;</span> hits, because <span class="blank" style="min-width:160px">&nbsp;</span>.</p>
     </div>
     <div class="box">
       <h3>Variables</h3>
       <ul>
-        <li><b>Change:</b> swing speed (slow, medium, fast), set in Addie's arena code</li>
-        <li><b>Measure:</b> hits in 30 seconds</li>
-        <li><b>Keep the same:</b> same turret, same mosquito, same spot, same room lights</li>
+        <li><b>Change:</b> how far back the mosquito is pulled before letting go (10, 20, or 30 degrees on the hook scale)</li>
+        <li><b>Measure:</b> hits counted by the wand in 30 seconds</li>
+        <li><b>Keep the same:</b> same turret, mosquito, line length, spot, and room lights</li>
       </ul>
     </div>
   </div>
   <div class="box" style="margin-top:12px">
     <h3>How to test</h3>
     <ol style="padding-left:18px">
-      <li>Set the arm to slow. Press start. The turret hunts for 30 seconds by itself.</li>
-      <li>Write down the score. Reset. Do it 5 times.</li>
-      <li>Do the same at medium and fast. That is 15 runs.</li>
-      <li>Find the average for each speed and make a bar graph.</li>
-      <li>Bonus: also time how long the first hit takes. That is our version of the Photonic Fence's 0.1 seconds.</li>
+      <li>Hang the wand on the hook. Pull the mosquito back to 10 degrees and let go.</li>
+      <li>Press start. The turret hunts for 30 seconds. Write down the hits.</li>
+      <li>Do it 5 times, then do the same at 20 and 30 degrees. That is 15 runs.</li>
+      <li>Find the average for each and make a bar graph.</li>
+      <li>Bonus: the wand also times how long the first hit took.</li>
     </ol>
   </div>
   <div class="tablewrap" style="margin-top:12px">
   <table class="grid-data">
     <tr><th>Hits in 30 s</th><th>Run 1</th><th>Run 2</th><th>Run 3</th><th>Run 4</th><th>Run 5</th><th>Average</th></tr>
-    <tr><td>Slow</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
-    <tr><td>Medium</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
-    <tr><td>Fast</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
+    <tr><td>10&deg; swing (slow)</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
+    <tr><td>20&deg; swing (medium)</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
+    <tr><td>30&deg; swing (fast)</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
   </table>
   </div>
-  <div class="bigidea"><b>Start this week, no parts needed:</b> Addie can write the arena code in MakeCode on the website and watch the virtual micro:bit. She can also make the first mosquitoes and try teaching a phone camera app to tell them apart from other toys.</div>
+  <div class="bigidea"><b>Start this week, no parts needed:</b> hang a paper mosquito on a string and watch how the swing changes with the starting angle. Addie can also write the wand code in MakeCode on the website and test it on the virtual micro:bit.</div>
 </div>
 
 <!-- DEMO -->
@@ -408,9 +457,9 @@
       <h3>The table</h3>
       <ul>
         <li>Trifold board behind</li>
-        <li>Arena in front, turret facing sideways, not toward the judges</li>
-        <li>"Class 2 laser" sign with the maker's label visible</li>
-        <li>Camera screen turned so judges can see it</li>
+        <li>Turret at one end, flight zone at the other, beam running sideways along the table, not toward the judges</li>
+        <li>"Class 2 laser" sign, maker's label visible</li>
+        <li>Camera screen turned so judges can see the box it draws</li>
         <li>Spare batteries and a spare mosquito</li>
       </ul>
     </div>
@@ -418,11 +467,11 @@
       <h3>What Addie says</h3>
       <ol style="padding-left:18px">
         <li>"Scientists built a machine that shoots mosquitoes with lasers. I built a safe one."</li>
-        <li>Flip the arm switch. The mosquito starts swinging.</li>
-        <li>Turret tracks, beeps, red dot, the mosquito glows. "HIT!"</li>
-        <li>"Here's how it sees the mosquito." (camera screen)</li>
+        <li>"Hold this mosquito and try to get away." (hands the judge the wand, judge stands beside the turret)</li>
+        <li>Turret chases it, flash, the eyes blink, the wand buzzes. "HIT!"</li>
+        <li>"It knows it's a mosquito because I trained it." (camera screen)</li>
+        <li>"A laser that kills mosquitoes would need to be 14,000 times stronger. That's too dangerous for school."</li>
         <li>"Here's what happened when the mosquito went faster." (graph)</li>
-        <li>Bonus: "Want to try to beat my robot?" (button mode)</li>
       </ol>
     </div>
   </div>
@@ -431,30 +480,32 @@
 <!-- PARTS -->
 <div class="card" id="parts">
   <h2>Parts (draft)</h2>
-  <p class="sub">For Design A. Prices checked on the vendor sites Sep 15, 2026 unless marked. We order after the design is locked in.</p>
+  <p class="sub">For Design A. Prices checked on the vendor sites Sep 15, 2026 unless marked with ~. We order after the design is locked in.</p>
   <div class="tablewrap">
   <table class="parts">
     <tr><th>Part</th><th>What it does</th><th>Where</th><th style="text-align:right">Price</th></tr>
-    <tr><td>Class 2 laser module, under 1 mW (Quarton VLM-650-03 LPT)</td><td>The laser. Labeled by the maker. Runs on 2.6 to 6 volts.</td><td><a href="https://www.digikey.com/en/products/detail/quarton-inc/VLM-650-03-LPT/1010454" target="_blank" rel="noopener">DigiKey</a></td><td class="price">~$12*</td></tr>
-    <tr><td>micro:bit v2 (x2)</td><td>One runs the turret, one runs the arena. They talk by radio.</td><td><a href="https://www.adafruit.com/product/4781" target="_blank" rel="noopener">Adafruit 4781</a></td><td class="price">$35.90</td></tr>
+    <tr><td>Class 2 laser module, under 1 mW (Quarton VLM-650-03 LPT)</td><td>The laser. Labeled by the maker. Runs on 2.6 to 6 volts.</td><td><a href="https://www.digikey.com/en/products/detail/quarton-inc/VLM-650-03-LPT/1010454" target="_blank" rel="noopener">DigiKey</a></td><td class="price">~$12</td></tr>
+    <tr><td>micro:bit v2 (x2)</td><td>One runs the turret, one lives in the wand handle. They talk by radio.</td><td><a href="https://www.adafruit.com/product/4781" target="_blank" rel="noopener">Adafruit 4781</a></td><td class="price">$35.90</td></tr>
     <tr><td>HuskyLens AI camera</td><td>Learns and tracks the mosquito. Has its own screen.</td><td><a href="https://www.dfrobot.com/product-1922.html" target="_blank" rel="noopener">DFRobot SEN0305</a></td><td class="price">$34.90</td></tr>
-    <tr><td>micro:Driver board</td><td>Plugs into the turret micro:bit. Runs the servo, switches the laser, connects the camera.</td><td><a href="https://www.dfrobot.com/product-1738.html" target="_blank" rel="noopener">DFRobot DFR0548</a></td><td class="price">$11.90</td></tr>
-    <tr><td>Micro servo SG92R (x2)</td><td>One turns the turret, one swings the mosquito.</td><td><a href="https://www.adafruit.com/product/169" target="_blank" rel="noopener">Adafruit 169</a></td><td class="price">$11.90</td></tr>
-    <tr><td>Analog light sensor (x3)</td><td>Goes inside each mosquito to feel the laser.</td><td><a href="https://www.adafruit.com/product/2748" target="_blank" rel="noopener">Adafruit 2748</a></td><td class="price">$7.50</td></tr>
-    <tr><td>3xAA holder with switch (x2)</td><td>Power for the turret and the arena. The switch is also the arm switch.</td><td><a href="https://www.adafruit.com/product/771" target="_blank" rel="noopener">Adafruit 771</a></td><td class="price">$7.90</td></tr>
-    <tr><td>Foam board and black paper</td><td>The arena walls and the matte black beam stop.</td><td>Craft store</td><td class="price">~$10</td></tr>
-    <tr><td>Craft kit</td><td>Pipe cleaners, googly eyes, wing film</td><td>Craft store</td><td class="price">~$6</td></tr>
-    <tr><td>White PLA</td><td>Mosquito bodies (thin, so they glow), turret, swing arm</td><td>Already have</td><td class="price">$0</td></tr>
-    <tr class="total"><td colspan="3">Total before shipping</td><td class="price">~$138</td></tr>
+    <tr><td>micro:Driver board</td><td>Plugs into the turret micro:bit. Runs both servos, switches the laser, connects the camera.</td><td><a href="https://www.dfrobot.com/product-1738.html" target="_blank" rel="noopener">DFRobot DFR0548</a></td><td class="price">$11.90</td></tr>
+    <tr><td>Micro servo SG92R (x3)</td><td>Pan, tilt, and one spare.</td><td><a href="https://www.adafruit.com/product/169" target="_blank" rel="noopener">Adafruit 169</a></td><td class="price">$17.85</td></tr>
+    <tr><td>Analog light sensor (x3)</td><td>One inside each mosquito to feel the laser.</td><td><a href="https://www.adafruit.com/product/2748" target="_blank" rel="noopener">Adafruit 2748</a></td><td class="price">$7.50</td></tr>
+    <tr><td>3xAA holder with switch</td><td>Turret power. The switch is the arm switch.</td><td><a href="https://www.adafruit.com/product/771" target="_blank" rel="noopener">Adafruit 771</a></td><td class="price">$3.95</td></tr>
+    <tr><td>2xAAA holder with switch</td><td>Wand power, plugs into the micro:bit.</td><td>Adafruit or micro:bit go kit</td><td class="price">~$3</td></tr>
+    <tr><td>Red LEDs, resistors, thin 30 AWG wire</td><td>Mosquito eyes and the wires down the line to the sensor</td><td>Adafruit or Micro Center</td><td class="price">~$10</td></tr>
+    <tr><td>Short fishing rod or dowel, clear line</td><td>The wand</td><td>Sporting goods</td><td class="price">~$10</td></tr>
+    <tr><td>Black foam board, dowels</td><td>Flight zone walls, top, and back</td><td>Craft store</td><td class="price">~$15</td></tr>
+    <tr><td>White and colored PLA</td><td>All housings and mosquito bodies</td><td>Already have</td><td class="price">$0</td></tr>
+    <tr class="total"><td colspan="3">Total before shipping</td><td class="price">~$160</td></tr>
   </table>
   </div>
-  <p class="small muted" style="margin-top:10px">*DigiKey did not show the single-unit price on the day we checked; confirm at checkout. To save money: one light sensor instead of three ($5 less). Stay away from the 5 mW "laser diode" modules sold for hobby kits: those are Class 3R, stronger than we need.</p>
+  <p class="small muted" style="margin-top:10px">DigiKey did not show the single-unit laser price on the day we checked; confirm at checkout. Skip the 5 mW hobby laser modules: they are Class 3R and still nowhere near strong enough to kill anything.</p>
 </div>
 
 <!-- SAFETY -->
 <div class="card" id="safety">
   <h2>Laser safety</h2>
-  <p class="sub">The science fair's rules come first. These are the rules the big international fair (ISEF) uses, which many school fairs copy. Our school may be stricter, so we ask the teacher before ordering.</p>
+  <p class="sub">These are the rules the big international fair (ISEF) uses, which many school fairs copy. Our school may be stricter, so we ask the teacher before ordering.</p>
   <div class="two">
     <div class="box">
       <h3>What ISEF says</h3>
@@ -471,11 +522,11 @@
       <h3>What we do</h3>
       <ul>
         <li>Class 2, the lowest visible class, under 1 mW, labeled</li>
-        <li>Bolted to the turret, never held</li>
-        <li>Turns left and right only; the beam stays 3 inches off the floor inside 8-inch walls</li>
-        <li>Matte black back wall, no mirrors or shiny parts in the arena</li>
-        <li>Fires only when locked on, one second at a time, only with the arm switch on</li>
-        <li>Nobody puts their face at arena height while it is armed</li>
+        <li>Bolted into the printed head, never held</li>
+        <li>Printed tilt stop plus a code limit: it cannot aim above the flight zone</li>
+        <li>Flight zone has a black top and back; no mirrors or shiny parts inside</li>
+        <li>Short flashes only when locked on, only with the arm switch on</li>
+        <li>The wand holder stands beside the turret, never inside the flight zone or in front of it</li>
         <li>Servo gears covered</li>
       </ul>
     </div>
@@ -493,9 +544,9 @@
     <li><span class="dot">4</span><div><h3>Lock in the design</h3><div class="when">Week 2</div><div class="muted small">Name the turret. Draw it by hand with labels. No more big changes after this.</div></div></li>
     <li><span class="dot">5</span><div><h3>Final parts list</h3><div class="when">Week 2</div><div class="muted small">Check every link again and pick a backup for each part.</div></div></li>
     <li><span class="dot">6</span><div><h3>Order</h3><div class="when">Week 2</div><div class="muted small">DigiKey, Adafruit, and DFRobot. Shipping is usually under a week.</div></div></li>
-    <li><span class="dot">7</span><div><h3>Build</h3><div class="when">Weeks 3 to 5</div><div class="muted small">Arena and mosquito first (test the glow with the laser by hand, on the bench). Then the turret and camera. Then the code.</div></div></li>
-    <li><span class="dot">8</span><div><h3>Test and experiment</h3><div class="when">Weeks 5 to 6</div><div class="muted small">15 runs, fill in the table, make the graph. Photos of every step for the board.</div></div></li>
-    <li><span class="dot">9</span><div><h3>Board and practice</h3><div class="when">Week 7</div><div class="muted small">Question, hypothesis, materials, steps, results, conclusion. Practice the 30-second demo on the family.</div></div></li>
+    <li><span class="dot">7</span><div><h3>Build</h3><div class="when">Weeks 3 to 5</div><div class="muted small">Mosquito and wand first (prove a hit lights the eyes). Then the pan and tilt head and camera training. Then the flight zone. Then the code.</div></div></li>
+    <li><span class="dot">8</span><div><h3>Test and experiment</h3><div class="when">Weeks 5 to 6</div><div class="muted small">15 pendulum runs, fill in the table, make the graph. Photos of every step for the board.</div></div></li>
+    <li><span class="dot">9</span><div><h3>Board and practice</h3><div class="when">Week 7</div><div class="muted small">Question, hypothesis, materials, steps, results, conclusion, and the "14,000 times" fact. Practice the 30-second demo on the family.</div></div></li>
   </ul>
 </div>
 
@@ -503,16 +554,17 @@
 <div class="card">
   <h2>Where the facts came from</h2>
   <ul class="src" style="padding-left:18px">
+    <li><a href="https://www.nature.com/articles/s41598-020-71824-y" target="_blank" rel="noopener">Keller et al., Optical tracking and laser-induced mortality of insects during flight, Scientific Reports (2020)</a>: lethal doses of about 7 J/cm&sup2; at 445 and 532 nm with a 2.5 mm beam and 25 ms pulse; longer pulses killed less.</li>
+    <li><a href="https://www.nature.com/articles/s41598-024-57804-6" target="_blank" rel="noopener">An optical system to detect, surveil, and kill flying insect vectors, Scientific Reports (2024)</a>: works at 30 m; will not fire when people or animals enter the zone.</li>
     <li><a href="https://www.sciencealert.com/the-latest-way-to-zap-harmful-bugs-is-with-targeted-laser-beams" target="_blank" rel="noopener">ScienceAlert, Photonic Fence</a>: finds bugs by wingbeat, size and flight; fires in under 100 milliseconds.</li>
-    <li><a href="https://www.mosquito.org/faqs/" target="_blank" rel="noopener">American Mosquito Control Association, FAQs</a>: flight speed, only females bite, CO2 from 35 m, 174 US species, 2,700 worldwide.</li>
     <li><a href="https://www.societyforscience.org/isef/international-rules/display-safety-rules/" target="_blank" rel="noopener">Society for Science, ISEF Display and Safety Rules</a>: laser classes, labels, no handheld lasers, pinch points.</li>
     <li><a href="https://www.quarton.com/uploadfiles/1028/product/Red-dot-laser-modules/Economic/VLM-650-03-series/Red-Dot-Laser-Module-VLM-650-03-manual.pdf" target="_blank" rel="noopener">Quarton VLM-650-03 manual</a>: the LPT version is under 1 mW, Class 2, with a safety label.</li>
-    <li><a href="https://www.adafruit.com/product/1054" target="_blank" rel="noopener">Adafruit 5 mW laser diode</a>: listed as Class IIIa, which is why we skip it.</li>
-    <li><a href="https://www.hackster.io/sidikalamini/pan-tilt-object-tracking-with-huskylens-and-edu-bit-309679" target="_blank" rel="noopener">Hackster: pan and tilt tracking with HuskyLens and micro:bit</a>: proof the camera-plus-servo idea works.</li>
+    <li><a href="https://learn.dfrobot.com/makelog-308707.html" target="_blank" rel="noopener">DFRobot: HuskyLens object tracking with micro:bit</a>: hold the learn button to learn an object at different angles and distances; the micro:bit gets its X and Y position.</li>
+    <li><a href="https://www.mosquito.org/faqs/" target="_blank" rel="noopener">American Mosquito Control Association, FAQs</a>: flight speed, only females bite, CO2 from 35 m, 174 US species, 2,700 worldwide.</li>
   </ul>
 </div>
 
-<div class="foot">NAW Games &middot; Addie's Projects &middot; Plan v2 (lasers), Sep 15, 2026</div>
+<div class="foot">NAW Games &middot; Addie's Projects &middot; Plan v3 (trainable mosquito wand), Sep 15, 2026</div>
 </div>
 </body>
 </html>

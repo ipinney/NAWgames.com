@@ -10,7 +10,7 @@ const PROJECTS = [
     subject: 'Science Fair',
     emoji: '🦟',
     description:
-      'A turret that finds a mosquito, aims by itself, and tags it with a safe laser. Requirements, design choices, the experiment, and the parts.',
+      'A trainable turret that follows a fake mosquito on a fishing line and tags it with a safe laser. Requirements, design choices, the experiment, and the parts.',
     dueLabel: 'TBD',
     color: 'from-fuchsia-700 to-lime-500',
     href: '/projects/addie/mosquito-turret',
