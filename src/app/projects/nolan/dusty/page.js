@@ -202,20 +202,25 @@ export default function DustyPage() {
                 <tr className="text-white/45 text-left">
                   <th className="px-4 py-3 font-semibold">Part</th>
                   <th className="px-2 py-3 font-semibold">Qty</th>
-                  <th className="px-2 py-3 font-semibold whitespace-nowrap">Size (mm)</th>
-                  <th className="px-2 py-3 font-semibold">g each</th>
-                  <th className="px-2 py-3 font-semibold">Print</th>
+                  <th className="hidden sm:table-cell px-2 py-3 font-semibold whitespace-nowrap">Size (mm)</th>
+                  <th className="hidden sm:table-cell px-2 py-3 font-semibold">g each</th>
+                  <th className="hidden sm:table-cell px-2 py-3 font-semibold">Print</th>
                   <th className="px-4 py-3"></th>
                 </tr>
               </thead>
               <tbody>
                 {PARTS.map(([file, name, qty, size, g, note]) => (
-                  <tr key={file} className="border-t border-white/5">
-                    <td className="px-4 py-2.5 text-white font-medium">{name}</td>
+                  <tr key={file} className="border-t border-white/5 align-top">
+                    <td className="px-4 py-2.5">
+                      <div className="text-white font-medium">{name}</div>
+                      <div className="sm:hidden text-white/50 text-xs mt-0.5 tabular-nums">
+                        {size} mm, {g} g{note ? `, ${note.toLowerCase()}` : ''}
+                      </div>
+                    </td>
                     <td className="px-2 py-2.5 text-white/70 tabular-nums">{qty}</td>
-                    <td className="px-2 py-2.5 text-white/70 tabular-nums whitespace-nowrap">{size}</td>
-                    <td className="px-2 py-2.5 text-white/70 tabular-nums">{g}</td>
-                    <td className="px-2 py-2.5 text-white/50">{note}</td>
+                    <td className="hidden sm:table-cell px-2 py-2.5 text-white/70 tabular-nums whitespace-nowrap">{size}</td>
+                    <td className="hidden sm:table-cell px-2 py-2.5 text-white/70 tabular-nums">{g}</td>
+                    <td className="hidden sm:table-cell px-2 py-2.5 text-white/50">{note}</td>
                     <td className="px-4 py-2.5 text-right">
                       <a href={`${F}/dusty-${file}.stl`} download className="text-naw-cyan font-semibold hover:underline whitespace-nowrap">
                         STL
