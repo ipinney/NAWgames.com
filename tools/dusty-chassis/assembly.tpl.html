@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Dusty dustpan, Rev A</title>
+<title>__TITLE_TEXT__</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -27,31 +27,29 @@ dl.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));g
 dl.specs div{border-left:2px solid var(--grid);padding-left:8px}
 dt{color:var(--dim);font-size:13px}
 dd{font-weight:600;font-variant-numeric:tabular-nums}
-@media (max-height:520px){dl.specs{grid-template-columns:repeat(4,auto)}#hint{display:none}h1{font-size:20px}header p{display:none}}
+@media (max-height:520px){dl.specs{grid-template-columns:repeat(4,auto)}#hint{display:none}#legend{display:none}h1{font-size:20px}header p{display:none}}
 #hint{color:var(--dim);font-size:13px;margin-top:8px}
+#legend{display:flex;flex-wrap:wrap;gap:4px 12px;margin:0 0 8px;font-size:13px;color:var(--dim)}
+#legend span{display:inline-flex;align-items:center;gap:5px}
+#legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
 #hint a{color:var(--line)}
 </style></head><body>
 <canvas id="stage"></canvas>
 <div id="labels"></div>
-<header><h1>Dusty <span>dustpan</span>, Rev A</h1><p>Drag to rotate, pinch or scroll to zoom. All dimensions in mm.</p></header>
+<header><h1>__TITLE_HTML__</h1><p>Drag to rotate, pinch or scroll to zoom. All dimensions in mm.</p></header>
 <footer>
-<dl class="specs">
-<div><dt>Overall</dt><dd>112 × 66 × 20</dd></div>
-<div><dt>Crumb bin (inside)</dt><dd>96.8 × 33 × 18.4</dd></div>
-<div><dt>Front lip</dt><dd>0.6 mm edge, 17° ramp</dd></div>
-<div><dt>Print (PLA)</dt><dd>~26 g, no supports</dd></div>
-</dl>
+<div id="legend">__LEGEND__</div>
+<dl class="specs">__SPECS__</dl>
 <div class="row">
 <button data-v="iso" class="on">3D</button><button data-v="front">Front</button><button data-v="side">Side</button><button data-v="top">Top</button>
-<button id="dims" class="on">Dimensions</button>
+<button id="ghosts" class="on">Parts</button><button id="dims" class="on">Dimensions</button>
 <button id="dl" class="go">Download STL</button>
 </div>
-<p id="hint">Glue the side flanges and rear tabs to the underside of the chassis. Roller goes in front of the lip. <a href="/projects/nolan/dusty">Back to Dusty</a></p>
+<p id="hint">__HINT__</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const DATA = __DATA__;
-const P = DATA.P;
 const canvas = document.getElementById('stage');
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
@@ -59,58 +57,57 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0d1b2e);
 const camera = new THREE.PerspectiveCamera(35,1,1,5000);
 
-// model (x,y,z) with y = depth from front lip, z = up  ->  three (x, z, -y)
-const v = DATA.v, pos = new Float32Array(v.length);
-for (let i=0;i<v.length;i+=3){pos[i]=v[i];pos[i+1]=v[i+2];pos[i+2]=-v[i+1];}
-const g = new THREE.BufferGeometry();
-g.setAttribute('position', new THREE.BufferAttribute(pos,3));
-g.setIndex(DATA.f);
-const ng = g.toNonIndexed(); ng.computeVertexNormals();
-const part = new THREE.Mesh(ng, new THREE.MeshStandardMaterial({color:0xf0b43c, roughness:.55, metalness:.05}));
-scene.add(part);
-const edges = new THREE.LineSegments(new THREE.EdgesGeometry(g, 25), new THREE.LineBasicMaterial({color:0x5a3b06}));
-scene.add(edges);
+// model (x,y,z), y = back, z = up  ->  three (x, z, -y)
+const partGroup = new THREE.Group(), ghostGroup = new THREE.Group();
+scene.add(partGroup); scene.add(ghostGroup);
+function addMesh(p){
+  const v=p.v, pos=new Float32Array(v.length);
+  for(let i=0;i<v.length;i+=3){pos[i]=v[i];pos[i+1]=v[i+2];pos[i+2]=-v[i+1];}
+  const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(pos,3)); g.setIndex(p.f);
+  const ng=g.toNonIndexed(); ng.computeVertexNormals();
+  const ghost=p.o<1;
+  const mat=new THREE.MeshStandardMaterial({color:p.c,roughness:.55,metalness:.05,transparent:ghost,opacity:p.o,depthWrite:!ghost});
+  const mesh=new THREE.Mesh(ng,mat);
+  (ghost?ghostGroup:partGroup).add(mesh);
+  if(!ghost){const e=new THREE.LineSegments(new THREE.EdgesGeometry(g,30),new THREE.LineBasicMaterial({color:0x000000,transparent:true,opacity:.35}));partGroup.add(e);}
+}
+DATA.parts.forEach(addMesh);
 scene.add(new THREE.HemisphereLight(0xcfe3ff, 0x1a2436, .75));
 const sun = new THREE.DirectionalLight(0xffffff,.85); sun.position.set(80,160,120); scene.add(sun);
 const fill = new THREE.DirectionalLight(0x8fd3ea,.25); fill.position.set(-120,40,-80); scene.add(fill);
-const grid = new THREE.GridHelper(300,30,0x2a4a73,0x1c3150); grid.position.set(0,-.05,-33); scene.add(grid);
+const BB=DATA.bounds; // model coords [[minx,miny,minz],[maxx,maxy,maxz]]
+const CX=(BB[0][0]+BB[1][0])/2, CY=(BB[0][1]+BB[1][1])/2, CZ=(BB[0][2]+BB[1][2])/2;
+const DIAG=Math.hypot(BB[1][0]-BB[0][0],BB[1][1]-BB[0][1],BB[1][2]-BB[0][2]);
+const grid = new THREE.GridHelper(Math.ceil(DIAG*2.5/10)*10,30,0x2a4a73,0x1c3150); grid.position.set(CX,BB[0][2]-.05,-CY); scene.add(grid);
 
-// dimension lines
-const W=P.W, D=P.D, H=P.H, F=P.FLANGE, TL=P.TAB_L, RL=P.RAMP_LEN, RH=P.RAMP_H;
+// dimension lines (DATA.dims, model coords)
 const dimMat = new THREE.LineBasicMaterial({color:0x8fd3ea});
 const dimGroup = new THREE.Group(); scene.add(dimGroup);
 const labelsEl = document.getElementById('labels');
 const labels = [];
-const V = (x,y,z)=>new THREE.Vector3(x,z,-y); // model coords
+const V = (x,y,z)=>new THREE.Vector3(x,z,-y); // model coords -> three
 function dim(a,b,off,text,note){
-  const A=V(...a),B=V(...b),o=V(...off).sub(V(0,0,0));
+  const A=V(...a),B=V(...b),o=V(...off);
   const A2=A.clone().add(o),B2=B.clone().add(o);
-  const pts=[A,A2.clone().add(o.clone().setLength(3)),B,B2.clone().add(o.clone().setLength(3)),A2,B2];
-  const dir=B2.clone().sub(A2).normalize(); const t=2.5;
+  const ext=o.clone().setLength(3);
+  const pts=[A,A2.clone().add(ext),B,B2.clone().add(ext),A2,B2];
+  const dir=B2.clone().sub(A2).normalize(), t=Math.max(1.5,DIAG*.02);
   const perp=o.clone().normalize().multiplyScalar(t);
   const tk=[A2.clone().add(dir.clone().multiplyScalar(t)).add(perp),A2.clone().sub(dir.clone().multiplyScalar(t)).sub(perp),
             B2.clone().add(dir.clone().multiplyScalar(t)).add(perp),B2.clone().sub(dir.clone().multiplyScalar(t)).sub(perp)];
-  const geo=new THREE.BufferGeometry().setFromPoints([...pts,...tk]);
-  dimGroup.add(new THREE.LineSegments(geo,dimMat));
+  dimGroup.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([...pts,...tk]),dimMat));
   const el=document.createElement('div'); el.className='dl';
-  el.innerHTML=text+(note?`<small>${note}</small>`:''); labelsEl.appendChild(el);
+  el.textContent=text; if(note){const s=document.createElement('small');s.textContent=note;el.appendChild(s);}
+  labelsEl.appendChild(el);
   labels.push({el,p:A2.clone().add(B2).multiplyScalar(.5)});
 }
-const hw=W/2;
-dim([-hw-F,-1,0],[hw+F,-1,0],[0,-14,0],'112','with flanges');
-dim([-hw,0,H],[hw,0,H],[0,-4,16],'100','body');
-dim([hw+F,0,0],[hw+F,D,0],[14,0,0],'50','tray');
-dim([P.TAB_X+P.TAB_W/2,D,H],[P.TAB_X+P.TAB_W/2,D+TL,H],[10,0,6],'16','tab');
-dim([-hw-F,D,0],[-hw-F,D,H],[-12,0,0],'20','tall');
-dim([-hw,0,0],[-hw,RL,0],[0,0,-9],'14','ramp');
-dim([hw,0,0],[hw,0,RH],[10,-4,0],'5','lip rise');
-dim([-P.TAB_X-P.TAB_W/2,D+TL,H],[-P.TAB_X+P.TAB_W/2,D+TL,H],[0,10,4],'22','tab');
+(DATA.dims||[]).forEach(d=>dim(d.a,d.b,d.off,d.text,d.note));
 
 // orbit controls
-const target=new THREE.Vector3(0,10,-33);   // center of the part
-const FIT_R=78;                                // bounding sphere of part + dimension labels
-let theta=-.75, phi=1.0, zoom=1, fitDist=300, anim=null, shiftNdc=0;
-const views={iso:[-.75,1.0],front:[0,1.45],side:[Math.PI/2,1.45],top:[0,.02]};
+const target=V(CX,CY,CZ);                    // orbit around the part's center
+const FIT_R=DIAG*.5*(DATA.fitPad||1.3);      // bounding sphere of part + dimension labels
+let theta=.8, phi=1.0, zoom=1, fitDist=300, anim=null, shiftNdc=0;
+const views={iso:[.8,1.0],front:[0,1.45],side:[Math.PI/2,1.45],top:[0,.02]};
 function place(){const radius=fitDist*zoom;camera.position.set(target.x+radius*Math.sin(phi)*Math.sin(theta),target.y+radius*Math.cos(phi),target.z+radius*Math.sin(phi)*Math.cos(theta));camera.lookAt(target);}
 const ptrs=new Map(); let pinch0=0, z0=1;
 canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});anim=null;
@@ -129,12 +126,14 @@ document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const [t,p]=view
   if(reduce){theta=t;phi=p;zoom=r;return;}
   let dt=((t-theta)%(2*Math.PI)+3*Math.PI)%(2*Math.PI)-Math.PI;
   anim={f:{t:theta,p:phi,r:zoom},to:{t:theta+dt,p,r},s:performance.now()};});
+const gBtn=document.getElementById('ghosts');
+gBtn.onclick=()=>{const on=!gBtn.classList.contains('on');gBtn.classList.toggle('on',on);ghostGroup.visible=on;};
 const dimsBtn=document.getElementById('dims');
 dimsBtn.onclick=()=>{const on=!dimsBtn.classList.contains('on');dimsBtn.classList.toggle('on',on);dimGroup.visible=on;labelsEl.classList.toggle('hidden',!on);};
 
 // STL download, built from the same mesh
 document.getElementById('dl').onclick=()=>{
-  const f=DATA.f, n=f.length/3, buf=new ArrayBuffer(84+n*50), dv=new DataView(buf);
+  const f=DATA.plate.f, v=DATA.plate.v, n=f.length/3, buf=new ArrayBuffer(84+n*50), dv=new DataView(buf);
   dv.setUint32(80,n,true);
   for(let i=0;i<n;i++){const o=84+i*50;
     const a=f[i*3]*3,b=f[i*3+1]*3,c=f[i*3+2]*3;
@@ -142,7 +141,7 @@ document.getElementById('dl').onclick=()=>{
     let nx=uy*wz-uz*wy,ny=uz*wx-ux*wz,nz=ux*wy-uy*wx;const l=Math.hypot(nx,ny,nz)||1;
     [nx/l,ny/l,nz/l,v[a],v[a+1],v[a+2],v[b],v[b+1],v[b+2],v[c],v[c+1],v[c+2]].forEach((x,j)=>dv.setFloat32(o+j*4,x,true));}
   const url=URL.createObjectURL(new Blob([buf],{type:'model/stl'}));
-  const l=document.createElement('a');l.href=url;l.download='dusty-dustpan-revA.stl';l.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  const l=document.createElement('a');l.href=url;l.download=DATA.stlName;l.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 
 function resize(){

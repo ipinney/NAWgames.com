@@ -5,65 +5,18 @@ import { useState } from 'react';
 
 const PROJECTS = [
   {
-    slug: 'dusty-build-guide',
-    title: 'How To Build Dusty',
-    subject: 'Build Guide',
-    emoji: '🔧',
-    description:
-      'Step by step, from a pile of parts to a working robot. Every part explained, every step drawn, plus what to do when it misbehaves.',
-    dueDate: '2026-11-16',
-    dueLabel: 'Nov 16, 2026',
-    color: 'from-slate-700 to-blue-500',
-    file: '/projects/nolan/dusty-build-guide.html',
-  },
-  {
     slug: 'dusty',
     title: 'Dusty',
     subject: 'Invention Project',
     emoji: '🤖',
     description:
-      'A palm-sized robot that sweeps crumbs off the table and stops itself at the edge instead of driving off. Build plan, verified parts list, and the experiment.',
+      'A palm-sized robot that sweeps crumbs off the table and stops at the edge. Build guide, parts list, 3D models, print files, and the school packet, all in one place.',
     dueDate: '2026-11-16',
     dueLabel: 'Nov 16, 2026',
     color: 'from-slate-700 to-orange-500',
-    file: '/projects/nolan/dusty.html',
-    links: [
-      { href: '/projects/nolan/dusty-parts-list.pdf', label: '↓ Parts List PDF' },
-      { href: '/projects/nolan/dusty-dustpan.html', label: '🧊 3D Dustpan' },
-      { href: '/projects/nolan/dusty-dustpan-revA.stl', label: '↓ Dustpan STL' },
-      { href: '/projects/nolan/invention-packet.html', label: '📋 Packet Guide' },
-    ],
-  },
-  {
-    slug: 'invention-packet',
-    title: 'The Packet',
-    subject: 'Invention Convention',
-    emoji: '📋',
-    description:
-      'Every page of the school packet in order, with the Dusty facts for each answer, the rubric, the five due dates, and the trifold board layout. Plus big print-outs for the board.',
-    dueDate: '2026-11-16',
-    dueLabel: 'Nov 16, 2026',
-    color: 'from-blue-800 to-cyan-500',
-    file: '/projects/nolan/invention-packet.html',
-    links: [
-      { href: '/projects/nolan/board-prints.html', label: '🖨️ Board Print-Outs' },
-      { href: '/projects/nolan/research.html', label: '🔎 Research Notes' },
-    ],
-  },
-  {
-    slug: 'research',
-    title: 'Research Notes',
-    subject: 'Invention Convention',
-    emoji: '🔎',
-    description:
-      'Six research topics with real sources: the Roomba story, how a cliff sensor sees an edge, the dark surface problem, random driving, the micro:bit, and why crumbs matter. Plus vocabulary and three filled-in bibliography entries.',
-    dueDate: '2026-09-17',
-    dueLabel: 'Sep 17, 2026',
-    color: 'from-emerald-800 to-cyan-500',
-    file: '/projects/nolan/research.html',
-    links: [
-      { href: '/projects/nolan/invention-packet.html', label: '📋 Packet Guide' },
-    ],
+    href: '/projects/nolan/dusty',
+    image: '/projects/nolan/dusty-hero.png',
+    tags: ['Build guide', '3D models', 'Print files', 'Parts list', 'School packet'],
   },
 ];
 
@@ -171,16 +124,22 @@ export default function NolanProjectsPage() {
       {/* Project Cards */}
       <section className="max-w-4xl mx-auto px-4 pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {PROJECTS.map((project) => (
-            <button
+          {PROJECTS.map((project) => {
+            const Card = project.href ? Link : 'button';
+            const cardProps = project.href ? { href: project.href } : { onClick: () => setViewing(project) };
+            return (
+            <Card
               key={project.slug}
-              onClick={() => setViewing(project)}
+              {...cardProps}
               className="group relative bg-naw-card rounded-2xl border border-naw-cyan/20 overflow-hidden text-left transition-all duration-300 hover:border-naw-cyan/40 hover:scale-[1.02]"
             >
-              {/* Gradient banner */}
-              <div className={`h-24 bg-gradient-to-br ${project.color} flex items-center justify-center`}>
-                <span className="text-4xl">{project.emoji}</span>
-              </div>
+              {project.image ? (
+                <img src={project.image} alt="" className="w-full h-40 object-cover bg-[#0d1b2e]" />
+              ) : (
+                <div className={`h-24 bg-gradient-to-br ${project.color} flex items-center justify-center`}>
+                  <span className="text-4xl">{project.emoji}</span>
+                </div>
+              )}
 
               <div className="p-5">
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -194,7 +153,14 @@ export default function NolanProjectsPage() {
                 <h3 className="text-white font-bold text-lg mb-1 group-hover:text-naw-cyan transition-colors">
                   {project.title}
                 </h3>
-                <p className="text-white/50 text-sm line-clamp-2">{project.description}</p>
+                <p className="text-white/50 text-sm line-clamp-3">{project.description}</p>
+                {project.tags && (
+                  <div className="flex flex-wrap gap-1.5 mt-3">
+                    {project.tags.map((t) => (
+                      <span key={t} className="text-white/60 text-xs border border-white/10 rounded-full px-2 py-0.5">{t}</span>
+                    ))}
+                  </div>
+                )}
 
                 <div className="mt-4 flex items-center gap-1 text-naw-cyan text-sm font-medium">
                   View Project
@@ -203,8 +169,9 @@ export default function NolanProjectsPage() {
                   </svg>
                 </div>
               </div>
-            </button>
-          ))}
+            </Card>
+            );
+          })}
         </div>
       </section>
     </div>
