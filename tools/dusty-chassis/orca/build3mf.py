@@ -1,5 +1,5 @@
 import json, os, subprocess, zipfile, re, glob, shutil, sys
-W='/opt/orca/work'
+W='/opt/ffstudio/work'
 PLATES={1:('fit-check','Fit check'),2:('base','Base plate'),3:('deck-and-arms','Deck and sensor arms'),4:('brush-drive','Brush drive'),5:('tray','Crumb tray')}
 COMMON={'wall_loops':'3','top_shell_layers':'5','bottom_shell_layers':'4','sparse_infill_density':'20%',
         'sparse_infill_pattern':'gyroid','brim_type':'outer_only','brim_width':'5','enable_support':'0',
@@ -13,9 +13,9 @@ PROJ={'curr_bed_type':'Textured PEI Plate'}
 
 def run(args,log):
     sh=f"{W}/job.sh"
-    open(sh,'w').write('#!/bin/bash\nexport LC_ALL=C HOME=/opt/orca/work/home XDG_RUNTIME_DIR=/tmp/xdg\nmkdir -p $HOME /tmp/xdg; chmod 700 /tmp/xdg\ntimeout 300 /opt/orca/squashfs-root/bin/orca-slicer --datadir /opt/orca/work/dd '+args+'\necho EXIT $?\n')
+    open(sh,'w').write('#!/bin/bash\nexport LC_ALL=C HOME=/opt/ffstudio/work/home XDG_RUNTIME_DIR=/tmp/xdg\nmkdir -p $HOME /tmp/xdg; chmod 700 /tmp/xdg\ntimeout 300 "/opt/ffstudio/squashfs-root/bin/flash studio" --datadir /opt/ffstudio/work/dd '+args+'\necho EXIT $?\n')
     os.chmod(sh,0o755)
-    r=subprocess.run(['docker','run','--rm','-v','/opt/orca:/opt/orca','-w',W,'orca-cli','./job.sh'],capture_output=True,text=True)
+    r=subprocess.run(['docker','run','--rm','-v','/opt/ffstudio:/opt/ffstudio','-w',W,'orca-cli','./job.sh'],capture_output=True,text=True)
     open(log,'w').write(r.stdout+r.stderr)
     assert 'EXIT 0' in r.stdout, (log, r.stdout[-500:])
 
@@ -45,7 +45,7 @@ def rewrite(src,dst,n,slow):
                 block=block.replace('<metadata key="extruder" value="1"/>','<metadata key="extruder" value="1"/>'+extra,1)
                 return block
             s=re.sub(r'<object id="\d+">.*?</object>',obj,s,flags=re.S)
-            s=s.replace('<metadata key="plater_name" value=""/>',f'<metadata key="plater_name" value="Dusty {n}: {PLATES[n][1]}"/>')
+            # plate names crash Flash Studio 1.7.9 on load; leave blank
             data=s.encode()
         elif it.filename=='3D/3dmodel.model':
             data=data.replace(b'<metadata name="Title"></metadata>',f'<metadata name="Title">Dusty plate {n}: {PLATES[n][1]}</metadata>'.encode())

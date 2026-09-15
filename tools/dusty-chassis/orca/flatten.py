@@ -1,5 +1,5 @@
 import json,glob,os,sys
-R='/opt/orca/squashfs-root/resources/profiles/Flashforge'
+R='/opt/ffstudio/squashfs-root/resources/profiles/Flashforge'
 idx={}
 for f in glob.glob(R+'/**/*.json',recursive=True):
     try: d=json.load(open(f))

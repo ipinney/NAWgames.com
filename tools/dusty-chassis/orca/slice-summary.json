@@ -4,44 +4,44 @@
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "10m 29s",
+  "time": "10m 35s",
   "grams": "1.34",
-  "brim": 0
+  "brim": 8
  },
  "2": {
   "file": "dusty-plate-2-base.3mf",
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "1h 24m 17s",
+  "time": "1h 25m 38s",
   "grams": "37.66",
-  "brim": 1
+  "brim": 8
  },
  "3": {
   "file": "dusty-plate-3-deck-and-arms.3mf",
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "40m 10s",
-  "grams": "17.05",
-  "brim": 1
+  "time": "40m 49s",
+  "grams": "17.04",
+  "brim": 8
  },
  "4": {
   "file": "dusty-plate-4-brush-drive.3mf",
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "58m 19s",
-  "grams": "13.56",
-  "brim": 0
+  "time": "59m 17s",
+  "grams": "13.60",
+  "brim": 8
  },
  "5": {
   "file": "dusty-plate-5-tray.3mf",
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "18m 18s",
+  "time": "18m 35s",
   "grams": "7.42",
-  "brim": 1
+  "brim": 8
  }
 }
