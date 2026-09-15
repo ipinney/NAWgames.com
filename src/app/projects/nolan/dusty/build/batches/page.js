@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const OG = 'https://nawgames.com/projects/nolan/dusty-og.png';
 const TITLE = 'Dusty: print and build plan';
-const DESC = 'Five print batches, each followed by the build steps it unlocks. Plate files ready for the slicer.';
+const DESC = 'Five print batches, each followed by the build steps it unlocks. Plate files set up for the FlashForge Adventurer 5M.';
 
 export const metadata = {
   title: `${TITLE} | NAW Games`,
@@ -23,12 +23,14 @@ const G = '/projects/nolan/dusty-build-guide.html';
 const V3D = `${F}/dusty-components-3d.html`;
 
 const SETTINGS = [
-  ['Material', 'PLA, printer software PLA profile'],
-  ['Layers', '0.2 mm, 0.4 mm nozzle'],
-  ['Walls', '3 walls, 20% infill'],
-  ['Brim', '5 mm on every part'],
+  ['Printer', 'FlashForge Adventurer 5M, 0.4 mm nozzle, textured PEI plate'],
+  ['Software', 'Orca-Flashforge or OrcaSlicer. Open the .3mf; every setting below is already in it.'],
+  ['Material', 'Flashforge Generic PLA profile: nozzle 220°C, bed 60°C'],
+  ['Layers', '0.2 mm, 3 walls, 5 top and 4 bottom layers, 20% gyroid infill'],
+  ['Brim', '5 mm, except none on the three gears and 8 mm on the tall roller'],
+  ['Speed', 'Normal, except plates 1 and 4 run slower for the small gears and the roller'],
   ['Supports', 'Off. Nothing needs them.'],
-  ['File', 'Open the .3mf. Each part stays its own object, so each gets its own brim.'],
+  ['Hole size', 'X-Y hole compensation 0. Batch 1 tells you if it needs to change.'],
 ];
 
 const BATCHES = [
@@ -37,16 +39,16 @@ const BATCHES = [
     stem: 'dusty-plate-1-fit-check',
     title: 'Fit check',
     when: 'Wed Sep 16, after the M2 screws arrive',
-    time: 'About 30 minutes',
+    time: 'About 10 minutes',
     pieces: 'Motor gear, washer, axle collar, 2 dowels, 1 deck post',
-    why: 'Six tiny parts that test whether this printer makes holes the right size. Finding out now takes 30 minutes. Finding out after the base takes three hours.',
+    why: 'Six tiny parts that test whether this printer makes holes the right size. Finding out now takes 10 minutes. Finding out after the base takes an hour and a half.',
     need: ['M2 screws', '130 brush motor'],
     printing: [
       'Unbox everything that has arrived and check it against the parts list.',
       'Sort the M2 screws into three cups: 6 mm, 8 mm and 10 mm. Put the nuts in a fourth.',
     ],
     after: [
-      ['Twist an M2 × 8 screw into the small hole in the top of the deck post.', 'It should bite and hold. If it spins loose, the holes print too big. If it will not start, too small. Either way, a grown-up changes the hole size setting in the printer software and prints this plate again.'],
+      ['Twist an M2 × 8 screw into the small hole in the top of the deck post.', 'It should bite and hold. If it spins loose, the holes print too big. If it will not start, too small. Either way, a grown-up changes X-Y hole compensation in the printer software (Quality tab): -0.05 if loose, +0.05 if tight. Print this plate again, and use the same number for every plate after.'],
       ['Push the motor gear onto the 130 motor shaft.', 'Snug, and it should not turn on the shaft when you hold the gear. A little loose is OK; a drop of superglue fixes it in Batch 4.'],
       ['Put the washer, collar, dowels and motor gear in a cup labeled BATCH 4. Keep the post with the deck parts.', ''],
     ],
@@ -58,7 +60,7 @@ const BATCHES = [
     stem: 'dusty-plate-2-base',
     title: 'Base plate',
     when: 'Wed Sep 16 or Thu Sep 17',
-    time: 'About 2.5 to 3 hours',
+    time: 'About 1.5 hours',
     pieces: 'Base plate (upside down), 3 deck posts, and a loose support block',
     why: 'The part everything else bolts to. It prints upside down so the top comes out perfectly flat.',
     need: [],
@@ -83,7 +85,7 @@ const BATCHES = [
     stem: 'dusty-plate-3-deck-and-arms',
     title: 'Deck and sensor arms',
     when: 'Thu Sep 17 or Fri Sep 18',
-    time: 'About 1.5 hours',
+    time: 'About 40 minutes',
     pieces: 'Deck, right sensor arm, left sensor arm (the one with the switch pad)',
     why: 'The deck is needed for the first drive on Saturday. The arms print now too, so the sensor weekend has nothing left to print.',
     need: [],
@@ -109,7 +111,7 @@ const BATCHES = [
     stem: 'dusty-plate-4-brush-drive',
     title: 'Brush drive',
     when: 'Any evening the week of Sep 21',
-    time: 'About 2 hours',
+    time: 'About 1 hour',
     pieces: 'Brush motor mount, big gear, roller gear, brush roller (standing up), axle (lying flat)',
     why: 'Everything for the brush except the small pieces from Batch 1. Printed a week early so there is time to fix a gear before Oct 3.',
     need: [],
@@ -118,7 +120,7 @@ const BATCHES = [
       'Watch the first layers of the roller. It is tall and thin, and it must stick well.',
     ],
     after: [
-      ['A grown-up trims the brim off the gear teeth with a hobby knife.', 'Tip: in the printer software, the brim can be turned off for just the two gears. Try that first.'],
+      ['Check the gear teeth are clean.', 'The gears print with no brim, so there is nothing to trim. If a tooth has a stray string, a grown-up cleans it with a hobby knife.'],
       ['Slide the axle through the roller and the roller gear.', 'The flat side of the axle matches the flat inside each one. They should slide on, not wobble.'],
       ['Slide the big gear onto the peg on the base and spin it.', 'It should spin freely. If it drags, sand the inside of the hole a little.'],
       ['Hold the motor gear from Batch 1 against the big gear and turn it.', 'The teeth should roll together without jamming.'],
@@ -133,7 +135,7 @@ const BATCHES = [
     stem: 'dusty-plate-5-tray',
     title: 'Crumb tray',
     when: 'After Batch 4, any day before Oct 4',
-    time: 'About 45 minutes',
+    time: 'About 20 minutes',
     pieces: 'Crumb tray',
     why: 'Last, because it sits right behind the brush. If the brush needed changes, the tray can change too.',
     need: [],
@@ -213,7 +215,7 @@ export default function DustyBatchesPage() {
         </p>
         <p className="text-white/55 text-sm mt-2 leading-relaxed">
           Print a batch, check it, build what it unlocks, then print the next. Small test parts go first, the big base
-          second, and the tray last. All 19 pieces use about 58 g of PLA.
+          second, and the tray last. All 19 pieces use about 77 g of PLA.
         </p>
 
         <section className="mt-8 bg-naw-card rounded-2xl border border-white/10 p-5">
@@ -242,8 +244,8 @@ export default function DustyBatchesPage() {
             ))}
           </div>
           <p className="text-white/45 text-xs mt-3">
-            Each plate leaves at least 15 mm between parts and 10 mm from the bed edge, so every 5 mm brim fits. The printer
-            software shows the real print time; the times below are rough.
+            Each plate leaves at least 15 mm between parts and 10 mm from the bed edge, so every brim fits. The times below are the slicer's
+            estimates for the Adventurer 5M, about 3.5 hours in all.
           </p>
         </section>
 

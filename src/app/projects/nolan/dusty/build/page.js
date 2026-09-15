@@ -30,7 +30,7 @@ const STEPS = [
   },
   {
     title: 'Print in five batches',
-    text: '19 pieces, about 58 g of PLA. Each batch is one plate file, and each one unlocks the next build steps.',
+    text: '19 pieces, about 77 g of PLA. Each batch is one plate file, and each one unlocks the next build steps.',
     action: { href: '/projects/nolan/dusty/build/batches', label: 'Print and build plan', internal: true },
   },
   {
@@ -62,23 +62,23 @@ const VIEWERS = [
   },
 ];
 
-// size in mm (as printed), grams of PLA each at normal infill
+// size in mm (as printed), grams of PLA each from the slicer (Adventurer 5M, 3 walls, 20% gyroid)
 const PARTS = [
-  ['base', 'Base plate', 1, '85 × 122 × 28', '28', 'Top face down'],
-  ['deck', 'Electronics deck', 1, '79 × 77 × 6', '10', ''],
-  ['post', 'Deck post', 4, '6 × 6 × 25', '0.4', 'Peg up'],
-  ['cradle', 'Brush motor cradle', 1, '29 × 26 × 17', '1.6', ''],
+  ['base', 'Base plate', 1, '85 × 122 × 28', '36', 'Top face down'],
+  ['deck', 'Electronics deck', 1, '79 × 77 × 6', '15', ''],
+  ['post', 'Deck post', 4, '6 × 6 × 25', '0.6', 'Peg up'],
+  ['cradle', 'Brush motor cradle', 1, '29 × 26 × 17', '2.1', ''],
   ['dowel', 'Cradle dowel', 2, '3 × 3 × 3', '<0.1', ''],
-  ['tray', 'Crumb tray', 1, '57 × 42 × 29', '4.8', ''],
-  ['roller', 'Brush roller', 1, '14 × 14 × 52', '5.4', 'Standing up'],
-  ['axle', 'Roller axle', 1, '75 × 4 × 4', '0.7', 'Flat side down'],
-  ['collar', 'Axle collar', 1, '8 × 8 × 3', '0.1', ''],
-  ['pinion', 'Motor pinion (12 teeth)', 1, '11 × 11 × 3', '0.1', ''],
-  ['compound_gear', 'Compound gear (36 + 10)', 1, '30 × 30 × 8', '1.5', 'Big gear down'],
-  ['roller_gear', 'Roller gear (18 teeth)', 1, '25 × 25 × 4', '1.2', ''],
+  ['tray', 'Crumb tray', 1, '57 × 42 × 29', '7.4', ''],
+  ['roller', 'Brush roller', 1, '14 × 14 × 52', '7.0', 'Standing up'],
+  ['axle', 'Roller axle', 1, '75 × 4 × 4', '0.9', 'Flat side down'],
+  ['collar', 'Axle collar', 1, '8 × 8 × 3', '0.2', ''],
+  ['pinion', 'Motor pinion (12 teeth)', 1, '11 × 11 × 3', '0.3', ''],
+  ['compound_gear', 'Compound gear (36 + 10)', 1, '30 × 30 × 8', '2.0', 'Big gear down'],
+  ['roller_gear', 'Roller gear (18 teeth)', 1, '25 × 25 × 4', '1.6', ''],
   ['washer', 'Gear washer', 1, '8 × 8 × 1', '0.1', ''],
-  ['sensor_carrier_R', 'Right sensor arm', 1, '17 × 10 × 27', '0.6', ''],
-  ['sensor_carrier_L', 'Left sensor arm (whisker)', 1, '19 × 12 × 27', '1.0', ''],
+  ['sensor_carrier_R', 'Right sensor arm', 1, '17 × 10 × 27', '0.9', ''],
+  ['sensor_carrier_L', 'Left sensor arm (whisker)', 1, '19 × 12 × 27', '1.4', ''],
 ];
 
 
@@ -185,7 +185,7 @@ export default function DustyBuildPage() {
 
         <Section
           title="Print files"
-          sub="PLA, 0.4 mm nozzle, 0.2 mm layers, no supports. Sizes are in millimeters as the part sits on the print bed."
+          sub="Set up for the FlashForge Adventurer 5M: PLA, 0.4 mm nozzle, 0.2 mm layers, no supports. Sizes are in millimeters as the part sits on the print bed."
         >
           <div className="flex flex-wrap gap-2 mb-4">
             <Btn href={`${F}/dusty-chassis-revA-stl.zip`} download primary>All parts (ZIP)</Btn>

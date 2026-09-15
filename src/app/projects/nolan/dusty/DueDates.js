@@ -7,7 +7,7 @@ const PACKET = '/projects/nolan/invention-packet.html';
 export const DUE = [
   {
     date: '2026-09-17',
-    label: 'Wed Sep 17',
+    label: 'Thu Sep 17',
     title: 'Research Question',
     text: 'Topic, why it is interesting, the Know and Need to know boxes, and three questions that are not yes or no.',
     links: [
@@ -17,7 +17,7 @@ export const DUE = [
   },
   {
     date: '2026-10-01',
-    label: 'Wed Oct 1',
+    label: 'Thu Oct 1',
     title: 'Design Thinking Plan',
     text: 'Page 23: what Dusty is and who it is for. Page 24: a labeled drawing plus size, weight, materials, cost, and how it works.',
     links: [
@@ -27,14 +27,14 @@ export const DUE = [
   },
   {
     date: '2026-10-08',
-    label: 'Wed Oct 8',
+    label: 'Thu Oct 8',
     title: 'Impact on Society',
     text: 'Top half of the Impact page. Who Dusty helps, and what changes if lots of people have one.',
     links: [{ href: `${PACKET}#impact`, label: 'How to fill it in' }],
   },
   {
     date: '2026-10-15',
-    label: 'Wed Oct 15',
+    label: 'Thu Oct 15',
     title: 'Catholic Connection',
     text: 'Bottom half of the Impact page. A saint or a work of mercy that connects to Dusty, explained in your own words.',
     links: [{ href: `${PACKET}#catholic`, label: 'How to fill it in' }],

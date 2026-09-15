@@ -133,11 +133,11 @@ extra = [
     newcard('Printed parts', svg_parts,
         '19 pieces printed on a 3D printer: the base plate, the deck and its posts, the brush roller and axle, three gears, a tray, and two sensor arms.',
         'hold everything in exactly the right place. Every hole, pocket and gap was measured before printing.',
-        'ABOUT 58 G OF PLA'),
+        'ABOUT 77 G OF PLA'),
     newcard('PLA filament', svg_pla,
         'A spool of plastic thread, 1.75 mm thick. The printer melts it and lays it down one thin line at a time.',
         'it becomes all the printed parts. PLA is made from plants like corn and sugarcane.',
-        'NOZZLE ABOUT 210&deg;C &middot; BED ABOUT 60&deg;C'),
+        'NOZZLE ABOUT 220&deg;C &middot; BED ABOUT 60&deg;C'),
     newcard('M2 screws and nuts', svg_screw,
         'Tiny machine screws. The M2 means the thread is 2 millimeters across. You need three lengths: 6, 8 and 10 mm.',
         'they hold the motors, caster, deck and sensor arms. Most screw straight into small holes in the plastic.',
@@ -218,7 +218,7 @@ svg_layers = f'''<svg class="fit" viewBox="0 0 420 235" role="img" aria-label="A
   <path d="M210 0 V40" stroke="#F0B43C" stroke-width="5"/>
   <path d="M190 40 h40 v34 l-12 14 h-16 l-12 -14 z" fill="#B9C4D1" stroke="#566A83" stroke-width="2"/>
   <path d="M205 88 h10 l-3 10 h-4 z" fill="#D8A34A" stroke="#566A83" stroke-width="1.5"/>
-  <text x="244" y="56" {F} font-size="16" fill="#14202F">Nozzle, about 210&deg;C</text>
+  <text x="244" y="56" {F} font-size="16" fill="#14202F">Nozzle, about 220&deg;C</text>
   <text x="244" y="75" {M} font-size="12" fill="#566A83">melts the plastic</text>
   <g fill="#F0B43C" stroke="#9A6A12" stroke-width="1">
     <rect x="60" y="166" width="240" height="12" rx="6"/><rect x="60" y="154" width="240" height="12" rx="6"/>
@@ -328,19 +328,19 @@ steps.append(step(1, 'Print the parts', 'Five batches, Sep 16 to the week of Sep
     'The parts print in five batches, and each batch unlocks the next few steps. The full plan, with a plate file for each batch, is on the <a href="/projects/nolan/dusty/build/batches" target="_top">print and build plan</a> page.',
     figure(svg_layers, 'A 3D PRINTER BUILDS A PART LIKE A STACK OF VERY THIN PANCAKES.') + '\n' +
     '''    <ol class="order">
-      <li><b>Batch 1: fit check</b><span>Motor gear, washer, collar, two dowels, one post. Tests that the printer makes holes the right size before the big print.</span><span class="t">ABOUT 30 MINUTES &middot; UNLOCKS NOTHING YET, BUT SAVES THE BASE</span></li>
-      <li><b>Batch 2: base plate</b><span>The base prints upside down, with three more posts. A small loose block holds up the gear peg while it prints; lift it off afterward.</span><span class="t">ABOUT 2.5 TO 3 HOURS &middot; UNLOCKS STEPS 2 AND 3</span></li>
-      <li><b>Batch 3: deck and sensor arms</b><span>Everything for the first drive, plus the arms for the sensor weekend.</span><span class="t">ABOUT 1.5 HOURS &middot; UNLOCKS STEPS 4 TO 8</span></li>
-      <li><b>Batch 4: brush drive</b><span>Motor mount, big gear, roller gear, roller and axle. The roller prints standing up, the axle lying flat side down.</span><span class="t">ABOUT 2 HOURS &middot; UNLOCKS STEP 9</span></li>
-      <li><b>Batch 5: crumb tray</b><span>Last, because it sits right behind the brush.</span><span class="t">ABOUT 45 MINUTES &middot; UNLOCKS STEPS 10 AND 11</span></li>
+      <li><b>Batch 1: fit check</b><span>Motor gear, washer, collar, two dowels, one post. Tests that the printer makes holes the right size before the big print.</span><span class="t">ABOUT 10 MINUTES &middot; UNLOCKS NOTHING YET, BUT SAVES THE BASE</span></li>
+      <li><b>Batch 2: base plate</b><span>The base prints upside down, with three more posts. A small loose block holds up the gear peg while it prints; lift it off afterward.</span><span class="t">ABOUT 1.5 HOURS &middot; UNLOCKS STEPS 2 AND 3</span></li>
+      <li><b>Batch 3: deck and sensor arms</b><span>Everything for the first drive, plus the arms for the sensor weekend.</span><span class="t">ABOUT 40 MINUTES &middot; UNLOCKS STEPS 4 TO 8</span></li>
+      <li><b>Batch 4: brush drive</b><span>Motor mount, big gear, roller gear, roller and axle. The roller prints standing up, the axle lying flat side down.</span><span class="t">ABOUT 1 HOUR &middot; UNLOCKS STEP 9</span></li>
+      <li><b>Batch 5: crumb tray</b><span>Last, because it sits right behind the brush.</span><span class="t">ABOUT 20 MINUTES &middot; UNLOCKS STEPS 10 AND 11</span></li>
     </ol>''' + '\n' +
-    '    <p class="caption">TIMES ARE ROUGH. THE PRINTER SOFTWARE SHOWS THE REAL TIME BEFORE EACH PRINT.</p>\n' +
-    do(('Set the printer software to <b>PLA, 0.2 mm layers, 3 walls, 20% infill, 5 mm brim, no supports</b>.', 'Open the .3mf plate file, so each part keeps its own brim.'),
+    '    <p class="caption">TIMES ARE FROM THE PRINTER SOFTWARE FOR THE ADVENTURER 5M.</p>\n' +
+    do(('Open the <b>.3mf plate file</b> in Orca-Flashforge (or OrcaSlicer).', 'The Adventurer 5M, the PLA settings, the brims and the slower speeds for the tiny gears are already inside the file. Slice and send.'),
        ('Wait until the bed cools before a grown-up takes each part off.', 'PLA grips a warm bed. Let it cool and the parts pop off on their own.'),
        ('Peel the brims off, and run a screw through each small hole once.', 'This clears the hole so the screw goes in smoothly later.'),
        ('Do the checks listed for each batch before printing the next one.', 'Nineteen pieces in all. Count them at the end.')) + '\n' +
     explain('What is PLA?',
-        'PLA is a plastic made from plants, usually corn or sugarcane. It comes on a spool as a long thread. The printer pushes the thread into a hot nozzle, about 210&deg;C, where it melts like the glue in a hot glue gun.',
+        'PLA is a plastic made from plants, usually corn or sugarcane. It comes on a spool as a long thread. The printer pushes the thread into a hot nozzle, about 220&deg;C, where it melts like the glue in a hot glue gun.',
         'The nozzle draws the shape of one layer, a fifth of a millimeter thick. The bed drops a tiny bit, and it draws the next layer on top. The base plate is 28 mm tall, so that is about <b>140 layers</b>.',
         'PLA goes soft at about 60&deg;C. A car parked in the Houston sun gets hotter than that inside. <b>Never leave Dusty in the car.</b>') + '\n' +
     explain('What is a brim, and why test first?',
@@ -635,8 +635,8 @@ hero = '''
   <div class="safety">
     <h2>Read this part first</h2>
     <ul>
-      <li><b>A grown-up runs the 3D printer.</b> The nozzle is about 210&deg;C and the bed about 60&deg;C. Never touch either while it is printing or cooling.</li>
-      <li><b>Hands off while it prints.</b> The printer moves fast and on its own. Watch through the door.</li>
+      <li><b>A grown-up runs the 3D printer.</b> The nozzle is about 220&deg;C and the bed about 60&deg;C. Never touch either while it is printing or cooling.</li>
+      <li><b>Hands off while it prints.</b> The printer moves fast and on its own, and this one has no door. Stand back and watch.</li>
       <li><b>A grown-up does the soldering.</b> The iron tip is hotter than the printer nozzle. Always put it back in its stand, and wash hands after touching solder.</li>
       <li><b>Tiny screws and nuts are choking hazards.</b> Keep them in a cup, and away from little brothers.</li>
       <li><b>Never plug batteries in backwards.</b> Backwards can cook the micro:bit.</li>
