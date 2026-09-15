@@ -9,7 +9,7 @@ os.makedirs(OUT, exist_ok=True)
 
 def tm_of(s):
     mm = s.to_mesh(); v = np.array(mm.vert_properties)[:, :3]; f = np.array(mm.tri_verts)
-    return trimesh.Trimesh(v, f, process=True)
+    return trimesh.Trimesh(v, f, process=False)
 
 def along_x(s, x0, y, z):
     """local solid with axis z (z from 0) -> axis along +x starting at x0, centered (y,z)."""

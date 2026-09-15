@@ -132,7 +132,7 @@ extra = [
     newcard('Printed parts', svg_parts,
         '19 pieces printed on a 3D printer: the base plate, the deck and its posts, the brush roller and axle, three gears, a tray, and two sensor arms.',
         'hold everything in exactly the right place. Every hole, pocket and gap was measured before printing.',
-        'ABOUT 53 G OF PLA'),
+        'ABOUT 58 G OF PLA'),
     newcard('PLA filament', svg_pla,
         'A spool of plastic thread, 1.75 mm thick. The printer melts it and lays it down one thin line at a time.',
         'it becomes all the printed parts. PLA is made from plants like corn and sugarcane.',
@@ -497,12 +497,15 @@ steps.append(step(9, 'Build the brush and the gears', 'Sat Oct 3 &middot; about 
     done('The brush switch starts the roller, all three gears turn smoothly, and the bristles at the bottom move backward toward the tray.')))
 
 steps.append(step(10, 'Slide in the tray and test the sweep', 'Sun Oct 4 &middot; about 1 hour',
-    'The tray catches what the brush flicks. It slides out, so you can weigh what Dusty picked up.',
-    do(('Slide the tray in from the back, under the base, until the two bumps click into the side walls.', 'Front lip first. The lip sits just behind the brush.'),
+    'The tray catches what the brush flicks. It snaps in from underneath and pops back out, so you can weigh what Dusty picked up.',
+    do(('Turn Dusty upside down on a towel. Set the tray in place with the ramp toward the brush, and press it down until the back clicks over the hook and the two side bumps click into the side plates.', 'To take it out: turn Dusty over, push the back wall of the tray a little toward the front so it slips off the hook, and lift.'),
        ('Set Dusty on the table and look from the side. The bristles should just touch the table.', 'Pressed hard, the brush acts like a brake. Too high, it misses crumbs. Trim the pipe cleaners to adjust.'),
        ('Weigh 5 grams of crushed cereal on a kitchen scale.', ''),
        'Sprinkle it on the table in a strip, and let Dusty drive through it with the brush on.',
-       ('Slide the tray out and weigh what is inside. Write down the number.', 'Do this three times and take the average.')) + '\n' +
+       ('Pop the tray out and weigh what is inside. Write down the number.', 'Do this three times and take the average.')) + '\n' +
+    explain('How the tray keeps crumbs in',
+        'The front of the tray is a ramp that climbs to a little ridge, then drops straight down. Crumbs flicked by the brush fly over the ridge, but once they land behind it they cannot roll back out. It works like a one-way door.',
+        'Inside, the corners are sloped instead of square, so crumbs slide to the middle where they are easy to dump out. Along the top of the back and side walls, a small lip leans inward. A crumb that bounces up hits the lip and falls back in.') + '\n' +
     explain('Why weigh it?',
         'Saying &ldquo;Dusty cleans pretty well&rdquo; is an opinion. Saying &ldquo;Dusty picked up 3.8 grams out of 5, which is 76 percent&rdquo; is a measurement. Science runs on measurements.') + '\n' +
     gotcha('<b>Keep crumbs off the sensors.</b> If the brush throws crumbs forward onto a sensor, it goes blind. Check the spin direction again, and wipe the sensor faces before each test.') + '\n' +

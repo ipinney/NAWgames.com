@@ -4,7 +4,7 @@ from build import *
 OUT = sys.argv[1]; os.makedirs(OUT, exist_ok=True)
 
 def tm(s):
-    mm = s.to_mesh(); return trimesh.Trimesh(np.array(mm.vert_properties)[:, :3], np.array(mm.tri_verts), process=True)
+    mm = s.to_mesh(); return trimesh.Trimesh(np.array(mm.vert_properties)[:, :3], np.array(mm.tri_verts), process=False)
 
 def on_bed(t):
     t = t.copy(); b = t.bounds

@@ -12,7 +12,7 @@ P = [
  ('post','Deck posts','printed',4,'Print','Standoffs between base and deck. Peg into the base, M2 screw from the top.',['post1','post2','post3','post4']),
  ('cradle','Brush motor cradle','printed',1,'Print','Holds the 130 motor and the brush on/off rocker. Two screws plus two dowels.',['cradle']),
  ('dowel','Cradle dowels','printed',2,'Print','Locate the cradle on the base.',['dowel1','dowel2']),
- ('tray','Crumb tray','printed',1,'Print','Slides out, snap bumps hold it. Weigh it for the R3 capture test.',['tray']),
+ ('tray','Crumb tray','printed',1,'Print','Snaps in from underneath. A ramp and crest let crumbs in but not back out; sloped corners and inward lips keep them inside. Weigh it for the capture test.',['tray']),
  ('roller','Brush roller','printed',1,'Print','14 mm core, 7 cross holes for pipe cleaners. Prints standing up.',['roller']),
  ('axle','Roller axle','printed',1,'Print','4 mm D-shaft through roller and roller gear. Prints flat side down.',['axle']),
  ('collar','Axle collar','printed',1,'Print','Keeps the axle from walking out on the left side.',['collar']),

@@ -30,7 +30,7 @@ const STEPS = [
   },
   {
     title: 'Print the chassis',
-    text: '19 pieces, about 55 g of PLA. Everything fits on one 220 mm print bed with no supports.',
+    text: '19 pieces, about 58 g of PLA. Everything fits on one 220 mm print bed with no supports.',
     action: { href: `${F}/dusty-chassis-revA-stl.zip`, label: 'All print files (ZIP)', download: true },
   },
   {
@@ -55,7 +55,7 @@ const VIEWERS = [
   },
   {
     title: 'Dustpan (foam board version)',
-    text: 'The crumb tray for the first, foam board Dusty. The printed chassis has its own slide-out tray.',
+    text: 'The crumb tray for the first, foam board Dusty. The printed chassis has its own pop-out tray.',
     open: `${P}/dusty-dustpan.html`,
     file: 'dusty-dustpan.html',
     stl: `${P}/dusty-dustpan-revA.stl`,
@@ -69,7 +69,7 @@ const PARTS = [
   ['post', 'Deck post', 4, '6 × 6 × 25', '0.4', 'Peg up'],
   ['cradle', 'Brush motor cradle', 1, '29 × 26 × 17', '1.6', ''],
   ['dowel', 'Cradle dowel', 2, '3 × 3 × 3', '<0.1', ''],
-  ['tray', 'Crumb tray', 1, '57 × 42 × 20', '2.4', ''],
+  ['tray', 'Crumb tray', 1, '57 × 42 × 29', '4.8', ''],
   ['roller', 'Brush roller', 1, '14 × 14 × 52', '5.4', 'Standing up'],
   ['axle', 'Roller axle', 1, '75 × 4 × 4', '0.7', 'Flat side down'],
   ['collar', 'Axle collar', 1, '8 × 8 × 3', '0.1', ''],
@@ -129,7 +129,7 @@ export default function DustyBuildPage() {
               </p>
               <p className="text-white/55 text-sm mt-3 leading-relaxed">
                 A micro:bit reads two infrared cliff sensors and a whisker switch. A geared brush sweeps crumbs into a
-                slide-out tray. The chassis is printed in PLA on a home 3D printer.
+                pop-out tray. The chassis is printed in PLA on a home 3D printer.
               </p>
               <div className="flex flex-wrap gap-2 mt-5">
                 <Btn href={`${F}/dusty-components-3d.html`} primary>Explore in 3D</Btn>

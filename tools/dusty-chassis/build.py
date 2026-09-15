@@ -47,7 +47,11 @@ P.update(C_Y=round(C_Y,2), MOT_Y=round(MOT_Y,2), MOT_Z=MOT_Z, D1=D1, D2=D2)
 # --- tray ---
 TRAY_Y0 = RY + ROLL_R + 0.5; TRAY_Y1 = 72.0
 TRAY_X = 27.6; TRAY_WALL = 1.4
-TRAY_FLOOR_Z = 0.8; TRAY_LOW_TOP = 8.5; TRAY_TALL_TOP = PL_Z0 - 0.5
+TRAY_FLOOR_Z = 0.8; TRAY_LOW_TOP = 9.0; TRAY_TALL_TOP = PL_Z0 - 0.5
+TRAY_FLOOR_T = 1.2                          # floor thickness
+CREST_Z = 4.2; CREST_DY = 10.0             # crumb-trap crest: height and distance behind the front edge
+FILLET = 3.0; LIP = 2.5                    # sloped inside corners; inward lips on the low walls
+REAR_MID_X = 18.0; REAR_MID_TOP = 15.0     # taller middle of the back wall (clear of the motor brackets)
 TRAY_TALL_Y1 = 44.0; LIP_Z = 0.4
 
 # --- rear / top ---
@@ -231,26 +235,38 @@ def post():
 def tray():
     X = TRAY_X; W = TRAY_WALL
     y0, y1 = TRAY_Y0, TRAY_Y1
+    F = TRAY_FLOOR_Z; T = F + TRAY_FLOOR_T
+    xi = X - W                                  # inner face of the side walls
+    yi = y1 - W                                 # inner face of the back wall
+    yc = y0 + CREST_DY
     parts = []
-    # ramp + floor: side profile (y,z)
-    prof = [(y0, TRAY_FLOOR_Z), (y1, TRAY_FLOOR_Z), (y1, TRAY_FLOOR_Z + 1.2),
-            (y0 + 8.0, TRAY_FLOOR_Z + 1.2), (y0, TRAY_FLOOR_Z + 0.5)]
+    # floor with a front ramp up to a crest, then a straight drop: crumbs go over, and cannot slide back out
+    prof = [(y0, F), (y1, F), (y1, T), (yc + 0.8, T), (yc + 0.8, CREST_Z), (yc, CREST_Z), (y0, F + 0.5)]
     parts.append(prism_yz(prof, -X, X))
-    # side walls: tall front part, low rear part
     for sx in (-1, 1):
-        xa, xb = sorted([sx*X, sx*(X - W)])
-        wall_prof = [(y0, TRAY_FLOOR_Z), (y0, TRAY_FLOOR_Z + 1.0), (y0 + 3.0, TRAY_TALL_TOP), (TRAY_TALL_Y1, TRAY_TALL_TOP),
-                     (TRAY_TALL_Y1 + 4.0, TRAY_LOW_TOP), (y1, TRAY_LOW_TOP), (y1, TRAY_FLOOR_Z)]
+        xa, xb = sorted([sx * X, sx * xi])
+        # tall between the side plates, then drops under the motor pads (which start at y 45.25, z 21)
+        wall_prof = [(y0, F), (y0, F + 1.0), (y0 + 3.0, TRAY_TALL_TOP), (TRAY_TALL_Y1, TRAY_TALL_TOP),
+                     (TRAY_TALL_Y1, 20.0), (TRAY_TALL_Y1 + 4.0, TRAY_LOW_TOP), (y1, TRAY_LOW_TOP), (y1, F)]
         parts.append(prism_yz(wall_prof, xa, xb))
-        # snap bump
-        parts.append(M.sphere(0.8, 16).translate([sx*X, 39.0, 20.0]))
-    # rear wall + flange
-    parts.append(box(-X, X, y1 - W, y1, TRAY_FLOOR_Z, TRAY_LOW_TOP))
-    parts.append(box(-7.5, 7.5, y1, y1 + 2.0, TRAY_LOW_TOP - 1.5, TRAY_LOW_TOP))   # 2 mm ledge, prints as a short overhang
+        parts.append(M.sphere(0.8, 16).translate([sx * X, 39.0, 20.0]))        # snap bump
+        # sloped inside corner along the floor (tapered sides)
+        tri = [(sx * (xi + 0.3), T - 0.3), (sx * (xi + 0.3), T + FILLET), (sx * (xi - FILLET), T - 0.3)]
+        parts.append(prism_xz(tri if sx > 0 else tri[::-1], yc + 0.8, yi))
+        # inward 45 degree lip along the top of the low part of the wall
+        lip = [(sx * (xi + 0.3), TRAY_LOW_TOP), (sx * (xi - LIP), TRAY_LOW_TOP), (sx * (xi + 0.3), TRAY_LOW_TOP - LIP - 0.3)]
+        parts.append(prism_xz(lip if sx > 0 else lip[::-1], TRAY_TALL_Y1 + 4.0, yi))
+    # back wall: low at the sides, taller in the middle, lips on both tops, sloped inside corner at the floor
+    parts.append(box(-X, X, yi, y1, F, TRAY_LOW_TOP))
+    parts.append(box(-REAR_MID_X, REAR_MID_X, yi, y1, F, REAR_MID_TOP))
+    parts.append(prism_yz([(yi + 0.3, T - 0.3), (yi + 0.3, T + FILLET), (yi - FILLET, T - 0.3)], -xi - 0.3, xi + 0.3))
+    parts.append(prism_yz([(yi + 0.3, TRAY_LOW_TOP), (yi - LIP, TRAY_LOW_TOP), (yi + 0.3, TRAY_LOW_TOP - LIP - 0.3)], -xi - 0.3, xi + 0.3))
+    parts.append(prism_yz([(yi + 0.3, REAR_MID_TOP), (yi - LIP, REAR_MID_TOP), (yi + 0.3, REAR_MID_TOP - LIP - 0.3)], -REAR_MID_X, REAR_MID_X))
+    parts.append(box(-7.5, 7.5, y1 - 0.3, y1 + 2.0, 7.0, 8.5))    # snap flange, clicks over the hook on the base
     s = union(parts)
-    # relief slots so the tall walls flex for the snap
+    # relief slots so the tall walls flex for the side snaps
     for sx in (-1, 1):
-        xa, xb = sorted([sx*(X + 1), sx*(X - W - 1)])
+        xa, xb = sorted([sx * (X + 1), sx * (xi - 1)])
         s = s - box(xa, xb, TRAY_TALL_Y1 + 0.2, TRAY_TALL_Y1 + 1.2, TRAY_LOW_TOP + 0.5, TRAY_TALL_TOP + 1)
     return s
 

@@ -40,7 +40,7 @@ legend = ''.join(f'<span><i style="background:{c}"></i>{html.escape(n)}</span>' 
                  [('frame', COL['frame']), ('brush motor mount', COL['cradle']), ('crumb tray', COL['tray']),
                   ('brush roller', COL['roller']), ('gears', COL['gears']), ('sensor arms', COL['carriers']),
                   ('bought parts', '#9fb3c8')])
-specs = [('Footprint', f'{round(2*xw)} × {round(DECK_Y[1] + 1 - EAR_Y[0])} mm'), ('Printed parts', '19 pieces, ~55 g'),
+specs = [('Footprint', f'{round(2*xw)} × {round(DECK_Y[1] + 1 - EAR_Y[0])} mm'), ('Printed parts', '19 pieces, ~58 g'),
          ('Brush gearing', f'{Z_BIG // Z_PIN * 1.0 * Z_ROL / Z_SM:.1f} : 1'), ('Print', 'one Adventurer 5M plate')]
 data = {'parts': parts, 'plate': {'v': np.round(pv, 2).flatten().tolist(), 'f': np.asarray(pf).flatten().tolist()},
         'bounds': bounds, 'dims': dims, 'stlName': 'dusty-chassis-revA-plate.stl', 'fitPad': 1.05}
