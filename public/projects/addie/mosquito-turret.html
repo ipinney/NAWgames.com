@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mosquito Turret - Plan</title>
+<meta property="og:title" content="Mosquito Turret: Addie's science fair plan">
+<meta property="og:description" content="A turret that spots a mosquito, turns to face it, and blasts it with a ring of air. Ideas, the design, the experiment, and the parts.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="NAW Games">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ground: #0F1420;
+    --card: #182032;
+    --card-2: #1F2940;
+    --ink: #EEF2F8;
+    --ink-2: #A9B6CA;
+    --ink-3: #74839B;
+    --line: #2B3650;
+    --pink: #F0609E;
+    --pink-soft: rgba(240,96,158,.13);
+    --lime: #9BE15D;
+    --lime-soft: rgba(155,225,93,.12);
+    --sky: #5DB7F0;
+    --sky-soft: rgba(93,183,240,.12);
+    --amber: #F5B642;
+    --amber-soft: rgba(245,182,66,.12);
+    --red: #F0605E;
+  }
+  body { font-family: 'Nunito', system-ui, sans-serif; background: var(--ground); color: var(--ink); padding: 16px; line-height: 1.55; }
+  .wrap { max-width: 880px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+  h1, h2, h3, .badge, .eyebrow, .num { font-family: 'Fredoka', 'Nunito', sans-serif; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+  h2 { font-size: 24px; line-height: 1.2; margin-bottom: 6px; }
+  h3 { font-size: 18px; line-height: 1.25; }
+  .sub { color: var(--ink-2); font-size: 15px; margin-bottom: 16px; }
+  p + p { margin-top: 10px; }
+  .muted { color: var(--ink-2); }
+  .small { font-size: 13px; }
+  a { color: var(--sky); }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  /* hero */
+  .hero { text-align: center; padding: 30px 20px 26px; border: none;
+    background: radial-gradient(120% 90% at 50% 0%, #3A2150 0%, #1B2238 60%, #182032 100%); }
+  .hero .eyebrow { color: var(--pink); font-size: 14px; letter-spacing: .08em; text-transform: uppercase; }
+  .hero h1 { font-size: 42px; line-height: 1.05; margin: 8px 0 10px; }
+  .hero h1 span { color: var(--lime); }
+  .hero p { color: var(--ink-2); max-width: 580px; margin: 0 auto; font-size: 17px; }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 16px; }
+  .chip { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--line); color: var(--ink-2); }
+  .chip.on { background: var(--pink); color: #1a0e18; border-color: var(--pink); }
+
+  /* jump nav */
+  .jump { display: flex; flex-wrap: wrap; gap: 8px; }
+  .jump a { text-decoration: none; font-size: 13px; font-weight: 700; color: var(--ink); background: var(--card-2); border: 1px solid var(--line); padding: 6px 11px; border-radius: 10px; }
+
+  /* facts */
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+  .fact { background: var(--card-2); border-radius: 12px; padding: 14px; }
+  .fact .num { font-size: 28px; color: var(--amber); line-height: 1.1; }
+  .fact .lbl { font-size: 14px; color: var(--ink-2); margin-top: 4px; }
+
+  .bigidea { margin-top: 16px; background: var(--lime-soft); border: 1px solid rgba(155,225,93,.4); border-radius: 12px; padding: 14px 16px; }
+  .bigidea b { color: var(--lime); }
+
+  /* brainstorm table */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; color: var(--ink-3); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; padding: 8px 8px; border-bottom: 1px solid var(--line); }
+  td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .yes { color: var(--lime); font-weight: 800; white-space: nowrap; }
+  .no { color: var(--red); font-weight: 800; white-space: nowrap; }
+  .tablewrap { overflow-x: auto; }
+
+  /* design options */
+  .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 12px; }
+  .opt { background: var(--card-2); border: 2px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .opt.rec { border-color: var(--pink); }
+  .opt .badge { align-self: flex-start; font-size: 12px; padding: 3px 9px; border-radius: 99px; background: var(--pink); color: #1a0e18; }
+  .opt .letter { font-family: 'Fredoka'; font-size: 13px; color: var(--ink-3); }
+  .opt dl { font-size: 14px; }
+  .opt dt { color: var(--ink-3); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; margin-top: 8px; }
+  .opt dd { color: var(--ink); }
+  .meter { display: inline-flex; gap: 3px; vertical-align: middle; }
+  .meter i { width: 12px; height: 8px; border-radius: 3px; background: var(--line); }
+  .meter i.f { background: var(--amber); }
+  .pickline { margin-top: 16px; border: 2px dashed var(--line); border-radius: 12px; padding: 14px; font-size: 16px; font-weight: 700; }
+
+  /* diagram */
+  .diagram { background: #121A2B; border-radius: 12px; padding: 10px; }
+  .diagram svg { width: 100%; height: auto; display: block; }
+  .steps { counter-reset: s; list-style: none; display: grid; gap: 10px; margin-top: 16px; }
+  .steps li { counter-increment: s; position: relative; padding: 12px 14px 12px 52px; background: var(--card-2); border-radius: 12px; }
+  .steps li::before { content: counter(s); position: absolute; left: 14px; top: 11px; width: 26px; height: 26px; border-radius: 50%; background: var(--sky); color: #0b1522; font-family: 'Fredoka'; font-weight: 700; display: grid; place-items: center; }
+  .steps b { color: var(--ink); }
+
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .box { background: var(--card-2); border-radius: 12px; padding: 14px; }
+  .box h3 { margin-bottom: 6px; }
+  .box ul { padding-left: 18px; }
+  .box li + li { margin-top: 4px; }
+
+  /* experiment */
+  .qbox { background: var(--sky-soft); border: 1px solid rgba(93,183,240,.4); border-radius: 12px; padding: 14px 16px; font-size: 18px; font-weight: 800; }
+  .blank { display: inline-block; min-width: 120px; border-bottom: 2px solid var(--ink-3); }
+  .grid-data th, .grid-data td { text-align: center; }
+  .grid-data td:first-child, .grid-data th:first-child { text-align: left; }
+  .grid-data td.c { color: var(--ink-3); }
+
+  /* parts */
+  .parts td.price { font-family: 'IBM Plex Mono'; white-space: nowrap; text-align: right; }
+  .parts tr.total td { font-weight: 800; border-top: 2px solid var(--line); }
+
+  /* timeline */
+  .phases { list-style: none; display: grid; gap: 8px; }
+  .phases li { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; background: var(--card-2); border-radius: 12px; padding: 12px 14px; }
+  .phases .dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; font-family: 'Fredoka'; font-weight: 700; color: var(--ink-3); }
+  .phases li.now { outline: 2px solid var(--pink); }
+  .phases li.now .dot { background: var(--pink); border-color: var(--pink); color: #1a0e18; }
+  .phases .when { color: var(--ink-3); font-size: 13px; font-weight: 700; }
+
+  .warn { background: var(--amber-soft); border: 1px solid rgba(245,182,66,.4); border-radius: 12px; padding: 14px 16px; }
+  .warn b { color: var(--amber); }
+  .src li { margin-top: 6px; font-size: 14px; }
+  .foot { text-align: center; color: var(--ink-3); font-size: 13px; padding: 8px 0 20px; }
+
+  @media (max-width: 560px) {
+    body { padding: 10px; }
+    .card { padding: 16px; }
+    .hero h1 { font-size: 34px; }
+    h2 { font-size: 21px; }
+  }
+  @media print {
+    body { background: #fff; color: #111; }
+    .card, .opt, .box, .fact, .steps li, .phases li { background: #fff; border-color: #ccc; color: #111; }
+    .jump { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HERO -->
+<div class="card hero">
+  <div class="eyebrow">Addie Pinney &middot; 3rd grade science fair</div>
+  <h1>Mosquito <span>Turret</span></h1>
+  <p>A turret that spots a mosquito, turns to face it, and blasts it out of the air with a ring of wind.</p>
+  <div class="chips">
+    <span class="chip on">Step 1: Brainstorm</span>
+    <span class="chip">2: Pick a design</span>
+    <span class="chip">3: Lock it in</span>
+    <span class="chip">4: Parts list</span>
+    <span class="chip">5: Order</span>
+    <span class="chip">6: Build</span>
+    <span class="chip">7: Test</span>
+    <span class="chip">8: Board</span>
+  </div>
+</div>
+
+<div class="jump">
+  <a href="#problem">The problem</a>
+  <a href="#brainstorm">Brainstorm</a>
+  <a href="#pick">Pick a design</a>
+  <a href="#design">How it works</a>
+  <a href="#experiment">The experiment</a>
+  <a href="#demo">Fair demo</a>
+  <a href="#parts">Parts</a>
+  <a href="#plan">The plan</a>
+</div>
+
+<!-- PROBLEM -->
+<div class="card" id="problem">
+  <h2>The problem</h2>
+  <p class="sub">Houston has a lot of mosquitoes. They bite, they itch, and some carry diseases. Bug spray works, but you have to put it on your skin.</p>
+  <div class="facts">
+    <div class="fact"><div class="num">1 to 1.5 mph</div><div class="lbl">How fast a mosquito flies. Slower than you walk.</div></div>
+    <div class="fact"><div class="num">15 mph</div><div class="lbl">How fast the wind from a regular house fan blows.</div></div>
+    <div class="fact"><div class="num">Only girls</div><div class="lbl">Only female mosquitoes bite. Males drink flower nectar.</div></div>
+    <div class="fact"><div class="num">35 meters</div><div class="lbl">How far away a mosquito can smell the carbon dioxide you breathe out.</div></div>
+    <div class="fact"><div class="num">174</div><div class="lbl">Kinds of mosquitoes in the United States. About 2,700 in the world.</div></div>
+    <div class="fact"><div class="num">Under 0.1 s</div><div class="lbl">How fast a real grown-up mosquito turret (the Photonic Fence) finds and zaps a mosquito.</div></div>
+  </div>
+  <div class="bigidea"><b>The big idea:</b> mosquitoes weigh a few milligrams and fly slower than a walk. Scientists at Cornell found that wind is one of the two best ways to stop them. So this turret does not shoot bullets. It shoots <b>air</b>.</div>
+</div>
+
+<!-- BRAINSTORM -->
+<div class="card" id="brainstorm">
+  <h2>Brainstorm: what could a turret shoot?</h2>
+  <p class="sub">Every idea goes on the list first. Then we check each one: is it safe, can we build it, and can we show it at the fair?</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>Idea</th><th>Keep?</th><th>Why</th></tr>
+    <tr><td>Laser</td><td class="no">No</td><td>This is what real scientists use, but a laser strong enough to hurt a bug can hurt eyes. Not safe at a school fair.</td></tr>
+    <tr><td>Water squirter</td><td class="no">No</td><td>Water and electronics do not mix, and the judges' table gets wet.</td></tr>
+    <tr><td>Foam darts or rubber bands</td><td class="no">No</td><td>A dart is way bigger than a mosquito and would miss. Schools often do not allow launchers.</td></tr>
+    <tr><td>Sticky net</td><td class="no">No</td><td>Works once, then you have to clean it. Hard to aim.</td></tr>
+    <tr><td>Air cannon (a ring of wind)</td><td class="yes">Yes</td><td>Safe, you can feel it hit your hand, and it can knock things over from across a table.</td></tr>
+    <tr><td>Vacuum (suck them in)</td><td class="yes">Yes</td><td>This is how real mosquito traps work. Can catch real mosquitoes in our backyard.</td></tr>
+    <tr><td>Light beam (like laser tag)</td><td class="yes">Yes</td><td>A bright LED instead of a laser. The fake mosquito has a light sensor and "gets hit".</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- PICK -->
+<div class="card" id="pick">
+  <h2>Pick a design</h2>
+  <p class="sub">Three turrets made from the three "yes" ideas. All three use the same brain: a micro:bit (the same kind Nolan uses in Dusty) and an AI camera that can learn what a mosquito looks like.</p>
+  <div class="opts">
+    <div class="opt rec">
+      <span class="badge">Best for first place</span>
+      <div class="letter">DESIGN A</div>
+      <h3>Air Cannon Turret</h3>
+      <p class="small muted">The camera spots the mosquito. The turret spins to face it. A motor pulls back a rubber skin on the back of the cannon and lets go: <b>THUMP</b>. A ring of air flies out and knocks the mosquito away.</p>
+      <dl>
+        <dt>At the fair</dt><dd>A judge moves a fake mosquito on a stick. The turret follows it and blasts it.</dd>
+        <dt>The science</dt><dd>Does the size of the hole change how far the air ring can knock down a mosquito?</dd>
+        <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span> Medium-hard</dd>
+        <dt>Cost</dt><dd>About $95</dd>
+      </dl>
+    </div>
+    <div class="opt">
+      <div class="letter">DESIGN B</div>
+      <h3>Vacuum Catcher</h3>
+      <p class="small muted">A fan sucks air into a tube with a net bag. A UV light and a bottle of yeast and sugar (it breathes out carbon dioxide, like a person) pull mosquitoes close. The fan catches them.</p>
+      <dl>
+        <dt>At the fair</dt><dd>The trap plus a jar of real mosquitoes caught in our backyard. It does not really "aim".</dd>
+        <dt>The science</dt><dd>Which bait catches the most mosquitoes: nothing, light, or yeast?</dd>
+        <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i></i><i></i></span> Medium</dd>
+        <dt>Cost</dt><dd>About $40</dd>
+      </dl>
+    </div>
+    <div class="opt">
+      <div class="letter">DESIGN C</div>
+      <h3>Light Beam Turret</h3>
+      <p class="small muted">The turret aims a bright LED beam. The fake mosquito has a light sensor. When the beam hits, the mosquito buzzes and its eyes turn off.</p>
+      <dl>
+        <dt>At the fair</dt><dd>Like laser tag against a mosquito. Quiet and clean, but nothing moves when it hits.</dd>
+        <dt>The science</dt><dd>Which color of light reaches the farthest?</dd>
+        <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span> Hard (two circuits)</dd>
+        <dt>Cost</dt><dd>About $110</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="pickline">Addie's pick: <span class="blank">&nbsp;</span> &nbsp; because <span class="blank" style="min-width:220px">&nbsp;</span></div>
+  <p class="small muted" style="margin-top:10px">Why A is the favorite: judges can hold the mosquito and feel the blast, the turret really moves and aims, and the experiment is easy to repeat many times. Design B can be a bonus: a yeast bottle in the backyard is a fun weekend test either way.</p>
+</div>
+
+<!-- DESIGN -->
+<div class="card" id="design">
+  <h2>How Design A works</h2>
+  <p class="sub">Side view. The whole cannon sits on a lazy susan so one small servo can spin it left and right.</p>
+  <div class="diagram">
+  <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" font-family="Nunito, sans-serif" font-size="14">
+    <!-- table -->
+    <line x1="20" y1="320" x2="740" y2="320" stroke="#2B3650" stroke-width="3"/>
+    <!-- base box -->
+    <rect x="140" y="250" width="250" height="70" rx="10" fill="#243152" stroke="#5DB7F0" stroke-width="2"/>
+    <text x="265" y="282" text-anchor="middle" fill="#EEF2F8" font-weight="700">Base box</text>
+    <text x="265" y="302" text-anchor="middle" fill="#A9B6CA" font-size="12">micro:bit, driver board, batteries</text>
+    <!-- turntable -->
+    <rect x="165" y="236" width="200" height="14" rx="4" fill="#F5B642"/>
+    <!-- servo -->
+    <rect x="248" y="252" width="34" height="0" fill="none"/>
+    <!-- barrel -->
+    <path d="M190 150 L190 220 L420 205 L420 165 Z" fill="#3A2150" stroke="#F0609E" stroke-width="2.5"/>
+    <rect x="200" y="220" width="12" height="16" fill="#3A2150" stroke="#F0609E" stroke-width="2"/>
+    <rect x="360" y="208" width="12" height="28" fill="#3A2150" stroke="#F0609E" stroke-width="2"/>
+    <!-- membrane -->
+    <path d="M190 150 Q175 185 190 220" fill="none" stroke="#9BE15D" stroke-width="4"/>
+    <!-- cam motor -->
+    <circle cx="140" cy="185" r="22" fill="#1F2940" stroke="#A9B6CA" stroke-width="2"/>
+    <path d="M140 185 m0 -16 a16 16 0 1 1 -12 27 L140 185 Z" fill="#A9B6CA" opacity=".5"/>
+    <line x1="160" y1="185" x2="184" y2="185" stroke="#9BE15D" stroke-width="3"/>
+    <rect x="100" y="205" width="45" height="30" rx="4" fill="#1F2940" stroke="#A9B6CA" stroke-width="2"/>
+    <!-- camera -->
+    <rect x="265" y="112" width="70" height="42" rx="6" fill="#1F2940" stroke="#5DB7F0" stroke-width="2.5"/>
+    <circle cx="335" cy="133" r="9" fill="#5DB7F0"/>
+    <!-- air rings -->
+    <ellipse cx="470" cy="185" rx="10" ry="26" fill="none" stroke="#EEF2F8" stroke-width="3" opacity=".9"/>
+    <ellipse cx="530" cy="185" rx="10" ry="26" fill="none" stroke="#EEF2F8" stroke-width="3" opacity=".55"/>
+    <ellipse cx="590" cy="185" rx="10" ry="26" fill="none" stroke="#EEF2F8" stroke-width="3" opacity=".3"/>
+    <!-- camera view line -->
+    <line x1="344" y1="133" x2="660" y2="170" stroke="#5DB7F0" stroke-width="1.5" stroke-dasharray="6 6"/>
+    <!-- mosquito on stick -->
+    <line x1="700" y1="120" x2="700" y2="320" stroke="#74839B" stroke-width="3"/>
+    <line x1="700" y1="120" x2="676" y2="172" stroke="#74839B" stroke-width="1.5"/>
+    <ellipse cx="672" cy="182" rx="16" ry="8" fill="#F0609E"/>
+    <circle cx="656" cy="180" r="6" fill="#F0609E"/>
+    <line x1="650" y1="180" x2="636" y2="183" stroke="#F0609E" stroke-width="2"/>
+    <ellipse cx="676" cy="170" rx="12" ry="5" fill="#EEF2F8" opacity=".5"/>
+    <line x1="664" y1="188" x2="656" y2="202" stroke="#F0609E" stroke-width="1.5"/>
+    <line x1="672" y1="189" x2="670" y2="204" stroke="#F0609E" stroke-width="1.5"/>
+    <line x1="680" y1="189" x2="686" y2="203" stroke="#F0609E" stroke-width="1.5"/>
+    <!-- labels -->
+    <g font-size="13" font-weight="700">
+      <text x="300" y="100" text-anchor="middle" fill="#5DB7F0">AI camera</text>
+      <text x="310" y="195" text-anchor="middle" fill="#F0609E">Cannon barrel</text>
+      <text x="200" y="136" text-anchor="middle" fill="#9BE15D">Rubber skin</text>
+      <text x="92" y="162" text-anchor="middle" fill="#A9B6CA">Snap cam</text>
+      <text x="122" y="252" text-anchor="middle" fill="#A9B6CA" font-size="11">motor</text>
+      <text x="520" y="235" text-anchor="middle" fill="#EEF2F8">Air ring</text>
+      <text x="265" y="345" text-anchor="middle" fill="#F5B642">Lazy susan + pan servo</text>
+      <text x="680" y="112" text-anchor="middle" fill="#F0609E">Fake mosquito</text>
+      <text x="660" y="345" text-anchor="middle" fill="#74839B">on a stick</text>
+    </g>
+  </svg>
+  </div>
+
+  <ol class="steps">
+    <li><b>See.</b> The AI camera (HuskyLens) is taught what the mosquito looks like by pointing at it and pressing one button. It draws a box around it on its little screen.</li>
+    <li><b>Turn.</b> If the mosquito is left of center, the micro:bit tells the servo to turn the turret left. Right of center, turn right.</li>
+    <li><b>Lock on.</b> When the mosquito stays in the middle for half a second, the micro:bit shows a target on its lights and beeps.</li>
+    <li><b>Fire.</b> A small motor turns a snail-shaped cam. The cam pulls the rubber skin back, then it slips off the edge and the skin snaps forward. That pushes a doughnut of air out of the hole.</li>
+    <li><b>Score.</b> Each hit adds a point on the micro:bit. The judge tries to escape.</li>
+  </ol>
+
+  <div class="two" style="margin-top:16px">
+    <div class="box">
+      <h3>Addie's jobs</h3>
+      <ul>
+        <li>Make the fake mosquitoes (pipe cleaners, pom-poms, wings)</li>
+        <li>Teach the camera what a mosquito is</li>
+        <li>Write the "turn left, turn right, fire" code in MakeCode blocks</li>
+        <li>Decorate the cannon and name the turret</li>
+        <li>Run every test and write down the numbers</li>
+        <li>The board</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Dad's jobs</h3>
+      <ul>
+        <li>Design and 3D print the barrel, cam, and turntable parts</li>
+        <li>Wire the batteries and motor to the driver board</li>
+        <li>Check the cam snaps hard enough before it goes on the turret</li>
+        <li>Help with the tricky parts of the code</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:12px">Backup plan: if the camera tracking gets hard, swap it for two distance sensors (one aimed left, one right). The turret turns toward whichever side sees something. Less magic, still works.</p>
+</div>
+
+<!-- EXPERIMENT -->
+<div class="card" id="experiment">
+  <h2>The experiment</h2>
+  <p class="sub">A turret is an invention. A science fair wants a test with numbers. This one uses the cannon itself.</p>
+  <div class="qbox">Question: Does the size of the hole change how far the air cannon can knock down a mosquito?</div>
+  <div class="two" style="margin-top:14px">
+    <div class="box">
+      <h3>Hypothesis</h3>
+      <p>If the hole is <span class="blank">&nbsp;</span>, then the air ring will knock the mosquito down from farther away, because <span class="blank" style="min-width:160px">&nbsp;</span>.</p>
+    </div>
+    <div class="box">
+      <h3>Variables</h3>
+      <ul>
+        <li><b>Change:</b> hole size (3 snap-on caps: small 20 mm, medium 30 mm, large 40 mm)</li>
+        <li><b>Measure:</b> hits out of 5 at each distance</li>
+        <li><b>Keep the same:</b> same cannon, same skin, same paper mosquito, same table, fan and AC off</li>
+      </ul>
+    </div>
+  </div>
+  <div class="box" style="margin-top:12px">
+    <h3>How to test</h3>
+    <ol style="padding-left:18px">
+      <li>Fold a paper mosquito into a little tent so it stands up.</li>
+      <li>Tape a line on the floor every 2 feet: 2, 4, 6, 8 feet.</li>
+      <li>Put on the small cap. Stand the mosquito at 2 feet. Fire 5 times. Count how many knock it over.</li>
+      <li>Move to 4, 6, then 8 feet. Then do it all again with the medium and large caps.</li>
+      <li>That is 60 shots. Make a bar graph: one bar for each cap at each distance.</li>
+    </ol>
+  </div>
+  <div class="tablewrap" style="margin-top:12px">
+  <table class="grid-data">
+    <tr><th>Hits out of 5</th><th>2 ft</th><th>4 ft</th><th>6 ft</th><th>8 ft</th></tr>
+    <tr><td>Small hole (20 mm)</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
+    <tr><td>Medium hole (30 mm)</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
+    <tr><td>Large hole (40 mm)</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
+  </table>
+  </div>
+  <div class="bigidea"><b>Start this week, for free:</b> a plastic cup with the bottom cut out and a balloon stretched over it is an air cannon. Pull the balloon and let go. Addie can try three cups with different hole sizes cut in a paper lid and see what happens before any parts arrive. That practice run tells us what hole sizes to print.</div>
+</div>
+
+<!-- DEMO -->
+<div class="card" id="demo">
+  <h2>The fair demo</h2>
+  <p class="sub">The best moment has to happen in the first 30 seconds.</p>
+  <div class="two">
+    <div class="box">
+      <h3>The table</h3>
+      <ul>
+        <li>Trifold board behind</li>
+        <li>Turret in front, facing the judges</li>
+        <li>Two fake mosquitoes on clear sticks</li>
+        <li>A "mosquito landing zone": paper mosquitoes to knock down</li>
+        <li>Spare batteries and a spare rubber skin</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>What Addie says</h3>
+      <ol style="padding-left:18px">
+        <li>"Mosquitoes fly slower than you walk. Wind is their weakness."</li>
+        <li>"Hold this mosquito. Try to get away from my turret."</li>
+        <li>Turret tracks, beeps, THUMP. The mosquito flips.</li>
+        <li>"Here's how it knows where the mosquito is." (show the camera screen)</li>
+        <li>"Here's what I tested." (point to the graph)</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- PARTS -->
+<div class="card" id="parts">
+  <h2>Parts (draft)</h2>
+  <p class="sub">For Design A. Prices checked on the vendor sites Sep 15, 2026. We order after the design is locked in.</p>
+  <div class="tablewrap">
+  <table class="parts">
+    <tr><th>Part</th><th>What it does</th><th>Where</th><th style="text-align:right">Price</th></tr>
+    <tr><td>micro:bit v2</td><td>The brain. Addie codes it in blocks.</td><td><a href="https://www.adafruit.com/product/4781" target="_blank" rel="noopener">Adafruit 4781</a></td><td class="price">$17.95</td></tr>
+    <tr><td>HuskyLens AI camera</td><td>Learns and tracks the mosquito. Has its own screen.</td><td><a href="https://www.dfrobot.com/product-1922.html" target="_blank" rel="noopener">DFRobot SEN0305</a></td><td class="price">$34.90</td></tr>
+    <tr><td>micro:Driver board</td><td>Plugs into the micro:bit. Runs the servo and the cam motor, connects the camera.</td><td><a href="https://www.dfrobot.com/product-1738.html" target="_blank" rel="noopener">DFRobot DFR0548</a></td><td class="price">$11.90</td></tr>
+    <tr><td>Micro servo SG92R</td><td>Spins the turret left and right.</td><td><a href="https://www.adafruit.com/product/169" target="_blank" rel="noopener">Adafruit 169</a></td><td class="price">$5.95</td></tr>
+    <tr><td>TT gear motor</td><td>Turns the snap cam that fires the cannon.</td><td><a href="https://www.adafruit.com/product/3777" target="_blank" rel="noopener">Adafruit 3777</a></td><td class="price">$2.95</td></tr>
+    <tr><td>3xAA holder with switch</td><td>Power, about 4.5 volts. The driver board takes 3.5 to 5.5.</td><td><a href="https://www.adafruit.com/product/771" target="_blank" rel="noopener">Adafruit 771</a></td><td class="price">$3.95</td></tr>
+    <tr><td>4 inch lazy susan bearing</td><td>Carries the cannon's weight so the servo only has to turn it.</td><td>Hardware store</td><td class="price">~$6</td></tr>
+    <tr><td>Balloons or a rubber glove</td><td>The cannon's rubber skin. Buy a pack, they wear out.</td><td>Grocery store</td><td class="price">~$4</td></tr>
+    <tr><td>Craft kit</td><td>Pom-poms, pipe cleaners, googly eyes, clear dowels, cardstock</td><td>Craft store</td><td class="price">~$10</td></tr>
+    <tr><td>PLA filament</td><td>Barrel, 3 caps, cam, turret plate, base box</td><td>Already have</td><td class="price">$0</td></tr>
+    <tr class="total"><td colspan="3">Total before shipping</td><td class="price">~$94</td></tr>
+  </table>
+  </div>
+  <p class="small muted" style="margin-top:10px">The micro:bit and the camera both use micro-USB for code. There is a newer HuskyLens 2, but the original is cheaper, in stock, and has MakeCode blocks for the micro:bit.</p>
+</div>
+
+<!-- PLAN -->
+<div class="card" id="plan">
+  <h2>The plan</h2>
+  <p class="sub">Dates fill in once we know the fair date. Each step has to be done before the next one starts.</p>
+  <ul class="phases">
+    <li class="now"><span class="dot">1</span><div><h3>Brainstorm</h3><div class="when">This week</div><div class="muted small">Read this page together. Try the free cup cannon. Add any new ideas.</div></div></li>
+    <li><span class="dot">2</span><div><h3>Pick a design</h3><div class="when">This week</div><div class="muted small">Addie picks A, B, or C and says why.</div></div></li>
+    <li><span class="dot">3</span><div><h3>Lock in the design</h3><div class="when">Week 2</div><div class="muted small">Name the turret. Draw it by hand with labels. Decide the three hole sizes from the cup test. No more big changes after this.</div></div></li>
+    <li><span class="dot">4</span><div><h3>Final parts list</h3><div class="when">Week 2</div><div class="muted small">Check every link again and pick a backup for each part.</div></div></li>
+    <li><span class="dot">5</span><div><h3>Order</h3><div class="when">Week 2</div><div class="muted small">Adafruit and DFRobot in one go. Shipping is usually under a week.</div></div></li>
+    <li><span class="dot">6</span><div><h3>Build</h3><div class="when">Weeks 3 to 5</div><div class="muted small">Print and test the cannon by hand first. Then the turntable and servo. Then the camera. Then the code.</div></div></li>
+    <li><span class="dot">7</span><div><h3>Test and experiment</h3><div class="when">Week 5 to 6</div><div class="muted small">60 shots, fill in the table, make the graph. Take photos of every step for the board.</div></div></li>
+    <li><span class="dot">8</span><div><h3>Board and practice</h3><div class="when">Week 7</div><div class="muted small">Question, hypothesis, materials, steps, results, conclusion. Practice the 30-second demo on the family.</div></div></li>
+  </ul>
+</div>
+
+<!-- SAFETY -->
+<div class="warn"><b>Safety.</b> No lasers, no water, nothing that flies out except air. Dad runs the 3D printer. The cam motor can pinch fingers, so it lives inside a printed cover. No real mosquitoes at the fair.</div>
+
+<!-- SOURCES -->
+<div class="card">
+  <h2>Where the facts came from</h2>
+  <ul class="src" style="padding-left:18px">
+    <li><a href="https://www.mosquito.org/faqs/" target="_blank" rel="noopener">American Mosquito Control Association, FAQs</a>: flight speed, only females bite, CO2 from 35 m, 174 US species, 2,700 worldwide.</li>
+    <li><a href="https://evidencebasedliving.human.cornell.edu/blog/a-new-method-to-avoid-mosquitoes" target="_blank" rel="noopener">Cornell, Evidence-Based Living</a>: wind and DEET were the two most effective ways to avoid mosquitoes; house fan about 15 mph.</li>
+    <li><a href="https://www.sciencealert.com/the-latest-way-to-zap-harmful-bugs-is-with-targeted-laser-beams" target="_blank" rel="noopener">ScienceAlert, Photonic Fence</a>: finds bugs by wingbeat, size and flight, fires in under 100 milliseconds.</li>
+    <li><a href="https://www.sciencedirect.com/science/article/pii/S2221169117309802" target="_blank" rel="noopener">Yeast-generated CO2 for mosquito trapping</a>: the yeast-and-sugar bait in Design B.</li>
+    <li><a href="https://www.hackster.io/sidikalamini/pan-tilt-object-tracking-with-huskylens-and-edu-bit-309679" target="_blank" rel="noopener">Hackster: pan and tilt tracking with HuskyLens and micro:bit</a>: proof the camera-plus-servo idea works.</li>
+  </ul>
+</div>
+
+<div class="foot">NAW Games &middot; Addie's Projects &middot; Plan v1, Sep 15, 2026</div>
+</div>
+</body>
+</html>
