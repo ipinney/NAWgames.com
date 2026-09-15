@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Laser Mosquito Turret - Plan</title>
-<meta property="og:title" content="Laser Mosquito Turret: Addie's science fair plan">
-<meta property="og:description" content="A turret that finds a mosquito, aims by itself, and tags it with a safe laser. Requirements, the design, the experiment, and the parts.">
+<title>MS-2000 Mosquito Shooter - Plan</title>
+<meta property="og:title" content="MS-2000 Mosquito Shooter: Addie's science fair plan">
+<meta property="og:description" content="Addie's laser mosquito turret. It learns a fake mosquito, tracks it, tags it with a safe laser, and records its own data.">
 <meta property="og:type" content="website"><meta property="og:site_name" content="NAW Games">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
@@ -150,18 +150,18 @@
 
 <!-- HERO -->
 <div class="card hero">
-  <div class="eyebrow">Addie Pinney &middot; 3rd grade science fair</div>
-  <h1>Laser Mosquito <span>Turret</span></h1>
-  <p>A turret that learns what a mosquito looks like, follows it as it swings on a fishing line, and tags it with a laser. The mosquito lights up and buzzes when it is hit.</p>
+  <div class="eyebrow">Addie Pinney &middot; 3rd grade science fair &middot; Spring 2027</div>
+  <h1>MS-<span>2000</span></h1>
+  <p><b>The Mosquito Shooter.</b> A laser turret that learns what a mosquito looks like, follows it as it swings on a fishing line, and tags it. The mosquito lights up and buzzes when it is hit, and every hit is saved as data.</p>
   <div class="chips">
-    <span class="chip">1: Brainstorm</span>
-    <span class="chip on">2: Requirements</span>
-    <span class="chip">3: Pick a design</span>
+    <span class="chip">1: Brainstorm &#10003;</span>
+    <span class="chip">2: Requirements &#10003;</span>
+    <span class="chip on">3: Pick a design</span>
     <span class="chip">4: Lock it in</span>
-    <span class="chip">5: Parts list</span>
-    <span class="chip">6: Order</span>
-    <span class="chip">7: Build</span>
-    <span class="chip">8: Test</span>
+    <span class="chip">5: Parts and order</span>
+    <span class="chip">6: Build</span>
+    <span class="chip">7: Practice</span>
+    <span class="chip">8: Experiments</span>
     <span class="chip">9: Board</span>
   </div>
 </div>
@@ -173,7 +173,7 @@
   <a href="#pick">Pick a design</a>
   <a href="#design">How it works</a>
   <a href="#prints">What we print</a>
-  <a href="#experiment">The experiment</a>
+  <a href="#experiment">Experiments and data</a>
   <a href="#demo">Fair demo</a>
   <a href="#parts">Parts</a>
   <a href="#safety">Laser safety</a>
@@ -183,12 +183,15 @@
 <!-- REQUIREMENTS -->
 <div class="card" id="requirements">
   <h2>Requirements</h2>
-  <p class="sub">The turret must do all of these. Every design choice gets checked against this list. Updated Sep 15 (v3).</p>
+  <p class="sub">The turret must do all of these. Every design choice gets checked against this list. Agreed Sep 15.</p>
   <ul class="req">
+    <li><b>Its name is the MS-2000, the Mosquito Shooter.</b><span class="why">The name goes on the turret, the board, and every data sheet.</span></li>
     <li><b>It shoots a laser.</b><span class="why">Real mosquito turrets use lasers, so ours does too.</span></li>
+    <li><b>It makes sound effects.</b><span class="why">A laser "pew" or a cannon "boom" every time it fires, picked with a button. A beep when it locks on. On a hit, the wand plays a splat and the turret plays a victory sound. A small speaker with a volume knob makes it loud enough for a noisy gym.</span></li>
     <li><b>It learns a fake mosquito and finds it by itself.</b><span class="why">Addie trains the camera on her mosquito by holding the learn button and turning the mosquito so the camera sees every side. After that the turret aims with no hands on the controls.</span></li>
     <li><b>The mosquito hangs from a fishing line and can be held and moved by a person.</b><span class="why">A "mosquito wand": a short rod, a thin line, a mosquito on the end. The turret has to follow it up, down, left, and right.</span></li>
     <li><b>A hit is proven, not guessed.</b><span class="why">A light sensor inside the mosquito feels the laser. The mosquito's eyes flash, the wand buzzes and shows an X, and the turret adds a point. Every hit is counted by the machine, which is what the experiment needs.</span></li>
+    <li><b>It records its own data.</b><span class="why">The wand micro:bit saves every run (test, setting, run number, hits, time to first hit) in its memory. Plug it into a computer and the data opens as a table and a graph, ready for a spreadsheet.</span></li>
     <li><b>The test can be repeated the same way every time.</b><span class="why">For the experiment, the wand clips onto a hook so the mosquito swings like a pendulum from a marked starting angle.</span></li>
     <li class="safety"><b>Class 2 laser, under 1 milliwatt, with the maker's label on it.</b><span class="why">No stronger laser, even though a stronger one is what it would take to kill a real mosquito. See the next section for the math.</span></li>
     <li class="safety"><b>Mounted, never handheld, and the beam cannot leave the flight zone.</b><span class="why">The mosquito flies inside a black box with a top and a back. The turret's tilt has a printed stop so it cannot aim above the box. The person holding the wand stands to the side, behind the turret line.</span></li>
@@ -196,7 +199,7 @@
     <li><b>Everything sits in 3D printed housings.</b><span class="why">Turret base, pan and tilt head, laser and camera mount, mosquito body, wand handle, and the flight zone corners.</span></li>
     <li><b>The best moment happens in the first 30 seconds of the demo.</b></li>
     <li><b>Addie does the training, coding, mosquitoes, and testing.</b><span class="why">MakeCode blocks. Dad does the printing and wiring.</span></li>
-    <li><b>Budget is flexible.</b><span class="why">Current estimate about $160.</span></li>
+    <li><b>Budget is flexible.</b><span class="why">Current estimate about $166.</span></li>
   </ul>
 </div>
 
@@ -261,7 +264,7 @@
         <dt>At the fair</dt><dd>A judge swings the mosquito. The turret chases it, flashes, and the mosquito lights up.</dd>
         <dt>The science</dt><dd>Does a faster mosquito get hit less?</dd>
         <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span> Medium-hard</dd>
-        <dt>Cost</dt><dd>About $160</dd>
+        <dt>Cost</dt><dd>About $166</dd>
       </dl>
     </div>
     <div class="opt">
@@ -272,7 +275,7 @@
         <dt>At the fair</dt><dd>Simpler and very reliable, but judges must keep the mosquito at the line.</dd>
         <dt>The science</dt><dd>Same speed test.</dd>
         <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i></i><i></i></span> Medium</dd>
-        <dt>Cost</dt><dd>About $150</dd>
+        <dt>Cost</dt><dd>About $156</dd>
       </dl>
     </div>
     <div class="opt">
@@ -283,7 +286,7 @@
         <dt>At the fair</dt><dd>Works, but misses more, and it fails the "learns the mosquito" requirement.</dd>
         <dt>The science</dt><dd>How close does the mosquito need to be?</dd>
         <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i></i><i></i></span> Medium</dd>
-        <dt>Cost</dt><dd>About $125</dd>
+        <dt>Cost</dt><dd>About $131</dd>
       </dl>
     </div>
   </div>
@@ -361,8 +364,8 @@
     <li><b>Train.</b> Addie points the camera at the mosquito, holds the learn button, and slowly turns the mosquito so the camera learns it from every side and distance. Then she saves it.</li>
     <li><b>Track.</b> The camera reports where the mosquito is on its screen (320 by 240 dots). Too far left, the pan servo turns left. Too high, the tilt servo tips up, but never past the printed stop.</li>
     <li><b>Lock on.</b> When the mosquito is inside a small box in the middle of the screen, the micro:bit shows a target and beeps.</li>
-    <li><b>Fire.</b> If the arm switch is on, the laser flashes for a quarter of a second.</li>
-    <li><b>Prove it.</b> The laser dot lands on the mosquito's white body and it glows. The light sensor inside jumps. The wand micro:bit flashes the mosquito's red eyes, buzzes, shows an X, and radios "HIT". The turret adds a point.</li>
+    <li><b>Fire.</b> If the arm switch is on, the laser flashes for a quarter of a second and the speaker plays the firing sound: laser "pew" or cannon "boom", whichever is picked with button A.</li>
+    <li><b>Prove it.</b> The laser dot lands on the mosquito's white body and it glows. The light sensor inside jumps. The wand micro:bit flashes the mosquito's red eyes, plays a splat, shows an X, and radios "HIT". The turret adds a point and plays a victory sound.</li>
   </ol>
 
   <div class="two" style="margin-top:16px">
@@ -372,6 +375,7 @@
         <li>Decorate the mosquitoes (legs, wings, stripes)</li>
         <li>Train the camera on the mosquito</li>
         <li>Code the turret: track, lock, fire, score</li>
+        <li>Design the sound effects in MakeCode's sound editor: the laser pew, the cannon boom, the lock-on beep, the hit splat</li>
         <li>Code the wand: feel the hit, flash, buzz, send "HIT"</li>
         <li>Name the turret and decorate the flight zone</li>
         <li>Run every test, write down the numbers, make the graph</li>
@@ -397,7 +401,7 @@
   <div class="tablewrap">
   <table>
     <tr><th>Print</th><th>What it holds</th><th>Notes</th></tr>
-    <tr><td>Turret base</td><td>micro:bit, micro:Driver, 3xAA pack, arm switch</td><td>Window so the micro:bit lights show. Heavy infill so it does not tip.</td></tr>
+    <tr><td>Turret base</td><td>micro:bit, micro:Driver, 3xAA pack, arm switch, speaker</td><td>Window so the micro:bit lights show, speaker grille on the front, hole for the volume knob. Heavy infill so it does not tip.</td></tr>
     <tr><td>Pan and tilt head</td><td>Two servos, the tilt axle</td><td>Tilt stop built in: the head physically cannot point above the flight zone.</td></tr>
     <tr><td>Sensor mount</td><td>HuskyLens on top, laser underneath</td><td>Laser in an adjustable clamp so it can be lined up with the camera's center.</td></tr>
     <tr><td>Servo covers</td><td>Servo gears and horns</td><td>Covers pinch points (fair rule).</td></tr>
@@ -410,42 +414,91 @@
 
 <!-- EXPERIMENT -->
 <div class="card" id="experiment">
-  <h2>The experiment</h2>
-  <p class="sub">A mosquito that swings farther moves faster. The pendulum hook makes each swing the same.</p>
-  <div class="qbox">Question: Does a faster mosquito get hit less often by the laser turret?</div>
+  <h2>Experiments and data</h2>
+  <p class="sub">The build is the invention. The science is what the MS-2000 measures. Three tests, 45 runs, all recorded by the machine itself, done in January and February.</p>
+
+  <div class="qbox">Main question: Does a faster mosquito get hit less often by the MS-2000?</div>
   <div class="two" style="margin-top:14px">
     <div class="box">
       <h3>Hypothesis</h3>
-      <p>If the mosquito swings faster, then the turret will get <span class="blank">&nbsp;</span> hits, because <span class="blank" style="min-width:160px">&nbsp;</span>.</p>
+      <p>If the mosquito swings faster, then the MS-2000 will get <span class="blank">&nbsp;</span> hits, because <span class="blank" style="min-width:160px">&nbsp;</span>.</p>
     </div>
     <div class="box">
       <h3>Variables</h3>
       <ul>
-        <li><b>Change:</b> how far back the mosquito is pulled before letting go (10, 20, or 30 degrees on the hook scale)</li>
-        <li><b>Measure:</b> hits counted by the wand in 30 seconds</li>
-        <li><b>Keep the same:</b> same turret, mosquito, line length, spot, and room lights</li>
+        <li><b>Change:</b> how far back the mosquito is pulled before letting go (10, 20, or 30 degrees on the hook scale). Farther back means faster.</li>
+        <li><b>Measure:</b> hits in 30 seconds, and time to the first hit</li>
+        <li><b>Keep the same:</b> same turret, mosquito, line length, spot, room lights, and fresh batteries</li>
       </ul>
     </div>
   </div>
-  <div class="box" style="margin-top:12px">
-    <h3>How to test</h3>
-    <ol style="padding-left:18px">
-      <li>Hang the wand on the hook. Pull the mosquito back to 10 degrees and let go.</li>
-      <li>Press start. The turret hunts for 30 seconds. Write down the hits.</li>
-      <li>Do it 5 times, then do the same at 20 and 30 degrees. That is 15 runs.</li>
-      <li>Find the average for each and make a bar graph.</li>
-      <li>Bonus: the wand also times how long the first hit took.</li>
-    </ol>
+
+  <div class="tablewrap" style="margin-top:14px">
+  <table>
+    <tr><th>Test</th><th>Question</th><th>What changes</th><th>Runs</th></tr>
+    <tr><td><b>1. Speed</b> (main)</td><td>Does a faster mosquito get hit less?</td><td>Swing angle: 10&deg;, 20&deg;, 30&deg;</td><td>3 &times; 5 = 15</td></tr>
+    <tr><td><b>2. Distance</b></td><td>Does the MS-2000 hit less when the mosquito is farther away?</td><td>Hook at 3, 5, and 7 feet from the turret (10&deg; swing)</td><td>3 &times; 5 = 15</td></tr>
+    <tr><td><b>3. Light</b></td><td>Does the camera track worse in a darker room?</td><td>Room lights on, one lamp, lights off (10&deg; swing)</td><td>3 &times; 5 = 15</td></tr>
+  </table>
   </div>
-  <div class="tablewrap" style="margin-top:12px">
+
+  <div class="two" style="margin-top:14px">
+    <div class="box">
+      <h3>How one run works</h3>
+      <ol style="padding-left:18px">
+        <li>On the wand, pick the test and setting with button A, and the run number with button B.</li>
+        <li>Hang the wand on the hook, pull the mosquito to the angle, let go.</li>
+        <li>Press start. The MS-2000 hunts for 30 seconds by itself.</li>
+        <li>The wand beeps at the end and saves one row of data.</li>
+        <li>Write the hits on the paper data sheet too, as a backup.</li>
+      </ol>
+    </div>
+    <div class="box">
+      <h3>What gets saved for every run</h3>
+      <ul>
+        <li>Test (speed, distance, or light)</li>
+        <li>Setting (for example 20&deg;)</li>
+        <li>Run number (1 to 5)</li>
+        <li>Hits in 30 seconds</li>
+        <li>Time to the first hit</li>
+        <li>Light level (the micro:bit measures it)</li>
+      </ul>
+      <p class="small muted" style="margin-top:8px">The micro:bit V2 keeps this data even when the batteries come out. Plugged into a computer, the file called MY_DATA opens as a table with graphs and can be downloaded for a spreadsheet.</p>
+    </div>
+  </div>
+
+  <div class="tablewrap" style="margin-top:14px">
   <table class="grid-data">
-    <tr><th>Hits in 30 s</th><th>Run 1</th><th>Run 2</th><th>Run 3</th><th>Run 4</th><th>Run 5</th><th>Average</th></tr>
+    <tr><th>Test 1: hits in 30 s</th><th>Run 1</th><th>Run 2</th><th>Run 3</th><th>Run 4</th><th>Run 5</th><th>Average</th></tr>
     <tr><td>10&deg; swing (slow)</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
     <tr><td>20&deg; swing (medium)</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
     <tr><td>30&deg; swing (fast)</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td><td class="c">__</td></tr>
   </table>
   </div>
-  <div class="bigidea"><b>Start this week, no parts needed:</b> hang a paper mosquito on a string and watch how the swing changes with the starting angle. Addie can also write the wand code in MakeCode on the website and test it on the virtual micro:bit.</div>
+
+  <div class="two" style="margin-top:14px">
+    <div class="box">
+      <h3>Data rules</h3>
+      <ul>
+        <li>Every run counts. Bad runs stay in the data.</li>
+        <li>Five runs for every setting, never fewer.</li>
+        <li>If something breaks, write down what happened and redo that run.</li>
+        <li>Do each test on one day so the room stays the same.</li>
+        <li>Take a photo of every setup.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Turning data into answers</h3>
+      <ul>
+        <li>Average: add the 5 runs and divide by 5.</li>
+        <li>One bar graph per test, averages on the bars.</li>
+        <li>Compare: which setting got the most hits, and by how much?</li>
+        <li>Conclusion: "My hypothesis was (right / wrong) because the data showed ___."</li>
+        <li>What I would change next time.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="bigidea"><b>Start this fall, no parts needed:</b> hang a paper mosquito on a string and watch how the swing changes with the starting angle. Addie can also write the wand code and try the datalogger blocks in MakeCode on the website.</div>
 </div>
 
 <!-- DEMO -->
@@ -466,12 +519,12 @@
     <div class="box">
       <h3>What Addie says</h3>
       <ol style="padding-left:18px">
-        <li>"Scientists built a machine that shoots mosquitoes with lasers. I built a safe one."</li>
+        <li>"Scientists built a machine that shoots mosquitoes with lasers. I built a safe one. It's called the MS-2000."</li>
         <li>"Hold this mosquito and try to get away." (hands the judge the wand, judge stands beside the turret)</li>
-        <li>Turret chases it, flash, the eyes blink, the wand buzzes. "HIT!"</li>
+        <li>The MS-2000 chases it, flash, the eyes blink, the wand buzzes. "HIT!"</li>
         <li>"It knows it's a mosquito because I trained it." (camera screen)</li>
         <li>"A laser that kills mosquitoes would need to be 14,000 times stronger. That's too dangerous for school."</li>
-        <li>"Here's what happened when the mosquito went faster." (graph)</li>
+        <li>"The MS-2000 recorded 45 runs by itself. Here's what happened when the mosquito went faster, farther, and into the dark." (graphs)</li>
       </ol>
     </div>
   </div>
@@ -490,13 +543,14 @@
     <tr><td>micro:Driver board</td><td>Plugs into the turret micro:bit. Runs both servos, switches the laser, connects the camera.</td><td><a href="https://www.dfrobot.com/product-1738.html" target="_blank" rel="noopener">DFRobot DFR0548</a></td><td class="price">$11.90</td></tr>
     <tr><td>Micro servo SG92R (x3)</td><td>Pan, tilt, and one spare.</td><td><a href="https://www.adafruit.com/product/169" target="_blank" rel="noopener">Adafruit 169</a></td><td class="price">$17.85</td></tr>
     <tr><td>Analog light sensor (x3)</td><td>One inside each mosquito to feel the laser.</td><td><a href="https://www.adafruit.com/product/2748" target="_blank" rel="noopener">Adafruit 2748</a></td><td class="price">$7.50</td></tr>
+    <tr><td>Speaker module with amplifier and volume knob</td><td>Loud firing and hit sounds. The micro:bit's own speaker is too quiet for a fair.</td><td><a href="https://www.dfrobot.com/product-1401.html" target="_blank" rel="noopener">DFRobot FIT0449</a></td><td class="price">$6.00</td></tr>
     <tr><td>3xAA holder with switch</td><td>Turret power. The switch is the arm switch.</td><td><a href="https://www.adafruit.com/product/771" target="_blank" rel="noopener">Adafruit 771</a></td><td class="price">$3.95</td></tr>
     <tr><td>2xAAA holder with switch</td><td>Wand power, plugs into the micro:bit.</td><td>Adafruit or micro:bit go kit</td><td class="price">~$3</td></tr>
     <tr><td>Red LEDs, resistors, thin 30 AWG wire</td><td>Mosquito eyes and the wires down the line to the sensor</td><td>Adafruit or Micro Center</td><td class="price">~$10</td></tr>
     <tr><td>Short fishing rod or dowel, clear line</td><td>The wand</td><td>Sporting goods</td><td class="price">~$10</td></tr>
     <tr><td>Black foam board, dowels</td><td>Flight zone walls, top, and back</td><td>Craft store</td><td class="price">~$15</td></tr>
     <tr><td>White and colored PLA</td><td>All housings and mosquito bodies</td><td>Already have</td><td class="price">$0</td></tr>
-    <tr class="total"><td colspan="3">Total before shipping</td><td class="price">~$160</td></tr>
+    <tr class="total"><td colspan="3">Total before shipping</td><td class="price">~$166</td></tr>
   </table>
   </div>
   <p class="small muted" style="margin-top:10px">DigiKey did not show the single-unit laser price on the day we checked; confirm at checkout. Skip the 5 mW hobby laser modules: they are Class 3R and still nowhere near strong enough to kill anything.</p>
@@ -536,17 +590,17 @@
 <!-- PLAN -->
 <div class="card" id="plan">
   <h2>The plan</h2>
-  <p class="sub">Dates fill in once we know the fair date. Each step has to be done before the next one starts.</p>
+  <p class="sub">The fair is in spring 2027; the exact date is not set. This schedule finishes everything by the end of March, so any spring date works.</p>
   <ul class="phases">
     <li><span class="dot">1</span><div><h3>Brainstorm</h3><div class="when">Done Sep 15</div><div class="muted small">Air cannon, vacuum, and light beam ideas. The family picked lasers.</div></div></li>
-    <li class="now"><span class="dot">2</span><div><h3>Requirements</h3><div class="when">This week</div><div class="muted small">Agree on the list at the top. Ask the teacher about the fair date and any laser rules.</div></div></li>
-    <li><span class="dot">3</span><div><h3>Pick a design</h3><div class="when">This week</div><div class="muted small">Addie picks A, B, or C and says why.</div></div></li>
-    <li><span class="dot">4</span><div><h3>Lock in the design</h3><div class="when">Week 2</div><div class="muted small">Name the turret. Draw it by hand with labels. No more big changes after this.</div></div></li>
-    <li><span class="dot">5</span><div><h3>Final parts list</h3><div class="when">Week 2</div><div class="muted small">Check every link again and pick a backup for each part.</div></div></li>
-    <li><span class="dot">6</span><div><h3>Order</h3><div class="when">Week 2</div><div class="muted small">DigiKey, Adafruit, and DFRobot. Shipping is usually under a week.</div></div></li>
-    <li><span class="dot">7</span><div><h3>Build</h3><div class="when">Weeks 3 to 5</div><div class="muted small">Mosquito and wand first (prove a hit lights the eyes). Then the pan and tilt head and camera training. Then the flight zone. Then the code.</div></div></li>
-    <li><span class="dot">8</span><div><h3>Test and experiment</h3><div class="when">Weeks 5 to 6</div><div class="muted small">15 pendulum runs, fill in the table, make the graph. Photos of every step for the board.</div></div></li>
-    <li><span class="dot">9</span><div><h3>Board and practice</h3><div class="when">Week 7</div><div class="muted small">Question, hypothesis, materials, steps, results, conclusion, and the "14,000 times" fact. Practice the 30-second demo on the family.</div></div></li>
+    <li><span class="dot">2</span><div><h3>Requirements</h3><div class="when">Done Sep 15</div><div class="muted small">The list at the top, including the name: MS-2000.</div></div></li>
+    <li class="now"><span class="dot">3</span><div><h3>Pick a design</h3><div class="when">September</div><div class="muted small">Addie picks A, B, or C and says why. Ask the teacher about laser rules.</div></div></li>
+    <li><span class="dot">4</span><div><h3>Lock in the design</h3><div class="when">Late September</div><div class="muted small">Draw the MS-2000 by hand with labels. No more big changes after this.</div></div></li>
+    <li><span class="dot">5</span><div><h3>Final parts list and order</h3><div class="when">Early October</div><div class="muted small">Check every link, pick a backup for each part, order from DigiKey, Adafruit, and DFRobot.</div></div></li>
+    <li><span class="dot">6</span><div><h3>Build</h3><div class="when">October to November</div><div class="muted small">Mosquito and wand first (prove a hit lights the eyes). Then the pan and tilt head and camera training. Then the flight zone and pendulum hook. Then the code and sound effects.</div></div></li>
+    <li><span class="dot">7</span><div><h3>Practice runs and fixes</h3><div class="when">December</div><div class="muted small">Make sure the data saves correctly. Fix anything that misses for a silly reason.</div></div></li>
+    <li><span class="dot">8</span><div><h3>Experiments and data</h3><div class="when">January to February</div><div class="muted small">Test 1 speed, Test 2 distance, Test 3 light. 45 runs. Averages and graphs.</div></div></li>
+    <li><span class="dot">9</span><div><h3>Board and practice</h3><div class="when">March</div><div class="muted small">Question, hypothesis, materials, steps, results, conclusion, and the "14,000 times" fact. Practice the 30-second demo on the family.</div></div></li>
   </ul>
 </div>
 
@@ -560,11 +614,12 @@
     <li><a href="https://www.societyforscience.org/isef/international-rules/display-safety-rules/" target="_blank" rel="noopener">Society for Science, ISEF Display and Safety Rules</a>: laser classes, labels, no handheld lasers, pinch points.</li>
     <li><a href="https://www.quarton.com/uploadfiles/1028/product/Red-dot-laser-modules/Economic/VLM-650-03-series/Red-Dot-Laser-Module-VLM-650-03-manual.pdf" target="_blank" rel="noopener">Quarton VLM-650-03 manual</a>: the LPT version is under 1 mW, Class 2, with a safety label.</li>
     <li><a href="https://learn.dfrobot.com/makelog-308707.html" target="_blank" rel="noopener">DFRobot: HuskyLens object tracking with micro:bit</a>: hold the learn button to learn an object at different angles and distances; the micro:bit gets its X and Y position.</li>
+    <li><a href="https://microbit.org/get-started/user-guide/data-logging/" target="_blank" rel="noopener">micro:bit, Data logging user guide</a>: the micro:bit V2 saves data that survives power off and opens as MY_DATA with tables, graphs, and CSV download.</li>
     <li><a href="https://www.mosquito.org/faqs/" target="_blank" rel="noopener">American Mosquito Control Association, FAQs</a>: flight speed, only females bite, CO2 from 35 m, 174 US species, 2,700 worldwide.</li>
   </ul>
 </div>
 
-<div class="foot">NAW Games &middot; Addie's Projects &middot; Plan v3 (trainable mosquito wand), Sep 15, 2026</div>
+<div class="foot">NAW Games &middot; Addie's Projects &middot; MS-2000 plan v4, Sep 15, 2026</div>
 </div>
 </body>
 </html>

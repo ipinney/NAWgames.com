@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-const TITLE = "Laser Mosquito Turret: Addie's science fair project";
+const TITLE = "MS-2000 Mosquito Shooter: Addie's science fair project";
 const DESC =
-  'A trainable turret that follows a fake mosquito on a fishing line and tags it with a safe Class 2 laser. Requirements, the laser lethality math, the experiment, and the parts.';
+  'A trainable laser turret with sound effects that tracks a fake mosquito on a fishing line, proves every hit, and records its own data. Spring 2027 science fair.';
 
 export const metadata = {
   title: `${TITLE} | NAW Games`,
@@ -22,14 +22,14 @@ const PLAN = '/projects/addie/mosquito-turret.html';
 // status: done | now | next
 const PHASES = [
   { title: 'Brainstorm', when: 'Done Sep 15', status: 'done', text: 'Air cannon, vacuum, and light beam ideas. The family picked lasers.', link: `${PLAN}#brainstorm` },
-  { title: 'Requirements', when: 'This week', status: 'now', text: 'Agree on the must-have list, including the laser safety rules. Ask the teacher for the fair date and laser rules.', link: `${PLAN}#requirements` },
-  { title: 'Pick a design', when: 'This week', status: 'next', text: 'Addie picks the pan and tilt, pan-only, or sensor turret, and says why.', link: `${PLAN}#pick` },
-  { title: 'Lock in the design', when: 'Week 2', status: 'next', text: 'Name it and draw it by hand with labels.', link: `${PLAN}#design` },
-  { title: 'Parts list', when: 'Week 2', status: 'next', text: 'Final list with a backup for every part.', link: `${PLAN}#parts` },
-  { title: 'Order', when: 'Week 2', status: 'next', text: 'DigiKey, Adafruit, and DFRobot.' },
-  { title: 'Build', when: 'Weeks 3 to 5', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head and camera training, then the flight zone, then the code.' },
-  { title: 'Test and experiment', when: 'Weeks 5 to 6', status: 'next', text: '15 pendulum runs at three swing angles, the data table, and the graph.', link: `${PLAN}#experiment` },
-  { title: 'Board and practice', when: 'Week 7', status: 'next', text: 'The trifold board and the 30-second demo.', link: `${PLAN}#demo` },
+  { title: 'Requirements', when: 'Done Sep 15', status: 'done', text: 'Laser, sound effects, trainable fishing-line mosquito, proven hits, self-recorded data, and the name: MS-2000.', link: `${PLAN}#requirements` },
+  { title: 'Pick a design', when: 'September', status: 'now', text: 'Addie picks the pan and tilt, pan-only, or sensor turret, and says why. Ask the teacher about laser rules.', link: `${PLAN}#pick` },
+  { title: 'Lock in the design', when: 'Late September', status: 'next', text: 'Draw the MS-2000 by hand with labels.', link: `${PLAN}#design` },
+  { title: 'Parts list and order', when: 'Early October', status: 'next', text: 'Final list with a backup for every part, then order.', link: `${PLAN}#parts` },
+  { title: 'Build', when: 'October to November', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head and camera training, then the flight zone, then the code and sound effects.', link: `${PLAN}#prints` },
+  { title: 'Practice runs and fixes', when: 'December', status: 'next', text: 'Make sure the data saves correctly and the MS-2000 hits reliably.' },
+  { title: 'Experiments and data', when: 'January to February', status: 'next', text: 'Speed, distance, and light tests. 45 runs recorded by the MS-2000, averages, and graphs.', link: `${PLAN}#experiment` },
+  { title: 'Board and practice', when: 'March', status: 'next', text: 'The trifold board and the 30-second demo, ready for any spring fair date.', link: `${PLAN}#demo` },
 ];
 
 const DOT = {
@@ -55,12 +55,13 @@ export default function MosquitoTurretPage() {
             <div className="flex flex-wrap gap-2">
               <span className="bg-naw-pink/20 text-naw-pink text-xs font-semibold px-2 py-0.5 rounded-full">Science Fair</span>
               <span className="bg-naw-orange/20 text-naw-orange text-xs font-semibold px-2 py-0.5 rounded-full">3rd grade</span>
+              <span className="bg-naw-cyan/20 text-naw-cyan text-xs font-semibold px-2 py-0.5 rounded-full">Spring 2027</span>
             </div>
             <h1 className="font-game text-3xl sm:text-4xl glow mt-4">
-              <span className="bg-gradient-to-r from-naw-pink to-naw-green bg-clip-text text-transparent">LASER MOSQUITO TURRET</span>
+              <span className="bg-gradient-to-r from-naw-pink to-naw-green bg-clip-text text-transparent">MS-2000</span>
             </h1>
             <p className="text-white text-lg sm:text-xl font-semibold mt-4 leading-snug">
-              A turret that learns a fake mosquito, follows it as it swings on a fishing line, and tags it with a laser. The mosquito's eyes flash when it is hit.
+              The Mosquito Shooter. A laser turret that learns a fake mosquito, follows it on a fishing line, and tags it with a pew or a boom. The mosquito's eyes flash, and every hit is saved as data.
             </p>
             <div className="mt-5 rounded-2xl border border-naw-green/30 bg-naw-green/10 p-4">
               <div className="text-naw-green text-xs font-semibold">The big idea</div>
@@ -83,7 +84,7 @@ export default function MosquitoTurretPage() {
       <div className="max-w-5xl mx-auto px-4 pb-20">
         <section className="mt-10">
           <h2 className="text-white text-xl sm:text-2xl font-bold">The steps</h2>
-          <p className="text-white/50 text-sm mt-1">One at a time. The pink one is where we are. Dates fill in once the fair date is set.</p>
+          <p className="text-white/50 text-sm mt-1">One at a time. The pink one is where we are. The fair is in spring 2027.</p>
           <ol className="relative border-l-2 border-white/10 ml-3 space-y-4 mt-5">
             {PHASES.map((p, i) => (
               <li key={p.title} className="pl-6 relative">
