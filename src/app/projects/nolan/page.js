@@ -10,13 +10,13 @@ const PROJECTS = [
     subject: 'Invention Project',
     emoji: '🤖',
     description:
-      'A palm-sized robot that sweeps crumbs off the table and stops at the edge. Build guide, parts list, 3D models, print files, and the school packet, all in one place.',
+      'My Invention Convention project: a robot that sweeps crumbs off the table and stops at the edge. Due dates, packet help, research, the board, and the build.',
     dueDate: '2026-11-16',
     dueLabel: 'Nov 16, 2026',
     color: 'from-slate-700 to-orange-500',
     href: '/projects/nolan/dusty',
     image: '/projects/nolan/dusty-hero.png',
-    tags: ['Build guide', '3D models', 'Print files', 'Parts list', 'School packet'],
+    tags: ['Due dates', 'Packet', 'Research', 'Board', 'Build', '3D model'],
   },
 ];
 
