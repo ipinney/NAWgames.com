@@ -35,7 +35,7 @@ const STEPS = [
   },
   {
     title: 'Put it together',
-    text: 'Ten steps with drawings, from wiring the motors to teaching Dusty where the table ends.',
+    text: 'Eleven steps with drawings: print order, where every M2 screw goes, how the brush gears slow the motor down, and teaching Dusty where the table ends.',
     action: { href: `${P}/dusty-build-guide.html`, label: 'Build guide' },
   },
 ];

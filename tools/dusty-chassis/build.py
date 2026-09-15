@@ -189,8 +189,9 @@ def cradle():
     # zip tie slots beside the motor
     s = s - box(14.0, 17.5, MOT_Y - 13.0, MOT_Y - 11.0, z0 - 1, z0 + 5) - box(14.0, 17.5, MOT_Y + 11.0, MOT_Y + 13.0, z0 - 1, z0 + 5)
     # screw holes
+    # pilot holes: M2 x 8 goes up from under the base, through the plate, and threads into the cradle
     for (x, y) in CRADLE_SCREWS:
-        s = s - cyl(x, y, z0 - 1, z0 + 10, SCREW_HOLE)
+        s = s - cyl(x, y, z0 - 1, z0 + 6.5, PILOT)
     # rocker cutout
     s = s - box(10.5, 23.5, sp_y - 1, sp_y + 3, z0 + 5.0, z0 + 13.5)
     return s
