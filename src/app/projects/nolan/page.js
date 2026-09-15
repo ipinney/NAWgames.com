@@ -29,6 +29,8 @@ const PROJECTS = [
     file: '/projects/nolan/dusty.html',
     links: [
       { href: '/projects/nolan/dusty-parts-list.pdf', label: '↓ Parts List PDF' },
+      { href: '/projects/nolan/dusty-dustpan.html', label: '🧊 3D Dustpan' },
+      { href: '/projects/nolan/dusty-dustpan-revA.stl', label: '↓ Dustpan STL' },
       { href: '/projects/nolan/invention-packet.html', label: '📋 Packet Guide' },
     ],
   },
