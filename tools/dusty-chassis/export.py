@@ -13,7 +13,7 @@ def on_bed(t):
 ax_s, AXL = axle()
 flip = lambda s: s.rotate([180, 0, 0])
 parts = {  # name: (manifold in print orientation, qty, note)
- 'base':        (base().rotate([0, 180, 0]), 1, 'top face down'),
+ 'base':        (base(print_fin=True).rotate([0, 180, 0]), 1, 'top face down, lift off the support block under the gear peg'),
  'deck':        (deck(), 1, ''),
  'post':        (flip(post()), 4, 'peg up'),
  'cradle':      (cradle(), 1, ''),

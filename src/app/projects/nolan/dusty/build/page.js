@@ -29,9 +29,9 @@ const STEPS = [
     action: { href: `${P}/dusty-parts-list.pdf`, label: 'Parts list (PDF)' },
   },
   {
-    title: 'Print the chassis',
-    text: '19 pieces, about 58 g of PLA. Everything fits on one 220 mm print bed with no supports.',
-    action: { href: `${F}/dusty-chassis-revA-stl.zip`, label: 'All print files (ZIP)', download: true },
+    title: 'Print in five batches',
+    text: '19 pieces, about 58 g of PLA. Each batch is one plate file, and each one unlocks the next build steps.',
+    action: { href: '/projects/nolan/dusty/build/batches', label: 'Print and build plan', internal: true },
   },
   {
     title: 'Put it together',
@@ -132,8 +132,10 @@ export default function DustyBuildPage() {
                 pop-out tray. The chassis is printed in PLA on a home 3D printer.
               </p>
               <div className="flex flex-wrap gap-2 mt-5">
-                <Btn href={`${F}/dusty-components-3d.html`} primary>Explore in 3D</Btn>
-                <Btn href={`${F}/dusty-chassis-revA-stl.zip`} download>Download print files</Btn>
+                <Link href="/projects/nolan/dusty/build/batches" className="bg-naw-orange text-naw-dark hover:bg-naw-orange/90 inline-flex items-center px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors">
+                  Print and build plan
+                </Link>
+                <Btn href={`${F}/dusty-components-3d.html`}>Explore in 3D</Btn>
               </div>
             </div>
             <a href={`${F}/dusty-chassis-3d.html`} target="_blank" rel="noopener noreferrer" className="block rounded-2xl overflow-hidden border border-white/10 bg-[#0d1b2e]">
@@ -152,7 +154,13 @@ export default function DustyBuildPage() {
                 <h3 className="text-white font-bold text-lg mt-3">{s.title}</h3>
                 <p className="text-white/55 text-sm mt-1 flex-1">{s.text}</p>
                 <div className="mt-4">
-                  <Btn href={s.action.href} download={s.action.download}>{s.action.label}</Btn>
+                  {s.action.internal ? (
+                    <Link href={s.action.href} className="bg-naw-orange text-naw-dark hover:bg-naw-orange/90 inline-flex items-center px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors">
+                      {s.action.label}
+                    </Link>
+                  ) : (
+                    <Btn href={s.action.href} download={s.action.download}>{s.action.label}</Btn>
+                  )}
                 </div>
               </li>
             ))}

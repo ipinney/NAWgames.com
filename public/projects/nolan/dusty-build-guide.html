@@ -247,6 +247,7 @@
   .try { margin-top: 12px; background: var(--orange-soft); border: 1px solid #F3CDB8; border-radius: 12px; padding: 13px 16px; font-size: 14.5px; color: var(--ink-2); }
   .try b { color: var(--orange); }
   .diagram svg.fit { min-width: 0; max-width: 560px; margin: 0 auto; }
+  .step[id] { scroll-margin-top: 12px; }
   .link3d { display: inline-block; margin-top: 10px; font-weight: 700; color: var(--blue); text-decoration: none; font-size: 14.5px; }
 </style>
 <body>
@@ -632,15 +633,15 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="step-1">
     <div class="step-head">
       <span class="num">1</span>
       <div>
         <h2>Print the parts</h2>
-        <p class="when">This week, Sep 15 to 18 &middot; a grown-up runs the printer</p>
+        <p class="when">Five batches, Sep 16 to the week of Sep 21 &middot; a grown-up runs the printer</p>
       </div>
     </div>
-    <p class="why">Everything else bolts onto these pieces, so they come first. Print them in this order. Each print teaches you something before the next one starts.</p>
+    <p class="why">The parts print in five batches, and each batch unlocks the next few steps. The full plan, with a plate file for each batch, is on the <a href="/projects/nolan/dusty/build/batches" target="_top">print and build plan</a> page.</p>
     <div class="diagram">
       <svg class="fit" viewBox="0 0 420 235" role="img" aria-label="A printer nozzle laying thin layers of melted plastic on a heated bed">
   <path d="M210 0 V40" stroke="#F0B43C" stroke-width="5"/>
@@ -663,19 +664,18 @@
       <p class="caption">A 3D PRINTER BUILDS A PART LIKE A STACK OF VERY THIN PANCAKES.</p>
     </div>
     <ol class="order">
-      <li><b>Test pieces: one deck post, two dowels, the motor gear</b><span>Small and quick. Check the motor gear pushes onto the brush motor shaft snugly, and the dowels drop into their holes.</span><span class="t">ABOUT 20 MINUTES</span></li>
-      <li><b>The base plate</b><span>The biggest part and the longest print. It prints upside down, top face on the bed. When it is done, test-fit the motor brackets, the caster and the brush axle before printing anything else.</span><span class="t">ABOUT 2 TO 3 HOURS</span></li>
-      <li><b>The deck and the other three posts</b><span>The shelf the moto:bit clips onto.</span><span class="t">ABOUT 1 HOUR</span></li>
-      <li><b>Both sensor arms</b><span>The left one has an extra pad for the whisker switch. Do not mix them up.</span><span class="t">ABOUT 30 MINUTES</span></li>
-      <li><b>The brush set: motor mount, big gear, roller gear, washer, axle, collar, roller</b><span>Print the roller standing up and the axle lying flat side down, so both come out round and straight.</span><span class="t">ABOUT 1.5 HOURS</span></li>
-      <li><b>The crumb tray</b><span>Last, because it is the easiest to change if the brush needs a different gap.</span><span class="t">ABOUT 30 MINUTES</span></li>
+      <li><b>Batch 1: fit check</b><span>Motor gear, washer, collar, two dowels, one post. Tests that the printer makes holes the right size before the big print.</span><span class="t">ABOUT 30 MINUTES &middot; UNLOCKS NOTHING YET, BUT SAVES THE BASE</span></li>
+      <li><b>Batch 2: base plate</b><span>The base prints upside down, with three more posts. A small loose block holds up the gear peg while it prints; lift it off afterward.</span><span class="t">ABOUT 2.5 TO 3 HOURS &middot; UNLOCKS STEPS 2 AND 3</span></li>
+      <li><b>Batch 3: deck and sensor arms</b><span>Everything for the first drive, plus the arms for the sensor weekend.</span><span class="t">ABOUT 1.5 HOURS &middot; UNLOCKS STEPS 4 TO 8</span></li>
+      <li><b>Batch 4: brush drive</b><span>Motor mount, big gear, roller gear, roller and axle. The roller prints standing up, the axle lying flat side down.</span><span class="t">ABOUT 2 HOURS &middot; UNLOCKS STEP 9</span></li>
+      <li><b>Batch 5: crumb tray</b><span>Last, because it sits right behind the brush.</span><span class="t">ABOUT 45 MINUTES &middot; UNLOCKS STEPS 10 AND 11</span></li>
     </ol>
     <p class="caption">TIMES ARE ROUGH. THE PRINTER SOFTWARE SHOWS THE REAL TIME BEFORE EACH PRINT.</p>
     <ol class="do">
-      <li>Set the printer software to <b>PLA, 0.2 mm layers, no supports</b>.<span class="tip">Every part was designed so nothing hangs in the air. Supports only make a mess here.</span></li>
+      <li>Set the printer software to <b>PLA, 0.2 mm layers, 3 walls, 20% infill, 5 mm brim, no supports</b>.<span class="tip">Open the .3mf plate file, so each part keeps its own brim.</span></li>
       <li>Wait until the bed cools before a grown-up takes each part off.<span class="tip">PLA grips a warm bed. Let it cool and the parts pop off on their own.</span></li>
-      <li>Clean up each part: peel off any thin strings, and run a screw through each hole once.<span class="tip">This clears the hole so the screw goes in smoothly later.</span></li>
-      <li>Lay the parts out and check them against the 3D model.<span class="tip">Nineteen pieces. Count them.</span></li>
+      <li>Peel the brims off, and run a screw through each small hole once.<span class="tip">This clears the hole so the screw goes in smoothly later.</span></li>
+      <li>Do the checks listed for each batch before printing the next one.<span class="tip">Nineteen pieces in all. Count them at the end.</span></li>
     </ol>
     <div class="explain">
       <h4>What is PLA?</h4>
@@ -684,20 +684,21 @@
       <p>PLA goes soft at about 60&deg;C. A car parked in the Houston sun gets hotter than that inside. <b>Never leave Dusty in the car.</b></p>
     </div>
     <div class="explain">
-      <h4>Why print in this order?</h4>
-      <p>The base is the part everything else attaches to. If a hole in the base is a little too small, it is better to find out before you print the other eighteen pieces. Engineers call this a <b>fit check</b>: test the risky part first, then build on it.</p>
+      <h4>What is a brim, and why test first?</h4>
+      <p>A <b>brim</b> is a thin flat ring the printer lays down around each part, like the brim of a hat. It gives the part more grip on the bed so the corners do not curl up. You peel it off afterward.</p>
+      <p>Batch 1 is a <b>fit check</b>: a few tiny parts that show whether the printer makes holes the right size. Testing the risky thing first, before the long print, is what engineers do.</p>
     </div>
     <a class="link3d" href="/projects/nolan/dusty-files/dusty-components-3d.html" target="_blank" rel="noopener">See it in 3D: tap &ldquo;Base plate&rdquo; &rarr;</a>
     <div class="checkpoint">
       <span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <div>
         <h4>You are done when</h4>
-        <p>All 19 pieces are printed, cleaned up, and laid out, and the motor gear fits snugly on the brush motor shaft.</p>
+        <p>All five batches are printed, cleaned up, and checked, and you have 19 pieces.</p>
       </div>
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="step-2">
     <div class="step-head">
       <span class="num">2</span>
       <div>
@@ -755,7 +756,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="step-3">
     <div class="step-head">
       <span class="num">3</span>
       <div>
@@ -782,7 +783,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="step-4">
     <div class="step-head">
       <span class="num">4</span>
       <div>
@@ -828,7 +829,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="step-5">
     <div class="step-head">
       <span class="num">5</span>
       <div>
@@ -897,7 +898,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="step-6">
     <div class="step-head">
       <span class="num">6</span>
       <div>
@@ -952,7 +953,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="step-7">
     <div class="step-head">
       <span class="num">7</span>
       <div>
@@ -1011,7 +1012,7 @@
   
   </div>
 
-  <div class="step">
+  <div class="step" id="step-8">
     <div class="step-head">
       <span class="num">8</span>
       <div>
@@ -1069,7 +1070,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="step-9">
     <div class="step-head">
       <span class="num">9</span>
       <div>
@@ -1141,7 +1142,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="step-10">
     <div class="step-head">
       <span class="num">10</span>
       <div>
@@ -1177,7 +1178,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="step-11">
     <div class="step-head">
       <span class="num">11</span>
       <div>

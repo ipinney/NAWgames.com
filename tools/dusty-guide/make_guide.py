@@ -22,6 +22,7 @@ css = css.replace('</style>', """
   .try { margin-top: 12px; background: var(--orange-soft); border: 1px solid #F3CDB8; border-radius: 12px; padding: 13px 16px; font-size: 14.5px; color: var(--ink-2); }
   .try b { color: var(--orange); }
   .diagram svg.fit { min-width: 0; max-width: 560px; margin: 0 auto; }
+  .step[id] { scroll-margin-top: 12px; }
   .link3d { display: inline-block; margin-top: 10px; font-weight: 700; color: var(--blue); text-decoration: none; font-size: 14.5px; }
 </style>""")
 
@@ -270,7 +271,7 @@ svg_arm = f'''<svg class="fit" viewBox="0 0 420 235" role="img" aria-label="Side
 
 def step(n, title, when, why, body):
     return f'''
-  <div class="step">
+  <div class="step" id="step-{n}">
     <div class="step-head">
       <span class="num">{n}</span>
       <div>
@@ -323,30 +324,30 @@ def see3d(part):
 I = '<span class="ind"></span>'
 
 steps = []
-steps.append(step(1, 'Print the parts', 'This week, Sep 15 to 18 &middot; a grown-up runs the printer',
-    'Everything else bolts onto these pieces, so they come first. Print them in this order. Each print teaches you something before the next one starts.',
+steps.append(step(1, 'Print the parts', 'Five batches, Sep 16 to the week of Sep 21 &middot; a grown-up runs the printer',
+    'The parts print in five batches, and each batch unlocks the next few steps. The full plan, with a plate file for each batch, is on the <a href="/projects/nolan/dusty/build/batches" target="_top">print and build plan</a> page.',
     figure(svg_layers, 'A 3D PRINTER BUILDS A PART LIKE A STACK OF VERY THIN PANCAKES.') + '\n' +
     '''    <ol class="order">
-      <li><b>Test pieces: one deck post, two dowels, the motor gear</b><span>Small and quick. Check the motor gear pushes onto the brush motor shaft snugly, and the dowels drop into their holes.</span><span class="t">ABOUT 20 MINUTES</span></li>
-      <li><b>The base plate</b><span>The biggest part and the longest print. It prints upside down, top face on the bed. When it is done, test-fit the motor brackets, the caster and the brush axle before printing anything else.</span><span class="t">ABOUT 2 TO 3 HOURS</span></li>
-      <li><b>The deck and the other three posts</b><span>The shelf the moto:bit clips onto.</span><span class="t">ABOUT 1 HOUR</span></li>
-      <li><b>Both sensor arms</b><span>The left one has an extra pad for the whisker switch. Do not mix them up.</span><span class="t">ABOUT 30 MINUTES</span></li>
-      <li><b>The brush set: motor mount, big gear, roller gear, washer, axle, collar, roller</b><span>Print the roller standing up and the axle lying flat side down, so both come out round and straight.</span><span class="t">ABOUT 1.5 HOURS</span></li>
-      <li><b>The crumb tray</b><span>Last, because it is the easiest to change if the brush needs a different gap.</span><span class="t">ABOUT 30 MINUTES</span></li>
+      <li><b>Batch 1: fit check</b><span>Motor gear, washer, collar, two dowels, one post. Tests that the printer makes holes the right size before the big print.</span><span class="t">ABOUT 30 MINUTES &middot; UNLOCKS NOTHING YET, BUT SAVES THE BASE</span></li>
+      <li><b>Batch 2: base plate</b><span>The base prints upside down, with three more posts. A small loose block holds up the gear peg while it prints; lift it off afterward.</span><span class="t">ABOUT 2.5 TO 3 HOURS &middot; UNLOCKS STEPS 2 AND 3</span></li>
+      <li><b>Batch 3: deck and sensor arms</b><span>Everything for the first drive, plus the arms for the sensor weekend.</span><span class="t">ABOUT 1.5 HOURS &middot; UNLOCKS STEPS 4 TO 8</span></li>
+      <li><b>Batch 4: brush drive</b><span>Motor mount, big gear, roller gear, roller and axle. The roller prints standing up, the axle lying flat side down.</span><span class="t">ABOUT 2 HOURS &middot; UNLOCKS STEP 9</span></li>
+      <li><b>Batch 5: crumb tray</b><span>Last, because it sits right behind the brush.</span><span class="t">ABOUT 45 MINUTES &middot; UNLOCKS STEPS 10 AND 11</span></li>
     </ol>''' + '\n' +
     '    <p class="caption">TIMES ARE ROUGH. THE PRINTER SOFTWARE SHOWS THE REAL TIME BEFORE EACH PRINT.</p>\n' +
-    do(('Set the printer software to <b>PLA, 0.2 mm layers, no supports</b>.', 'Every part was designed so nothing hangs in the air. Supports only make a mess here.'),
+    do(('Set the printer software to <b>PLA, 0.2 mm layers, 3 walls, 20% infill, 5 mm brim, no supports</b>.', 'Open the .3mf plate file, so each part keeps its own brim.'),
        ('Wait until the bed cools before a grown-up takes each part off.', 'PLA grips a warm bed. Let it cool and the parts pop off on their own.'),
-       ('Clean up each part: peel off any thin strings, and run a screw through each hole once.', 'This clears the hole so the screw goes in smoothly later.'),
-       ('Lay the parts out and check them against the 3D model.', 'Nineteen pieces. Count them.')) + '\n' +
+       ('Peel the brims off, and run a screw through each small hole once.', 'This clears the hole so the screw goes in smoothly later.'),
+       ('Do the checks listed for each batch before printing the next one.', 'Nineteen pieces in all. Count them at the end.')) + '\n' +
     explain('What is PLA?',
         'PLA is a plastic made from plants, usually corn or sugarcane. It comes on a spool as a long thread. The printer pushes the thread into a hot nozzle, about 210&deg;C, where it melts like the glue in a hot glue gun.',
         'The nozzle draws the shape of one layer, a fifth of a millimeter thick. The bed drops a tiny bit, and it draws the next layer on top. The base plate is 28 mm tall, so that is about <b>140 layers</b>.',
         'PLA goes soft at about 60&deg;C. A car parked in the Houston sun gets hotter than that inside. <b>Never leave Dusty in the car.</b>') + '\n' +
-    explain('Why print in this order?',
-        'The base is the part everything else attaches to. If a hole in the base is a little too small, it is better to find out before you print the other eighteen pieces. Engineers call this a <b>fit check</b>: test the risky part first, then build on it.') + '\n' +
+    explain('What is a brim, and why test first?',
+        'A <b>brim</b> is a thin flat ring the printer lays down around each part, like the brim of a hat. It gives the part more grip on the bed so the corners do not curl up. You peel it off afterward.',
+        'Batch 1 is a <b>fit check</b>: a few tiny parts that show whether the printer makes holes the right size. Testing the risky thing first, before the long print, is what engineers do.') + '\n' +
     see3d('Base plate') + '\n' +
-    done('All 19 pieces are printed, cleaned up, and laid out, and the motor gear fits snugly on the brush motor shaft.')))
+    done('All five batches are printed, cleaned up, and checked, and you have 19 pieces.')))
 
 steps.append(step(2, 'Mount the motors and wheels', 'Sat Sep 19 &middot; about 45 minutes',
     'The two motors hang under the base on small printed pads. The pads put the wheels at exactly the right height, so there is nothing to measure.',
@@ -441,7 +442,7 @@ t7_body = re.sub(r'<span class="blk-?[^"]*">', '', t7_body)
 t7_body = t7_body.replace('motor A stop, motor B stop', 'set LEFT and RIGHT motors to 0').replace('motor A and B run at 40 %', 'set LEFT and RIGHT motors to FORWARD at 40')
 t7_body = t7_body.replace('Weekend 2 finished', 'the sensor weekend finished')
 steps.append(f'''
-  <div class="step">
+  <div class="step" id="step-7">
     <div class="step-head">
       <span class="num">7</span>
       <div>

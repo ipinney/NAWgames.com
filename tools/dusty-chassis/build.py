@@ -74,7 +74,8 @@ def mirror_x(s):
     return s.mirror([1, 0, 0])
 
 # ================= BASE =================
-def base():
+def base(print_fin=False):
+    """print_fin=True adds a loose support block under the gear peg for printing upside down."""
     parts = []
     # plate: front narrow section + wide rear section
     parts.append(box(-FRONT_HALF, FRONT_HALF, -2.0, WIDE_Y0, PL_Z0, PL_Z1))
@@ -149,6 +150,15 @@ def base():
         holes.append(box(-14, 14, yy - 4, yy + 4, PL_Z0 - 1, PL_Z1 + 1))
     for h in holes:
         s = s - h
+    if print_fin:
+        # The peg sticks out past the edge of the plate, so upside down it hangs over the bed.
+        # A loose support block stands on the bed and stops 0.25 mm short of the peg; lift it off after printing.
+        r = PIN_D / 2 + 0.25
+        arc = [(C_Y + r * math.cos(math.radians(a)), C_Z + r * math.sin(math.radians(a))) for a in range(40, 141, 10)]
+        prof = [(C_Y - r * math.cos(math.radians(40)), PL_Z1), (C_Y + r * math.cos(math.radians(40)), PL_Z1)]
+        prof += arc
+        fin = prism_yz(prof, SP_X1 + 0.8, P2[1] - 0.5)
+        s = s + (fin - M.cylinder(20, r, r, 48).rotate([0, 90, 0]).translate([SP_X1, C_Y, C_Z]))
     return s
 
 # 130 motor cradle attachment
