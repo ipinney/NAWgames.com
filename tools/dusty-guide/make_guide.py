@@ -183,6 +183,21 @@ for i, chunk in enumerate(_steps_region.split('<div class="step">')[1:]):
 diag_wire = re.sub(r'<p class="caption">.*?</p>', '', diag[5], flags=re.S)
 diag_whisk = re.sub(r'<p class="caption">.*?</p>', '', diag[8], flags=re.S)
 diag_pat = re.sub(r'<p class="caption">.*?</p>', '', diag[10], flags=re.S)
+diag_pat = '''<svg viewBox="0 0 640 250" role="img" aria-label="Two cleaning patterns: random bounce over the whole table on the left, Spot Clean rows inside a one foot square on the right">
+        <rect x="24" y="30" width="278" height="182" rx="8" fill="#0F1420" stroke="#2B3650" stroke-width="2.5"/>
+        <rect x="118" y="80" width="90" height="90" fill="none" stroke="#F5B642" stroke-width="2" stroke-dasharray="6 4"/>
+        <path d="M60 70 L250 140 L70 180 L240 60 L90 195 L260 110" stroke="#F0609E" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+        <circle cx="60" cy="70" r="5" fill="#9BE15D"/>
+        <text x="163" y="22" font-family="Fredoka, sans-serif" font-size="15" fill="#EEF2F8" text-anchor="middle">BUTTON A: RANDOM BOUNCE</text>
+        <text x="163" y="234" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A9B6CA" text-anchor="middle">WHOLE TABLE, ONLY SOMETIMES CROSSES THE SPILL</text>
+
+        <rect x="338" y="30" width="278" height="182" rx="8" fill="#0F1420" stroke="#2B3650" stroke-width="2.5"/>
+        <rect x="388" y="40" width="180" height="160" fill="none" stroke="#F5B642" stroke-width="2" stroke-dasharray="6 4"/>
+        <path d="M399.0 192 L399.0 48 L421.8 48 L421.8 192 L444.6 192 L444.6 48 L467.4 48 L467.4 192 L490.2 192 L490.2 48 L513.0 48 L513.0 192 L535.8 192 L535.8 48 L558.6 48 L558.6 192" stroke="#5DB7F0" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+        <circle cx="399.0" cy="192" r="5" fill="#9BE15D"/>
+        <text x="477" y="22" font-family="Fredoka, sans-serif" font-size="15" fill="#EEF2F8" text-anchor="middle">BUTTON B: SPOT CLEAN</text>
+        <text x="477" y="234" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A9B6CA" text-anchor="middle">8 ROWS INSIDE A 1 FT SQUARE, NOTHING MISSED</text>
+      </svg>'''
 
 # ---- new diagrams ----
 def gear_path(cx, cy, teeth, r_root, r_tip):
@@ -535,16 +550,33 @@ steps.append(step(10, 'Slide in the tray and test the sweep', 'Sun Oct 4 &middot
 steps.append(step(11, 'Two brains, then run the experiment', 'Oct 10 and 11 &middot; the whole weekend',
     'The robot is finished. This weekend turns it into a science project, and this is what the display board is really about.',
     figure(diag_pat, 'SAME ROBOT, TWO DIFFERENT IDEAS. RACE THEM AND SEE WHICH WINS.') + '\n' +
-    do('Put random bounce on button A and the expanding spiral on button B. Spot clean goes on A and B together.',
+    do('Put random bounce on button A and Spot Clean on button B.',
+       ('Build Spot Clean from the blocks below.', 'Spot Clean sweeps a 1 foot square right in front of Dusty, in rows like mowing a lawn. The cliff sensors still work the whole time.'),
+       ('Tape a 1 foot (30 cm) square on the table. Put Dusty at the bottom left corner, facing into the square, and press B.', 'Adjust the lane time until the front of Dusty just reaches the far tape. Adjust the turn time until each turn is square.'),
        ('Run the speed experiment at four speeds: 25, 50, 75 and 100. Twenty runs at each.', 'Put a cushion on the floor anyway.'),
        ('For every run, write down how far the sensor went past the edge before Dusty stopped, in millimeters, and whether it fell.', 'A ruler taped along the table edge makes this easy. A slow-motion phone video makes it exact.'),
        'Make the first chart: speed along the bottom, stopping distance up the side.',
-       'Race the patterns: the same 5 grams of cereal, time each one until the table is clean, three tries each.',
+       ('Experiment B, the spill race: sprinkle 5 grams of cereal inside the taped square. Press B and time Spot Clean until it stops. Weigh the tray.', 'Write down the time and the grams.'),
+       ('Put the same 5 grams back in the same square. Press A and stop random bounce after the same amount of time. Weigh the tray.', 'Same time, same crumbs, same spot. Only the pattern changes.'),
+       ('Do three tries of each pattern and make the second chart: grams picked up by each pattern.', ''),
        'Try three surfaces if there is time: white paper, bare wood, a black placemat.') + '\n' +
+    blocks(('start', 'on button B pressed', 'Spot Clean'),
+           ('var', f'{I}set lane to 0'),
+           ('logic', f'{I}repeat 8 times', '8 rows, about 4 cm apart, fill the 30 cm square'),
+           ('act', f'{I}{I}driveFor 4400 ms', 'One row: 30 cm at 40%. driveFor checks the cliff sensors every 40 ms'),
+           ('logic', f'{I}{I}if lane is even: turn RIGHT 90, otherwise turn LEFT 90'),
+           ('act', f'{I}{I}driveFor 570 ms', 'Slide over about 4 cm'),
+           ('logic', f'{I}{I}turn the same way 90 again', 'Now Dusty faces back across the square, one row over'),
+           ('var', f'{I}{I}change lane by 1'),
+           ('act', f'{I}stop both motors', 'Done. Pop out the tray and weigh it')) + '\n' +
+    explain('Why 8 rows, 4 cm apart?',
+        'The brush is 52 mm wide. If the rows are 40 mm apart, each row overlaps the last one by 12 mm, so no stripe of crumbs gets missed. A foot is about 305 mm, and 305 divided by 40 is about 8 rows.',
+        'At 40% Dusty drives about 70 mm every second, so one 305 mm row takes about 4.4 seconds, and a 40 mm slide takes about 0.6 seconds. Those are the starting numbers. The real table decides the final ones.') + '\n' +
     explain('What should happen?',
         'Faster means more distance to stop. Your prediction: the stopping distance grows <b>faster</b> than the speed. Double the speed and the distance more than doubles, because a faster robot has more to slow down and also covers more ground while the code reacts.',
-        'Dusty has a <b>62 mm</b> head start. The math says that even at 100% it should need less than that, so it should never fall. If your chart shows the distances climbing toward 62, you can draw the line forward and predict the speed where Dusty <em>would</em> fall. That number is the one to put in big type on the board.') + '\n' +
-    done('You have a filled-in data table and two charts made from your own numbers.')))
+        'Dusty has a <b>62 mm</b> head start. The math says that even at 100% it should need less than that, so it should never fall. If your chart shows the distances climbing toward 62, you can draw the line forward and predict the speed where Dusty <em>would</em> fall. That number is the one to put in big type on the board.',
+        'For the spill race, a good guess is that Spot Clean wins. Random bounce spends most of its time driving where there are no crumbs. Spot Clean spends all of its time on the spill.') + '\n' +
+    done('You have a filled-in data table and two charts made from your own numbers: stopping distance by speed, and grams picked up by pattern.')))
 
 trouble = '''
   <div class="card">

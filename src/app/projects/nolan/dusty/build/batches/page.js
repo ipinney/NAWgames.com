@@ -187,7 +187,7 @@ const BATCHES = [
     gate: 'All 19 pieces printed. Dusty is complete.',
     build: [
       [10, 'Slide in the tray and test the sweep (Sun Oct 4)', 'Kitchen scale, 5 g of crushed cereal'],
-      [11, 'Two brains, then run the experiment (Oct 10 and 11)', 'Charged power bank, ruler, notebook'],
+      [11, 'Two brains, then run the experiment (Oct 10 and 11)', 'Charged power bank, ruler, notebook, masking tape for a 1 foot square, 5 g of crushed cereal'],,
     ],
   },
 ];

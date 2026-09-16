@@ -45,6 +45,7 @@ const TOUCHED = ['3D model and all 19 print files', 'Parts list', 'Build guide s
 
 // Newest first. Add a line every time something about the plan changes.
 const LOG = [
+  ['Sep 15', 'Change', 'MOC-002: Button B changes from an expanding spiral to Spot Clean, which sweeps a 1 foot square in front of Dusty in rows. Experiment B becomes a spill race: Spot Clean against random bounce on the same 5 g spill. Code and plan only, no parts.'],
   ['Sep 15', 'Change', 'Weight limit raised from 300 g to 400 g (change order MOC-001, Rev D.1).'],
   ['Sep 15', 'Change', 'MOC-001: USB-C power bank in a printed sleeve replaces the 4 AA battery pack. Deck 10.5 mm higher, two posts instead of four, keeper bar added. Print total goes from 77 g to 101 g.'],
   ['Sep 15', 'Design', 'Crumb tray Rev B: only the front edge touches the table, and the bottom slopes up toward the back so it does not drag.'],
