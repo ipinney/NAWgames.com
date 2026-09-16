@@ -45,14 +45,22 @@ AXLE_R = 2.0; AXLE_FLAT = 1.5; AXLE_HOLE = 4.6
 P.update(C_Y=round(C_Y,2), MOT_Y=round(MOT_Y,2), MOT_Z=MOT_Z, D1=D1, D2=D2)
 
 # --- tray ---
+# Rev B: the front lip touches the table and the underside rises toward the back, so only
+# the lip can rub. The weight hangs on the rear flange (resting on the base hook) and the side snaps.
 TRAY_Y0 = RY + ROLL_R + 0.5; TRAY_Y1 = 72.0
 TRAY_X = 27.6; TRAY_WALL = 1.4
-TRAY_FLOOR_Z = 0.8; TRAY_LOW_TOP = 9.0; TRAY_TALL_TOP = PL_Z0 - 0.5
+LIP_T = 0.6                                 # lip edge thickness at the table
+UNDER_RISE = p('UNDER_RISE', 2.5)           # underside height at the back edge (lip is at 0)
+TRAY_LOW_TOP = 9.0
 TRAY_FLOOR_T = 1.2                          # floor thickness
 CREST_Z = 4.2; CREST_DY = 10.0             # crumb-trap crest: height and distance behind the front edge
 FILLET = 3.0; LIP = 2.5                    # sloped inside corners; inward lips on the low walls
 REAR_MID_X = 18.0; REAR_MID_TOP = 15.0     # taller middle of the back wall (clear of the motor brackets)
-TRAY_TALL_Y1 = 44.0; LIP_Z = 0.4
+SNAP_Y = 39.0; SNAP_Z = 20.0; SNAP_R = 0.8
+TAB_Y = (36.0, 42.0); TAB_TOP = 23.0       # snap tab; the side wall tapers down on both sides of it
+TAPER_END_Y = 48.0                         # side wall is back to TRAY_LOW_TOP here (stays under the motor pads)
+RELIEF_W = 1.0; RELIEF_Z = 6.0             # slots either side of the tab so it flexes for the snap
+FLANGE_Z = (7.0, 8.5)
 
 # --- rear / top ---
 BAT = (62.5, 57.3, 19.5)                   # Adafruit 4xAA holder (x, y, z)
@@ -91,7 +99,7 @@ def base(print_fin=False):
     # side plates / skirts (roller supports, tray snap walls)
     for s in (-1, 1):
         xa, xb = sorted([s*SP_X0, s*SP_X1])
-        parts.append(box(xa, xb, 4.0, TRAY_TALL_Y1, 8.0, PL_Z0))
+        parts.append(box(xa, xb, 4.0, 44.0, 8.0, PL_Z0))
     # compound-gear pin boss + pin (right side)
     boss = M.cylinder(SP_X1 - SP_X0 + 0.01, 4.8, 4.8, 40).rotate([0, 90, 0]).translate([SP_X0, C_Y, C_Z])
     pin = M.cylinder(P2[1] - SP_X1, PIN_D/2, PIN_D/2, 40).rotate([0, 90, 0]).translate([SP_X1, C_Y, C_Z])
@@ -242,43 +250,61 @@ def post():
     return s   # local: z=0 at plate top
 
 # ================= TRAY =================
+def tray_under(y):
+    """underside height: 0 at the front lip, rising straight to UNDER_RISE at the back"""
+    return UNDER_RISE * (y - TRAY_Y0) / (TRAY_Y1 - TRAY_Y0)
+
+def tray_top(y):
+    return tray_under(y) + TRAY_FLOOR_T
+
 def tray():
     X = TRAY_X; W = TRAY_WALL
     y0, y1 = TRAY_Y0, TRAY_Y1
-    F = TRAY_FLOOR_Z; T = F + TRAY_FLOOR_T
+    zu, zt = tray_under, tray_top
     xi = X - W                                  # inner face of the side walls
     yi = y1 - W                                 # inner face of the back wall
     yc = y0 + CREST_DY
     parts = []
-    # floor with a front ramp up to a crest, then a straight drop: crumbs go over, and cannot slide back out
-    prof = [(y0, F), (y1, F), (y1, T), (yc + 0.8, T), (yc + 0.8, CREST_Z), (yc, CREST_Z), (y0, F + 0.5)]
+    # floor: thin lip on the table, ramp up to a crest, straight drop, then a floor parallel to the sloped underside
+    prof = [(y0, 0.0), (y1, zu(y1)), (y1, zt(y1)), (yc + 0.8, zt(yc + 0.8)), (yc + 0.8, CREST_Z), (yc, CREST_Z), (y0, LIP_T)]
     parts.append(prism_yz(prof, -X, X))
     for sx in (-1, 1):
         xa, xb = sorted([sx * X, sx * xi])
-        # tall between the side plates, then drops under the motor pads (which start at y 45.25, z 21)
-        wall_prof = [(y0, F), (y0, F + 1.0), (y0 + 3.0, TRAY_TALL_TOP), (TRAY_TALL_Y1, TRAY_TALL_TOP),
-                     (TRAY_TALL_Y1, 20.0), (TRAY_TALL_Y1 + 4.0, TRAY_LOW_TOP), (y1, TRAY_LOW_TOP), (y1, F)]
+        # tapered side wall: low at the lip, up to the snap tab, back down to the low wall before the motor pads
+        wall_prof = [(y0, 0.0), (y0, CREST_Z), (TAB_Y[0], TAB_TOP), (TAB_Y[1], TAB_TOP),
+                     (TAPER_END_Y, TRAY_LOW_TOP), (y1, TRAY_LOW_TOP), (y1, zu(y1))]
         parts.append(prism_yz(wall_prof, xa, xb))
-        parts.append(M.sphere(0.8, 16).translate([sx * X, 39.0, 20.0]))        # snap bump
-        # sloped inside corner along the floor (tapered sides)
-        tri = [(sx * (xi + 0.3), T - 0.3), (sx * (xi + 0.3), T + FILLET), (sx * (xi - FILLET), T - 0.3)]
-        parts.append(prism_xz(tri if sx > 0 else tri[::-1], yc + 0.8, yi))
+        parts.append(M.sphere(SNAP_R, 16).translate([sx * X, SNAP_Y, SNAP_Z]))       # snap bump
+        # sloped inside corner along the floor, following the floor slope
+        ya, yb = yc + 0.8, yi
+        pts = []
+        for yy in (ya, yb):
+            t = zt(yy)
+            pts += [(sx * (xi + 0.3), yy, t - 0.3), (sx * (xi + 0.3), yy, t + FILLET), (sx * (xi - FILLET), yy, t - 0.3)]
+        parts.append(M.hull_points(pts))
         # inward 45 degree lip along the top of the low part of the wall
         lip = [(sx * (xi + 0.3), TRAY_LOW_TOP), (sx * (xi - LIP), TRAY_LOW_TOP), (sx * (xi + 0.3), TRAY_LOW_TOP - LIP - 0.3)]
-        parts.append(prism_xz(lip if sx > 0 else lip[::-1], TRAY_TALL_Y1 + 4.0, yi))
+        parts.append(prism_xz(lip, TAPER_END_Y, yi))
     # back wall: low at the sides, taller in the middle, lips on both tops, sloped inside corner at the floor
-    parts.append(box(-X, X, yi, y1, F, TRAY_LOW_TOP))
-    parts.append(box(-REAR_MID_X, REAR_MID_X, yi, y1, F, REAR_MID_TOP))
-    parts.append(prism_yz([(yi + 0.3, T - 0.3), (yi + 0.3, T + FILLET), (yi - FILLET, T - 0.3)], -xi - 0.3, xi + 0.3))
+    parts.append(prism_yz([(yi, zu(yi)), (y1, zu(y1)), (y1, TRAY_LOW_TOP), (yi, TRAY_LOW_TOP)], -X, X))
+    parts.append(prism_yz([(yi, zu(yi) + 0.5), (y1, zu(y1) + 0.5), (y1, REAR_MID_TOP), (yi, REAR_MID_TOP)], -REAR_MID_X, REAR_MID_X))
+    tb = zt(yi)
+    parts.append(prism_yz([(yi + 0.3, tb - 0.3), (yi + 0.3, tb + FILLET), (yi - FILLET, tb - 0.3)], -xi - 0.3, xi + 0.3))
     parts.append(prism_yz([(yi + 0.3, TRAY_LOW_TOP), (yi - LIP, TRAY_LOW_TOP), (yi + 0.3, TRAY_LOW_TOP - LIP - 0.3)], -xi - 0.3, xi + 0.3))
     parts.append(prism_yz([(yi + 0.3, REAR_MID_TOP), (yi - LIP, REAR_MID_TOP), (yi + 0.3, REAR_MID_TOP - LIP - 0.3)], -REAR_MID_X, REAR_MID_X))
-    parts.append(box(-7.5, 7.5, y1 - 0.3, y1 + 2.0, 7.0, 8.5))    # snap flange, clicks over the hook on the base
+    # snap flange: rests on the hook at the back of the base and carries the tray
+    parts.append(box(-7.5, 7.5, y1 - 0.3, y1 + 2.0, FLANGE_Z[0], FLANGE_Z[1]))
     s = union(parts)
-    # relief slots so the tall walls flex for the side snaps
+    # relief slots either side of the snap tab
     for sx in (-1, 1):
         xa, xb = sorted([sx * (X + 1), sx * (xi - 1)])
-        s = s - box(xa, xb, TRAY_TALL_Y1 + 0.2, TRAY_TALL_Y1 + 1.2, TRAY_LOW_TOP + 0.5, TRAY_TALL_TOP + 1)
+        for ys in (TAB_Y[0] - RELIEF_W, TAB_Y[1]):
+            s = s - box(xa, xb, ys, ys + RELIEF_W, RELIEF_Z, TAB_TOP + 1)
     return s
+
+def tray_print_tilt():
+    """degrees about x that lay the sloped underside flat on the bed"""
+    return -math.degrees(math.atan2(UNDER_RISE, TRAY_Y1 - TRAY_Y0))
 
 # ================= ROLLER + AXLE =================
 def d_profile(r, flat, n=40):

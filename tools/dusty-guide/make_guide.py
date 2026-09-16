@@ -332,7 +332,7 @@ steps.append(step(1, 'Print the parts', 'Five batches, Sep 16 to the week of Sep
       <li><b>Batch 2: base plate</b><span>The base prints upside down, with three more posts. A small loose block holds up the gear peg while it prints; lift it off afterward.</span><span class="t">ABOUT 1.5 HOURS &middot; UNLOCKS STEPS 2 AND 3</span></li>
       <li><b>Batch 3: deck and sensor arms</b><span>Everything for the first drive, plus the arms for the sensor weekend.</span><span class="t">ABOUT 40 MINUTES &middot; UNLOCKS STEPS 4 TO 8</span></li>
       <li><b>Batch 4: brush drive</b><span>Motor mount, big gear, roller gear, roller and axle. The roller prints standing up, the axle lying flat side down.</span><span class="t">ABOUT 1 HOUR &middot; UNLOCKS STEP 9</span></li>
-      <li><b>Batch 5: crumb tray</b><span>Last, because it sits right behind the brush.</span><span class="t">ABOUT 20 MINUTES &middot; UNLOCKS STEPS 10 AND 11</span></li>
+      <li><b>Batch 5: crumb tray</b><span>Last, because it sits right behind the brush.</span><span class="t">ABOUT 15 MINUTES &middot; UNLOCKS STEPS 10 AND 11</span></li>
     </ol>''' + '\n' +
     '    <p class="caption">TIMES ARE FROM THE PRINTER SOFTWARE FOR THE ADVENTURER 5M.</p>\n' +
     do(('Open the <b>.3mf plate file</b> in Orca-Flashforge (or OrcaSlicer).', 'The Adventurer 5M, the PLA settings, the brims and the slower speeds for the tiny gears are already inside the file. Slice and send.'),
@@ -501,12 +501,16 @@ steps.append(step(10, 'Slide in the tray and test the sweep', 'Sun Oct 4 &middot
     'The tray catches what the brush flicks. It snaps in from underneath and pops back out, so you can weigh what Dusty picked up.',
     do(('Turn Dusty upside down on a towel. Set the tray in place with the ramp toward the brush, and press it down until the back clicks over the hook and the two side bumps click into the side plates.', 'To take it out: turn Dusty over, push the back wall of the tray a little toward the front so it slips off the hook, and lift.'),
        ('Set Dusty on the table and look from the side. The bristles should just touch the table.', 'Pressed hard, the brush acts like a brake. Too high, it misses crumbs. Trim the pipe cleaners to adjust.'),
+       ('Still looking from the side, check the tray. The front edge should touch the table, and you should see a thin gap under the back of the tray.', 'If the front edge scrapes hard, sand it a little. A gap thinner than a crumb at the front is fine.'),
        ('Weigh 5 grams of crushed cereal on a kitchen scale.', ''),
        'Sprinkle it on the table in a strip, and let Dusty drive through it with the brush on.',
        ('Pop the tray out and weigh what is inside. Write down the number.', 'Do this three times and take the average.')) + '\n' +
     explain('How the tray keeps crumbs in',
         'The front of the tray is a ramp that climbs to a little ridge, then drops straight down. Crumbs flicked by the brush fly over the ridge, but once they land behind it they cannot roll back out. It works like a one-way door.',
         'Inside, the corners are sloped instead of square, so crumbs slide to the middle where they are easy to dump out. Along the top of the back and side walls, a small lip leans inward. A crumb that bounces up hits the lip and falls back in.') + '\n' +
+    explain('Why the bottom of the tray slopes',
+        'A tray lying flat on the table would rub along its whole bottom, like dragging a book across a desk. That rubbing is called friction, and the motors would waste their push fighting it. So only the thin front edge touches the table, where it scoops crumbs up the ramp. From there the bottom tilts up, and the back of the tray floats 2.5 mm above the table.',
+        'The tray does not hold itself up with that front edge. It hangs from the hook at the back of the base and the two side bumps. The front edge only rests on the table, so the rubbing stays tiny. The sides are also cut down in a slope on each side of the snap bumps, which takes off plastic the tray does not need.') + '\n' +
     explain('Why weigh it?',
         'Saying &ldquo;Dusty cleans pretty well&rdquo; is an opinion. Saying &ldquo;Dusty picked up 3.8 grams out of 5, which is 76 percent&rdquo; is a measurement. Science runs on measurements.') + '\n' +
     gotcha('<b>Keep crumbs off the sensors.</b> If the brush throws crumbs forward onto a sensor, it goes blind. Check the spin direction again, and wipe the sensor faces before each test.') + '\n' +

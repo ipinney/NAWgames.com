@@ -135,7 +135,7 @@ const BATCHES = [
     stem: 'dusty-plate-5-tray',
     title: 'Crumb tray',
     when: 'After Batch 4, any day before Oct 4',
-    time: 'About 20 minutes',
+    time: 'About 15 minutes',
     pieces: 'Crumb tray',
     why: 'Last, because it sits right behind the brush. If the brush needed changes, the tray can change too.',
     need: [],
@@ -143,6 +143,7 @@ const BATCHES = [
       'Crush some cereal and weigh out 5 grams for the sweep test.',
     ],
     after: [
+      ['Check the bottom of the tray is flat and the front edge is thin and clean.', 'The tray prints tipped back a little so its sloped bottom lies flat on the bed. Trim any brim off the front edge, because that edge rides on the table.'],
       ['Turn Dusty upside down on a towel and press the tray on until the back clicks.', 'The two side bumps click too. Push the back wall forward a little to take it off.'],
     ],
     gate: 'All 19 pieces printed. Dusty is complete.',

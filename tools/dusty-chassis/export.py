@@ -17,7 +17,7 @@ parts = {  # name: (manifold in print orientation, qty, note)
  'deck':        (deck(), 1, ''),
  'post':        (flip(post()), 4, 'peg up'),
  'cradle':      (cradle(), 1, ''),
- 'tray':        (tray(), 1, ''),
+ 'tray':        (tray().rotate([tray_print_tilt(), 0, 0]), 1, 'sloped underside flat on the bed'),
  'roller':      (roller(), 1, 'standing'),
  'axle':        (ax_s.rotate([0, 90, 0]).rotate([90, 0, 0]).rotate([180, 0, 0]), 1, 'flat side down'),
  'collar':      (collar(), 1, ''),

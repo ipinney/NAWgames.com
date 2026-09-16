@@ -69,7 +69,7 @@ const PARTS = [
   ['post', 'Deck post', 4, '6 × 6 × 25', '0.6', 'Peg up'],
   ['cradle', 'Brush motor cradle', 1, '29 × 26 × 17', '2.1', ''],
   ['dowel', 'Cradle dowel', 2, '3 × 3 × 3', '<0.1', ''],
-  ['tray', 'Crumb tray', 1, '57 × 42 × 29', '7.4', ''],
+  ['tray', 'Crumb tray', 1, '57 × 42 × 23', '7.0', 'Sloped bottom flat on the bed'],
   ['roller', 'Brush roller', 1, '14 × 14 × 52', '7.0', 'Standing up'],
   ['axle', 'Roller axle', 1, '75 × 4 × 4', '0.9', 'Flat side down'],
   ['collar', 'Axle collar', 1, '8 × 8 × 3', '0.2', ''],
