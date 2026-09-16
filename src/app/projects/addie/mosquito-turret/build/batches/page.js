@@ -19,7 +19,7 @@ const SETTINGS = [
 
 const BEFORE = [
   ['Unbox everything and check it against the shopping list.', ''],
-  ['Measure the Xia mi board, a servo, the battery packs, and the arm switch with calipers.', 'The print files use numbers from datasheets and photos. If a part is off by more than half a millimeter, the files get fixed before printing.'],
+  ['Measure the Xia mi board, a servo, the wand battery pack, the arm switch, the power bank, the in-line switch, and the charge port with calipers.', 'The print files use numbers from datasheets and photos. If a part is off by more than half a millimeter, the files get fixed before printing.'],
   ['Sort the M2 screws by length into cups.', ''],
 ];
 
@@ -83,8 +83,8 @@ const BATCHES = [
     plate: 1,
     stem: 'ms2000-plate-1-base-shell',
     title: 'Base shell',
-    time: 'About 3 hours',
-    grams: 125,
+    time: 'About 3 hours 15 minutes',
+    grams: 131,
     pieces: 'The base shell, printed upside down',
     why: 'The biggest part. It prints upside down so the deck the turntable sits on comes out flat.',
     learn: {
@@ -96,10 +96,10 @@ const BATCHES = [
     },
     after: [
       ['Let the bed cool, then lift the shell off and peel away the brim.', ''],
-      ['Check the battery pack slides into the bay on the right side.', ''],
+      ['Check the charge port and the in-line switch line up with their holes in the right wall.', 'The power bank sits inside now, so there is no side bay. Its cradle is on the floor plate in batch 4.'],
       ['Check the arm switch and speaker fit their holes in the back wall.', ''],
     ],
-    gate: 'The battery pack slides in.',
+    gate: 'The charge port and switch fit the right wall.',
     build: [],
   },
   {
@@ -107,8 +107,8 @@ const BATCHES = [
     plate: 2,
     stem: 'ms2000-plate-2-floor-and-foot',
     title: 'Floor plate and one backdrop foot',
-    time: 'About 1 hour 45 minutes',
-    grams: 64,
+    time: 'About 1 hour 55 minutes',
+    grams: 72,
     pieces: 'Floor plate and one backdrop foot',
     why: 'The floor closes up the base, so after this batch the whole turret can be built.',
     learn: {
@@ -120,9 +120,17 @@ const BATCHES = [
     },
     after: [
       ['Screw the Xia mi board onto the floor posts.', 'If the holes do not line up, the floor gets reprinted with the measured spacing.'],
+      ['Check the power bank drops into its cradle on the right half, ports facing the front.', 'The strap goes through the two slots in the floor.'],
       ['Screw the floor into the shell from underneath.', ''],
     ],
-    gate: 'The board fits the floor, and the floor fits the shell.',
+    gate: 'The board and power bank fit the floor, and the floor fits the shell.',
+    learn2: {
+      title: 'How a power bank works',
+      items: [
+        ['Plug the power bank into a USB-C phone charger and watch its four lights.', 'Each light is about a quarter full. When all four stay on, it is charged. Inside the turret the lights are hidden, so charge it before every session.'],
+        ['Why does a power bank make the speed test fairer than AA batteries?', 'Batteries slowly lose voltage as they drain, so servos slow down. The bank gives a steady 5 volts, so the servos move at the same speed on run 1 and run 30.'],
+      ],
+    },
     build: [
       [4, 'Build the base'],
       [5, 'Build the pan and tilt head'],
@@ -177,7 +185,7 @@ export default function BatchesPage() {
         </p>
         <p className="text-white/55 text-sm mt-2 leading-relaxed">
           Start after the parts arrive and are measured. Small white parts first, the turret and wand second, the base third.
-          About 10 hours of printing and {TOTAL_G} g of PLA in all. Order is by batch; the file names keep their plate numbers.
+          About 10 hours 45 minutes of printing and {TOTAL_G} g of PLA in all. Order is by batch; the file names keep their plate numbers.
         </p>
 
         <nav className="mt-6 flex flex-wrap gap-2">
@@ -245,6 +253,14 @@ export default function BatchesPage() {
                 <Steps items={b.after} />
               </div>
             </div>
+
+            {b.learn2 && (
+              <div className="mt-4 bg-naw-card rounded-2xl border border-lime-300/25 p-5">
+                <div className="text-lime-300 text-xs font-semibold">Learn while it prints</div>
+                <h3 className="text-white font-bold">{b.learn2.title}</h3>
+                <Steps items={b.learn2.items} />
+              </div>
+            )}
 
             <div className="mt-4 rounded-2xl border border-naw-green/40 bg-naw-green/10 p-4">
               <div className="text-naw-green text-xs font-semibold">Ready for the next batch when</div>

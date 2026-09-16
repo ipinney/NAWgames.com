@@ -15,8 +15,8 @@ const PHASES = [
   { title: 'Requirements', when: 'Sep 15', status: 'done', text: 'Laser, sound effects, a trainable mosquito on a fishing line, proven hits, and data it saves by itself.', link: `${PLAN}#requirements` },
   { title: 'Pick a design', when: 'Sep 15', status: 'done', text: 'Addie picked Design A, the Pan and Tilt Camera Turret.', link: `${PLAN}#pick` },
   { title: 'Lock in the design', when: 'Sep 16', status: 'done', text: 'Design A locked. Still to do by hand: why Design A and a labeled drawing, both in the journal. Ask Miss Taggart about laser rules.', link: `${PLAN}#design` },
-  { title: '3D print design', when: 'Sep 16', status: 'done', text: '12 printed parts on five print plates, about 10 hours and 320 g of PLA. Checked with calipers when the parts arrive.', link: `${BASE}/build/batches` },
-  { title: 'Order the parts', when: 'By Sep 30', status: 'now', text: 'About $192 from DFRobot and DigiKey, plus batteries and craft supplies. Start the journal now.', link: `${BASE}/build#shopping` },
+  { title: '3D print design', when: 'Sep 16', status: 'done', text: '12 printed parts on five print plates, about 10 hours 45 minutes and 335 g of PLA. Checked with calipers when the parts arrive.', link: `${BASE}/build/batches` },
+  { title: 'Order the parts', when: 'By Sep 30', status: 'now', text: 'About $224 from four stores: DFRobot, DigiKey, Adafruit, and Walmart, plus AAA batteries and craft supplies. Start the journal now.', link: `${BASE}/build#shopping` },
   { title: 'Print and build', when: 'Oct 1 to Nov 13', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head, then the backdrop and pendulum, then the code and sounds.', link: `${BASE}/build` },
   { title: 'Teach the camera and practice', when: 'Nov 14 to Dec 11', status: 'next', text: 'Train the camera, pick the hit threshold, and make sure the data saves. The question (Nov 18), research (Dec 2), and hypothesis (Dec 9) are due at school in these weeks.', link: `${FAIR}#question` },
   { title: 'Experiments', when: 'Dec 12 to Jan 15', status: 'next', text: 'Speed and target size, all at 3 feet. 30 runs, one test per day, over winter break. Due Jan 19, so a few days are left for redos.', link: `${FAIR}#experiments` },
@@ -31,7 +31,7 @@ const RULES = [
   ['The journal is cursive, by hand', 'Write in it every day you work on the project. It gets its own grade.'],
   ['Addie writes it', 'The research, question, hypothesis, and conclusion are in her own words.'],
   ['Every run counts', 'Five runs for every setting. Only redo a run if something broke, and write down why.'],
-  ['One test per day', 'Same room, same batteries, same person holding the line. Take a photo of each setup.'],
+  ['One test per day', 'Same room, a charged power bank, same person holding the line. Take a photo of each setup.'],
 ];
 
 const PAGES = [

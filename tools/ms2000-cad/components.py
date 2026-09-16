@@ -142,15 +142,41 @@ COMPONENTS = {
             'conn_h': d(6.0, 'est', 'Gravity PH2.0 socket on the top edge, back side'),
             'knob_h': d(5.0, 'est', 'volume pot, back side'),
         }),
-    'aa_pack': dict(
-        label='4xAA battery holder', qty=1, sku='DFRobot FIT0918', color='#50555e',
-        role='Turret power, about 6 V into the Xia mi. Slides into the base.',
+    'bank': dict(
+        label='USB-C power bank', qty=1, sku='Anker 321 (A1112), Walmart', color='#2b2f36',
+        role='Turret power, steady 5 V (MOC-004). Lies flat on the right of the floor, ports forward. Charges through the side port.',
         dims={
-            'w': d(64.5, 'ds', 'DFRobot: 70 x 64.5 x 19.6 mm'),
-            'l': d(70.0, 'ds'),
-            'h': d(19.6, 'ds'),
-            'lead': d(250, 'ds', 'to DC 2.1 plug'),
-            'switch_side': d(None, 'tbd', 'which face the switch is on'),
+            'w': d(45.8, 'ds', 'Anker: 97 x 45.8 x 22 mm'),
+            'l': d(97.0, 'ds'),
+            'h': d(23.0, 'ds', 'Anker says 22, a store says 0.9 in (22.9): design for 23'),
+            'ports': d(None, 'tbd', 'USB-A and USB-C on the front end; exact spots unknown until it arrives'),
+            'lights': d(None, 'tbd', 'where the 4 charge lights are'),
+        }),
+    'charge_port': dict(
+        label='USB-C charge port', qty=1, sku='Adafruit 6069', color='#44484f',
+        role='Panel USB-C socket in the right wall. Its short cable plugs into the bank (MOC-004).',
+        dims={
+            'hole_d': d(14.0, 'ds', 'Adafruit: fits holes 12 to 18 mm'),
+            'max_panel': d(13.0, 'ds', 'panels up to 13 mm'),
+            'body_d': d(12.0, 'est', 'threaded body behind the panel'),
+            'body_l': d(18.0, 'est'),
+            'nut_d': d(18.0, 'est'),
+            'nut_t': d(3.0, 'est'),
+            'bezel_d': d(17.0, 'est', 'lip outside the wall'),
+            'bezel_t': d(2.5, 'est'),
+            'cable': d(None, 'tbd', 'cable length not published'),
+        }),
+    'inline_switch': dict(
+        label='In-line power switch', qty=1, sku='Adafruit 1125', color='#3a3f47',
+        role='Main on/off (MOC-004). Sits in ribs on the right wall, rocker through a window. Between the barrel cable and the Xia mi jack.',
+        dims={
+            'l': d(38.0, 'est', 'size not published'),
+            'w': d(18.0, 'est'),
+            'h': d(13.0, 'est'),
+            'rocker_l': d(12.0, 'est'),
+            'rocker_w': d(8.0, 'est'),
+            'rocker_h': d(3.0, 'est', 'above the body'),
+            'rating': d(None, 'ds', '2 A, 2.1 mm jack in, plug out'),
         }),
     'aaa_pack': dict(
         label='2xAAA battery holder', qty=2, sku='DFRobot FIT0625', color='#50555e',
@@ -309,6 +335,38 @@ def ghost_pack(name):
     return s, {}
 
 
+def ghost_bank():
+    """Bank lying flat, ports at y = 0 (front end)."""
+    g = lambda k: V('bank', k)
+    w, l, h = g('w'), g('l'), g('h')
+    s = box(-w/2, w/2, 0, l, 0, h)
+    for x0, x1 in ((-14, -2), (4, 13)):                          # port marks (spots are placeholders)
+        s = s - box(x0, x1, -1, 3, h/2 - 3, h/2 + 3)
+    return s, {}
+
+
+def ghost_charge_port():
+    """Axis along +z = out of the panel. Panel inner face at z = 0."""
+    g = lambda k: V('charge_port', k)
+    s = union([cyl(0, 0, -g('body_l'), 0, g('body_d')),
+               cyl(0, 0, -g('nut_t'), 0, g('nut_d')),
+               cyl(0, 0, 2.0, 2.0 + g('bezel_t'), g('bezel_d')),
+               cyl(0, 0, 0, 2.0, g('hole_d') - 0.4)])
+    return s - cyl(0, 0, 1.0, 5, 8.5), {}
+
+
+def ghost_inline_switch():
+    """Body along y, rocker up (+z)."""
+    g = lambda k: V('inline_switch', k)
+    l, w, h = g('l'), g('w'), g('h')
+    s = union([box(-w/2, w/2, 0, l, 0, h),
+               box(-g('rocker_w')/2, g('rocker_w')/2, l/2 - g('rocker_l')/2, l/2 + g('rocker_l')/2, h, h + g('rocker_h')),
+               ])
+    for yy in (-10, l):
+        s = s + box(-2, 2, yy, yy + 10, h/2 - 2, h/2 + 2)       # cord stubs
+    return s, {}
+
+
 def ghost_stuffy():
     g = lambda k: V('stuffy', k)
     body = M.sphere(1, 32).scale([g('h')/2 * .7, g('len')/2, g('h')/2]).translate([0, g('len')/2, g('h')/2])
@@ -319,7 +377,8 @@ def ghost_stuffy():
 GHOSTS = {
     'microbit': ghost_microbit, 'xiami': ghost_xiami, 'servo': ghost_servo, 'laser': ghost_laser,
     'arm_switch': ghost_arm_switch, 'light_sensor': ghost_light_sensor, 'led': ghost_led,
-    'speaker': ghost_speaker, 'aa_pack': lambda: ghost_pack('aa_pack'),
+    'speaker': ghost_speaker, 'bank': ghost_bank,
+    'charge_port': ghost_charge_port, 'inline_switch': ghost_inline_switch,
     'aaa_pack': lambda: ghost_pack('aaa_pack'), 'stuffy': ghost_stuffy,
 }
 

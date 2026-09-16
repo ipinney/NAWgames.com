@@ -11,7 +11,7 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, 'out')
 os.makedirs(os.path.join(OUT, 'components'), exist_ok=True)
 
 GAP = 14.0
-ORDER = ['huskylens', 'xiami', 'microbit', 'servo', 'laser', 'speaker', 'aa_pack', 'aaa_pack',
+ORDER = ['huskylens', 'xiami', 'microbit', 'servo', 'laser', 'speaker', 'bank', 'charge_port', 'inline_switch', 'aaa_pack',
          'arm_switch', 'light_sensor', 'led', 'stuffy']
 BASIS = {'photo': 'from photo', 'ds': 'datasheet', 'step': 'maker 3D model', 'est': 'estimate', 'tbd': 'unknown until it arrives', 'cal': 'measured'}
 

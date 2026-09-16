@@ -174,7 +174,7 @@ const TOPICS = [
     words: [
       ['Variable you change', 'What you change on purpose (swing angle or target size).'],
       ['Variable you measure', 'What you count (hits, and time to first hit).'],
-      ['Controlled variables', 'Everything you keep the same (the 3 foot distance, room, batteries, camera training).'],
+      ['Controlled variables', 'Everything you keep the same (the 3 foot distance, room, a charged power bank, camera training).'],
       ['Hypothesis', 'Your best guess before you test, and why.'],
     ],
     visual: 'average',

@@ -19,10 +19,12 @@ items = {k: (n, g, q, s, note, mesh, c) for k, n, g, q, s, note, mesh, c in asm[
 
 # name, printed?, color, explode offset, note (shown when tapped)
 SPEC = [
-    ('shell', 'Base shell (P1)', '#ff5fa2', (0, 0, 0), 'Printed. Front window shows the micro:bit, slot lets it lift out, battery bay on the right, speaker grille and arm switch on the back.'),
-    ('plate', 'Floor plate (P1)', '#c9477f', (0, 0, -95), 'Printed. Board posts and battery rails; four M2 screws up into the base.'),
+    ('shell', 'Base shell (P1)', '#ff5fa2', (0, 0, 0), 'Printed. Front window shows the micro:bit, slot lets it lift out, charge port and power switch on the right, speaker grille and arm switch on the back.'),
+    ('plate', 'Floor plate (P1)', '#c9477f', (0, 0, -95), 'Printed. Board posts and the power bank cradle with strap slots; four M2 screws up into the base.'),
     ('board', 'Xia mi board + micro:bit', '#2f6fbf', (0, 0, -70), 'Bought. The turret brain: servos, speaker, camera port, and the relay that switches the laser.'),
-    ('pack', '4xAA battery pack', '#5b6270', (85, 0, -70), 'Bought. About 6 V. Slides in from the right; its switch is the main power.'),
+    ('bank', 'USB-C power bank', '#5b6270', (60, 0, -70), 'Bought. Steady 5 V, charges through the side port like a phone. Lies flat, ports forward, strapped down (change MOC-004).'),
+    ('cport', 'USB-C charge port', '#8a93a3', (70, 0, 0), 'Bought. Plug a phone charger in here with the power switch off. Its cable goes to the bank.'),
+    ('pswitch', 'Power switch', '#e07b39', (70, 0, 0), 'Bought. The main on/off. Rocker pokes through the right wall; it sits between the bank cable and the board.'),
     ('pservo', 'Pan servo', '#3d7cc9', (0, 0, -40), 'Bought. Hangs under the top and turns the turntable left and right.'),
     ('pan_horn', 'Pan horn', '#e6e6e6', (0, 0, 22), 'Comes with the servo. Presses into the pocket under the turntable.'),
     ('speaker', 'Speaker', '#1d9a4a', (0, 70, 0), 'Bought. Pew, boom, lock-on beep, victory sound. Faces the back grille.'),

@@ -9,7 +9,7 @@ export const metadata = meta(
 
 const price = (pn) => BUY.find((b) => b.pn === pn)?.price || 0;
 const MB = price('MBT0039') / 2;
-const L2 = MB + price('MBT0042') + price('SEN0305') + (price('SER0049') / 3) * 2 + price('FIT0918');
+const L2 = MB + price('MBT0042') + price('SEN0305') + (price('SER0049') / 3) * 2 + price('A1112') + price('2697') + price('1125');
 const L3 = BUY.reduce((s, b) => s + (b.price || 0), 0);
 const usd = (n) => `about $${Math.round(n / 5) * 5}`;
 
@@ -31,7 +31,7 @@ const LEVELS = [
     tag: 'No laser',
     cost: `${usd(L2)}`,
     time: 'A weekend',
-    you: 'Level 1 plus an AI camera, an expansion board, two servos, and a battery pack.',
+    you: 'Level 1 plus an AI camera, an expansion board, two servos, and a USB-C power bank.',
     learn: ['Machine learning', 'Pixels and coordinates', 'Servos', 'Feedback loops'],
   },
   {
@@ -114,7 +114,7 @@ const L2_STEPS = [
 
 const L3_STEPS = [
   ['Buy the parts', 'Every part, two stores, with a backup for each.', [[`${BASE}/build#shopping`, 'Shopping list'], [PARTS_PDF, 'Parts list PDF']]],
-  ['Print the body', '12 parts on five plates, about 10 hours of printing.', [[`${BASE}/build/batches`, 'Print plan']]],
+  ['Print the body', '12 parts on five plates, about 11 hours of printing.', [[`${BASE}/build/batches`, 'Print plan']]],
   ['Look at it in 3D first', 'Spin it, tap a part, pull it apart.', [[`${CAD}/ms2000-turret-3d.html`, 'Turret in 3D'], [`${CAD}/ms2000-3d.html`, 'Whole setup']]],
   ['Build and code it', 'Sixteen steps with wiring maps and all seven MakeCode programs.', [[GUIDE, 'Build guide']]],
   ['Learn how it works', 'Eleven short lessons with things to try.', [[`${BASE}/learn`, 'Learn the science']]],
@@ -242,7 +242,7 @@ export default function MakePage() {
           <div className="bg-naw-card rounded-2xl border border-white/10 p-4 mt-4">
             <div className="text-white/50 text-xs font-semibold">Parts for Level 2</div>
             <div className="mt-2 grid sm:grid-cols-2 gap-x-6 gap-y-1 text-sm">
-              {[['MBT0039', 1], ['MBT0042', 1], ['SEN0305', 1], ['SER0049', 2], ['FIT0918', 1]].map(([pn, q]) => {
+              {[['MBT0039', 1], ['MBT0042', 1], ['SEN0305', 1], ['SER0049', 2], ['A1112', 1], ['2697', 1], ['1125', 1]].map(([pn, q]) => {
                 const b = BUY.find((x) => x.pn === pn);
                 if (!b) return null;
                 return (

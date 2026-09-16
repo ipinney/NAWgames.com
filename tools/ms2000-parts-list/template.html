@@ -44,6 +44,9 @@ h2 { font-size: 16px; color: var(--pink); margin-bottom: 6px; break-after: avoid
 .v-dfrobot { background: #F5B642; }
 .v-digikey { background: #F0605E; }
 .v-adafruit { background: #5DB7F0; }
+.v-walmart { background: #7FB2F0; }
+.v-target { background: #F08A8A; }
+.v-newark, .v-mouser { background: #B9C2D0; }
 .pn { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: var(--ink); }
 .stock { color: var(--ink3); font-size: 9px; }
 .title { color: var(--ink); font-weight: 600; margin-top: 1px; }
@@ -67,15 +70,15 @@ tr:last-child td { border-bottom: none; }
   <div>
     <div class="eyebrow">Addie Pinney &middot; 3rd grade science fair &middot; Spring 2027</div>
     <h1>MS-<span>2000</span> Parts and Materials</h1>
-    <div class="sub">Design A, Pan and Tilt Camera Turret. Design locked Sep 16, 2026.</div>
+    <div class="sub">Design A, Pan and Tilt Camera Turret. Design locked Sep 16, 2026. Rev 2: USB-C power bank (MOC-004).</div>
   </div>
   <div class="meta"><b>Links checked</b><br>Sep 15 to 16, 2026<br><b>{{NITEMS}}</b> line items to buy</div>
 </div>
 
 <div class="grid3">
-  <div class="box"><div class="big">{{PT}}</div><div class="lbl">Primary order, 2 suppliers: DFRobot {{PDF}} + DigiKey {{PDK}}. Shipping and tax extra.</div></div>
-  <div class="box"><div class="big">~{{PALL}}</div><div class="lbl">All-in with about {{LOCALEST}} of batteries, foam board, rod, and craft supplies from local stores.</div></div>
-  <div class="box"><div class="big">{{BT}}</div><div class="lbl">If every backup were used instead (Adafruit {{BAF}}, DigiKey {{BDK}}, DFRobot {{BDF}}), not counting the backup laser price.</div></div>
+  <div class="box"><div class="big">{{PT}}</div><div class="lbl">Primary order, 4 stores: DFRobot {{PDF}} + DigiKey {{PDK}} + Adafruit {{PAF}} + Walmart {{PWM}}. Shipping and tax extra.</div></div>
+  <div class="box"><div class="big">~{{PALL}}</div><div class="lbl">All-in with about {{LOCALEST}} of AAA batteries, foam board, rod, strap, and craft supplies from local stores.</div></div>
+  <div class="box"><div class="big">{{BT}}</div><div class="lbl">If every backup were used instead (Adafruit {{BAF}}, DigiKey {{BDK}}, DFRobot {{BDF}}), not counting backups with no listed price (laser, bank, barrel cable).</div></div>
 </div>
 
 <div class="two">
@@ -83,8 +86,8 @@ tr:last-child td { border-bottom: none; }
     <h3>How to read this</h3>
     <ul>
       <li>Every part has a <b>primary</b> and a <b>backup</b>. Buy the primary. Use the backup only if the primary is out of stock or late.</li>
-      <li>Primary uses <b>two suppliers</b>: DFRobot (the micro:bit, camera, board, and servos all come from one ecosystem) and DigiKey (the laser and small parts).</li>
-      <li>Backups use Adafruit and DigiKey, plus DFRobot for the backup board.</li>
+      <li>Primary uses <b>four stores</b>: DFRobot (the micro:bit, camera, board, and servos all come from one ecosystem), DigiKey (the laser and small parts), Adafruit (power cable, switch, and charge port), and Walmart (the power bank, also at Target and Micro Center).</li>
+      <li>Backups use Adafruit and DigiKey, plus DFRobot for the backup board and Target, Newark, or Mouser for the power parts.</li>
       <li>Every link was opened on the dates above. Prices are what each site showed.</li>
       <li>Amazon is left out on purpose: its listings change sellers and cannot be checked reliably.</li>
     </ul>
@@ -95,7 +98,7 @@ tr:last-child td { border-bottom: none; }
       <li><b>DigiKey prices marked *</b> come from DigiKey's listing on Octopart; confirm in the cart.</li>
       <li><b>DigiKey stock is thin</b> on the 4-wire cable (16). Order it with everything else.</li>
       <li><b>DFRobot</b> ships from its US warehouse by UPS (3 to 7 days to Texas). Items not in the US warehouse ship from China in 10 to 17 business days with duties prepaid.</li>
-      <li><b>On arrival:</b> check the Xia mi board's external power connector (the pack has a DC 2.1 jack), whether the board powers the micro:bit, and which 5 V port the servos run best on.</li>
+      <li><b>On arrival:</b> check whether the Xia mi powers the micro:bit, and which 5 V port the servos run best on. With both servos moving and the laser on, the 5 V pins must read at least 4.6 V on the power bank; if not, feed the board's USB 5 V input instead. Measure the bank, the power switch, and the charge port before printing the base.</li>
       <li><b>Laser:</b> read the Class II label on the module before first power-up.</li>
     </ul>
   </div>
@@ -119,6 +122,20 @@ tr:last-child td { border-bottom: none; }
     <div class="note">Resistors and LEDs are sold loose; type the quantity in the cart.</div>
   </div>
 </div>
+<div class="two">
+  <div class="box"><h3>Adafruit cart (primary)</h3>
+    <table><tr><th>#</th><th>Product ID</th><th>Part</th><th class="r">Qty</th><th class="r">Price</th></tr>
+    {{CART_AF}}
+    <tr><td></td><td></td><td><b>Subtotal</b></td><td></td><td class="r"><b>{{PAF}}</b></td></tr></table>
+    <div class="note">Add the arm switch (805) here too if DigiKey will not price it.</div>
+  </div>
+  <div class="box"><h3>Walmart (primary)</h3>
+    <table><tr><th>#</th><th>Model</th><th>Part</th><th class="r">Qty</th><th class="r">Price</th></tr>
+    {{CART_WM}}
+    <tr><td></td><td></td><td><b>Subtotal</b></td><td></td><td class="r"><b>{{PWM}}</b></td></tr></table>
+    <div class="note">Store pickup works. Charge it fully when it arrives.</div>
+  </div>
+</div>
 <div class="box" style="margin-top:8px"><h3>From local stores or already on hand</h3>
   <table><tr><th>Item</th><th>Amount</th><th>Where</th></tr>
   {{LOCAL}}
@@ -131,18 +148,19 @@ tr:last-child td { border-bottom: none; }
       <li><b>Printed tilt stop</b> plus a code limit: cannot aim above the backdrop.</li>
       <li><b>Laser path:</b> 5 V port, through the arm switch, through the board relay, to the laser.</li>
       <li><b>Ports:</b> HuskyLens on the 5 V HuskyLens port; pan servo P1, tilt servo P2, speaker P0 (all 5 V); P8 spare.</li>
+      <li><b>Turret power:</b> USB-C power bank on the base floor, bank to power switch to Xia mi DC jack; USB-C charge port in the right wall.</li>
       <li><b>Wand:</b> second micro:bit in a printed handle, 2xAAA pack, 4-wire cable down the line to the mosquito (sensor + LED eyes).</li>
       <li><b>Fasteners:</b> M2 everywhere in printed parts; M3 only for the HuskyLens.</li>
     </ul>
   </div>
   <div class="box"><h3>If the primary board gives trouble</h3>
     <ul>
-      <li>Switch to the <b>micro:Driver</b> (backup #02): servos on its servo headers, laser on motor channel M1, power from the 3xAA backup pack.</li>
-      <li>Its I2C port voltage is not documented. Test the HuskyLens on it before relying on it; if it browns out, power the HuskyLens from a 5 V USB power bank.</li>
+      <li>Switch to the <b>micro:Driver</b> (backup #02): servos on its servo headers, laser on motor channel M1, power from the same power bank (5 V is inside its 3.5 to 5.5 V range).</li>
+      <li>Its I2C port voltage is not documented. Test the HuskyLens on it before relying on it; if it browns out, power the HuskyLens from the bank's second (USB-C) port.</li>
       <li>The printed base has room for either board (Xia mi 57 &times; 87 mm is the larger).</li>
     </ul>
   </div>
 </div>
 </section>
-<div class="foot">NAW Games &middot; nawgames.com/projects/addie/mosquito-turret &middot; MS-2000 parts list v1</div>
+<div class="foot">NAW Games &middot; nawgames.com/projects/addie/mosquito-turret &middot; MS-2000 parts list v2 (MOC-004)</div>
 </body></html>

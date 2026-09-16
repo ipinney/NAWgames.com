@@ -99,10 +99,59 @@ export const MOCS = [
     commits: ['8a683b7'],
     link: { href: '/projects/addie/ms2000-board.html#table', label: 'See the table layout' },
   },
+  {
+    id: 'MOC-004',
+    date: 'Sep 16, 2026',
+    title: 'A power bank that charges like a phone',
+    status: 'Approved',
+    approver: 'Dad',
+    was: [
+      'Four AA batteries in a pack that slid into a bay on the right side of the base. The pack’s switch turned the turret on and off.',
+      'A set of batteries lasts about 2 to 3 hours of tracking, and gets weaker the whole time.',
+    ],
+    now: [
+      'A USB-C power bank (the same one Dusty uses) lies flat on the floor of the base, ports to the front, held by a printed cradle and a strap.',
+      'A USB-C charge port in the right wall. Plug in a phone charger and the turret charges without opening anything.',
+      'A power switch with its rocker poking through the right wall is the main on and off.',
+      'The wand keeps its 2 AAA batteries.',
+    ],
+    why: 'No more swapping batteries. One charge should run about 4 to 6 hours, and the bank gives a steady 5 volts, so the servos move just as fast on run 30 as on run 1. That keeps the speed test fair.',
+    options: [
+      ['Keep regular AA batteries', 'They still come out, and they get weaker during a test.', false],
+      ['Rechargeable AA batteries', 'Only 4.8 volts, and they still come out to charge.', false],
+      ['AA batteries with their own USB-C plug', 'They still come out, and you need 4 cables.', false],
+      ['A bare lithium battery with a charging board', 'Not sealed, needs soldering, and about 1 amp is not enough for two servos.', false],
+      ['A store-bought power bank and a charge port in the wall', 'Picked. Sealed and made safe by the company, gives up to 2.4 amps, and uses the same charger as Dusty.', true],
+    ],
+    found: [
+      ['The bank does not fit the battery bay', 'The bank is 97 mm long and the bay was 70 mm. It lies front to back on the right side of the floor instead, with its back end against the back wall.'],
+      ['The speaker was in the way', 'The speaker sat on the back wall right where the bank ends. It moved to just left of center.'],
+      ['The plugs need room', 'The cable plugs stick out of the front of the bank. The bank sits all the way back, which leaves 31 mm, and a 90 degree adapter turns the plug sideways.'],
+      ['The board switch is hidden inside', 'The Xia mi has its own switch, but it is inside the base where nobody can reach it. So a small in-line switch sits on the right wall with its rocker poking through a window.'],
+      ['A shelf would not print', 'The base prints upside down, so a flat shelf under the switch would hang in the air. The switch sits on a wall that stands up from the floor plate instead, and the part above it is a 45 degree wedge.'],
+      ['Wands draw too little for a power bank', 'Power banks turn themselves off when a gadget uses very little power. The wand uses so little that it would get switched off, so it keeps its AAA batteries. The turret uses plenty, so its bank stays on.'],
+      ['5 volts is the lowest the board takes', 'The board’s power jack takes 5 to 12 volts, and the bank gives 5. A meter test on arrival makes sure the servos still get at least 4.6 volts. If not, the bank plugs into the board’s USB input instead.'],
+      ['Charging while it runs can reset it', 'Plugging in a charger can blink the power for a moment and restart the micro:bit. Rule: switch off, then charge.'],
+      ['The charge lights are hidden', 'The bank’s lights are inside the base. Rule: charge it the night before every session.'],
+    ],
+    touched: ['Base shell and floor plate (P1 Rev B)', 'Plates 1 and 2 re-sliced', 'Bought-part models', 'Both 3D viewers, hero and share pictures', 'Parts list and PDF (4 stores, $224)', 'Build guide: safety, parts, wiring map, steps 1, 6, 7, 9, 16, fixes', 'Print plan', 'Fair guide and Learn: controlled variables', 'Build your own', 'Overview, full plan, board page', 'Project plan'],
+    tests: [
+      'The bank, adapter, and switch fit with the floor plate on, and a charger plugs in from outside.',
+      'The 5 volt pins read at least 4.6 volts with both servos sweeping and the laser on.',
+      'The side switch turns everything on and off.',
+      '20 fast sweeps with no micro:bit restart.',
+      'At least 3 hours of nonstop tracking on one charge.',
+      'It charges through the side port until all 4 lights stay on.',
+      'Still 10 out of 10 hits at 3 feet.',
+    ],
+    commits: [],
+    link: { href: '/projects/addie/ms2000-cad/ms2000-turret-3d.html', label: 'See the new base in 3D' },
+  },
 ];
 
 // Newest first: [date, tag, text, commit]. Tags: Change, Decision, Design, Fix, Plan.
 export const LOG = [
+  ['Sep 16', 'Change', 'MOC-004: USB-C power bank with a charge port and power switch in the right wall replaces the 4 AA pack. Speaker moved left. Parts now $224 from 4 stores. Print time about 10 hours 45 minutes.', ''],
   ['Sep 16', 'Plan', 'Changes and lessons page started. From now on every change after the design lock gets a change order and a line here.', ''],
   ['Sep 16', 'Design', '3D viewers got a card at the bottom and chips you slide sideways, like Dusty\u2019s.', 'cf3345e'],
   ['Sep 16', 'Plan', 'Board and table page: two trifold layouts that fit a 3 foot table, and 12 sheets to print.', '8a683b7'],
@@ -124,6 +173,8 @@ export const LOG = [
 ];
 
 export const LESSONS = [
+  ['Check that a switch can be reached', 'The board already had a power switch, but it was inside the base. A switch only helps if a hand can get to it.'],
+  ['Think about how it prints', 'A shelf that looks fine in 3D can hang in the air when the part prints upside down. Slopes of 45 degrees or more print without help.'],
   ['Get the school\u2019s dates first', 'We guessed the fair was in the spring. The real due date is February 1, so the experiments had to move to winter break.'],
   ['Measure where it will be shown', 'Tests at 5 and 7 feet could never run on a 3 foot fair table. Measure the table before picking test distances.'],
   ['Two things side by side only line up at one distance', 'The camera and the laser are 38 mm apart, like your two eyes. Their lines cross at one spot. The target needs room for error, and the pod\u2019s 40 mm glowing face is that room.'],

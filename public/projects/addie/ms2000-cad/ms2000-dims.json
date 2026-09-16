@@ -481,37 +481,135 @@
     }
    }
   },
-  "aa_pack": {
-   "label": "4xAA battery holder",
+  "bank": {
+   "label": "USB-C power bank",
    "qty": 1,
-   "sku": "DFRobot FIT0918",
-   "color": "#50555e",
-   "role": "Turret power, about 6 V into the Xia mi. Slides into the base.",
+   "sku": "Anker 321 (A1112), Walmart",
+   "color": "#2b2f36",
+   "role": "Turret power, steady 5 V (MOC-004). Lies flat on the right of the floor, ports forward. Charges through the side port.",
    "dims": {
     "w": {
-     "v": 64.5,
+     "v": 45.8,
      "basis": "ds",
-     "note": "DFRobot: 70 x 64.5 x 19.6 mm"
+     "note": "Anker: 97 x 45.8 x 22 mm"
     },
     "l": {
-     "v": 70.0,
+     "v": 97.0,
      "basis": "ds",
      "note": ""
     },
     "h": {
-     "v": 19.6,
+     "v": 23.0,
      "basis": "ds",
-     "note": ""
+     "note": "Anker says 22, a store says 0.9 in (22.9): design for 23"
     },
-    "lead": {
-     "v": 250,
-     "basis": "ds",
-     "note": "to DC 2.1 plug"
-    },
-    "switch_side": {
+    "ports": {
      "v": null,
      "basis": "tbd",
-     "note": "which face the switch is on"
+     "note": "USB-A and USB-C on the front end; exact spots unknown until it arrives"
+    },
+    "lights": {
+     "v": null,
+     "basis": "tbd",
+     "note": "where the 4 charge lights are"
+    }
+   }
+  },
+  "charge_port": {
+   "label": "USB-C charge port",
+   "qty": 1,
+   "sku": "Adafruit 6069",
+   "color": "#44484f",
+   "role": "Panel USB-C socket in the right wall. Its short cable plugs into the bank (MOC-004).",
+   "dims": {
+    "hole_d": {
+     "v": 14.0,
+     "basis": "ds",
+     "note": "Adafruit: fits holes 12 to 18 mm"
+    },
+    "max_panel": {
+     "v": 13.0,
+     "basis": "ds",
+     "note": "panels up to 13 mm"
+    },
+    "body_d": {
+     "v": 12.0,
+     "basis": "est",
+     "note": "threaded body behind the panel"
+    },
+    "body_l": {
+     "v": 18.0,
+     "basis": "est",
+     "note": ""
+    },
+    "nut_d": {
+     "v": 18.0,
+     "basis": "est",
+     "note": ""
+    },
+    "nut_t": {
+     "v": 3.0,
+     "basis": "est",
+     "note": ""
+    },
+    "bezel_d": {
+     "v": 17.0,
+     "basis": "est",
+     "note": "lip outside the wall"
+    },
+    "bezel_t": {
+     "v": 2.5,
+     "basis": "est",
+     "note": ""
+    },
+    "cable": {
+     "v": null,
+     "basis": "tbd",
+     "note": "cable length not published"
+    }
+   }
+  },
+  "inline_switch": {
+   "label": "In-line power switch",
+   "qty": 1,
+   "sku": "Adafruit 1125",
+   "color": "#3a3f47",
+   "role": "Main on/off (MOC-004). Sits in ribs on the right wall, rocker through a window. Between the barrel cable and the Xia mi jack.",
+   "dims": {
+    "l": {
+     "v": 38.0,
+     "basis": "est",
+     "note": "size not published"
+    },
+    "w": {
+     "v": 18.0,
+     "basis": "est",
+     "note": ""
+    },
+    "h": {
+     "v": 13.0,
+     "basis": "est",
+     "note": ""
+    },
+    "rocker_l": {
+     "v": 12.0,
+     "basis": "est",
+     "note": ""
+    },
+    "rocker_w": {
+     "v": 8.0,
+     "basis": "est",
+     "note": ""
+    },
+    "rocker_h": {
+     "v": 3.0,
+     "basis": "est",
+     "note": "above the body"
+    },
+    "rating": {
+     "v": null,
+     "basis": "ds",
+     "note": "2 A, 2.1 mm jack in, plug out"
     }
    }
   },

@@ -15,7 +15,7 @@ Project plan, school due dates, site map, and deploy gotchas: PLAN.md in this fo
 - [x] 0. Workspace, skill, checkpoint file (Sep 16)
 - [x] 1. Component library: components.py, make_components.py, DIMENSIONS.md, ms2000-components.html (Sep 16)
 - [ ] 2. Printed parts, one at a time (script in parts/, viewer + STL + check PNG each)
-  - [x] P1 base (Sep 16): parts/p1_base.py -> base shell (142x133x67, ~160 g) + floor plate (~63 g). Fit check and swept paths (pack slide-in, micro:bit lift-out, DC plug) all clear.
+  - [x] P1 base (Sep 16): parts/p1_base.py -> base shell (142x133x67, ~169 g) + floor plate (~76 g). Rev B (MOC-004): power bank cradle, charge port, in-line switch. Fit check (ghost vs parts, ghost vs ghost) and swept paths (bank plugs, rocker, micro:bit lift-out, DC plug) all clear.
   - [x] P2 turntable + tilt yoke, one print (Sep 16): parts/p2_turntable.py, ~39 g. Also P3 pivot pin (same script).
     Checks: tilt servo vs yoke/head, head sweep -30..+35 vs yoke, stops engage at +40/-35 and not inside the range, whole turret pan sweep -90..+90 vs base shell and pan servo. All clear.
   - [x] P4 camera + laser head (Sep 16): parts/p4_head.py, ~11 g. HuskyLens via tab (2x M3, nut traps), screen back, top edge z 25.
@@ -36,7 +36,7 @@ Project plan, school due dates, site map, and deploy gotchas: PLAN.md in this fo
 - [x] 3. Assembly: make_assembly.py (turret in place, catalog 'In turret' mode). Sweeps live in the part scripts. Exploded view not done.
 - [x] 4. Print plates (Sep 16): plates.py (layout, print orientation per part) + orca/build3mf.py (Flash Studio CLI in orca-cli docker, presets from /opt/ffstudio/work/*.json) via ./plates.sh.
   Settings: 0.2 mm, 3 walls, 15% gyroid, 5 mm brim (none on pin and clips), no supports, textured PEI; plate 3 slowed walls.
-  Results: P1 shell 3h01 125 g | floor + foot 1h43 64 g | yoke, wand, head, pin, pod back 3h34 77 g | WHITE pod front + clips 0h34 11 g | pendulum, clip, foot 1h26 44 g. Total ~10h 20m, ~320 g.
+  Results (Rev B): P1 shell 3h13 131 g | floor + foot 1h54 72 g | yoke, wand, head, pin, pod back 3h34 77 g | WHITE pod front + clips 0h34 11 g | pendulum, clip, foot 1h26 44 g. Total ~10h 42m, ~335 g.
   3mf published; gcode stays in /opt/ffstudio/work/ms2000/out (too big for git).
 - [ ] 5. Parts arrive: calipers, set basis 'cal', rebuild, reprint what changed
 
@@ -52,13 +52,15 @@ Project plan, school due dates, site map, and deploy gotchas: PLAN.md in this fo
 ## Open numbers (see DIMENSIONS.md, basis est/tbd)
 - Xia mi: mounting holes, height, micro:bit slot direction, power jack side
 - 2xAAA pack size; arm switch size; servo horn; stuffed mosquito size
+- Power bank height and port spots; in-line switch body and rocker (all est); charge port body/nut/cable length
 
 ## P1 layout (model frame: x right, y back from front face, z up)
 - Xia mi flat on 5 mm posts, left side x -60..-3, y 4..91, socket end at front; micro:bit stands at y 17.7, top z 56.6.
-- Board holes from photo: 80.2 x 50.2 pitch, 3.4 inset. Board power switch stays ON; pack switch is master.
-- 4xAA pack x 1..65.5, y 11.5..81.5, slides in through right-wall bay (z < 24).
+- Board holes from photo: 80.2 x 50.2 pitch, 3.4 inset. Board power switch stays ON; the in-line switch (right wall) is master.
+- Power bank (MOC-004) x 14..59.8, y 33.5..130.5, z 3..26, ports forward (31.5 mm plug room), back end at the back wall. Floor cradle: rails x 11.1..13.5 / 60.3..62.7 (y 41.5..114.5, 10 tall), front corner tabs 7 tall, strap slots beside the rails.
+- Charge port (Adafruit 6069) hole d14 in right wall at y 20, z 40. In-line switch body x 56..69, y 60..98, z 30..48, rocker window 14 x 10 at y 79; sits on a floor-plate stand (x 63.2..68.4, to z 29.7); 45 deg wedge above it (shell prints deck-down).
 - Pan servo hangs from deck underside (z 64), shaft at (0, 66), deck top z 67. Turntable max radius 38 (slot at y 24 is the limit).
-- Cable hole (0,112) d14 behind the turntable. Speaker on back wall at x 36 z 40, arm switch at x -36 z 40.
+- Cable hole (0,112) d14 behind the turntable. Speaker on back wall at x -8 z 40 (moved from x 36 for the bank), arm switch at x -36 z 40.
 - Corner posts at (+-65.5, 5.5 / 127.5), M2 up through the floor plate.
 
 ## P2 numbers (turntable local frame: origin on pan axis at disc underside; world = local + (0, 66, 72.3))
@@ -76,6 +78,7 @@ Project plan, school due dates, site map, and deploy gotchas: PLAN.md in this fo
 - Sep 16: P2 + P3 done. Old P3 (tilt yoke) merged into P2; P3 is now the pivot pin.
 - Sep 16: P4 done. Sensor pod (P6) note: the laser dot lands +-15 mm off the camera aim at 3 and 7 ft, and the ALS-PT19 is only 7.8 x 10.6. Pod needs a light collector about 30 mm wide, or code must offset the aim by distance (HuskyLens box size).
 - Sep 16: P7, P8, plates done. Design complete except caliper pass. Filament: ~320 g sliced (buy a spool; 11 g must be white).
+- Sep 16: MOC-004. components.py: aa_pack replaced by bank, charge_port, inline_switch. P1 Rev B. Plates 1-2 resliced (~335 g total). Guide shots, hero, OG re-rendered (make_guide_shots.py writes head-explode and setup too; only the 6 used jpgs are published).
 
 ## Site rework (Sep 16, Dusty layout)
 - Pages: /projects/addie/mosquito-turret (overview), /build (steps, how it works, shopping list from parts.js, tools, 3D models, print files, build steps placeholder), /build/batches (5 print batches in print order 4,3,1,2,5 with learn-while-it-prints), /learn (11 science topics + glossary). Shared nav/buttons in mosquito-turret/ui.js.

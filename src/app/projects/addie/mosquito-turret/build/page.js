@@ -10,12 +10,12 @@ export const metadata = meta(
 const STEPS = [
   {
     title: 'Get the parts',
-    text: 'Two micro:bits, a board, an AI camera, three servos, a tiny laser, light sensors, a speaker, and batteries. About $192 from two stores.',
+    text: 'Two micro:bits, a board, an AI camera, three servos, a tiny laser, light sensors, a speaker, and a rechargeable power bank. About $224 from four stores.',
     action: { href: '#shopping', label: 'Shopping list' },
   },
   {
     title: 'Print in five batches',
-    text: '12 printed parts on five plates. About 10 hours and 320 g of PLA. One plate must be white.',
+    text: '12 printed parts on five plates. About 10 hours 45 minutes and 335 g of PLA. One plate must be white.',
     action: { href: `${BASE}/build/batches`, label: 'Print plan' },
   },
   {
@@ -50,8 +50,8 @@ const VIEWERS = [
 
 // [stl stem, name, what it does, qty, plate, white]
 const PRINTS = [
-  ['p1-base-shell', 'Base shell', 'The body. Holds the board, battery pack, speaker, and arm switch.', 1, 1],
-  ['p1-floor-plate', 'Floor plate', 'The bottom. The board and battery pack sit on it.', 1, 2],
+  ['p1-base-shell', 'Base shell', 'The body. Holds the board, power bank, speaker, arm switch, side switch, and charge port.', 1, 1],
+  ['p1-floor-plate', 'Floor plate', 'The bottom. The board and power bank sit on it.', 1, 2],
   ['p2-turntable-yoke', 'Turntable and tilt yoke', 'Spins left and right on the pan servo and holds the head.', 1, 3],
   ['p3-pivot-pin', 'Pivot pin', 'The axle on the left side of the head.', 1, 3],
   ['p4-head', 'Camera and laser head', 'Holds the camera and the laser, lined up to meet 3 feet away.', 1, 3],
@@ -90,6 +90,8 @@ export default function BuildPage() {
   const sections = [...new Set(BUY.map((b) => b.sec))];
   const total = BUY.reduce((s, b) => s + (b.price || 0), 0);
   const byStore = BUY.reduce((m, b) => ({ ...m, [b.vendor]: (m[b.vendor] || 0) + (b.price || 0) }), {});
+  const stores = Object.keys(byStore).map((v) => `${v} (${money(byStore[v])})`);
+  const storeList = stores.length > 1 ? `${stores.slice(0, -1).join(', ')}${stores.length > 2 ? ',' : ''} and ${stores[stores.length - 1]}` : stores.join('');
   return (
     <div className="min-h-screen">
       <Nav current="build" />
@@ -166,7 +168,7 @@ export default function BuildPage() {
         <Section
           id="shopping"
           title="Shopping list"
-          sub={`Order from DFRobot (${money(byStore.DFRobot)}) and DigiKey (${money(byStore.DigiKey)}). ${money(total)} before shipping and tax. The PDF has a backup source for every part.`}
+          sub={`Order from ${storeList}. ${money(total)} before shipping and tax. The PDF has a backup source for every part.`}
         >
           <div className="space-y-4">
             {sections.map((sec) => (
@@ -202,7 +204,7 @@ export default function BuildPage() {
                   </div>
                 ))}
               </div>
-              <p className="text-white/45 text-xs mt-2">About $35 in all.</p>
+              <p className="text-white/45 text-xs mt-2">About $30 in all.</p>
             </div>
             <div className="bg-naw-card rounded-2xl border border-white/10 p-5">
               <h3 className="text-white font-bold">Tools</h3>

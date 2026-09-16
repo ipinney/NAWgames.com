@@ -61,7 +61,7 @@ const PARTS = {
   experiments: {
     what: 'All 30 runs done and written down. Two tests, three settings each, five runs each, 30 seconds a run, always 3 feet from the camera.',
     ask: [
-      ['Set up', 'Backdrop up, mosquito 3 feet from the camera lens (tape mark), the right target cover on, room lights on, fresh batteries in both.'],
+      ['Set up', 'Backdrop up, mosquito 3 feet from the camera lens (tape mark), the right target cover on, room lights on, a charged power bank in the turret, fresh batteries in the wand.'],
       ['Label the run', 'Set the wand to the test, the setting, and the run number.'],
       ['Arm', 'A grown-up turns the arm switch on.'],
       ['Release', 'Pull the mosquito back to the angle mark, let go, and start the 30 seconds.'],
@@ -270,7 +270,7 @@ export default function FairPage() {
                     <td className="p-3 text-white font-semibold">{t}</td>
                     <td className="p-3 text-naw-pink">{c}</td>
                     <td className="p-3 text-naw-cyan">{m}</td>
-                    <td className="p-3 text-white/60">{k}. Same room, same batteries, same person on the line.</td>
+                    <td className="p-3 text-white/60">{k}. Same room, a charged power bank, same person on the line.</td>
                   </tr>
                 ))}
               </tbody>

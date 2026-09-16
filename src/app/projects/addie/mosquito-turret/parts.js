@@ -123,14 +123,47 @@ export const BUY = [
  },
  {
   "sec": "Power",
-  "name": "Turret battery pack, 4xAA",
+  "name": "Turret power bank, USB-C",
   "qty": 1,
-  "role": "External power for the Xia mi board: servos, camera, speaker, laser.",
-  "vendor": "DFRobot",
-  "pn": "FIT0918",
-  "title": "4xAA battery holder with power switch, DC 2.1 jack, cover",
-  "price": 2.0,
-  "url": "https://www.dfrobot.com/product-2649.html"
+  "role": "Powers the Xia mi board: servos, camera, speaker, laser. Steady 5 V, stays inside the base and charges through the side port (change MOC-004, Sep 16).",
+  "vendor": "Walmart",
+  "pn": "A1112",
+  "title": "Anker 321 Power Bank (PowerCore 5K), 5,200 mAh, USB-A + USB-C",
+  "price": 23.84,
+  "url": "https://www.walmart.com/ip/Anker-5K-Power-Bank-12W-USB-C-USB-A-Port/2335161189"
+ },
+ {
+  "sec": "Power",
+  "name": "USB to barrel jack cable",
+  "qty": 1,
+  "role": "Bank USB-A port to the power switch, then the Xia mi DC jack.",
+  "vendor": "Adafruit",
+  "pn": "2697",
+  "title": "USB to 2.1mm Male Barrel Jack Cable, 22AWG, 1 m",
+  "price": 2.75,
+  "url": "https://www.adafruit.com/product/2697"
+ },
+ {
+  "sec": "Power",
+  "name": "Power switch",
+  "qty": 1,
+  "role": "Main on/off. Plugs between the barrel cable and the Xia mi jack; the rocker pokes through the right wall.",
+  "vendor": "Adafruit",
+  "pn": "1125",
+  "title": "In-line power switch for 2.1mm barrel jack, 2 A",
+  "price": 2.5,
+  "url": "https://www.adafruit.com/product/1125"
+ },
+ {
+  "sec": "Power",
+  "name": "USB-C charge port",
+  "qty": 1,
+  "role": "Panel USB-C socket in the right wall. Its cable plugs into the bank, so a phone charger charges the turret from outside.",
+  "vendor": "Adafruit",
+  "pn": "6069",
+  "title": "USB C Small Round Panel Mount Extension Cable",
+  "price": 4.5,
+  "url": "https://www.adafruit.com/product/6069"
  },
  {
   "sec": "Power",
@@ -168,11 +201,6 @@ export const BUY = [
 ];
 
 export const LOCAL = [
- {
-  "name": "AA batteries",
-  "qty": "4 plus 4 spares",
-  "where": "Grocery store"
- },
  {
   "name": "AAA batteries",
   "qty": "4 plus 4 spares",
@@ -217,6 +245,21 @@ export const LOCAL = [
   "name": "Micro-USB data cables",
   "qty": "2",
   "where": "Probably on hand"
+ },
+ {
+  "name": "90 degree USB-A adapter",
+  "qty": "1",
+  "where": "Spare from Dusty's pair (backup: Walmart 709931832)"
+ },
+ {
+  "name": "USB-C phone charger and cable",
+  "qty": "1",
+  "where": "On hand"
+ },
+ {
+  "name": "Hook-and-loop strap, 20 mm",
+  "qty": "1",
+  "where": "Hardware store (holds the bank)"
  },
  {
   "name": "Paper data sheets, printed",

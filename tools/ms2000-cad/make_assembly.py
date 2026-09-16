@@ -28,13 +28,15 @@ ROT_PIN = [[0, 0, 1], [0, 1, 0], [-1, 0, 0]]                    # pin z axis -> 
 
 # key, label, group, qty, source, note, mesh, color
 ITEMS = [
-    ('shell', 'Base shell', 'printed', 1, 'P1', 'Top deck, front window, micro:bit slot, battery bay, speaker grille, arm switch.', T(p1['shell']), '#ff5fa2'),
-    ('plate', 'Floor plate', 'printed', 1, 'P1', 'Board posts and battery rails. Four M2 screws up into the shell.', T(p1['plate']), '#c9477f'),
+    ('shell', 'Base shell', 'printed', 1, 'P1', 'Top deck, front window, micro:bit slot, charge port and switch window on the right, speaker grille, arm switch.', T(p1['shell']), '#ff5fa2'),
+    ('plate', 'Floor plate', 'printed', 1, 'P1', 'Board posts, power bank cradle and strap slots. Four M2 screws up into the shell.', T(p1['plate']), '#c9477f'),
     ('yoke', 'Turntable + yoke', 'printed', 1, 'P2', 'Pan horn underneath, tilt servo on the right, pivot bushing and tilt stops on the left.', tt(p2['yoke']), '#9be15d'),
     ('pin', 'Pivot pin', 'printed', 1, 'P3', 'Left tilt axle, M2 x 12 into a nut in the head.', tt(T(p2['pin'], ROT_PIN, (-XO - 1.6, 0, TZ))), '#f0b43c'),
     ('head', 'Camera + laser head', 'printed', 1, 'P4', 'HuskyLens on two M3 screws, laser in a plastic pinch clamp toed in 2.4 degrees to meet the camera line at 3 ft.', hd(p4['head']), '#4ad0e8'),
     ('board', 'Xia mi + micro:bit', 'bought', 1, 'DFRobot MBT0042 + MBT0039', 'micro:bit stands up behind the front window.', T(g1['board']), '#2f6fbf'),
-    ('pack', '4xAA pack', 'bought', 1, 'DFRobot FIT0918', 'Slides in from the right side.', T(g1['pack']), '#50555e'),
+    ('bank', 'USB-C power bank', 'bought', 1, 'Anker 321 (Walmart)', 'Flat on the floor, ports forward, strapped in its cradle (MOC-004).', T(g1['bank']), '#2b2f36'),
+    ('cport', 'USB-C charge port', 'bought', 1, 'Adafruit 6069', 'Right wall near the front. Its cable plugs into the bank.', T(g1['cport']), '#44484f'),
+    ('pswitch', 'Power switch', 'bought', 1, 'Adafruit 1125', 'In-line switch in ribs on the right wall, rocker through the window. Main on/off.', T(g1['pswitch']), '#3a3f47'),
     ('pservo', 'Pan servo', 'bought', 1, 'DFRobot SER0049', 'Hangs from the deck.', T(g1['servo']), '#474c55'),
     ('tservo', 'Tilt servo', 'bought', 1, 'DFRobot SER0049', 'Right upright, shaft pointing in.', tt(g2['tilt_servo']), '#474c55'),
     ('horns', 'Servo horns', 'bought', 2, 'with the servos', 'Sizes are estimates until the servos arrive.', None, '#e8e8e8'),

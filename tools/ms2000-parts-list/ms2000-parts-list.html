@@ -44,6 +44,9 @@ h2 { font-size: 16px; color: var(--pink); margin-bottom: 6px; break-after: avoid
 .v-dfrobot { background: #F5B642; }
 .v-digikey { background: #F0605E; }
 .v-adafruit { background: #5DB7F0; }
+.v-walmart { background: #7FB2F0; }
+.v-target { background: #F08A8A; }
+.v-newark, .v-mouser { background: #B9C2D0; }
 .pn { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: var(--ink); }
 .stock { color: var(--ink3); font-size: 9px; }
 .title { color: var(--ink); font-weight: 600; margin-top: 1px; }
@@ -67,15 +70,15 @@ tr:last-child td { border-bottom: none; }
   <div>
     <div class="eyebrow">Addie Pinney &middot; 3rd grade science fair &middot; Spring 2027</div>
     <h1>MS-<span>2000</span> Parts and Materials</h1>
-    <div class="sub">Design A, Pan and Tilt Camera Turret. Design locked Sep 16, 2026.</div>
+    <div class="sub">Design A, Pan and Tilt Camera Turret. Design locked Sep 16, 2026. Rev 2: USB-C power bank (MOC-004).</div>
   </div>
-  <div class="meta"><b>Links checked</b><br>Sep 15 to 16, 2026<br><b>15</b> line items to buy</div>
+  <div class="meta"><b>Links checked</b><br>Sep 15 to 16, 2026<br><b>18</b> line items to buy</div>
 </div>
 
 <div class="grid3">
-  <div class="box"><div class="big">$191.94</div><div class="lbl">Primary order, 2 suppliers: DFRobot $154.70 + DigiKey $37.24. Shipping and tax extra.</div></div>
-  <div class="box"><div class="big">~$226.94</div><div class="lbl">All-in with about $35.00 of batteries, foam board, rod, and craft supplies from local stores.</div></div>
-  <div class="box"><div class="big">$174.35</div><div class="lbl">If every backup were used instead (Adafruit $88.65, DigiKey $73.80, DFRobot $11.90), not counting the backup laser price.</div></div>
+  <div class="box"><div class="big">$223.53</div><div class="lbl">Primary order, 4 stores: DFRobot $152.70 + DigiKey $37.24 + Adafruit $9.75 + Walmart $23.84. Shipping and tax extra.</div></div>
+  <div class="box"><div class="big">~$253.53</div><div class="lbl">All-in with about $30.00 of AAA batteries, foam board, rod, strap, and craft supplies from local stores.</div></div>
+  <div class="box"><div class="big">$182.85</div><div class="lbl">If every backup were used instead (Adafruit $94.65, DigiKey $73.80, DFRobot $11.90), not counting backups with no listed price (laser, bank, barrel cable).</div></div>
 </div>
 
 <div class="two">
@@ -83,8 +86,8 @@ tr:last-child td { border-bottom: none; }
     <h3>How to read this</h3>
     <ul>
       <li>Every part has a <b>primary</b> and a <b>backup</b>. Buy the primary. Use the backup only if the primary is out of stock or late.</li>
-      <li>Primary uses <b>two suppliers</b>: DFRobot (the micro:bit, camera, board, and servos all come from one ecosystem) and DigiKey (the laser and small parts).</li>
-      <li>Backups use Adafruit and DigiKey, plus DFRobot for the backup board.</li>
+      <li>Primary uses <b>four stores</b>: DFRobot (the micro:bit, camera, board, and servos all come from one ecosystem), DigiKey (the laser and small parts), Adafruit (power cable, switch, and charge port), and Walmart (the power bank, also at Target and Micro Center).</li>
+      <li>Backups use Adafruit and DigiKey, plus DFRobot for the backup board and Target, Newark, or Mouser for the power parts.</li>
       <li>Every link was opened on the dates above. Prices are what each site showed.</li>
       <li>Amazon is left out on purpose: its listings change sellers and cannot be checked reliably.</li>
     </ul>
@@ -95,7 +98,7 @@ tr:last-child td { border-bottom: none; }
       <li><b>DigiKey prices marked *</b> come from DigiKey's listing on Octopart; confirm in the cart.</li>
       <li><b>DigiKey stock is thin</b> on the 4-wire cable (16). Order it with everything else.</li>
       <li><b>DFRobot</b> ships from its US warehouse by UPS (3 to 7 days to Texas). Items not in the US warehouse ship from China in 10 to 17 business days with duties prepaid.</li>
-      <li><b>On arrival:</b> check the Xia mi board's external power connector (the pack has a DC 2.1 jack), whether the board powers the micro:bit, and which 5 V port the servos run best on.</li>
+      <li><b>On arrival:</b> check whether the Xia mi powers the micro:bit, and which 5 V port the servos run best on. With both servos moving and the laser on, the 5 V pins must read at least 4.6 V on the power bank; if not, feed the board's USB 5 V input instead. Measure the bank, the power switch, and the charge port before printing the base.</li>
       <li><b>Laser:</b> read the Class II label on the module before first power-up.</li>
     </ul>
   </div>
@@ -231,18 +234,51 @@ tr:last-child td { border-bottom: none; }
 <div class="note">Plugs into the Xia mi P0 port (5 V); MakeCode plays sound on P0. Backup speaker page: adafruit.com/product/3923 (solder the wires to the amp).</div></div>
 </section>
 <section><h2>Power</h2>
-<div class="item"><div class="ihead"><span class="num">12</span><span class="iname">Turret battery pack, 4xAA</span><span class="qty">Qty 1</span></div>
-<div class="role">External power for the Xia mi board: servos, camera, speaker, laser.</div>
+<div class="item"><div class="ihead"><span class="num">12</span><span class="iname">Turret power bank, USB-C</span><span class="qty">Qty 1</span></div>
+<div class="role">Powers the Xia mi board: servos, camera, speaker, laser. Steady 5 V, stays inside the base and charges through the side port (change MOC-004, Sep 16).</div>
 <div class="src p"><div class="tag">PRIMARY</div>
-<div class="body"><div class="top"><span class="vend v-dfrobot">DFRobot</span><span class="pn">FIT0918</span><span class="stock">In stock</span></div>
-<div class="title">4xAA battery holder with power switch, DC 2.1 jack, cover</div><a class="url" href="https://www.dfrobot.com/product-2649.html">dfrobot.com/product-2649.html</a></div>
-<div class="price">$2.00</div></div>
+<div class="body"><div class="top"><span class="vend v-walmart">Walmart</span><span class="pn">A1112</span><span class="stock">In stock</span></div>
+<div class="title">Anker 321 Power Bank (PowerCore 5K), 5,200 mAh, USB-A + USB-C</div><a class="url" href="https://www.walmart.com/ip/Anker-5K-Power-Bank-12W-USB-C-USB-A-Port/2335161189">walmart.com/ip/Anker-5K-Power-Bank-12W-USB-C-USB-A-Port/2335161189</a></div>
+<div class="price">$23.84</div></div>
 <div class="src b"><div class="tag">BACKUP</div>
-<div class="body"><div class="top"><span class="vend v-adafruit">Adafruit</span><span class="pn">771</span><span class="stock">In stock</span></div>
-<div class="title">3xAA battery holder with on/off switch (4.5 V)</div><a class="url" href="https://www.adafruit.com/product/771">adafruit.com/product/771</a></div>
-<div class="price">$3.95</div></div>
-<div class="note">About 6 V, inside the Xia mi&#x27;s 5 to 12 V range. The 3xAA backup matches the micro:Driver (3.5 to 5.5 V). A 5 V USB power bank into the board&#x27;s USB port also works.</div></div>
-<div class="item"><div class="ihead"><span class="num">13</span><span class="iname">micro:bit battery pack</span><span class="qty">Qty 2</span></div>
+<div class="body"><div class="top"><span class="vend v-target">Target</span><span class="pn">A-86373147</span><span class="stock">Check store</span></div>
+<div class="title">Same bank (Anker 5000mAh PowerCore 5K 12W 1A1C)</div><a class="url" href="https://www.target.com/p/anker-5000mah-power-bank-powercore-5k-12w-1a1c-black/-/A-86373147">target.com/p/anker-5000mah-power-bank-powercore-5k-12w-1a1c-black/-/A-86373147</a></div>
+<div class="price"><span class="tbd">at checkout</span></div></div>
+<div class="note">97 x 45.8 x 22 mm, 118 g, 5 V up to 2.4 A. Same bank as Nolan&#x27;s Dusty. The turret draws enough that the bank never shuts itself off; do not use its trickle mode (double press). Also sold at Micro Center Houston.</div></div>
+<div class="item"><div class="ihead"><span class="num">13</span><span class="iname">USB to barrel jack cable</span><span class="qty">Qty 1</span></div>
+<div class="role">Bank USB-A port to the power switch, then the Xia mi DC jack.</div>
+<div class="src p"><div class="tag">PRIMARY</div>
+<div class="body"><div class="top"><span class="vend v-adafruit">Adafruit</span><span class="pn">2697</span><span class="stock">In stock</span></div>
+<div class="title">USB to 2.1mm Male Barrel Jack Cable, 22AWG, 1 m</div><a class="url" href="https://www.adafruit.com/product/2697">adafruit.com/product/2697</a></div>
+<div class="price">$2.75</div></div>
+<div class="src b"><div class="tag">BACKUP</div>
+<div class="body"><div class="top"><span class="vend v-newark">Newark</span><span class="pn">2697</span><span class="stock">Check stock</span></div>
+<div class="title">Adafruit 2697 (same cable)</div><a class="url" href="https://www.newark.com/adafruit/2697/usb-to-2-1mm-male-barrel-jack/dp/77Y5319">newark.com/adafruit/2697/usb-to-2-1mm-male-barrel-jack/dp/77Y5319</a></div>
+<div class="price"><span class="tbd">at checkout</span></div></div>
+<div class="note">Center positive, 5.5/2.1 mm. Coil the extra length inside the base. A 90 degree USB-A adapter (spare from Dusty&#x27;s pair) turns the plug so it fits in front of the bank.</div></div>
+<div class="item"><div class="ihead"><span class="num">14</span><span class="iname">Power switch</span><span class="qty">Qty 1</span></div>
+<div class="role">Main on/off. Plugs between the barrel cable and the Xia mi jack; the rocker pokes through the right wall.</div>
+<div class="src p"><div class="tag">PRIMARY</div>
+<div class="body"><div class="top"><span class="vend v-adafruit">Adafruit</span><span class="pn">1125</span><span class="stock">In stock</span></div>
+<div class="title">In-line power switch for 2.1mm barrel jack, 2 A</div><a class="url" href="https://www.adafruit.com/product/1125">adafruit.com/product/1125</a></div>
+<div class="price">$2.50</div></div>
+<div class="src b"><div class="tag">BACKUP</div>
+<div class="body"><div class="top"><span class="vend v-mouser">Mouser</span><span class="pn">1125</span><span class="stock">Check stock</span></div>
+<div class="title">Adafruit 1125 (same switch)</div><a class="url" href="https://www.mouser.com/c/?q=adafruit%201125">mouser.com/c/?q=adafruit%201125</a></div>
+<div class="price">$2.50</div></div>
+<div class="note">Body size is not published: measure it before printing the base.</div></div>
+<div class="item"><div class="ihead"><span class="num">15</span><span class="iname">USB-C charge port</span><span class="qty">Qty 1</span></div>
+<div class="role">Panel USB-C socket in the right wall. Its cable plugs into the bank, so a phone charger charges the turret from outside.</div>
+<div class="src p"><div class="tag">PRIMARY</div>
+<div class="body"><div class="top"><span class="vend v-adafruit">Adafruit</span><span class="pn">6069</span><span class="stock">In stock</span></div>
+<div class="title">USB C Small Round Panel Mount Extension Cable</div><a class="url" href="https://www.adafruit.com/product/6069">adafruit.com/product/6069</a></div>
+<div class="price">$4.50</div></div>
+<div class="src b"><div class="tag">BACKUP</div>
+<div class="body"><div class="top"><span class="vend v-adafruit">Adafruit</span><span class="pn">4218</span><span class="stock">In stock</span></div>
+<div class="title">USB C Round Panel Mount Extension Cable, 30 cm (needs a 21.5 mm hole)</div><a class="url" href="https://www.adafruit.com/product/4218">adafruit.com/product/4218</a></div>
+<div class="price">$9.95</div></div>
+<div class="note">Fits a 12 to 18 mm hole; the base has 14 mm. Also listed at DigiKey (6069). Switch off before charging: plugging in can blink the power and reset the micro:bit.</div></div>
+<div class="item"><div class="ihead"><span class="num">16</span><span class="iname">micro:bit battery pack</span><span class="qty">Qty 2</span></div>
 <div class="role">Powers the wand micro:bit, and the turret micro:bit if the board does not.</div>
 <div class="src p"><div class="tag">PRIMARY</div>
 <div class="body"><div class="top"><span class="vend v-dfrobot">DFRobot</span><span class="pn">FIT0625</span><span class="stock">In stock</span></div>
@@ -255,7 +291,7 @@ tr:last-child td { border-bottom: none; }
 <div class="note">The micro:bit battery socket is JST PH 2.0 mm. Adafruit&#x27;s 2xAAA version (4191) is out of stock, so the backup is 2xAA.</div></div>
 </section>
 <section><h2>Wiring and hardware</h2>
-<div class="item"><div class="ihead"><span class="num">14</span><span class="iname">M2 screw, nut, and standoff kit</span><span class="qty">Qty 1</span></div>
+<div class="item"><div class="ihead"><span class="num">17</span><span class="iname">M2 screw, nut, and standoff kit</span><span class="qty">Qty 1</span></div>
 <div class="role">Every printed part: base, turret head, wand handle, sensor pod, and backdrop parts.</div>
 <div class="src p"><div class="tag">PRIMARY</div>
 <div class="body"><div class="top"><span class="vend v-dfrobot">DFRobot</span><span class="pn">FIT0665</span><span class="stock">In stock</span></div>
@@ -266,7 +302,7 @@ tr:last-child td { border-bottom: none; }
 <div class="title">DFRobot FIT0665 (same kit)</div><a class="url" href="https://www.digikey.com/en/products/detail/dfrobot/FIT0665/12324933">digikey.com/en/products/detail/dfrobot/FIT0665/12324933</a></div>
 <div class="price">$12.90</div></div>
 <div class="note">Prints use M2 clearance holes (2.2 mm) and M2 nut traps. Exceptions: HuskyLens uses its own M3 kit; servos use their own horn screws.</div></div>
-<div class="item"><div class="ihead"><span class="num">15</span><span class="iname">Gravity 3-pin cables (10 pack)</span><span class="qty">Qty 1</span></div>
+<div class="item"><div class="ihead"><span class="num">18</span><span class="iname">Gravity 3-pin cables (10 pack)</span><span class="qty">Qty 1</span></div>
 <div class="role">Servo, speaker, and laser leads to the board, plus spares.</div>
 <div class="src p"><div class="tag">PRIMARY</div>
 <div class="body"><div class="top"><span class="vend v-dfrobot">DFRobot</span><span class="pn">FIT0031</span><span class="stock">In stock</span></div>
@@ -289,11 +325,10 @@ tr:last-child td { border-bottom: none; }
 <tr><td>03</td><td>SEN0305</td><td>HuskyLens AI camera</td><td class="r">1</td><td class="r">$34.90</td></tr>
 <tr><td>04</td><td>SER0049</td><td>Micro servo</td><td class="r">3</td><td class="r">$14.70</td></tr>
 <tr><td>11</td><td>FIT0449</td><td>Speaker module</td><td class="r">1</td><td class="r">$6.00</td></tr>
-<tr><td>12</td><td>FIT0918</td><td>Turret battery pack, 4xAA</td><td class="r">1</td><td class="r">$2.00</td></tr>
-<tr><td>13</td><td>FIT0625</td><td>micro:bit battery pack</td><td class="r">2</td><td class="r">$2.50</td></tr>
-<tr><td>14</td><td>FIT0665</td><td>M2 screw, nut, and standoff kit</td><td class="r">1</td><td class="r">$12.90</td></tr>
-<tr><td>15</td><td>FIT0031</td><td>Gravity 3-pin cables (10 pack)</td><td class="r">1</td><td class="r">$6.00</td></tr>
-    <tr><td></td><td></td><td><b>Subtotal</b></td><td></td><td class="r"><b>$154.70</b></td></tr></table>
+<tr><td>16</td><td>FIT0625</td><td>micro:bit battery pack</td><td class="r">2</td><td class="r">$2.50</td></tr>
+<tr><td>17</td><td>FIT0665</td><td>M2 screw, nut, and standoff kit</td><td class="r">1</td><td class="r">$12.90</td></tr>
+<tr><td>18</td><td>FIT0031</td><td>Gravity 3-pin cables (10 pack)</td><td class="r">1</td><td class="r">$6.00</td></tr>
+    <tr><td></td><td></td><td><b>Subtotal</b></td><td></td><td class="r"><b>$152.70</b></td></tr></table>
     <div class="note">DFRobot has offered free US shipping over $50 as a limited-time deal; check at checkout.</div>
   </div>
   <div class="box"><h3>DigiKey cart (primary)</h3>
@@ -308,10 +343,25 @@ tr:last-child td { border-bottom: none; }
     <div class="note">Resistors and LEDs are sold loose; type the quantity in the cart.</div>
   </div>
 </div>
+<div class="two">
+  <div class="box"><h3>Adafruit cart (primary)</h3>
+    <table><tr><th>#</th><th>Product ID</th><th>Part</th><th class="r">Qty</th><th class="r">Price</th></tr>
+    <tr><td>13</td><td>2697</td><td>USB to barrel jack cable</td><td class="r">1</td><td class="r">$2.75</td></tr>
+<tr><td>14</td><td>1125</td><td>Power switch</td><td class="r">1</td><td class="r">$2.50</td></tr>
+<tr><td>15</td><td>6069</td><td>USB-C charge port</td><td class="r">1</td><td class="r">$4.50</td></tr>
+    <tr><td></td><td></td><td><b>Subtotal</b></td><td></td><td class="r"><b>$9.75</b></td></tr></table>
+    <div class="note">Add the arm switch (805) here too if DigiKey will not price it.</div>
+  </div>
+  <div class="box"><h3>Walmart (primary)</h3>
+    <table><tr><th>#</th><th>Model</th><th>Part</th><th class="r">Qty</th><th class="r">Price</th></tr>
+    <tr><td>12</td><td>A1112</td><td>Turret power bank, USB-C</td><td class="r">1</td><td class="r">$23.84</td></tr>
+    <tr><td></td><td></td><td><b>Subtotal</b></td><td></td><td class="r"><b>$23.84</b></td></tr></table>
+    <div class="note">Store pickup works. Charge it fully when it arrives.</div>
+  </div>
+</div>
 <div class="box" style="margin-top:8px"><h3>From local stores or already on hand</h3>
   <table><tr><th>Item</th><th>Amount</th><th>Where</th></tr>
-  <tr><td>AA batteries</td><td>4 plus 4 spares</td><td>Grocery store</td></tr>
-<tr><td>AAA batteries</td><td>4 plus 4 spares</td><td>Grocery store</td></tr>
+  <tr><td>AAA batteries</td><td>4 plus 4 spares</td><td>Grocery store</td></tr>
 <tr><td>Stuffed mosquito toy (the target)</td><td>1</td><td>Toy store or online</td></tr>
 <tr><td>Short fishing rod or 3/8&quot; dowel, clear 10 lb line</td><td>1</td><td>Sporting goods or hardware store</td></tr>
 <tr><td>Black foam board, 20x30 in, 3/16&quot; thick</td><td>1</td><td>Craft store</td></tr>
@@ -320,6 +370,9 @@ tr:last-child td { border-bottom: none; }
 <tr><td>PLA filament, any color plus a little white</td><td>About 310 g + 11 g white</td><td>On hand (check for white)</td></tr>
 <tr><td>Solder, heat-shrink tubing, hot glue</td><td>Small amounts</td><td>On hand</td></tr>
 <tr><td>Micro-USB data cables</td><td>2</td><td>Probably on hand</td></tr>
+<tr><td>90 degree USB-A adapter</td><td>1</td><td>Spare from Dusty&#x27;s pair (backup: Walmart 709931832)</td></tr>
+<tr><td>USB-C phone charger and cable</td><td>1</td><td>On hand</td></tr>
+<tr><td>Hook-and-loop strap, 20 mm</td><td>1</td><td>Hardware store (holds the bank)</td></tr>
 <tr><td>Paper data sheets, printed</td><td>15 per test</td><td>Print at home</td></tr>
   </table>
 </div>
@@ -330,18 +383,19 @@ tr:last-child td { border-bottom: none; }
       <li><b>Printed tilt stop</b> plus a code limit: cannot aim above the backdrop.</li>
       <li><b>Laser path:</b> 5 V port, through the arm switch, through the board relay, to the laser.</li>
       <li><b>Ports:</b> HuskyLens on the 5 V HuskyLens port; pan servo P1, tilt servo P2, speaker P0 (all 5 V); P8 spare.</li>
+      <li><b>Turret power:</b> USB-C power bank on the base floor, bank to power switch to Xia mi DC jack; USB-C charge port in the right wall.</li>
       <li><b>Wand:</b> second micro:bit in a printed handle, 2xAAA pack, 4-wire cable down the line to the mosquito (sensor + LED eyes).</li>
       <li><b>Fasteners:</b> M2 everywhere in printed parts; M3 only for the HuskyLens.</li>
     </ul>
   </div>
   <div class="box"><h3>If the primary board gives trouble</h3>
     <ul>
-      <li>Switch to the <b>micro:Driver</b> (backup #02): servos on its servo headers, laser on motor channel M1, power from the 3xAA backup pack.</li>
-      <li>Its I2C port voltage is not documented. Test the HuskyLens on it before relying on it; if it browns out, power the HuskyLens from a 5 V USB power bank.</li>
+      <li>Switch to the <b>micro:Driver</b> (backup #02): servos on its servo headers, laser on motor channel M1, power from the same power bank (5 V is inside its 3.5 to 5.5 V range).</li>
+      <li>Its I2C port voltage is not documented. Test the HuskyLens on it before relying on it; if it browns out, power the HuskyLens from the bank's second (USB-C) port.</li>
       <li>The printed base has room for either board (Xia mi 57 &times; 87 mm is the larger).</li>
     </ul>
   </div>
 </div>
 </section>
-<div class="foot">NAW Games &middot; nawgames.com/projects/addie/mosquito-turret &middot; MS-2000 parts list v1</div>
+<div class="foot">NAW Games &middot; nawgames.com/projects/addie/mosquito-turret &middot; MS-2000 parts list v2 (MOC-004)</div>
 </body></html>

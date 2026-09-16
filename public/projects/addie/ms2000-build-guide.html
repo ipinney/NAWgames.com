@@ -242,7 +242,8 @@
       <li><b>Soldering is a grown-up job.</b> The iron is hotter than an oven. Wear eye protection.</li>
       <li><b>The laser's metal case carries power.</b> Only plastic touches it. No metal clips or screws against the case.</li>
       <li><b>Fingers away from the servos</b> while the turret is on. The clutch servos slip instead of pinching hard, but they still move fast.</li>
-      <li><b>Batteries out</b> before any wiring change. Pack switch off when you are done for the day.</li>
+      <li><b>Side switch off and bank cable unplugged</b> before any wiring change. Side switch off when you are done for the day.</li>
+      <li><b>The power bank is a sealed lithium battery.</b> Never crush, pierce, or drop it. If it gets hot, swells, or smells, a grown-up takes it out and puts it somewhere safe.</li>
     </ul>
   </div>
 
@@ -385,7 +386,7 @@
         </svg></div>
         <div class="pbody">
           <h3>Xia mi board</h3>
-          <p class="what">A helper board the micro:bit plugs into. It adds 5 volt pins for servos, a special plug for the camera, a relay, and a jack for the battery pack.</p>
+          <p class="what">A helper board the micro:bit plugs into. It adds 5 volt pins for servos, a special plug for the camera, a relay, and a jack for the power cable.</p>
           <p class="does"><b>Its job:</b> the turret's power station and switchboard. Its relay is the switch that fires the laser.</p>
           <p class="spec">57 &times; 87 mm &middot; power switch stays ON</p>
         </div></div>
@@ -516,22 +517,23 @@
         </div></div>
 
       <div class="pcard"><div class="pic">
-        <svg viewBox="0 0 220 150" role="img" aria-label="Battery holders: a large one for four AA batteries with a switch and round plug, and a small one for two AAA batteries with a white plug">
-          <rect x="16" y="30" width="112" height="84" rx="6" fill="#222" stroke="#555" stroke-width="2"/>
-          <g fill="#555"><rect x="24" y="38" width="96" height="16" rx="8"/><rect x="24" y="56" width="96" height="16" rx="8"/><rect x="24" y="74" width="96" height="16" rx="8"/><rect x="24" y="92" width="96" height="16" rx="8"/></g>
-          <rect x="60" y="20" width="18" height="10" rx="2" fill="#9BE15D"/><text x="69" y="15" font-family="IBM Plex Mono" font-size="8" fill="#9BE15D" text-anchor="middle">switch</text>
-          <path d="M128 72 C 140 72, 140 130, 70 134" stroke="#222" stroke-width="3" fill="none"/><circle cx="66" cy="134" r="5" fill="#8E9CAC"/>
-          <text x="40" y="146" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA">4&times;AA, turret</text>
+        <svg viewBox="0 0 220 150" role="img" aria-label="A dark rectangular USB-C power bank with a USB-C port, a USB-A port, and four small lights, and a small holder for two AAA batteries with a white plug">
+          <rect x="14" y="44" width="122" height="62" rx="12" fill="#222" stroke="#555" stroke-width="2"/>
+          <rect x="18" y="62" width="6" height="12" rx="3" fill="#8E9CAC"/><text x="21" y="38" font-family="IBM Plex Mono" font-size="8" fill="#5DB7F0" text-anchor="middle">USB-C</text>
+          <rect x="17" y="80" width="7" height="18" rx="1" fill="#EEF2F8"/><text x="36" y="120" font-family="IBM Plex Mono" font-size="8" fill="#9BE15D" text-anchor="middle">USB-A</text>
+          <g fill="#5DB7F0"><circle cx="104" cy="96" r="2.2"/><circle cx="111" cy="96" r="2.2"/><circle cx="118" cy="96" r="2.2"/><circle cx="125" cy="96" r="2.2" opacity=".35"/></g>
+          <text x="80" y="79" font-family="Fredoka, sans-serif" font-size="12" fill="#A9B6CA" text-anchor="middle">5,200 mAh</text>
+          <text x="75" y="146" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA" text-anchor="middle">power bank, turret</text>
           <rect x="152" y="48" width="44" height="64" rx="5" fill="#222" stroke="#555" stroke-width="2"/>
           <g fill="#555"><rect x="158" y="54" width="14" height="52" rx="7"/><rect x="176" y="54" width="14" height="52" rx="7"/></g>
           <path d="M174 112 v16" stroke="#E53935" stroke-width="2"/><rect x="167" y="128" width="14" height="7" fill="#EEF2F8"/>
           <text x="174" y="42" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA" text-anchor="middle">2&times;AAA, wand</text>
         </svg></div>
         <div class="pbody">
-          <h3>Battery holders</h3>
-          <p class="what">The big one holds four AA batteries, has an on/off switch, and a round plug. The small ones hold two AAA batteries and have the white plug a micro:bit takes.</p>
-          <p class="does"><b>Their job:</b> the big pack powers the turret and its switch is the main power. A small pack powers the wand.</p>
-          <p class="spec">4&times;AA slides in from the right side &middot; 2&times;AAA zip-tied</p>
+          <h3>Power bank and battery holders</h3>
+          <p class="what">The power bank is a rechargeable battery, like the one that charges a phone. It has a USB-A port that gives power and a USB-C port that charges it. The small holders take two AAA batteries and have the white plug a micro:bit takes.</p>
+          <p class="does"><b>Their job:</b> the bank powers the turret and stays inside the base. You charge it through a USB-C port on the side. A small pack powers the wand.</p>
+          <p class="spec">Bank 97 &times; 46 &times; 22 mm, 5 V &middot; 2&times;AAA zip-tied</p>
         </div></div>
 
       <div class="pcard"><div class="pic">
@@ -599,7 +601,7 @@
           <h3>Printed parts <small>12 pieces</small></h3>
           <p class="what">Base shell and floor, turntable and yoke, pivot pin, camera head, wand, the white pod cup and its cap, pendulum pivot, backdrop clip, two feet, and cable clips.</p>
           <p class="does"><b>Their job:</b> every electronic part lives inside something printed. Step 2 shows the print order.</p>
-          <p class="spec">About 320 g of PLA &middot; 11 g must be white</p>
+          <p class="spec">About 335 g of PLA &middot; 11 g must be white</p>
         </div></div>
 
     </div>
@@ -608,10 +610,10 @@
   <div class="card" id="wiring">
     <p class="eyebrow">Where every wire goes</p>
     <h2>The two wiring maps</h2>
-    <p class="lead">Keep this page open while you wire. <b>Batteries out</b> before you change any wire.</p>
+    <p class="lead">Keep this page open while you wire. <b>Side switch off and bank cable unplugged</b> before you change any wire.</p>
     <h3 style="margin-top:14px">Turret</h3>
     <div class="diagram">
-      <svg viewBox="0 0 660 330" role="img" aria-label="Turret wiring. The micro:bit stands in the Xia mi board. HuskyLens on the HuskyLens port. Pan servo on P1, tilt servo on P2, speaker on P0. Battery pack into the DC jack. A 5 volt pin goes to the arm switch, then to the relay, then to the laser plus wire. The laser minus wire goes to ground.">
+      <svg viewBox="0 0 660 330" role="img" aria-label="Turret wiring. The micro:bit stands in the Xia mi board. HuskyLens on the HuskyLens port. Pan servo on P1, tilt servo on P2, speaker on P0. The power bank goes through the side switch into the DC jack, and a USB-C charge port on the right wall plugs into the bank. A 5 volt pin goes to the arm switch, then to the relay, then to the laser plus wire. The laser minus wire goes to ground.">
         <rect x="220" y="70" width="220" height="190" rx="12" fill="#1F6B3A" stroke="#2F8F50" stroke-width="2"/>
         <text x="376" y="252" font-family="Fredoka, sans-serif" font-size="16" fill="#EEF2F8" text-anchor="middle">Xia mi board</text>
         <rect x="236" y="108" width="54" height="80" rx="4" fill="#1C1C1C" stroke="#555"/><text x="263" y="152" font-family="IBM Plex Mono" font-size="10" fill="#A9B6CA" text-anchor="middle">micro</text><text x="263" y="164" font-family="IBM Plex Mono" font-size="10" fill="#A9B6CA" text-anchor="middle">:bit</text>
@@ -630,7 +632,7 @@
           <rect x="20" y="104" width="150" height="40" rx="8" fill="#1F4E8C" stroke="#5DB7F0"/><text x="95" y="129" text-anchor="middle">Speaker module</text>
           <rect x="20" y="152" width="150" height="40" rx="8" fill="#2B6CB0" stroke="#5DB7F0"/><text x="95" y="177" text-anchor="middle">Pan servo</text>
           <rect x="20" y="200" width="150" height="40" rx="8" fill="#2B6CB0" stroke="#5DB7F0"/><text x="95" y="225" text-anchor="middle">Tilt servo</text>
-          <rect x="20" y="268" width="150" height="44" rx="8" fill="#222" stroke="#9BE15D"/><text x="95" y="289" text-anchor="middle">4&#215;AA pack</text><text x="95" y="304" text-anchor="middle" font-size="11" fill="#9BE15D">its switch = main power</text>
+          <rect x="20" y="258" width="150" height="62" rx="8" fill="#222" stroke="#9BE15D"/><text x="95" y="277" text-anchor="middle">USB-C power bank</text><text x="95" y="293" text-anchor="middle" font-size="11" fill="#9BE15D">side switch = main power</text><text x="95" y="310" text-anchor="middle" font-size="10" fill="#5DB7F0">charge port: right wall</text>
           <rect x="490" y="20" width="150" height="50" rx="8" fill="#2B2F3A" stroke="#F5B642"/><text x="565" y="42" text-anchor="middle">Arm switch</text><text x="565" y="59" text-anchor="middle" font-size="11" fill="#F5B642">back wall, grown-up</text>
           <rect x="490" y="214" width="150" height="56" rx="8" fill="#2B2F3A" stroke="#F0605E"/><text x="565" y="236" text-anchor="middle">Class 2 laser</text><text x="565" y="253" text-anchor="middle" font-size="11" fill="#F0605E">in the head clamp</text>
         </g>
@@ -640,6 +642,7 @@
           <path d="M170 172 H200 V169 H306" stroke="#FB8C00"/>
           <path d="M170 220 H200 V195 H306" stroke="#FB8C00"/>
           <path d="M170 290 H210 V229 H236" stroke="#9BE15D"/>
+          <rect x="200" y="252" width="20" height="14" rx="3" fill="#9BE15D" stroke="none"/>
           <path d="M428 117 H450 V38 H490" stroke="#E53935"/>
           <path d="M490 56 H470 V160 H428" stroke="#F5B642"/>
           <path d="M428 178 H460 V230 H490" stroke="#E53935"/>
@@ -647,6 +650,7 @@
         </g>
         <g font-family="IBM Plex Mono" font-size="10.5">
           <text x="236" y="36" fill="#EEF2F8">4-pin camera cable</text>
+          <text x="224" y="272" fill="#9BE15D">side switch</text>
           <text x="176" y="118" fill="#F0609E">P0</text><text x="176" y="166" fill="#FB8C00">P1</text><text x="176" y="214" fill="#FB8C00">P2</text>
           <text x="454" y="84" fill="#E53935">5V</text>
           <text x="476" y="110" fill="#F5B642">to COM</text>
@@ -654,7 +658,7 @@
           <text x="500" y="292" fill="#9aa5b4">laser &minus; to G</text>
         </g>
       </svg>
-      <p class="caption">The laser only gets power when the arm switch is on AND the relay clicks.</p>
+      <p class="caption">The laser only gets power when the arm switch is on AND the relay clicks. The side switch turns the whole turret on and off.</p>
     </div>
     <h3 style="margin-top:18px">Mosquito and wand</h3>
     <div class="diagram">
@@ -743,9 +747,11 @@
     <ol class="do">
       <li><b>Check every item against the shopping list.</b> Tick them off on the <a href="/projects/addie/ms2000-parts-list.pdf" target="_blank" rel="noopener">parts list PDF</a>.<span class="tip">Keep the tiny parts (sensors, LEDs, resistors, switch) in a labeled bag.</span></li>
       <li><b>Measure the Xia mi board:</b> the distance between its corner holes, both ways.<span class="tip">The base expects about 80.2 mm by 50.2 mm between hole centers.</span></li>
-      <li><b>Measure a servo, the 2&times;AAA pack, the arm switch, and the stuffed mosquito.</b> Write every number in the journal.</li>
+      <li><b>Measure a servo, the 2&times;AAA pack, the arm switch, the power bank, the in-line switch, the charge port, and the stuffed mosquito.</b> Write every number in the journal.<span class="tip">The bank, the in-line switch, and the charge port all fit holes or a cradle in the base, so measure them before the base prints.</span></li>
+      <li><b>Charge the power bank.</b> Plug a USB-C phone charger into its USB-C port. It takes about 2 to 2.5 hours.</li>
       <li><b>Read the Xia mi board</b> for a version number (V1 or V2). You need it for the relay block in Step 11.</li>
-      <li><b>Plug a micro:bit into the Xia mi</b>, plug in the 4&times;AA pack, switch on. Does the micro:bit light up by itself?<span class="tip">If it does, the board powers the micro:bit and the turret needs only one battery pack.</span></li>
+      <li><b>Plug a micro:bit into the Xia mi</b>. Plug the 90&deg; adapter and the barrel cable into the bank's USB-A port, the cable into the in-line switch, and the switch into the DC jack. Switch on. Does the micro:bit light up by itself?<span class="tip">If it does, the board powers the micro:bit and the spare 2&times;AAA pack is not needed.</span></li>
+      <li><span class="grownup">grown-up</span> <b>Voltage check:</b> with both servos sweeping and the laser on, the Xia mi 5V pins must read at least 4.6 V on a meter.<span class="tip">The bank gives 5 V, the lowest the DC jack takes. If it reads low, plug into the board's own USB 5 V input instead, with a USB cable that has an in-line switch.</span></li>
       <li><b>A grown-up compares your numbers</b> with the print files and fixes anything that is off before printing.</li>
     </ol>
     <div class="explain">
@@ -761,14 +767,14 @@
   <div class="step" id="step-2">
     <div class="step-head">
       <span class="num">2</span>
-      <div><h2>Print in five batches</h2><p class="when">Starts the same weekend &middot; about 10 hours of printing &middot; <span class="grownup">grown-up</span></p></div>
+      <div><h2>Print in five batches</h2><p class="when">Starts the same weekend &middot; about 10 hours 45 minutes of printing &middot; <span class="grownup">grown-up</span></p></div>
     </div>
     <p class="why">The small, quick batch goes first as a test. Then the parts for the mosquito and wand, so building can start while the big base prints. Each batch has something to learn while it prints on the <a href="/projects/addie/mosquito-turret/build/batches" target="_top">print plan page</a>.</p>
     <ol class="order">
       <li><b>Batch 1: the white pod and cable clips</b><span>The front of the sensor pod and 11 clips. Must be <span class="w">WHITE</span> PLA.</span><span class="t">About 35 minutes &middot; 11 g &middot; unlocks step 3</span></li>
       <li><b>Batch 2: turret head, turntable, and wand</b><span>Turntable with the tilt yoke, camera head, pivot pin, wand handle, and the back of the pod.</span><span class="t">About 3.5 hours &middot; 77 g &middot; unlocks steps 3, 4, and 8</span></li>
-      <li><b>Batch 3: base shell</b><span>The biggest part. It prints upside down, deck on the bed.</span><span class="t">About 3 hours &middot; 125 g &middot; unlocks step 6</span></li>
-      <li><b>Batch 4: floor plate and one backdrop foot</b><span>The board and battery pack sit on the floor plate.</span><span class="t">About 1 hour 45 minutes &middot; 64 g &middot; unlocks step 6</span></li>
+      <li><b>Batch 3: base shell</b><span>The biggest part. It prints upside down, deck on the bed.</span><span class="t">About 3 hours 15 minutes &middot; 131 g &middot; unlocks step 6</span></li>
+      <li><b>Batch 4: floor plate and one backdrop foot</b><span>The board and power bank sit on the floor plate.</span><span class="t">About 1 hour 55 minutes &middot; 72 g &middot; unlocks step 6</span></li>
       <li><b>Batch 5: pendulum pivot, backdrop clip, second foot</b><span>The test rig. The pivot has the 10, 20, and 30 degree marks.</span><span class="t">About 1.5 hours &middot; 44 g &middot; unlocks step 14</span></li>
     </ol>
     <div class="pair" style="margin-top:14px">
@@ -950,7 +956,7 @@
   </div>
 
   <div class="card">
-    <div class="diagram" style="margin-top:0"><img src="/projects/addie/ms2000-guide/turret-explode.jpg" alt="Exploded 3D model of the turret: floor plate and battery pack at the bottom, the pink base shell, the green turntable and yoke, the teal head with the camera, the tilt servo on the right, the laser under the camera" loading="lazy"></div>
+    <div class="diagram" style="margin-top:0"><img src="/projects/addie/ms2000-guide/turret-explode.jpg" alt="Exploded 3D model of the turret: floor plate and power bank at the bottom, the pink base shell, the green turntable and yoke, the teal head with the camera, the tilt servo on the right, the laser under the camera" loading="lazy"></div>
     <div class="legend">
       <span><i style="background:#F07ACB"></i>base shell and floor</span>
       <span><i style="background:#3B82F6"></i>Xia mi board and servos</span>
@@ -968,13 +974,13 @@
       <span class="num">6</span>
       <div><h2>Fill the base</h2><p class="when">Batches 3 and 4 done &middot; about 1 hour</p></div>
     </div>
-    <p class="why">The base is the turret's body. It holds the brain, the batteries, the speaker, the arm switch, and the pan servo. It stays open underneath until Step 9.</p>
-    <div class="diagram"><img src="/projects/addie/ms2000-guide/base-inside.jpg" alt="Inside the base: the Xia mi board with the micro:bit standing up at the front left, the gray battery pack on the right, the blue pan servo under the deck, the green speaker on the back wall" loading="lazy">
-      <p class="caption">Board and micro:bit front left, battery pack right, speaker on the back wall, pan servo under the deck.</p></div>
+    <p class="why">The base is the turret's body. It holds the brain, the power bank, the speaker, the arm switch, and the pan servo. It stays open underneath until Step 9.</p>
+    <div class="diagram"><img src="/projects/addie/ms2000-guide/base-inside.jpg" alt="Inside the base: the Xia mi board with the micro:bit standing up at the front left, the dark power bank on the right, the blue pan servo under the deck, the green speaker on the back wall" loading="lazy">
+      <p class="caption">Board and micro:bit front left, power bank right, speaker on the back wall just left of center, pan servo under the deck.</p></div>
     <ol class="do">
       <li><b>Screw the Xia mi board</b> onto the four posts on the floor plate, micro:bit end toward the front. 4 &times; M2.</li>
       <li><b>Stand the turret micro:bit</b> in the board's socket. Its lights will show through the front window.</li>
-      <li><b>Screw the speaker</b> to the four bosses on the back wall, speaker facing the grille. 4 &times; M2.<span class="tip">Set the volume knob to the middle first. It is hard to reach later.</span></li>
+      <li><b>Screw the speaker</b> to the four bosses on the back wall, just left of center, speaker facing the grille. 4 &times; M2.<span class="tip">Set the volume knob to the middle first. It is hard to reach later.</span></li>
       <li><b>Press the arm switch</b> into its frame on the back wall so the lever pokes out of the slot. A grown-up tacks it with hot glue.</li>
       <li><b>Push the pan servo up</b> through the pocket in the deck from underneath until its ears sit between the two ribs, shaft on top near the middle.</li>
       <li><b>Screw it down</b> from the top through the deck and the ears, with a nut underneath. 2 &times; M2 + nuts.</li>
@@ -1009,8 +1015,8 @@
     </div>
     <ol class="do">
       <li>Plug the pan servo into <span class="mono">P1</span> and the tilt servo into <span class="mono">P2</span>, brown wire toward <b>G</b>.</li>
-      <li>Plug in the 4&times;AA pack and load the centering program.</li>
-      <li>Switch on. Both servos twitch to the middle and stay there.</li>
+      <li>Plug the charged power bank into the DC jack (adapter, barrel cable, and in-line switch, like in Step 1) and load the centering program.</li>
+      <li>Turn the in-line switch on. Both servos twitch to the middle and stay there.</li>
       <li>Switch off, and leave them alone until they get their horns in Step 8.</li>
     </ol>
     <div class="prog">
@@ -1071,7 +1077,11 @@
       <li><b>Speaker</b> into <span class="mono">P0</span>, pan servo into <span class="mono">P1</span>, tilt servo into <span class="mono">P2</span>. Brown or black wires toward <b>G</b>.</li>
       <li><span class="grownup">grown-up</span> <b>Laser power:</b> a wire from a 5V pin to the arm switch's middle leg; from one side leg to the relay's COM terminal; from the relay's NO terminal to the laser's plus wire. Laser minus wire to a G pin.</li>
       <li><b>Arm switch OFF.</b> Tape a label next to it: ARM.</li>
-      <li><b>Plug the 4&times;AA pack</b> into the DC jack and slide the pack into the right-side bay.</li>
+      <li><b>Set the power bank in its cradle</b> on the right half of the floor plate, ports facing the front. Pull the hook-and-loop strap over it through the two floor slots.<span class="tip">Changed Sep 16 by <a href="/projects/addie/mosquito-turret/changes" target="_top">change order MOC-004</a>: the 4&times;AA pack and its side bay are gone. A rechargeable power bank stays inside instead.</span></li>
+      <li><b>Plug the 90&deg; adapter</b> into the bank's USB-A port, and the barrel cable into the adapter. Coil the extra cable.</li>
+      <li><b>Plug the barrel cable into the in-line switch</b>, and the switch into the Xia mi DC jack. Leave the Xia mi's own little power switch ON.</li>
+      <li><b>Press the switch rocker</b> into its window in the right wall so it pokes out, under the sloped keeper. This is the main on/off switch now. Hold it there until the floor plate is on: the plate has a small wall the switch sits on.</li>
+      <li><b>Charge port:</b> push it through the round hole near the front of the right wall from the outside, screw its nut on from the inside, and plug its cable into the bank's USB-C port.</li>
       <li><b>Screw the floor plate</b> on from underneath. 4 &times; M2.</li>
       <li><b>Load the relay test</b> and listen.</li>
     </ol>
@@ -1092,6 +1102,7 @@
       <p><b>NO</b> means normally open: no connection until the relay clicks. <b>COM</b> is the common terminal that gets connected.</p>
     </div>
     <div class="gotcha"><b>Point the turret at the backdrop</b> before a grown-up slides the arm switch on for the first time.</div>
+    <div class="gotcha"><b>How to charge:</b> side switch OFF, then plug a USB-C phone charger into the side port. About 2 to 2.5 hours. The bank's four lights are hidden inside, so charge before every session. <b>Never charge while it runs:</b> plugging in can blink the power and restart the micro:bit.</div>
     <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <div><h4>You are done when</h4><p>The relay clicks every 2.5 seconds. With the arm switch off, no dot. With it on, a red dot blinks on the backdrop. Arm switch back off.</p></div></div>
   </div>
@@ -1434,7 +1445,7 @@
     </div>
     <p class="why">A dress rehearsal. Five practice runs, just like a real experiment, to find anything silly before the numbers count.</p>
     <ol class="do">
-      <li><b>Fresh batteries</b> in the turret and the wand. Turret on the 5 foot mark, room lights on.</li>
+      <li><b>Charged power bank</b> in the turret, <b>fresh batteries</b> in the wand. Turret on the 5 foot mark, room lights on.</li>
       <li><b>Teach the camera</b> the mosquito if it has forgotten.</li>
       <li>On the wand: <b>A</b> until it says speed 10, <b>B</b> to run 1.</li>
       <li><span class="grownup">grown-up</span> <b>Arm switch on.</b> Pull the mosquito to the 10 degree mark.</li>
@@ -1461,7 +1472,7 @@
       <table>
         <thead><tr><th>What you see</th><th>Most likely cause</th><th>What to do</th></tr></thead>
         <tbody>
-          <tr><td>Nothing happens at all</td><td>Power</td><td>Pack switch on? Batteries the right way round? Xia mi power switch on? Try fresh batteries.</td></tr>
+          <tr><td>Nothing happens at all</td><td>Power</td><td>Side switch on? Bank charged? Xia mi power switch on? Adapter pushed all the way in?</td></tr>
           <tr><td>micro:bit will not take the code</td><td>Cable</td><td>Many micro-USB cables only charge. Use one you know moves data.</td></tr>
           <tr><td>Camera screen works, turret does not move</td><td>No data from the camera</td><td>Check the camera cable is in the HuskyLens port and Protocol Type is I2C or Auto. Is ID1 learned?</td></tr>
           <tr><td>Head turns away from the mosquito</td><td>Sign is backwards</td><td>Swap minus and plus in that servo's line in Program 5.</td></tr>
@@ -1476,7 +1487,7 @@
           <tr><td>Turret never hears the wand</td><td>Radio group</td><td>Both programs must say radio set group 7. Keep them within a few meters.</td></tr>
           <tr><td>One hit counts twice</td><td>Missing the wait loop</td><td>Check the "while ... pause 20" loop is in the wand's forever.</td></tr>
           <tr><td>A screw spins and will not tighten</td><td>Stripped plastic</td><td>Use the next longer screw, or a grown-up adds a drop of glue and waits.</td></tr>
-          <tr><td>Hits drop during a test day</td><td>Batteries draining</td><td>Normal. Fresh batteries at the start of every test, so the test is fair.</td></tr>
+          <tr><td>Hits drop during a test day</td><td>Not the power</td><td>The bank holds a steady 5 V, so this should not come from power. If the bank runs empty, the turret stops all at once. Charge it before each test day.</td></tr>
         </tbody>
       </table>
     </div>

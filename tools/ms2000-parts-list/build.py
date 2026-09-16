@@ -1,5 +1,5 @@
 import html, json
-DF='DFRobot'; DK='DigiKey'; AF='Adafruit'
+DF='DFRobot'; DK='DigiKey'; AF='Adafruit'; WM='Walmart'; TG='Target'
 # (num, section, name, qty, role, primary, backup, note)
 # primary/backup: dict(v, pn, title, unit, qty, url, stock)
 P=[]
@@ -61,10 +61,22 @@ item(S4,'Speaker module',1,'Laser pew, cannon boom, lock-on beep, victory sound.
  'Plugs into the Xia mi P0 port (5 V); MakeCode plays sound on P0. Backup speaker page: adafruit.com/product/3923 (solder the wires to the amp).')
 
 S5='Power'
-item(S5,'Turret battery pack, 4xAA',1,'External power for the Xia mi board: servos, camera, speaker, laser.',
- src(DF,'FIT0918','4xAA battery holder with power switch, DC 2.1 jack, cover',2.00,'https://www.dfrobot.com/product-2649.html','In stock'),
- src(AF,'771','3xAA battery holder with on/off switch (4.5 V)',3.95,'https://www.adafruit.com/product/771','In stock'),
- 'About 6 V, inside the Xia mi\'s 5 to 12 V range. The 3xAA backup matches the micro:Driver (3.5 to 5.5 V). A 5 V USB power bank into the board\'s USB port also works.')
+item(S5,'Turret power bank, USB-C',1,'Powers the Xia mi board: servos, camera, speaker, laser. Steady 5 V, stays inside the base and charges through the side port (change MOC-004, Sep 16).',
+ src(WM,'A1112','Anker 321 Power Bank (PowerCore 5K), 5,200 mAh, USB-A + USB-C',23.84,'https://www.walmart.com/ip/Anker-5K-Power-Bank-12W-USB-C-USB-A-Port/2335161189','In stock'),
+ src(TG,'A-86373147','Same bank (Anker 5000mAh PowerCore 5K 12W 1A1C)',None,'https://www.target.com/p/anker-5000mah-power-bank-powercore-5k-12w-1a1c-black/-/A-86373147','Check store'),
+ '97 x 45.8 x 22 mm, 118 g, 5 V up to 2.4 A. Same bank as Nolan\'s Dusty. The turret draws enough that the bank never shuts itself off; do not use its trickle mode (double press). Also sold at Micro Center Houston.')
+item(S5,'USB to barrel jack cable',1,'Bank USB-A port to the power switch, then the Xia mi DC jack.',
+ src(AF,'2697','USB to 2.1mm Male Barrel Jack Cable, 22AWG, 1 m',2.75,'https://www.adafruit.com/product/2697','In stock'),
+ src('Newark','2697','Adafruit 2697 (same cable)',None,'https://www.newark.com/adafruit/2697/usb-to-2-1mm-male-barrel-jack/dp/77Y5319','Check stock'),
+ 'Center positive, 5.5/2.1 mm. Coil the extra length inside the base. A 90 degree USB-A adapter (spare from Dusty\'s pair) turns the plug so it fits in front of the bank.')
+item(S5,'Power switch',1,'Main on/off. Plugs between the barrel cable and the Xia mi jack; the rocker pokes through the right wall.',
+ src(AF,'1125','In-line power switch for 2.1mm barrel jack, 2 A',2.50,'https://www.adafruit.com/product/1125','In stock'),
+ src('Mouser','1125','Adafruit 1125 (same switch)',2.50,'https://www.mouser.com/c/?q=adafruit%201125','Check stock'),
+ 'Body size is not published: measure it before printing the base.')
+item(S5,'USB-C charge port',1,'Panel USB-C socket in the right wall. Its cable plugs into the bank, so a phone charger charges the turret from outside.',
+ src(AF,'6069','USB C Small Round Panel Mount Extension Cable',4.50,'https://www.adafruit.com/product/6069','In stock'),
+ src(AF,'4218','USB C Round Panel Mount Extension Cable, 30 cm (needs a 21.5 mm hole)',9.95,'https://www.adafruit.com/product/4218','In stock'),
+ 'Fits a 12 to 18 mm hole; the base has 14 mm. Also listed at DigiKey (6069). Switch off before charging: plugging in can blink the power and reset the micro:bit.')
 item(S5,'micro:bit battery pack',2,'Powers the wand micro:bit, and the turret micro:bit if the board does not.',
  src(DF,'FIT0625','2xAAA battery holder with cover and switch, PH2.0',1.25,'https://www.dfrobot.com/product-1855.html','In stock',ext=2.50),
  src(AF,'4193','2xAA battery holder with on/off switch and JST PH',1.95,'https://www.adafruit.com/product/4193','In stock',ext=3.90),
@@ -81,7 +93,6 @@ item(S6,'Gravity 3-pin cables (10 pack)',1,'Servo, speaker, and laser leads to t
  '')
 
 LOCAL=[
- ('AA batteries','4 plus 4 spares','Grocery store'),
  ('AAA batteries','4 plus 4 spares','Grocery store'),
  ('Stuffed mosquito toy (the target)','1','Toy store or online'),
  ('Short fishing rod or 3/8" dowel, clear 10 lb line','1','Sporting goods or hardware store'),
@@ -91,9 +102,12 @@ LOCAL=[
  ('PLA filament, any color plus a little white','About 310 g + 11 g white','On hand (check for white)'),
  ('Solder, heat-shrink tubing, hot glue','Small amounts','On hand'),
  ('Micro-USB data cables','2','Probably on hand'),
+ ('90 degree USB-A adapter','1','Spare from Dusty\'s pair (backup: Walmart 709931832)'),
+ ('USB-C phone charger and cable','1','On hand'),
+ ('Hook-and-loop strap, 20 mm','1','Hardware store (holds the bank)'),
  ('Paper data sheets, printed','15 per test','Print at home'),
 ]
-LOCAL_EST=35
+LOCAL_EST=30
 
 def total(side, vendor=None):
     t=0; unknown=[]
@@ -103,10 +117,10 @@ def total(side, vendor=None):
         if s['unit'] is None: unknown.append(it['name']); continue
         t+= s['ext'] if s['ext'] is not None else s['unit']*(s['qty'] or it['qty'])
     return round(t,2), unknown
-pDF,_=total('pri',DF); pDK,uk=total('pri',DK); pT,_=total('pri')
+pDF,_=total('pri',DF); pDK,uk=total('pri',DK); pAF,_=total('pri',AF); pWM,_=total('pri',WM); pT,_=total('pri')
 bT,bu=total('bak')
 bAF,_=total('bak',AF); bDK,_=total('bak',DK); bDF,_=total('bak',DF)
-json.dump(dict(pDF=pDF,pDK=pDK,pT=pT,bT=bT,bAF=bAF,bDK=bDK,bDF=bDF,bu=bu),open('totals.json','w'))
+json.dump(dict(pDF=pDF,pDK=pDK,pAF=pAF,pWM=pWM,pT=pT,bT=bT,bAF=bAF,bDK=bDK,bDF=bDF,bu=bu),open('totals.json','w'))
 
 def money(x): return '$%.2f'%x
 def price_cell(s,qty):
@@ -154,8 +168,8 @@ def cart(side,vendor):
 local_rows='\n'.join(f'<tr><td>{html.escape(a)}</td><td>{html.escape(b)}</td><td>{html.escape(c)}</td></tr>' for a,b,c in LOCAL)
 
 doc=open('template.html').read()
-for k,v in dict(ITEMS=items_html, CART_DF=cart('pri',DF), CART_DK=cart('pri',DK), LOCAL=local_rows,
-  PDF=money(pDF), PDK=money(pDK), PT=money(pT), PALL=money(pT+LOCAL_EST), LOCALEST=money(LOCAL_EST),
+for k,v in dict(ITEMS=items_html, CART_DF=cart('pri',DF), CART_DK=cart('pri',DK), CART_AF=cart('pri',AF), CART_WM=cart('pri',WM), LOCAL=local_rows,
+  PDF=money(pDF), PDK=money(pDK), PAF=money(pAF), PWM=money(pWM), PT=money(pT), PALL=money(pT+LOCAL_EST), LOCALEST=money(LOCAL_EST),
   BT=money(bT), BAF=money(bAF), BDK=money(bDK), BDF=money(bDF), NITEMS=str(len(P))).items():
     doc=doc.replace('{{'+k+'}}',v)
 open('ms2000-parts-list.html','w').write(doc)

@@ -10,7 +10,7 @@ SHOTS = [
     # name, viewer, focus, explode, highlight keys
     ('turret', 'ms2000-turret-3d.html', 'turret', False, None),
     ('turret-explode', 'ms2000-turret-3d.html', 'turret', True, None),
-    ('base-inside', 'ms2000-turret-3d.html', 'base', False, ['board', 'pack', 'pservo', 'speaker', 'switch', 'plate']),
+    ('base-inside', 'ms2000-turret-3d.html', 'base', False, ['board', 'bank', 'cport', 'pswitch', 'pservo', 'speaker', 'switch', 'plate']),
     ('head', 'ms2000-turret-3d.html', 'head', False, None),
     ('head-explode', 'ms2000-turret-3d.html', 'head', True, None),
     ('servos', 'ms2000-turret-3d.html', 'turret', False, ['pservo', 'tservo', 'pan_horn', 'tilt_horn']),

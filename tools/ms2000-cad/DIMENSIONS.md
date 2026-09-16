@@ -103,16 +103,44 @@ DFRobot FIT0449. Pew, boom, lock-on beep, victory sound. Faces the grille in the
 | conn_h | 6.0 | est | Gravity PH2.0 socket on the top edge, back side |
 | knob_h | 5.0 | est | volume pot, back side |
 
-## 4xAA battery holder (aa_pack) x1
-DFRobot FIT0918. Turret power, about 6 V into the Xia mi. Slides into the base.
+## USB-C power bank (bank) x1
+Anker 321 (A1112), Walmart. Turret power, steady 5 V (MOC-004). Lies flat on the right of the floor, ports forward. Charges through the side port.
 
 | key | mm | basis | note |
 |---|---|---|---|
-| w | 64.5 | ds | DFRobot: 70 x 64.5 x 19.6 mm |
-| l | 70.0 | ds |  |
-| h | 19.6 | ds |  |
-| lead | 250 | ds | to DC 2.1 plug |
-| switch_side |  | tbd | which face the switch is on |
+| w | 45.8 | ds | Anker: 97 x 45.8 x 22 mm |
+| l | 97.0 | ds |  |
+| h | 23.0 | ds | Anker says 22, a store says 0.9 in (22.9): design for 23 |
+| ports |  | tbd | USB-A and USB-C on the front end; exact spots unknown until it arrives |
+| lights |  | tbd | where the 4 charge lights are |
+
+## USB-C charge port (charge_port) x1
+Adafruit 6069. Panel USB-C socket in the right wall. Its short cable plugs into the bank (MOC-004).
+
+| key | mm | basis | note |
+|---|---|---|---|
+| hole_d | 14.0 | ds | Adafruit: fits holes 12 to 18 mm |
+| max_panel | 13.0 | ds | panels up to 13 mm |
+| body_d | 12.0 | est | threaded body behind the panel |
+| body_l | 18.0 | est |  |
+| nut_d | 18.0 | est |  |
+| nut_t | 3.0 | est |  |
+| bezel_d | 17.0 | est | lip outside the wall |
+| bezel_t | 2.5 | est |  |
+| cable |  | tbd | cable length not published |
+
+## In-line power switch (inline_switch) x1
+Adafruit 1125. Main on/off (MOC-004). Sits in ribs on the right wall, rocker through a window. Between the barrel cable and the Xia mi jack.
+
+| key | mm | basis | note |
+|---|---|---|---|
+| l | 38.0 | est | size not published |
+| w | 18.0 | est |  |
+| h | 13.0 | est |  |
+| rocker_l | 12.0 | est |  |
+| rocker_w | 8.0 | est |  |
+| rocker_h | 3.0 | est | above the body |
+| rating |  | ds | 2 A, 2.1 mm jack in, plug out |
 
 ## 2xAAA battery holder (aaa_pack) x2
 DFRobot FIT0625. Wand power; turret micro:bit backup power.

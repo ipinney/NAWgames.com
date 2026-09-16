@@ -132,7 +132,7 @@ function Moc({ m }) {
 
       <div className="flex flex-wrap items-center gap-3 mt-5">
         {m.link && <Btn href={m.link.href} small>{m.link.label}</Btn>}
-        <span className="text-white/35 text-xs font-mono">commit {m.commits.join(', ')}</span>
+        {m.commits.length > 0 && <span className="text-white/35 text-xs font-mono">commit {m.commits.join(', ')}</span>}
       </div>
     </article>
   );
