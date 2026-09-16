@@ -23,7 +23,9 @@ Read this first every session. Update it and commit after every finished step.
     Left boss: pin socket 6.1 x 3.5, M2 x 12 from the pin head into a nut trap open to the inside. Top bar z 29..31.5 (53 mm bridge).
     Checks: HuskyLens envelope and laser vs head, beam path clear, head+camera+laser sweep -30..+35 vs yoke and tilt servo, stops hit at -35/+40.
   - [x] Assembly viewer (make_assembly.py -> ms2000-turret.html), all turret parts in place.
-  - [ ] P5 wand handle (micro:bit, 2xAAA)
+  - [x] P5 wand handle (Sep 16): parts/p5_wand.py, ~50 g, 56 x 119 x 19. Board face up at z 8..9.6 on ring bosses (M2 self-tap through the rings = wire clamps), top edge under corner lips.
+    Plug/USB notch in the bay top wall; pack lead points at the micro:bit. Rails: 45 deg V (apex z 4), fits rods 9-30 mm (checked 9.5/16/25/30). Ties at y 4.5 and over the pack.
+    Checks: micro:bit and pack vs wand, lift-out path, USB plug path. Prints face up on the rail bottoms.
   - [ ] P6 sensor pod for stuffed mosquito (ALS-PT19, 2 LEDs, line tie)
   - [ ] P7 pendulum pivot + 10/20/30 deg guide
   - [ ] P8 cable clips

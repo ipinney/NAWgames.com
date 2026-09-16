@@ -18,8 +18,9 @@ PARTS = [
      'Left-side tilt axle. An M2 screw clamps it to the head; it turns in the upright.'),
     ('P4', 'Camera and laser head', 'done', [('3D viewer', 'ms2000-p4-head.html'), ('STL', 'stl/ms2000-p4-head.stl')],
      'Closed frame 61 mm wide. HuskyLens on two M3 screws, lens forward, screen readable from behind. Laser 38 mm under the lens in a plastic pinch clamp, toed up 1.4 degrees so the dot meets the camera line at 5 ft (15 mm off at 3 and 7 ft). Horn pocket right, pivot socket and stop finger left. About 11 g. The top bar is a 53 mm bridge: if it sags, print the head on its back.'),
-    ('P5', 'Wand handle', 'now', [], 'micro:bit and 2xAAA pack on the fishing rod.'),
-    ('P6', 'Mosquito sensor pod', 'next', [], 'Clips onto the stuffed mosquito: light sensor, two LED eyes, line tie.'),
+    ('P5', 'Wand handle', 'done', [('3D viewer', 'ms2000-p5-wand.html'), ('STL', 'stl/ms2000-p5-wand.stl')],
+     '56 x 119 mm paddle. micro:bit face up; M2 screws through its big rings clamp the cable wires (P0 sensor, P1 eyes, 3V, GND) with no soldering. 2xAAA pack behind it. A V under it centers rods from 9 to 30 mm; the rear zip ties go over the pack and under the rod. About 50 g.'),
+    ('P6', 'Mosquito sensor pod', 'now', [], 'Clips onto the stuffed mosquito: light sensor behind a 30 mm light collector (the dot can land 15 mm off at 3 and 7 ft), two LED eyes, line tie.'),
     ('P7', 'Pendulum pivot and angle guide', 'next', [], '10, 20, and 30 degree release marks for the speed test.'),
     ('P8', 'Cable clips', 'next', [], ''),
 ]
