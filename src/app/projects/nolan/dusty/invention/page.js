@@ -166,6 +166,7 @@ export default function InventionPage() {
           <p className="text-white/40 text-xs">Prices are rough. The parts list PDF has the real ones, plus a backup for every part.</p>
           <div className="flex flex-wrap gap-2">
             <Btn href={`${P}/dusty-parts-list.pdf`} primary newTab>Parts list (PDF)</Btn>
+            <Btn href={`${BASE}/inventory#checklist`}>Check in the boxes</Btn>
             <Btn href={GUIDE}>Step by step build guide</Btn>
             <Btn href={`${BASE}/build`}>Build page and 3D models</Btn>
           </div>

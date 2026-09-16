@@ -30,6 +30,7 @@ const TABS = [
   ['research', 'Research', `${BASE}/research`],
   ['invention', 'The invention', `${BASE}/invention`],
   ['learn', 'Learn the science', `${BASE}/learn`],
+  ['inventory', 'Inventory', `${BASE}/inventory`],
   ['build', 'Build', `${BASE}/build`],
   ['print', 'Print plan', `${BASE}/build/batches`],
   ['guide', 'Build guide', GUIDE, true],

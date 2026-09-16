@@ -52,6 +52,11 @@ const PAGES = [
     text: 'Every piece of Dusty explained: the micro:bit, motors, infrared, calibration, gears, power, 3D printing, and the fair test.',
   },
   {
+    href: '/projects/nolan/dusty/inventory',
+    title: 'Inventory',
+    text: 'Check in every part as the boxes arrive, what to do when a part is wrong, and how to keep it all organized.',
+  },
+  {
     href: '/projects/nolan/dusty/changes',
     title: 'Changes and lessons',
     text: 'How engineers change a plan safely, the power bank change, the project history, and lessons for next time.',
