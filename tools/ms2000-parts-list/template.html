@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>MS-2000 Parts and Materials</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+@page { size: Letter; margin: 0.45in 0.45in 0.5in; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg:#0F1420; --card:#182032; --card2:#1F2940; --ink:#EEF2F8; --ink2:#A9B6CA; --ink3:#74839B; --line:#2B3650; --pink:#F0609E; --lime:#9BE15D; --sky:#5DB7F0; --amber:#F5B642; }
+html, body { background: var(--bg); color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: 'Nunito', sans-serif; font-size: 10.5px; line-height: 1.45; }
+h1,h2,h3,.num,.iname,.big { font-family: 'Fredoka', sans-serif; }
+a { color: var(--sky); text-decoration: none; }
+.hero { display:flex; justify-content:space-between; align-items:flex-end; border-bottom: 2px solid var(--pink); padding-bottom: 10px; }
+.hero .eyebrow { color: var(--pink); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: 10px; }
+.hero h1 { font-size: 34px; line-height: 1; margin-top: 4px; }
+.hero h1 span { color: var(--lime); }
+.hero .sub { color: var(--ink2); font-size: 12px; margin-top: 4px; }
+.meta { text-align: right; color: var(--ink2); font-size: 10px; }
+.meta b { color: var(--ink); }
+.grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 12px; }
+.box { break-inside: avoid; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.big { font-size: 24px; color: var(--amber); line-height: 1.05; }
+.box .lbl { color: var(--ink2); font-size: 10px; margin-top: 2px; }
+.box h3 { font-size: 13px; margin-bottom: 4px; }
+.box ul { padding-left: 14px; color: var(--ink2); }
+.box li + li { margin-top: 2px; }
+.box li b { color: var(--ink); }
+.two { break-inside: avoid; display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+section { margin-top: 14px; }
+h2 { font-size: 16px; color: var(--pink); margin-bottom: 6px; break-after: avoid; }
+.item { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px 9px; margin-bottom: 7px; break-inside: avoid; }
+.ihead { display:flex; align-items: baseline; gap: 8px; }
+.num { color: var(--ink3); font-size: 13px; }
+.iname { font-size: 14px; font-weight: 600; flex: 1; }
+.qty { font-weight: 800; color: var(--lime); font-size: 11px; }
+.role { color: var(--ink2); margin: 2px 0 6px; }
+.src { display:grid; grid-template-columns: 58px 1fr 92px; gap: 8px; align-items: center; background: var(--card2); border-radius: 7px; padding: 5px 8px; margin-top: 4px; }
+.src.b { background: transparent; border: 1px dashed var(--line); }
+.tag { font-size: 8.5px; font-weight: 800; letter-spacing: .08em; }
+.src.p .tag { color: var(--lime); }
+.src.b .tag { color: var(--ink3); }
+.top { display:flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.vend { font-weight: 800; font-size: 9px; padding: 1px 6px; border-radius: 99px; color: #0c1220; }
+.v-dfrobot { background: #F5B642; }
+.v-digikey { background: #F0605E; }
+.v-adafruit { background: #5DB7F0; }
+.pn { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: var(--ink); }
+.stock { color: var(--ink3); font-size: 9px; }
+.title { color: var(--ink); font-weight: 600; margin-top: 1px; }
+.url { font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; word-break: break-all; }
+.price { text-align: right; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 12px; }
+.price small { display:block; font-size: 8.5px; color: var(--ink3); font-weight: 400; }
+.tbd { color: var(--amber); font-size: 10px; }
+.note { color: var(--ink3); font-size: 9.5px; margin-top: 5px; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; color: var(--ink3); font-size: 8.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 4px; border-bottom: 1px solid var(--line); }
+td { padding: 3px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.r, th.r { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+tr:last-child td { border-bottom: none; }
+.pagebreak { break-before: page; }
+.foot { margin-top: 12px; color: var(--ink3); font-size: 9px; text-align: center; }
+.warn { border-color: rgba(245,182,66,.5); }
+.warn h3 { color: var(--amber); }
+</style></head><body>
+
+<div class="hero">
+  <div>
+    <div class="eyebrow">Addie Pinney &middot; 3rd grade science fair &middot; Spring 2027</div>
+    <h1>MS-<span>2000</span> Parts and Materials</h1>
+    <div class="sub">Design A, Pan and Tilt Camera Turret. Design locked Sep 16, 2026.</div>
+  </div>
+  <div class="meta"><b>Links checked</b><br>Sep 15 to 16, 2026<br><b>{{NITEMS}}</b> line items to buy</div>
+</div>
+
+<div class="grid3">
+  <div class="box"><div class="big">{{PT}}</div><div class="lbl">Primary order, 2 suppliers: DFRobot {{PDF}} + DigiKey {{PDK}}. Shipping and tax extra.</div></div>
+  <div class="box"><div class="big">~{{PALL}}</div><div class="lbl">All-in with about {{LOCALEST}} of batteries, foam board, rod, and craft supplies from local stores.</div></div>
+  <div class="box"><div class="big">{{BT}}</div><div class="lbl">If every backup were used instead (Adafruit {{BAF}}, DigiKey {{BDK}}, DFRobot {{BDF}}), not counting the backup laser price.</div></div>
+</div>
+
+<div class="two">
+  <div class="box">
+    <h3>How to read this</h3>
+    <ul>
+      <li>Every part has a <b>primary</b> and a <b>backup</b>. Buy the primary. Use the backup only if the primary is out of stock or late.</li>
+      <li>Primary uses <b>two suppliers</b>: DFRobot (the micro:bit, camera, board, and servos all come from one ecosystem) and DigiKey (the laser and small parts).</li>
+      <li>Backups use Adafruit and DigiKey, plus DFRobot for the backup board.</li>
+      <li>Every link was opened on the dates above. Prices are what each site showed.</li>
+      <li>Amazon is left out on purpose: its listings change sellers and cannot be checked reliably.</li>
+    </ul>
+  </div>
+  <div class="box warn">
+    <h3>Check before and after ordering</h3>
+    <ul>
+      <li><b>DigiKey prices marked *</b> come from DigiKey's listing on Octopart; confirm in the cart.</li>
+      <li><b>DigiKey stock is thin</b> on the 4-wire cable (16). Order it with everything else.</li>
+      <li><b>DFRobot</b> ships from its US warehouse by UPS (3 to 7 days to Texas). Items not in the US warehouse ship from China in 10 to 17 business days with duties prepaid.</li>
+      <li><b>On arrival:</b> check the Xia mi board's external power connector (the pack has a DC 2.1 jack), whether the board powers the micro:bit, and which 5 V port the servos run best on.</li>
+      <li><b>Laser:</b> read the Class II label on the module before first power-up.</li>
+    </ul>
+  </div>
+</div>
+
+{{ITEMS}}
+
+<section>
+<h2>Order sheets</h2>
+<div class="two">
+  <div class="box"><h3>DFRobot cart (primary)</h3>
+    <table><tr><th>#</th><th>SKU</th><th>Part</th><th class="r">Qty</th><th class="r">Price</th></tr>
+    {{CART_DF}}
+    <tr><td></td><td></td><td><b>Subtotal</b></td><td></td><td class="r"><b>{{PDF}}</b></td></tr></table>
+    <div class="note">DFRobot has offered free US shipping over $50 as a limited-time deal; check at checkout.</div>
+  </div>
+  <div class="box"><h3>DigiKey cart (primary)</h3>
+    <table><tr><th>#</th><th>DigiKey / part</th><th>Part</th><th class="r">Qty</th><th class="r">Price</th></tr>
+    {{CART_DK}}
+    <tr><td></td><td></td><td><b>Subtotal</b></td><td></td><td class="r"><b>{{PDK}}</b></td></tr></table>
+    <div class="note">Resistors and LEDs are sold loose; type the quantity in the cart.</div>
+  </div>
+</div>
+<div class="box" style="margin-top:8px"><h3>From local stores or already on hand</h3>
+  <table><tr><th>Item</th><th>Amount</th><th>Where</th></tr>
+  {{LOCAL}}
+  </table>
+</div>
+<div class="two">
+  <div class="box"><h3>What the design locks in</h3>
+    <ul>
+      <li><b>Design A:</b> pan and tilt camera turret, HuskyLens on top, laser below it, boresighted.</li>
+      <li><b>Printed tilt stop</b> plus a code limit: cannot aim above the flight zone.</li>
+      <li><b>Laser path:</b> 5 V port, through the arm switch, through the board relay, to the laser.</li>
+      <li><b>Ports:</b> HuskyLens on the 5 V HuskyLens port; pan servo P1, tilt servo P2, speaker P0 (all 5 V); P8 spare.</li>
+      <li><b>Wand:</b> second micro:bit in a printed handle, 2xAAA pack, 4-wire cable down the line to the mosquito (sensor + LED eyes).</li>
+      <li><b>Fasteners:</b> M2 everywhere in printed parts; M3 only for the HuskyLens.</li>
+    </ul>
+  </div>
+  <div class="box"><h3>If the primary board gives trouble</h3>
+    <ul>
+      <li>Switch to the <b>micro:Driver</b> (backup #02): servos on its servo headers, laser on motor channel M1, power from the 3xAA backup pack.</li>
+      <li>Its I2C port voltage is not documented. Test the HuskyLens on it before relying on it; if it browns out, power the HuskyLens from a 5 V USB power bank.</li>
+      <li>The printed base has room for either board (Xia mi 57 &times; 87 mm is the larger).</li>
+    </ul>
+  </div>
+</div>
+</section>
+<div class="foot">NAW Games &middot; nawgames.com/projects/addie/mosquito-turret &middot; MS-2000 parts list v1</div>
+</body></html>

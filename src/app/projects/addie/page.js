@@ -14,7 +14,7 @@ const PROJECTS = [
     dueLabel: 'Spring 2027',
     color: 'from-fuchsia-700 to-lime-500',
     href: '/projects/addie/mosquito-turret',
-    tags: ['Requirements', 'Pick a design', 'Experiments and data', 'Laser safety', 'Parts'],
+    tags: ['Requirements', 'Design locked', 'Parts list', 'Experiments and data', 'Laser safety'],
   },
   {
     slug: 'herbert-hoover',

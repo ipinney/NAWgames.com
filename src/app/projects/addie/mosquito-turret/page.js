@@ -24,8 +24,8 @@ const PHASES = [
   { title: 'Brainstorm', when: 'Done Sep 15', status: 'done', text: 'Air cannon, vacuum, and light beam ideas. The family picked lasers.', link: `${PLAN}#brainstorm` },
   { title: 'Requirements', when: 'Done Sep 15', status: 'done', text: 'Laser, sound effects, trainable fishing-line mosquito, proven hits, self-recorded data, and the name: MS-2000.', link: `${PLAN}#requirements` },
   { title: 'Pick a design', when: 'Done Sep 15', status: 'done', text: 'Addie picked Design A, the Pan and Tilt Camera Turret.', link: `${PLAN}#pick` },
-  { title: 'Lock in the design', when: 'Late September', status: 'now', text: 'Write why Design A, draw the MS-2000 by hand with labels, and ask the teacher about laser rules.', link: `${PLAN}#design` },
-  { title: 'Parts list and order', when: 'Early October', status: 'next', text: 'Final list with a backup for every part, then order.', link: `${PLAN}#parts` },
+  { title: 'Lock in the design', when: 'Done Sep 16', status: 'done', text: 'Design A locked. Still to do by hand: why Design A, a labeled drawing, and the teacher laser-rules question.', link: `${PLAN}#design` },
+  { title: 'Parts list and order', when: 'List done Sep 16; order next', status: 'now', text: 'Final list: primary and backup for every part, $192 from DFRobot and DigiKey. Order next.', link: '/projects/addie/ms2000-parts-list.pdf' },
   { title: 'Build', when: 'October to November', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head and camera training, then the flight zone, then the code and sound effects.', link: `${PLAN}#prints` },
   { title: 'Practice runs and fixes', when: 'December', status: 'next', text: 'Make sure the data saves correctly and the MS-2000 hits reliably.' },
   { title: 'Experiments and data', when: 'January to February', status: 'next', text: 'Speed, distance, and light tests. 45 runs recorded by the MS-2000, averages, and graphs.', link: `${PLAN}#experiment` },
@@ -76,6 +76,14 @@ export default function MosquitoTurretPage() {
               className="mt-5 inline-flex items-center bg-naw-pink text-naw-dark px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-naw-pink/90 transition-colors"
             >
               Open the full plan
+            </a>
+            <a
+              href="/projects/addie/ms2000-parts-list.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 ml-2 inline-flex items-center bg-naw-cyan/15 border border-naw-cyan/40 text-naw-cyan px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-naw-cyan/25 transition-colors"
+            >
+              Parts list (PDF)
             </a>
           </div>
         </div>

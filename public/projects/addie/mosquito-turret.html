@@ -157,8 +157,8 @@
     <span class="chip">1: Brainstorm &#10003;</span>
     <span class="chip">2: Requirements &#10003;</span>
     <span class="chip">3: Pick a design &#10003;</span>
-    <span class="chip on">4: Lock it in</span>
-    <span class="chip">5: Parts and order</span>
+    <span class="chip">4: Lock it in &#10003;</span>
+    <span class="chip on">5: Parts and order</span>
     <span class="chip">6: Build</span>
     <span class="chip">7: Practice</span>
     <span class="chip">8: Experiments</span>
@@ -175,7 +175,7 @@
   <a href="#prints">What we print</a>
   <a href="#experiment">Experiments and data</a>
   <a href="#demo">Fair demo</a>
-  <a href="#parts">Parts</a>
+  <a href="#parts">Parts list</a>
   <a href="#safety">Laser safety</a>
   <a href="#plan">The plan</a>
 </div>
@@ -199,7 +199,7 @@
     <li><b>Everything sits in 3D printed housings.</b><span class="why">Turret base, pan and tilt head, laser and camera mount, mosquito body, wand handle, and the flight zone corners.</span></li>
     <li><b>The best moment happens in the first 30 seconds of the demo.</b></li>
     <li><b>Addie does the training, coding, mosquitoes, and testing.</b><span class="why">MakeCode blocks. Dad does the printing and wiring.</span></li>
-    <li><b>Budget is flexible.</b><span class="why">Current estimate about $166.</span></li>
+    <li><b>Budget is flexible.</b><span class="why">Final parts list: $192 from two suppliers, about $227 with batteries and craft supplies.</span></li>
   </ul>
 </div>
 
@@ -264,7 +264,7 @@
         <dt>At the fair</dt><dd>A judge swings the mosquito. The turret chases it, flashes, and the mosquito lights up.</dd>
         <dt>The science</dt><dd>Does a faster mosquito get hit less?</dd>
         <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span> Medium-hard</dd>
-        <dt>Cost</dt><dd>About $166</dd>
+        <dt>Cost</dt><dd>About $227 (final list)</dd>
       </dl>
     </div>
     <div class="opt">
@@ -401,7 +401,7 @@
   <div class="tablewrap">
   <table>
     <tr><th>Print</th><th>What it holds</th><th>Notes</th></tr>
-    <tr><td>Turret base</td><td>micro:bit, micro:Driver, 3xAA pack, arm switch, speaker</td><td>Window so the micro:bit lights show, speaker grille on the front, hole for the volume knob. Heavy infill so it does not tip.</td></tr>
+    <tr><td>Turret base</td><td>micro:bit on the Xia mi board, 4xAA pack, laser arm switch, speaker</td><td>Window so the micro:bit lights show, speaker grille on the front, hole for the volume knob. Heavy infill so it does not tip.</td></tr>
     <tr><td>Pan and tilt head</td><td>Two servos, the tilt axle</td><td>Tilt stop built in: the head physically cannot point above the flight zone.</td></tr>
     <tr><td>Sensor mount</td><td>HuskyLens on top, laser underneath</td><td>Laser in an adjustable clamp so it can be lined up with the camera's center.</td></tr>
     <tr><td>Servo covers</td><td>Servo gears and horns</td><td>Covers pinch points (fair rule).</td></tr>
@@ -532,28 +532,34 @@
 
 <!-- PARTS -->
 <div class="card" id="parts">
-  <h2>Parts (draft)</h2>
-  <p class="sub">For Design A. Prices checked on the vendor sites Sep 15, 2026 unless marked with ~. We order after the design is locked in.</p>
-  <div class="tablewrap">
-  <table class="parts">
-    <tr><th>Part</th><th>What it does</th><th>Where</th><th style="text-align:right">Price</th></tr>
-    <tr><td>Class 2 laser module, under 1 mW (Quarton VLM-650-03 LPT)</td><td>The laser. Labeled by the maker. Runs on 2.6 to 6 volts.</td><td><a href="https://www.digikey.com/en/products/detail/quarton-inc/VLM-650-03-LPT/1010454" target="_blank" rel="noopener">DigiKey</a></td><td class="price">~$12</td></tr>
-    <tr><td>micro:bit v2 (x2)</td><td>One runs the turret, one lives in the wand handle. They talk by radio.</td><td><a href="https://www.adafruit.com/product/4781" target="_blank" rel="noopener">Adafruit 4781</a></td><td class="price">$35.90</td></tr>
-    <tr><td>HuskyLens AI camera</td><td>Learns and tracks the mosquito. Has its own screen.</td><td><a href="https://www.dfrobot.com/product-1922.html" target="_blank" rel="noopener">DFRobot SEN0305</a></td><td class="price">$34.90</td></tr>
-    <tr><td>micro:Driver board</td><td>Plugs into the turret micro:bit. Runs both servos, switches the laser, connects the camera.</td><td><a href="https://www.dfrobot.com/product-1738.html" target="_blank" rel="noopener">DFRobot DFR0548</a></td><td class="price">$11.90</td></tr>
-    <tr><td>Micro servo SG92R (x3)</td><td>Pan, tilt, and one spare.</td><td><a href="https://www.adafruit.com/product/169" target="_blank" rel="noopener">Adafruit 169</a></td><td class="price">$17.85</td></tr>
-    <tr><td>Analog light sensor (x3)</td><td>One inside each mosquito to feel the laser.</td><td><a href="https://www.adafruit.com/product/2748" target="_blank" rel="noopener">Adafruit 2748</a></td><td class="price">$7.50</td></tr>
-    <tr><td>Speaker module with amplifier and volume knob</td><td>Loud firing and hit sounds. The micro:bit's own speaker is too quiet for a fair.</td><td><a href="https://www.dfrobot.com/product-1401.html" target="_blank" rel="noopener">DFRobot FIT0449</a></td><td class="price">$6.00</td></tr>
-    <tr><td>3xAA holder with switch</td><td>Turret power. The switch is the arm switch.</td><td><a href="https://www.adafruit.com/product/771" target="_blank" rel="noopener">Adafruit 771</a></td><td class="price">$3.95</td></tr>
-    <tr><td>2xAAA holder with switch</td><td>Wand power, plugs into the micro:bit.</td><td>Adafruit or micro:bit go kit</td><td class="price">~$3</td></tr>
-    <tr><td>Red LEDs, resistors, thin 30 AWG wire</td><td>Mosquito eyes and the wires down the line to the sensor</td><td>Adafruit or Micro Center</td><td class="price">~$10</td></tr>
-    <tr><td>Short fishing rod or dowel, clear line</td><td>The wand</td><td>Sporting goods</td><td class="price">~$10</td></tr>
-    <tr><td>Black foam board, dowels</td><td>Flight zone walls, top, and back</td><td>Craft store</td><td class="price">~$15</td></tr>
-    <tr><td>White and colored PLA</td><td>All housings and mosquito bodies</td><td>Already have</td><td class="price">$0</td></tr>
-    <tr class="total"><td colspan="3">Total before shipping</td><td class="price">~$166</td></tr>
-  </table>
+  <h2>Parts list (final)</h2>
+  <p class="sub">Locked Sep 16, 2026. Every part has a primary and a backup, with links checked Sep 15 and 16. The primary order uses two suppliers.</p>
+  <div class="facts">
+    <div class="fact"><div class="num">$154.70</div><div class="lbl">DFRobot: 2 micro:bits, Xia mi board, HuskyLens, 3 clutch servos, speaker, battery packs, M2 kit, cables</div></div>
+    <div class="fact"><div class="num">$37.24</div><div class="lbl">DigiKey: Class 2 laser, arm switch, 3 light sensors, LEDs, resistors, 4-wire cable</div></div>
+    <div class="fact"><div class="num">~$35</div><div class="lbl">Local: batteries, black foam board, dowels, rod and line, craft supplies</div></div>
+    <div class="fact"><div class="num">~$227</div><div class="lbl">All-in, before shipping and tax</div></div>
   </div>
-  <p class="small muted" style="margin-top:10px">DigiKey did not show the single-unit laser price on the day we checked; confirm at checkout. Skip the 5 mW hobby laser modules: they are Class 3R and still nowhere near strong enough to kill anything.</p>
+  <p style="margin-top:14px"><a href="/projects/addie/ms2000-parts-list.pdf" target="_blank" rel="noopener" style="display:inline-block;background:var(--pink);color:#1a0e18;font-weight:800;text-decoration:none;padding:10px 16px;border-radius:10px">Open the parts list (PDF)</a></p>
+  <div class="two" style="margin-top:14px">
+    <div class="box">
+      <h3>What changed when the design was locked</h3>
+      <ul>
+        <li>The turret board is now the DFRobot <b>Xia mi</b>: it has a 5 V HuskyLens port, 5 V ports for the servos and speaker, and a relay for the laser. The micro:Driver is the backup.</li>
+        <li><b>Clutch servos</b> that slip instead of breaking if someone grabs the turret.</li>
+        <li>A separate <b>laser arm switch</b> that cuts power to the laser only.</li>
+        <li><b>M2 screws</b> for every printed part; the HuskyLens keeps its own M3 kit.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Check on arrival</h3>
+      <ul>
+        <li>The Xia mi board's external power connector (the battery pack has a DC 2.1 jack).</li>
+        <li>Whether the board powers the micro:bit (a spare 2xAAA pack is on the list in case it does not).</li>
+        <li>The Class II label on the laser before it is ever switched on.</li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <!-- SAFETY -->
@@ -595,8 +601,8 @@
     <li><span class="dot">1</span><div><h3>Brainstorm</h3><div class="when">Done Sep 15</div><div class="muted small">Air cannon, vacuum, and light beam ideas. The family picked lasers.</div></div></li>
     <li><span class="dot">2</span><div><h3>Requirements</h3><div class="when">Done Sep 15</div><div class="muted small">The list at the top, including the name: MS-2000.</div></div></li>
     <li><span class="dot">3</span><div><h3>Pick a design</h3><div class="when">Done Sep 15</div><div class="muted small">Addie picked Design A, the Pan and Tilt Camera Turret.</div></div></li>
-    <li class="now"><span class="dot">4</span><div><h3>Lock in the design</h3><div class="when">Late September</div><div class="muted small">Addie writes why she picked A and draws the MS-2000 by hand with labels. Ask the teacher about laser rules. No more big changes after this.</div></div></li>
-    <li><span class="dot">5</span><div><h3>Final parts list and order</h3><div class="when">Early October</div><div class="muted small">Check every link, pick a backup for each part, order from DigiKey, Adafruit, and DFRobot.</div></div></li>
+    <li><span class="dot">4</span><div><h3>Lock in the design</h3><div class="when">Done Sep 16</div><div class="muted small">Design A locked. Still to do by hand: Addie writes why she picked A and draws the MS-2000 with labels. Ask the teacher about laser rules.</div></div></li>
+    <li class="now"><span class="dot">5</span><div><h3>Final parts list and order</h3><div class="when">List done Sep 16; order next</div><div class="muted small">Order the primary parts from DFRobot and DigiKey using the <a href="/projects/addie/ms2000-parts-list.pdf" target="_blank" rel="noopener">parts list</a>. Pick up the local items.</div></div></li>
     <li><span class="dot">6</span><div><h3>Build</h3><div class="when">October to November</div><div class="muted small">Mosquito and wand first (prove a hit lights the eyes). Then the pan and tilt head and camera training. Then the flight zone and pendulum hook. Then the code and sound effects.</div></div></li>
     <li><span class="dot">7</span><div><h3>Practice runs and fixes</h3><div class="when">December</div><div class="muted small">Make sure the data saves correctly. Fix anything that misses for a silly reason.</div></div></li>
     <li><span class="dot">8</span><div><h3>Experiments and data</h3><div class="when">January to February</div><div class="muted small">Test 1 speed, Test 2 distance, Test 3 light. 45 runs. Averages and graphs.</div></div></li>
@@ -619,7 +625,7 @@
   </ul>
 </div>
 
-<div class="foot">NAW Games &middot; Addie's Projects &middot; MS-2000 plan v5 (Design A picked), Sep 15, 2026</div>
+<div class="foot">NAW Games &middot; Addie's Projects &middot; MS-2000 plan v6 (design locked, parts list), Sep 16, 2026</div>
 </div>
 </body>
 </html>
