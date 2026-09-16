@@ -1,0 +1,95 @@
+[
+ {
+  "n": 1,
+  "slug": "base-shell",
+  "title": "Base shell",
+  "color": "any color (pink on the site)",
+  "pieces": 1,
+  "parts": [
+   "shell"
+  ],
+  "height": 67.0,
+  "footprint": [
+   142.0,
+   133.0
+  ],
+  "time": "3h 0m 58s",
+  "grams": "125.18"
+ },
+ {
+  "n": 2,
+  "slug": "floor-and-foot",
+  "title": "Floor plate and one backdrop foot",
+  "color": "any color",
+  "pieces": 2,
+  "parts": [
+   "floor",
+   "foot"
+  ],
+  "height": 22.0,
+  "footprint": [
+   184.4,
+   130.0
+  ],
+  "time": "1h 42m 56s",
+  "grams": "63.70"
+ },
+ {
+  "n": 3,
+  "slug": "turret-and-wand",
+  "title": "Turntable, head, pivot pin, wand, pod back",
+  "color": "any color",
+  "pieces": 5,
+  "parts": [
+   "yoke",
+   "wand",
+   "head",
+   "pin",
+   "pod_back"
+  ],
+  "height": 61.5,
+  "footprint": [
+   168.2,
+   176.8
+  ],
+  "time": "3h 33m 34s",
+  "grams": "77.23"
+ },
+ {
+  "n": 4,
+  "slug": "white",
+  "title": "Pod front and cable clips",
+  "color": "WHITE PLA",
+  "pieces": 2,
+  "parts": [
+   "pod_front",
+   "cable_clips"
+  ],
+  "height": 20.0,
+  "footprint": [
+   130.2,
+   58.3
+  ],
+  "time": "34m 22s",
+  "grams": "10.98"
+ },
+ {
+  "n": 5,
+  "slug": "backdrop",
+  "title": "Pendulum pivot, backdrop clip, second foot",
+  "color": "any color",
+  "pieces": 3,
+  "parts": [
+   "pendulum",
+   "foot",
+   "clip"
+  ],
+  "height": 30.0,
+  "footprint": [
+   164.0,
+   183.0
+  ],
+  "time": "1h 26m 27s",
+  "grams": "43.59"
+ }
+]

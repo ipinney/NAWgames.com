@@ -4,7 +4,7 @@ import sys, os, json, html
 
 PARTS = [
     # (id, name, status, files [(label, href)], note)
-    ('A', 'Turret so far, assembled', 'done', [('3D viewer', 'ms2000-turret.html')],
+    ('A', 'Turret, assembled', 'done', [('3D viewer', 'ms2000-turret.html')],
      'Every printed and bought part in place. Tap a part to see it alone or highlighted. Pan and tilt sweeps are checked in the build scripts.'),
     ('C', 'Bought parts, measured', 'done', [('3D viewer', 'ms2000-components.html'), ('Numbers (JSON)', 'ms2000-dims.json')],
      'Every bought part as a stand-in model. Numbers marked estimate or photo get checked with calipers when the parts arrive.'),
@@ -24,10 +24,24 @@ PARTS = [
      'Print in WHITE. A 40 mm face 0.8 mm thick: the laser dot anywhere on it makes the whole cup glow, so hits count even when the dot lands up to 17 mm off center. Eye bar on top with two red LEDs facing the turret (outside the cup, so the eyes never set off the sensor), cable slot, fishing-line tab. About 8 g.'),
     ('P6', 'Mosquito sensor pod, back', 'done', [('3D viewer', 'ms2000-p6-pod-cap.html'), ('STL', 'stl/ms2000-p6-pod-cap.stl')],
      'Plugs into the front. Holds the light sensor facing into the cup; wires and the two 220 ohm resistors go in the open back. Sew the four lugs or strap it to the stuffed mosquito. About 9 g.'),
-    ('P7', 'Pendulum pivot and angle guide', 'now', [], '10, 20, and 30 degree release marks for the speed test.'),
-    ('P8', 'Cable clips', 'next', [], ''),
+    ('P7', 'Pendulum pivot', 'done', [('3D viewer', 'ms2000-p7-pendulum-pivot.html'), ('STL', 'stl/ms2000-p7-pendulum-pivot.stl')],
+     'Clamps on the end of a 1/4 in dowel. The line loops over the peg; rim notches mark 0, 10, 20, 30 degrees each way and the round holes count the tens. About 14 g.'),
+    ('P7', 'Backdrop clip', 'done', [('3D viewer', 'ms2000-p7-backdrop-clip.html'), ('STL', 'stl/ms2000-p7-backdrop-clip.stl')],
+     'Pushes onto the top edge of the 5 mm foam board and holds the dowel straight out toward the turret.'),
+    ('P7', 'Backdrop foot (print 2)', 'done', [('3D viewer', 'ms2000-p7-backdrop-foot.html'), ('STL', 'stl/ms2000-p7-backdrop-foot.stl')],
+     'Holds the foam board upright. Ridges in the slot grip the board.'),
+    ('P8', 'Cable clips', 'done', [('3D viewer', 'ms2000-p8-clips.html'), ('STL', 'stl/ms2000-p8-clips.stl')],
+     '8 clips that ride on the fishing line and hold the ribbon cable beside it, plus 3 that snap on a 3/8 in dowel.'),
 ]
 COL = {'done': '#9be15d', 'now': '#ff5fa2', 'next': '#7d93ad'}
+import os as _os
+PS = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'plates-summary.json')
+if _os.path.exists(PS):
+    for pl in json.load(open(PS)):
+        PARTS.append((f"Plate {pl['n']}", pl['title'], 'done',
+                      [('Flash Studio file (.3mf)', f"plates/ms2000-plate-{pl['n']}-{pl['slug']}.3mf")],
+                      f"{pl['color']}. {pl['pieces']} piece{'s' if pl['pieces'] > 1 else ''}, {pl['time']}, {float(pl['grams']):.0f} g. "
+                      "Adventurer 5M 0.4 nozzle, Generic PLA, 0.2 mm layers, 3 walls, 15% gyroid, 5 mm brim, no supports."))
 rows = []
 for pid, name, st, files, note in PARTS:
     links = ' '.join(f'<a href="{h}">{html.escape(l)}</a>' for l, h in files)
@@ -46,10 +60,10 @@ ul{{list-style:none;padding:0;margin:0;display:grid;gap:10px}}
 li{{background:#10233b;border:1px solid #1c3150;border-radius:10px;padding:12px 14px}}
 li.next{{opacity:.6}}
 .top{{display:flex;gap:10px;align-items:baseline}}
-.id{{color:#7d93ad;font-weight:700;min-width:26px}}
+.id{{color:#7d93ad;font-weight:700;min-width:56px}}
 .st{{margin-left:auto;font-size:13px;font-weight:700;text-transform:uppercase}}
-p{{margin:4px 0 0 36px;color:#b8c6d8;font-size:15px}}
-.links{{margin:8px 0 0 36px;display:flex;gap:8px;flex-wrap:wrap}}
+p{{margin:4px 0 0 66px;color:#b8c6d8;font-size:15px}}
+.links{{margin:8px 0 0 66px;display:flex;gap:8px;flex-wrap:wrap}}
 a{{color:#8fd3ea;border:1px solid #2a4a73;border-radius:6px;padding:5px 10px;text-decoration:none;font-weight:600;font-size:14px}}
 .back{{border:0;padding:0;display:inline-block;margin-bottom:12px}}
 </style></head><body><main>

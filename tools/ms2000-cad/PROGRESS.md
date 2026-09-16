@@ -30,10 +30,13 @@ Read this first every session. Update it and commit after every finished step.
     Light-collector idea: the dot lights the whole white cup; sensor at the back sees it. 6 mm dot fully on the face up to 17 mm off center (laser offset 15.2 at 3/7 ft).
     LEDs sit outside the cavity (checked). Cup prints face down, cap plug face down.
     Wiring: 3V + GND to sensor VIN/GND, sensor OUT -> P0, LED anodes via 220 ohm each -> P1, cathodes -> GND.
-  - [ ] P7 pendulum pivot + 10/20/30 deg guide
-  - [ ] P8 cable clips
-- [ ] 3. Assembly: turret in place, collision check, pan/tilt sweep, exploded view; catalog "In turret" mode
-- [ ] 4. Print plates (220 bed), 3mf + gcode, grams and times
+  - [x] P7 (Sep 16): parts/p7_pendulum.py -> pendulum pivot + protractor (clamps 1/4 in dowel, notches + count holes for 10/20/30), backdrop clip (5 mm foam board edge, holds dowel square), backdrop foot (print 2).
+  - [x] P8 (Sep 16): parts/p8_clips.py -> plate of 8 line clips (1 mm line hole, 5 x 1.2 ribbon snaps in edgewise) + 3 rod clips for a 3/8 in dowel (RD param).
+- [x] 3. Assembly: make_assembly.py (turret in place, catalog 'In turret' mode). Sweeps live in the part scripts. Exploded view not done.
+- [x] 4. Print plates (Sep 16): plates.py (layout, print orientation per part) + orca/build3mf.py (Flash Studio CLI in orca-cli docker, presets from /opt/ffstudio/work/*.json) via ./plates.sh.
+  Settings: 0.2 mm, 3 walls, 15% gyroid, 5 mm brim (none on pin and clips), no supports, textured PEI; plate 3 slowed walls.
+  Results: P1 shell 3h01 125 g | floor + foot 1h43 64 g | yoke, wand, head, pin, pod back 3h34 77 g | WHITE pod front + clips 0h34 11 g | pendulum, clip, foot 1h26 44 g. Total ~10h 20m, ~320 g.
+  3mf published; gcode stays in /opt/ffstudio/work/ms2000/out (too big for git).
 - [ ] 5. Parts arrive: calipers, set basis 'cal', rebuild, reprint what changed
 
 ## Open numbers (see DIMENSIONS.md, basis est/tbd)
@@ -62,3 +65,4 @@ Read this first every session. Update it and commit after every finished step.
 - index page: make_index.py (PARTS list holds status per part).
 - Sep 16: P2 + P3 done. Old P3 (tilt yoke) merged into P2; P3 is now the pivot pin.
 - Sep 16: P4 done. Sensor pod (P6) note: the laser dot lands +-15 mm off the camera aim at 3 and 7 ft, and the ALS-PT19 is only 7.8 x 10.6. Pod needs a light collector about 30 mm wide, or code must offset the aim by distance (HuskyLens box size).
+- Sep 16: P7, P8, plates done. Design complete except caliper pass. Filament: ~320 g sliced (buy a spool; 11 g must be white).

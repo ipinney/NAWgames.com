@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>MS-2000 backdrop clip, Rev A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0d1b2e;--grid:#1c3150;--line:#8fd3ea;--part:#f0b43c;--text:#dbe5f1;--dim:#7d93ad}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--ink);color:var(--text);font-family:"Barlow Semi Condensed",system-ui,sans-serif;overflow:hidden}
+#stage{position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;display:block;touch-action:none}
+#labels{position:fixed;inset:0;pointer-events:none}
+.dl{position:absolute;transform:translate(-50%,-50%);background:var(--ink);color:var(--line);border:1px solid var(--line);border-radius:3px;padding:1px 6px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dl small{color:var(--dim);font-weight:500;margin-left:4px}
+.hidden .dl{display:none}
+header{position:fixed;top:14px;left:16px;right:16px;pointer-events:none}
+h1{font-size:26px;font-weight:700;letter-spacing:.01em;line-height:1.1}
+h1 span{color:var(--part)}
+header p{color:var(--dim);font-size:15px;margin-top:2px}
+footer{position:fixed;left:0;right:0;bottom:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--ink) 30%)}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+button{font:inherit;font-size:15px;font-weight:600;color:var(--text);background:#152a45;border:1px solid var(--grid);border-radius:6px;padding:7px 12px;cursor:pointer}
+button:focus-visible{outline:2px solid var(--line);outline-offset:2px}
+button.on{border-color:var(--line);color:var(--line)}
+button.go{background:var(--part);color:var(--ink);border-color:var(--part);margin-left:auto}
+dl.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:4px 14px;margin:0 0 10px;font-size:15px}
+dl.specs div{border-left:2px solid var(--grid);padding-left:8px}
+dt{color:var(--dim);font-size:13px}
+dd{font-weight:600;font-variant-numeric:tabular-nums}
+@media (max-height:520px){dl.specs{grid-template-columns:repeat(4,auto)}#hint{display:none}h1{font-size:20px}header p{display:none}}
+#hint{color:var(--dim);font-size:13px;margin-top:8px}
+#hint a{color:var(--line)}
+</style></head><body>
+<canvas id="stage"></canvas>
+<div id="labels"></div>
+<header><h1>MS-2000 <span>backdrop clip</span>, Rev A</h1><p>Drag to rotate, pinch or scroll to zoom. All dimensions in mm.</p></header>
+<footer>
+<dl class="specs"><div><dt>Board</dt><dd>5 mm foam board</dd></div><div><dt>Dowel</dt><dd>1/4 in, square to the board</dd></div><div><dt>Length</dt><dd>30</dd></div><div><dt>Print</dt><dd>on its end, no supports</dd></div></dl>
+<div class="row">
+<button data-v="iso" class="on">3D</button><button data-v="front">Front</button><button data-v="side">Side</button><button data-v="top">Top</button>
+<button id="dims" class="on">Dimensions</button>
+<button id="dl" class="go">Download STL</button>
+</div>
+<p id="hint">Push onto the top edge of the backdrop. The dowel goes straight out toward the turret; the pivot clamps near its end.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const DATA = {"v":[-5.5,0.0,0.0,-2.5,0.0,0.0,-2.5,4.8,0.0,-2.15,6.0,0.0,-2.5,7.2,0.0,-2.5,12.8,0.0,-2.15,14.0,0.0,-2.5,15.2,0.0,-5.5,0.0,30.0,-2.5,0.0,30.0,-2.5,4.8,30.0,-2.15,6.0,30.0,-2.5,7.2,30.0,-2.5,12.8,30.0,-2.15,14.0,30.0,-2.5,15.2,30.0,-20.0,26.0,0.0,-20.0,38.0,0.0,-20.0,29.63,12.63,-20.0,30.72,11.91,-20.0,30.14,12.21,-20.0,28.91,13.72,-20.0,29.21,13.14,-20.0,28.71,14.35,-20.0,31.35,11.71,-20.0,32.0,11.65,-20.0,32.65,11.71,-20.0,33.28,11.91,-20.0,33.86,12.21,-20.0,34.37,12.63,-20.0,34.79,13.14,-20.0,35.09,13.72,-20.0,35.29,14.35,-5.5,22.0,0.0,-5.5,26.0,0.0,-2.5,22.0,0.0,-20.0,26.0,30.0,-20.0,28.65,15.0,-20.0,28.71,15.65,-20.0,28.91,16.28,-20.0,29.21,16.86,-20.0,29.63,17.37,-20.0,30.14,17.79,-20.0,30.72,18.09,-20.0,31.35,18.29,-20.0,32.0,18.35,-20.0,32.65,18.29,-20.0,35.35,15.0,-20.0,35.29,15.65,-20.0,34.79,16.86,-20.0,35.09,16.28,-20.0,33.86,17.79,-20.0,34.37,17.37,-20.0,33.28,18.09,-20.0,38.0,30.0,-5.5,22.0,30.0,-5.5,26.0,30.0,-2.5,22.0,30.0,2.5,0.0,0.0,2.15,6.0,0.0,2.5,4.8,0.0,2.5,7.2,0.0,5.5,0.0,0.0,2.15,14.0,0.0,2.5,12.8,0.0,2.5,15.2,0.0,2.5,0.0,30.0,2.15,6.0,30.0,2.5,4.8,30.0,2.5,7.2,30.0,5.5,0.0,30.0,2.15,14.0,30.0,2.5,12.8,30.0,2.5,15.2,30.0,2.5,22.0,0.0,5.5,22.0,0.0,5.5,26.0,0.0,20.0,26.0,0.0,20.0,38.0,0.0,20.0,29.63,12.63,20.0,30.72,11.91,20.0,30.14,12.21,20.0,28.91,13.72,20.0,29.21,13.14,20.0,28.71,14.35,20.0,31.35,11.71,20.0,32.0,11.65,20.0,32.65,11.71,20.0,33.28,11.91,20.0,33.86,12.21,20.0,34.37,12.63,20.0,34.79,13.14,20.0,35.09,13.72,20.0,35.29,14.35,2.5,22.0,30.0,5.5,22.0,30.0,5.5,26.0,30.0,20.0,26.0,30.0,20.0,28.65,15.0,20.0,28.71,15.65,20.0,28.91,16.28,20.0,29.21,16.86,20.0,29.63,17.37,20.0,30.14,17.79,20.0,30.72,18.09,20.0,31.35,18.29,20.0,32.0,18.35,20.0,32.65,18.29,20.0,35.35,15.0,20.0,35.29,15.65,20.0,34.79,16.86,20.0,35.09,16.28,20.0,33.86,17.79,20.0,34.37,17.37,20.0,33.28,18.09,20.0,38.0,30.0],"f":[0,33,1,1,33,2,0,1,8,1,2,9,4,5,12,2,33,4,4,33,5,5,33,7,0,55,33,7,35,15,0,8,55,1,9,8,2,10,9,8,9,55,9,10,55,5,13,12,10,12,55,12,13,55,13,15,55,7,33,35,15,35,57,15,57,55,58,60,62,60,61,62,61,64,62,62,64,65,58,62,66,58,68,60,62,75,70,62,65,74,62,74,75,61,72,64,58,66,68,62,70,66,61,69,72,66,70,68,68,70,69,69,70,72,70,73,72,65,73,94,70,75,95,70,94,73,70,95,94,65,94,74,33,34,35,34,74,35,33,56,34,35,74,57,33,55,56,55,57,56,56,57,94,34,75,74,34,76,75,75,76,95,57,74,94,76,96,95,56,94,95,56,95,96,16,23,21,16,22,18,16,21,22,16,36,23,16,34,56,16,17,34,16,24,17,16,18,20,16,20,19,16,19,24,17,24,25,17,25,26,17,26,27,17,27,28,17,28,29,17,29,30,17,30,31,17,31,32,17,32,54,17,76,34,36,37,23,36,38,37,36,39,38,36,40,39,36,41,40,16,56,36,36,42,41,36,43,42,36,44,43,36,45,44,36,46,45,54,53,46,54,51,53,54,52,51,54,32,47,54,47,48,54,48,50,54,50,49,54,49,52,36,54,46,36,56,54,17,54,115,54,56,96,17,77,76,17,78,77,17,115,78,76,77,97,77,82,84,77,79,83,77,83,82,77,84,97,77,78,87,77,81,79,77,80,81,77,85,80,77,86,85,77,87,86,78,88,87,78,89,88,78,90,89,78,91,90,78,92,91,78,93,92,78,115,93,54,96,97,54,97,115,76,97,96,97,84,98,97,98,99,97,99,100,97,100,101,97,101,102,97,102,103,97,103,104,97,104,105,115,105,106,115,106,107,115,107,114,115,114,112,115,112,113,115,108,93,115,109,108,115,111,109,115,110,111,115,113,110,97,105,115,2,4,3,2,3,10,3,4,11,3,11,10,4,12,11,10,11,12,59,61,60,59,60,67,59,69,61,60,68,67,59,67,69,67,68,69,5,7,6,5,6,13,6,7,14,6,14,13,7,15,14,13,14,15,63,65,64,63,64,71,63,73,65,64,72,71,63,71,73,71,72,73,18,22,83,19,20,81,20,18,79,22,21,82,21,23,84,37,98,23,24,19,80,24,85,25,25,86,26,27,26,87,28,27,88,29,28,89,30,29,90,31,30,91,32,31,92,47,32,93,38,99,37,38,39,100,39,40,101,40,41,102,41,42,103,42,43,104,43,44,105,44,45,106,45,46,107,46,53,114,48,47,108,50,48,109,49,50,111,51,52,113,53,51,112,52,49,110,18,83,79,19,81,80,20,79,81,21,84,82,22,82,83,23,98,84,24,80,85,25,85,86,26,86,87,87,88,27,28,88,89,29,89,90,30,90,91,31,91,92,32,92,93,47,93,108,37,99,98,38,100,99,39,101,100,40,102,101,41,103,102,42,104,103,105,104,43,44,106,105,45,107,106,46,114,107,48,108,109,49,111,110,50,109,111,51,113,112,53,112,114,52,110,113],"bounds":[[-20.0,0.0,0.0],[20.0,38.0,30.0]],"dims":[{"a":[-2.5,0,30.0],"b":[2.5,0,30.0],"off":[0,-8,0],"text":"5","note":"slot"},{"a":[20,0,0],"b":[20,38,0],"off":[10,0,0],"text":"38","note":"tall"},{"a":[-20,38,30.0],"b":[20,38,30.0],"off":[0,8,0],"text":"40","note":"dowel length held"}],"stlName":"ms2000-p7-backdrop-clip.stl","fitPad":1.3};
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d1b2e);
+const camera = new THREE.PerspectiveCamera(35,1,1,5000);
+
+// model (x,y,z) with y = depth from front lip, z = up  ->  three (x, z, -y)
+const v = DATA.v, pos = new Float32Array(v.length);
+for (let i=0;i<v.length;i+=3){pos[i]=v[i];pos[i+1]=v[i+2];pos[i+2]=-v[i+1];}
+const g = new THREE.BufferGeometry();
+g.setAttribute('position', new THREE.BufferAttribute(pos,3));
+g.setIndex(DATA.f);
+const ng = g.toNonIndexed(); ng.computeVertexNormals();
+const part = new THREE.Mesh(ng, new THREE.MeshStandardMaterial({color:0xf0b43c, roughness:.55, metalness:.05}));
+scene.add(part);
+const edges = new THREE.LineSegments(new THREE.EdgesGeometry(g, 25), new THREE.LineBasicMaterial({color:0x5a3b06}));
+scene.add(edges);
+scene.add(new THREE.HemisphereLight(0xcfe3ff, 0x1a2436, .75));
+const sun = new THREE.DirectionalLight(0xffffff,.85); sun.position.set(80,160,120); scene.add(sun);
+const fill = new THREE.DirectionalLight(0x8fd3ea,.25); fill.position.set(-120,40,-80); scene.add(fill);
+const BB=DATA.bounds; // model coords [[minx,miny,minz],[maxx,maxy,maxz]]
+const CX=(BB[0][0]+BB[1][0])/2, CY=(BB[0][1]+BB[1][1])/2, CZ=(BB[0][2]+BB[1][2])/2;
+const DIAG=Math.hypot(BB[1][0]-BB[0][0],BB[1][1]-BB[0][1],BB[1][2]-BB[0][2]);
+const grid = new THREE.GridHelper(Math.ceil(DIAG*2.5/10)*10,30,0x2a4a73,0x1c3150); grid.position.set(CX,BB[0][2]-.05,-CY); scene.add(grid);
+
+// dimension lines (DATA.dims, model coords)
+const dimMat = new THREE.LineBasicMaterial({color:0x8fd3ea});
+const dimGroup = new THREE.Group(); scene.add(dimGroup);
+const labelsEl = document.getElementById('labels');
+const labels = [];
+const V = (x,y,z)=>new THREE.Vector3(x,z,-y); // model coords -> three
+function dim(a,b,off,text,note){
+  const A=V(...a),B=V(...b),o=V(...off);
+  const A2=A.clone().add(o),B2=B.clone().add(o);
+  const ext=o.clone().setLength(3);
+  const pts=[A,A2.clone().add(ext),B,B2.clone().add(ext),A2,B2];
+  const dir=B2.clone().sub(A2).normalize(), t=Math.max(1.5,DIAG*.02);
+  const perp=o.clone().normalize().multiplyScalar(t);
+  const tk=[A2.clone().add(dir.clone().multiplyScalar(t)).add(perp),A2.clone().sub(dir.clone().multiplyScalar(t)).sub(perp),
+            B2.clone().add(dir.clone().multiplyScalar(t)).add(perp),B2.clone().sub(dir.clone().multiplyScalar(t)).sub(perp)];
+  dimGroup.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([...pts,...tk]),dimMat));
+  const el=document.createElement('div'); el.className='dl';
+  el.textContent=text; if(note){const s=document.createElement('small');s.textContent=note;el.appendChild(s);}
+  labelsEl.appendChild(el);
+  labels.push({el,p:A2.clone().add(B2).multiplyScalar(.5)});
+}
+(DATA.dims||[]).forEach(d=>dim(d.a,d.b,d.off,d.text,d.note));
+
+// orbit controls
+const target=V(CX,CY,CZ);                    // orbit around the part's center
+const FIT_R=DIAG*.5*(DATA.fitPad||1.3);      // bounding sphere of part + dimension labels
+let theta=-.75, phi=1.0, zoom=1, fitDist=300, anim=null, shiftNdc=0;
+const views={iso:[-.75,1.0],front:[0,1.45],side:[Math.PI/2,1.45],top:[0,.02]};
+function place(){const radius=fitDist*zoom;camera.position.set(target.x+radius*Math.sin(phi)*Math.sin(theta),target.y+radius*Math.cos(phi),target.z+radius*Math.sin(phi)*Math.cos(theta));camera.lookAt(target);}
+const ptrs=new Map(); let pinch0=0, z0=1;
+canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});anim=null;
+  if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch0=Math.hypot(a.x-b.x,a.y-b.y);z0=zoom;}});
+canvas.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId))return;const p=ptrs.get(e.pointerId);
+  if(ptrs.size===1){theta-=(e.clientX-p.x)*.008;phi=Math.min(Math.PI-.02,Math.max(.02,phi-(e.clientY-p.y)*.008));}
+  p.x=e.clientX;p.y=e.clientY;
+  if(ptrs.size===2){const [a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);zoom=Math.min(3,Math.max(.35,z0*pinch0/d));}
+  setActive(null);});
+['pointerup','pointercancel'].forEach(t=>canvas.addEventListener(t,e=>ptrs.delete(e.pointerId)));
+canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.min(3,Math.max(.35,zoom*Math.exp(e.deltaY*.001)));},{passive:false});
+
+function setActive(k){document.querySelectorAll('[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===k));}
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const [t,p]=views[b.dataset.v];const r=1;setActive(b.dataset.v);
+  if(reduce){theta=t;phi=p;zoom=r;return;}
+  let dt=((t-theta)%(2*Math.PI)+3*Math.PI)%(2*Math.PI)-Math.PI;
+  anim={f:{t:theta,p:phi,r:zoom},to:{t:theta+dt,p,r},s:performance.now()};});
+const dimsBtn=document.getElementById('dims');
+dimsBtn.onclick=()=>{const on=!dimsBtn.classList.contains('on');dimsBtn.classList.toggle('on',on);dimGroup.visible=on;labelsEl.classList.toggle('hidden',!on);};
+
+// STL download, built from the same mesh
+document.getElementById('dl').onclick=()=>{
+  const f=DATA.f, n=f.length/3, buf=new ArrayBuffer(84+n*50), dv=new DataView(buf);
+  dv.setUint32(80,n,true);
+  for(let i=0;i<n;i++){const o=84+i*50;
+    const a=f[i*3]*3,b=f[i*3+1]*3,c=f[i*3+2]*3;
+    const ux=v[b]-v[a],uy=v[b+1]-v[a+1],uz=v[b+2]-v[a+2],wx=v[c]-v[a],wy=v[c+1]-v[a+1],wz=v[c+2]-v[a+2];
+    let nx=uy*wz-uz*wy,ny=uz*wx-ux*wz,nz=ux*wy-uy*wx;const l=Math.hypot(nx,ny,nz)||1;
+    [nx/l,ny/l,nz/l,v[a],v[a+1],v[a+2],v[b],v[b+1],v[b+2],v[c],v[c+1],v[c+2]].forEach((x,j)=>dv.setFloat32(o+j*4,x,true));}
+  const url=URL.createObjectURL(new Blob([buf],{type:'model/stl'}));
+  const l=document.createElement('a');l.href=url;l.download=DATA.stlName;l.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+
+function resize(){
+  const w=innerWidth,h=innerHeight;
+  renderer.setSize(w,h,true);camera.aspect=w/h;camera.updateProjectionMatrix();
+  const top=document.querySelector('header').getBoundingClientRect().bottom+8;
+  const bot=document.querySelector('.specs').getBoundingClientRect().top-8;
+  const availH=Math.max(120,bot-top), half=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
+  const vHalf=Math.atan(half*availH/h), hHalf=Math.atan(half*w/h);
+  fitDist=FIT_R/Math.sin(Math.min(vHalf,hHalf*.94));
+  shiftNdc=1-2*((top+bot)/2)/h;          // move the image center into the open area
+  camera.projectionMatrix.elements[9]=-shiftNdc;
+  camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+}
+addEventListener('resize',resize);
+new ResizeObserver(resize).observe(document.querySelector('footer'));
+if(document.fonts)document.fonts.ready.then(resize);
+resize();
+canvas.addEventListener('dblclick',()=>document.querySelector('[data-v="iso"]').click());
+const tmp=new THREE.Vector3();
+function loop(now){
+  if(anim){const k=Math.min(1,(now-anim.s)/600),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    theta=anim.f.t+(anim.to.t-anim.f.t)*e;phi=anim.f.p+(anim.to.p-anim.f.p)*e;zoom=anim.f.r+(anim.to.r-anim.f.r)*e;if(k===1)anim=null;}
+  place();renderer.render(scene,camera);
+  const w=innerWidth,h=innerHeight;
+  labels.forEach(L=>{tmp.copy(L.p).project(camera);L.el.style.left=(tmp.x*.5+.5)*w+'px';L.el.style.top=(-tmp.y*.5+.5)*h+'px';L.el.style.visibility=tmp.z<1?'visible':'hidden';});
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script></body></html>
