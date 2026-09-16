@@ -23,6 +23,8 @@ printed['deck'] = deck()
 for i, (x, y) in enumerate(POSTS):
     printed[f'post{i+1}'] = post().translate([x, y, PL_Z1])
 printed['tray'] = tray()
+printed['sleeve'] = sleeve()
+printed['keeper'] = keeper()
 # tooth phasing so the meshes interleave
 ang = lambda y, z: math.atan2(z, y)
 phi_CR = ang(RY - C_Y, RZ - C_Z); phi_CM = ang(MOT_Y - C_Y, MOT_Z - C_Z)
@@ -79,7 +81,19 @@ cz = CASTER_H
 cast = boxc(-10, 10, CASTER_Y - 6, CASTER_Y + 6, 4.8, cz)
 ball = trimesh.creation.icosphere(subdivisions=2, radius=4.76); ball.apply_translation([0, CASTER_Y, 4.76])
 ghosts['ball caster'] = trimesh.util.concatenate([cast, ball])
-ghosts['4xAA pack'] = boxc(-BAT[0]/2, BAT[0]/2, BAT_Y0, BAT_Y1, PL_Z1, PL_Z1 + BAT[2])
+# Anker 321 power bank on foam, ports facing left; 90 deg USB-A adapter (estimated size) turns the cable forward
+_bz0 = PL_Z1 + SL_FLOOR_T + (SL_IN_H - BANK[2]) / 2
+_byc = (SL_IN_Y[0] + SL_IN_Y[1]) / 2
+_bank = trimesh.creation.box(extents=[BANK[0], BANK[1], BANK[2]])
+_bank.apply_translation([(BANK_X0 + BANK_X1) / 2, _byc, _bz0 + BANK[2] / 2])
+ghosts['power bank'] = _bank
+_pz = _bz0 + BANK[2] / 2
+ghosts['USB adapter and cable'] = trimesh.util.concatenate([
+    boxc(BANK_X0 - 22.0, BANK_X0 - 0.2, _byc - 20.0, _byc - 4.0, _pz - 6.0, _pz + 6.0),
+    boxc(BANK_X0 - 22.0, BANK_X0 - 14.0, _byc - 56.0, _byc - 20.0, _pz - 4.0, _pz + 4.0)])
+ghosts['foam shims'] = trimesh.util.concatenate([
+    boxc(BANK_X0 + 5, BANK_X1 - 5, _byc - 8, _byc + 8, PL_Z1 + SL_FLOOR_T, _bz0),
+    boxc(BANK_X0 + 5, BANK_X1 - 5, _byc - 8, _byc + 8, _bz0 + BANK[2], DECK_Z0)])
 mb_z = DECK_Z0 + DECK_T + 1.6
 ghosts['moto:bit'] = trimesh.util.concatenate([
     boxc(-MB[0]/2, MB[0]/2, MB_Y0, MB_Y1, DECK_Z0 + DECK_T, mb_z),

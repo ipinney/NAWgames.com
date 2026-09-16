@@ -11,7 +11,7 @@ meta = json.load(open(os.path.join(OUT, 'plates.json')))
 COLOR = {'base': 0xf0b43c, 'deck': 0xf0b43c, 'post': 0xf0b43c, 'dowel': 0xf0b43c, 'cradle': 0xe8793a,
          'tray': 0x5cc98a, 'roller': 0xb48cff, 'axle': 0xb48cff, 'collar': 0xb48cff,
          'pinion': 0x4aa8ff, 'compound_gear': 0x4aa8ff, 'roller_gear': 0x4aa8ff, 'washer': 0x4aa8ff,
-         'sensor_carrier_R': 0xff6f9a, 'sensor_carrier_L': 0xff6f9a}
+         'sensor_carrier_R': 0xff6f9a, 'sensor_carrier_L': 0xff6f9a, 'sleeve': 0xe0e0e0, 'keeper': 0xe0e0e0}
 
 PAGE = """<!doctype html><html><body style="margin:0;background:#0d1b2e">
 <canvas id="c" width="900" height="600"></canvas>

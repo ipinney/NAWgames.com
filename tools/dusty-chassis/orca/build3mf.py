@@ -1,6 +1,6 @@
 import json, os, subprocess, zipfile, re, glob, shutil, sys
 W='/opt/ffstudio/work'
-PLATES={1:('fit-check','Fit check'),2:('base','Base plate'),3:('deck-and-arms','Deck and sensor arms'),4:('brush-drive','Brush drive'),5:('tray','Crumb tray')}
+PLATES={1:('fit-check','Fit check'),2:('base','Base plate'),3:('deck-and-arms','Deck, battery sleeve and sensor arms'),4:('brush-drive','Brush drive'),5:('tray','Crumb tray')}
 COMMON={'wall_loops':'3','top_shell_layers':'5','bottom_shell_layers':'4','sparse_infill_density':'20%',
         'sparse_infill_pattern':'gyroid','brim_type':'outer_only','brim_width':'5','enable_support':'0',
         'xy_hole_compensation':'0','layer_height':'0.2','initial_layer_print_height':'0.2'}

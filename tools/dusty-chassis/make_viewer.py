@@ -4,11 +4,12 @@ OUT = sys.argv[1]
 d = pickle.load(open(f'{OUT}/assembly.pkl', 'rb'))
 pv, pf = pickle.load(open(f'{OUT}/stl/plate.pkl', 'rb'))
 COL = {'frame': '#f0b43c', 'cradle': '#e8793a', 'tray': '#5cc98a', 'roller': '#b48cff',
-       'gears': '#4aa8ff', 'carriers': '#ff6f9a'}
+       'gears': '#4aa8ff', 'carriers': '#ff6f9a', 'battery': '#e0e0e0'}
 def group(k):
     if k in ('base', 'deck') or k.startswith('post') or k.startswith('dowel'): return 'frame'
     if k in ('pinion', 'compound', 'roller_gear', 'washer'): return 'gears'
     if k.startswith('carrier'): return 'carriers'
+    if k in ('sleeve', 'keeper'): return 'battery'
     if k in ('roller', 'axle', 'collar'): return 'roller'
     return k
 groups = {}
@@ -34,19 +35,20 @@ dims = [
     dim([-xw, EAR_Y[0], 0], [xw, EAR_Y[0], 0], [0, -12, 0], round(2*xw), 'wide'),
     dim([-DECK_X, DECK_Y[1] + 1, 0], [-DECK_X, DECK_Y[1] + 1, top], [-8, 8, 0], round(top), 'tall'),
     dim([xw, -3, 0], [xw, A, 0], [12, 0, 0], round(A + 3), 'sensor to wheel'),
+    dim([bounds[0][0], SL_Y1, 0], [SL_X1, SL_Y1, 0], [0, 12, 0], round(SL_X1 - bounds[0][0]), 'wide at the battery, with USB adapter'),
     dim([-SP_X1 - 4, RY - ROLL_R, RZ], [-SP_X1 - 4, RY + ROLL_R, RZ], [-14, 0, -14], round(2*ROLL_R), 'brush'),
 ]
 legend = ''.join(f'<span><i style="background:{c}"></i>{html.escape(n)}</span>' for n, c in
                  [('frame', COL['frame']), ('brush motor mount', COL['cradle']), ('crumb tray', COL['tray']),
-                  ('brush roller', COL['roller']), ('gears', COL['gears']), ('sensor arms', COL['carriers']),
+                  ('brush roller', COL['roller']), ('gears', COL['gears']), ('sensor arms', COL['carriers']), ('battery sleeve', COL['battery']),
                   ('bought parts', '#9fb3c8')])
-specs = [('Footprint', f'{round(2*xw)} × {round(DECK_Y[1] + 1 - EAR_Y[0])} mm'), ('Printed parts', '19 pieces, ~77 g'),
+specs = [('Footprint', f'{round(SL_X1 - bounds[0][0])} × {round(bounds[1][1] - bounds[0][1])} mm'), ('Printed parts', '19 pieces, ~' + (sys.argv[4] if len(sys.argv) > 4 else '95') + ' g'),
          ('Brush gearing', f'{Z_BIG // Z_PIN * 1.0 * Z_ROL / Z_SM:.1f} : 1'), ('Print', 'one Adventurer 5M plate')]
 data = {'parts': parts, 'plate': {'v': np.round(pv, 2).flatten().tolist(), 'f': np.asarray(pf).flatten().tolist()},
         'bounds': bounds, 'dims': dims, 'stlName': 'dusty-chassis-revA-plate.stl', 'fitPad': 1.05}
 tpl = open('assembly.tpl.html').read()
-page = (tpl.replace('__TITLE_TEXT__', 'Dusty chassis, Rev A')
-        .replace('__TITLE_HTML__', 'Dusty <span>chassis</span>, Rev A')
+page = (tpl.replace('__TITLE_TEXT__', 'Dusty chassis, Rev A.1')
+        .replace('__TITLE_HTML__', 'Dusty <span>chassis</span>, Rev A.1')
         .replace('__LEGEND__', legend)
         .replace('__SPECS__', ''.join(f'<div><dt>{html.escape(k)}</dt><dd>{html.escape(v)}</dd></div>' for k, v in specs))
         .replace('__HINT__', 'Tap Parts to hide the bought parts. Download gives every printed piece laid out on one 220 mm plate. __BACK__')

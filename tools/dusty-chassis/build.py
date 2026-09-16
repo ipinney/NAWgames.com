@@ -67,12 +67,25 @@ BAT = (62.5, 57.3, 19.5)                   # Adafruit 4xAA holder (x, y, z)
 BAT_Y1 = 114.0; BAT_Y0 = BAT_Y1 - BAT[1]
 PLATE_Y1 = BAT_Y1
 CASTER_Y = p('CASTER_Y', 106.0); CASTER_H = 10.16; CASTER_DX = 13.46/2
-DECK_Z0 = p('DECK_Z0', PL_Z1 + BAT[2] + 2.5); DECK_T = 2.5
+# --- battery sleeve (MOC-001 Rev D): power bank lies crosswise, ports to the left ---
+SL_X0 = -43.0; SL_X1 = 62.6; SL_END_T = 1.6         # open end at SL_X0, closed end wall inside SL_X1
+SL_Y0 = 60.6; SL_FRONT_T = 1.6; SL_REAR_T = 3.6; SL_Y1 = 113.8
+SL_IN_Y = (SL_Y0 + SL_FRONT_T, SL_Y1 - SL_REAR_T)   # 48 mm inside
+SL_FLOOR_T = 2.5; SL_IN_H = 30.0                    # bank envelope 104 x 48 x 29
+SL_CAP_X0 = 40.0                                    # cap over the right end, beside the deck
+SL_TABS = [(sx*20.0, 58.4) for sx in (-1, 1)]       # screw up from under the base
+SL_REAR = [(sx*34.5, 112.0) for sx in (-1, 1)]      # screw up from base and down from deck
+KEEP_X = (-41.2, -37.8); KEEP_Z = (38.5, 42.5)      # keeper bar slot, below the USB ports
+KEEP_HEAD = (-42.5, -36.5, 7.5)                     # head x range and height, recessed into the rear wall
+BTN_X = (-31.0, -5.0); BTN_Z = (38.5, 61.5)         # button windows, 12 to 38 mm in from the mouth
+BANK = (97.0, 45.8, 22.9)                           # Anker 321 (A1112), largest published figures
+BANK_X1 = SL_X1 - SL_END_T; BANK_X0 = BANK_X1 - BANK[0]
+DECK_Z0 = p('DECK_Z0', PL_Z1 + SL_FLOOR_T + SL_IN_H); DECK_T = 2.5
 DECK_Y = (50.0, BAT_Y1); DECK_X = 39.5
 MB = (62.0, 76.0)                           # moto:bit v2 (DEV-15713): 62 wide (connector edge, front) x 76 deep
 MB_Y0 = 36.0; MB_Y1 = MB_Y0 + MB[1]         # board sits flush against the rear stop
 DECK_NOSE_Y = 37.0                          # deck extends forward under the board
-POSTS = [(sx*36.5, y) for y in (53.0, 111.0) for sx in (-1, 1)]
+POSTS = [(sx*36.5, 53.0) for sx in (-1, 1)]         # front posts; the sleeve carries the rear of the deck
 POST_D = 5.6; PEG_D = 4.0
 WIDE_Y0 = 47.0; FRONT_HALF = SP_X1; WIDE_HALF = 39.5
 EAR_Y = (-8.0, 2.0); EAR_X = (40.0, 42.5)
@@ -135,6 +148,9 @@ def base(print_fin=False):
     # post pegs
     for (x, y) in POSTS:
         holes.append(cyl(x, y, PL_Z0 - 3, PL_Z1 + 1, PEG_D + 0.05))
+    # battery sleeve screws (M2 x 8 up from underneath)
+    for (x, y) in SL_TABS + SL_REAR:
+        holes.append(cyl(x, y, PL_Z0 - 1, PL_Z1 + 1, SCREW_HOLE))
     # sensor ear screw holes (x direction)
     for sx in (-1, 1):
         holes.append(M.cylinder(10, SCREW_HOLE/2, SCREW_HOLE/2, 16).rotate([0, 90, 0]).translate([sx*EAR_X[0] - 5, -3.0, 13.0]))
@@ -232,7 +248,7 @@ def deck():
         parts.append(box(xa, xb, DECK_NOSE_Y + 2.0, MB_Y1 - 4.0, z1, z1 + 3.0))
     parts.append(box(-hx, hx, MB_Y1, MB_Y1 + 2.0, z1, z1 + 3.0))              # rear stop
     s = union(parts)
-    for (x, y) in POSTS:
+    for (x, y) in POSTS + SL_REAR:
         s = s - cyl(x, y, z0 - 1, z1 + 1, SCREW_HOLE) - cyl(x, y, z1 - 1.2, z1 + 5, 4.4)
     # zip-tie slots just outside the side guides; the ties go over the board
     for sx in (-1, 1):
@@ -248,6 +264,66 @@ def post():
     s = s + M.cylinder(PL_T - 0.3, PEG_D/2, PEG_D/2, 32).translate([0, 0, -(PL_T - 0.3)])
     s = s - M.cylinder(8, PILOT/2, PILOT/2, 16).translate([0, 0, h - 7.5])
     return s   # local: z=0 at plate top
+
+# ================= BATTERY SLEEVE =================
+def sleeve():
+    """Tube the power bank slides into from the left. Floor sits on the base, deck sits on the walls.
+    Printed standing on its closed end."""
+    z0 = PL_Z1; zf = z0 + SL_FLOOR_T; zt = zf + SL_IN_H
+    yi0, yi1 = SL_IN_Y
+    parts = [box(SL_X0, SL_X1, SL_Y0, SL_Y1, z0, zf),                    # floor
+             box(SL_X0, SL_X1, SL_Y0, yi0, z0, zt),                      # front wall
+             box(SL_X0, SL_X1, SL_Y1 - 1.6, SL_Y1, z0, zt),              # rear wall
+             box(SL_X0, -31.5, yi1, SL_Y1, z0, zt),                      # thick at the keeper head and left screw
+             box(30.0, 39.0, yi1, SL_Y1, z0, zt),                        # thick at the right screw
+             box(SL_X0, SL_X1, yi1, SL_Y1, zt - 2.0, zt),                # top lip the deck rests on
+             box(SL_X1 - SL_END_T, SL_X1, SL_Y0, SL_Y1, z0, zt),         # closed end
+             box(SL_CAP_X0, SL_X1, SL_Y0, SL_Y1, zt, zt + DECK_T)]       # cap beside the deck
+    for (x, y) in SL_TABS:                                               # front screw tabs, 45 deg underside for printing
+        pts = []
+        for zz in (z0, z0 + 7.0):
+            pts += [(x - 3.0, SL_Y0 - 0.01, zz), (x + 8.0, SL_Y0 - 0.01, zz), (x - 3.0, y - 3.0, zz), (x + 3.0, y - 3.0, zz)]
+        parts.append(M.hull_points(pts))
+    s = union(parts)
+    holes = []
+    for (x, y) in SL_TABS:
+        holes.append(cyl(x, y, z0 - 1, z0 + 6.5, PILOT))
+    for (x, y) in SL_REAR:
+        holes.append(cyl(x, y, z0 - 1, z0 + 7.5, PILOT))
+        holes.append(cyl(x, y, zt - 7.5, zt + 1, PILOT))
+    # clear the tires: no floor over the wheels, front wall lifted there
+    for sx in (-1, 1):
+        xa, xb = sorted([sx*(WHEEL_X0 - 1.5), sx*(WHEEL_X0 + WHEEL_W + 1.5)])
+        holes.append(box(xa, xb, SL_Y0 - 1, A + WHEEL_R + 3.0, z0 - 1, zf + 0.01))
+    # lightening: floor windows beside a centre rib, window in the cap
+    for xa, xb in ((-30.0, -8.0), (8.0, 36.0)):
+        for ya, yb in ((yi0 + 4.0, 81.0), (91.0, yi1 - 4.0)):
+            holes.append(box(xa, xb, ya, yb, z0 - 1, zf + 0.01))
+    holes.append(box(SL_CAP_X0 + 4.0, SL_X1 - SL_END_T - 3.0, yi0 + 4.0, yi1 - 4.0, zt - 1, zt + DECK_T + 1))
+    # lightening windows in the long walls (the corners, top lip and floor hold the bank)
+    for xa, xb in ((5.0, 27.0), (41.0, SL_X1 - SL_END_T - 3.0)):
+        for (ya, yb) in ((SL_Y0 - 1, yi0 + 1), (yi1 - 1, SL_Y1 + 1)):
+            holes.append(box(xa, xb, ya, yb, BTN_Z[0], BTN_Z[1]))
+    # button windows through both long walls
+    for (ya, yb) in ((SL_Y0 - 1, yi0 + 1), (yi1 - 1, SL_Y1 + 1)):
+        holes.append(box(BTN_X[0], BTN_X[1], ya, yb, BTN_Z[0], BTN_Z[1]))
+    # keeper bar slot through both walls, head pocket in the rear wall
+    holes.append(box(KEEP_X[0], KEEP_X[1], SL_Y0 - 1, SL_Y1 + 1, KEEP_Z[0], KEEP_Z[1]))
+    hx0, hx1, hh = KEEP_HEAD
+    holes.append(box(hx0 - 0.2, hx1 + 0.2, SL_Y1 - 1.8, SL_Y1 + 1, KEEP_Z[0] - 0.2, KEEP_Z[0] + hh + 0.2))
+    for h in holes:
+        s = s - h
+    return s
+
+def keeper():
+    """Bar across the sleeve mouth under the USB ports; stops the bank sliding out. Head sits flush in the rear wall."""
+    x0, x1 = KEEP_X[0] + 0.15, KEEP_X[1] - 0.15
+    zb = KEEP_Z[0] + 0.15; ztop = KEEP_Z[1] - 0.15
+    bar = box(x0, x1, SL_Y0 - 0.6, SL_Y1 - 1.6, zb, ztop)
+    hx0, hx1, hh = KEEP_HEAD
+    head = box(hx0, hx1, SL_Y1 - 1.6, SL_Y1, zb, zb + hh)
+    grip = box(hx0 + 1.5, hx1 - 1.5, SL_Y1 - 0.4, SL_Y1, zb + hh - 2.0, zb + hh)
+    return union([bar, head]) - grip
 
 # ================= TRAY =================
 def tray_under(y):

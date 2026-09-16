@@ -15,7 +15,9 @@ flip = lambda s: s.rotate([180, 0, 0])
 parts = {  # name: (manifold in print orientation, qty, note)
  'base':        (base(print_fin=True).rotate([0, 180, 0]), 1, 'top face down, lift off the support block under the gear peg'),
  'deck':        (deck(), 1, ''),
- 'post':        (flip(post()), 4, 'peg up'),
+ 'post':        (flip(post()), 2, 'peg up'),
+ 'sleeve':      (sleeve().rotate([0, 90, 0]), 1, 'standing on its closed end'),
+ 'keeper':      (keeper(), 1, 'head down flat'),
  'cradle':      (cradle(), 1, ''),
  'tray':        (tray().rotate([tray_print_tilt(), 0, 0]), 1, 'sloped underside flat on the bed'),
  'roller':      (roller(), 1, 'standing'),
@@ -53,7 +55,8 @@ place = [  # (name, x, y, rotz)
  ('sensor_carrier_R', 75, -40, 90),
  ('sensor_carrier_L', 98, -40, 90),
  ('cradle', 42, -80, 0),
- ('post', 80, -72, 0), ('post', 88, -72, 0), ('post', 96, -72, 0), ('post', 104, -72, 0),
+ ('post', 80, -72, 0), ('post', 88, -72, 0),
+ ('sleeve', -62, 88, 90), ('keeper', -62, -72, 90),
  ('dowel', 80, -84, 0), ('dowel', 86, -84, 0),
 ]
 plate = []

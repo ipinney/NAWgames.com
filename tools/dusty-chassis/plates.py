@@ -23,9 +23,9 @@ PLATES = [
     dict(n=1, slug='fit-check', title='Fit check',
          parts=[('pinion', 1), ('washer', 1), ('collar', 1), ('dowel', 2), ('post', 1)]),
     dict(n=2, slug='base', title='Base plate',
-         parts=[('base', 1), ('post', 3)]),
-    dict(n=3, slug='deck-and-arms', title='Deck and sensor arms',
-         parts=[('deck', 1), ('sensor_carrier_R', 1), ('sensor_carrier_L', 1)]),
+         parts=[('base', 1), ('post', 1)]),
+    dict(n=3, slug='deck-and-arms', title='Deck, battery sleeve and sensor arms',
+         parts=[('deck', 1), ('sensor_carrier_R', 1), ('sensor_carrier_L', 1), ('sleeve', 1), ('keeper', 1)]),
     dict(n=4, slug='brush-drive', title='Brush drive',
          parts=[('cradle', 1), ('compound_gear', 1), ('roller_gear', 1), ('roller', 1), ('axle', 1)]),
     dict(n=5, slug='tray', title='Crumb tray',
@@ -34,7 +34,7 @@ PLATES = [
 COLOR = {'base': '#f0b43c', 'deck': '#f0b43c', 'post': '#f0b43c', 'dowel': '#f0b43c', 'cradle': '#e8793a',
          'tray': '#5cc98a', 'roller': '#b48cff', 'axle': '#b48cff', 'collar': '#b48cff',
          'pinion': '#4aa8ff', 'compound_gear': '#4aa8ff', 'roller_gear': '#4aa8ff', 'washer': '#4aa8ff',
-         'sensor_carrier_R': '#ff6f9a', 'sensor_carrier_L': '#ff6f9a'}
+         'sensor_carrier_R': '#ff6f9a', 'sensor_carrier_L': '#ff6f9a', 'sleeve': '#e0e0e0', 'keeper': '#e0e0e0'}
 
 
 def load(name):

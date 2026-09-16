@@ -65,7 +65,7 @@ Each part is its own grade. Project also counts for writing (journal) and handwr
 Rubric (0 not evident, 1 not clear, 3 somewhat clear, 5 very clear; 9 rows, 45 max): purpose/hypothesis/variables; procedure and materials; data and results; analysis and conclusions; religion reflection; journal; display; oral presentation; other (originality, creativity, presentation, multiple trials).
 
 ## Status (Sep 16)
-Done: brainstorm, requirements, design pick (A), design lock, 3D print design (12 parts, 5 plates, ~10 h, ~320 g), parts list, website fair guide + build-your-own (commit 0c76d1e).
+Done: brainstorm, requirements, design pick (A), design lock, 3D print design (12 parts, 5 plates, ~10 h, ~320 g), parts list, website fair guide + build-your-own (commit 0c76d1e), build guide (commit b04f515).
 Now: order parts by Sep 30; start the cursive journal (catch-up entries for Sep 15 and Sep 16).
 Still by hand: Addie's written reason for A and labeled drawing (journal); ask Miss Taggart about laser rules (Parish Hall and Archdiocesan fair; no published Archdiocesan elementary laser rules found).
 Build guide written (Sep 16). Next on the site when it happens: photos and real-part corrections in the guide, advancing PHASES.
@@ -84,7 +84,8 @@ Build guide written (Sep 16). Next on the site when it happens: photos and real-
 - Name: MS-2000 (Mosquito Shooter).
 - Lasers required. Class 2 <1 mW kept; lethal laser (~14 W, Class 4) not adopted.
 - Trainable on a fake mosquito on a fishing line held by a person; hits affirmatively shown. Stuffed mosquito bought; only a clip-on sensor pod is printed. Poster board backdrop, no printed flight zone.
-- Sound effects required: laser pew or cannon boom on fire (button-selectable), lock-on beep, hit splat on wand, victory sound on turret. DFRobot FIT0449 speaker module, grille in printed base.
+- Tracking is automatic: HuskyLens (Object Tracking, ID1) reports the box center; the turret micro:bit moves pan (P1) and tilt (P2) by (offset from 160,120) / 20 degrees each loop, clamped to limits, and fires when within 12 px, at most once per second, only during a wand-started run. No search sweep yet: if the camera loses the mosquito the head holds still.
+- Sound effects required: laser pew or cannon boom on fire (chosen with the wand's touch logo; turret buttons are inside the base), lock-on beep, hit splat on wand, victory sound on turret. DFRobot FIT0449 speaker module, grille in printed base.
 - Experiment and data gathering is a core requirement.
 - Budget flexible (~$192 primary + ~$35 local). Printer: Flashforge Adventurer 5M. All equipment in printed housings.
 

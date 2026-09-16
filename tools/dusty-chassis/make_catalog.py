@@ -9,7 +9,9 @@ PR, GH = d['printed'], d['ghosts']
 P = [
  ('base','Base plate','printed',1,'Print','Main frame: motor bracket pads, roller side plates, gear pin, caster boss, sensor ears. Prints top face down.',['base']),
  ('deck','Electronics deck','printed',1,'Print','Upper shelf for the moto:bit, corner clips, zip-tie slots, wire window.',['deck']),
- ('post','Deck posts','printed',4,'Print','Standoffs between base and deck. Peg into the base, M2 screw from the top.',['post1','post2','post3','post4']),
+ ('post','Deck posts','printed',2,'Print','Front standoffs between base and deck. Peg into the base, M2 screw from the top. The battery sleeve holds up the back of the deck.',['post1','post2']),
+ ('sleeve','Battery sleeve','printed',1,'Print','The power bank slides in from the left side. Screws to the base from underneath; the deck screws down onto its back wall. Windows in both long walls reach the bank button. Prints standing on its closed end.',['sleeve']),
+ ('keeper','Keeper bar','printed',1,'Print','Pushes through both sleeve walls under the USB ports so the bank cannot slide out. Its head sits flush in the back wall.',['keeper']),
  ('cradle','Brush motor cradle','printed',1,'Print','Holds the 130 motor and the brush on/off rocker. Two screws plus two dowels.',['cradle']),
  ('dowel','Cradle dowels','printed',2,'Print','Locate the cradle on the base.',['dowel1','dowel2']),
  ('tray','Crumb tray','printed',1,'Print','Snaps in from underneath. Only the front lip touches the table; the bottom slopes up 2.5 mm toward the back so it does not drag. It hangs on the back hook and two side snaps. A ramp and crest let crumbs in but not back out. Weigh it for the capture test.',['tray']),
@@ -27,7 +29,9 @@ G = [
  ('n20','N20 drive motors + brackets','bought',2,'Adafruit (motors), Pololu #1089 (brackets)','6 V, 298:1, magnetic encoders. Pololu STEP model for motor and bracket.',['N20 motors + brackets']),
  ('wheels','Wheels, 32 x 7 mm','bought',2,'Pololu','Axle 16 mm off the table.',['wheels']),
  ('caster','Ball caster, 3/8 in','bought',1,'Pololu','Rear support. Screws up into the base boss.',['ball caster']),
- ('battery','4xAA holder','bought',1,'Adafruit','Switch and 2.1 mm plug to the moto:bit. Sits under the deck.',['4xAA pack']),
+ ('battery','Anker 321 power bank','bought',1,'Walmart','5,200 mAh, charges through USB-C in place. Lies crosswise in the sleeve, ports to the left.',['power bank']),
+ ('usbcable','90 degree USB adapter and barrel cable','bought',1,'Amazon (Cable Matters), Adafruit #2697','Turns the power cable forward along the left side into the switch and Y splitter. Adapter size is an estimate until it arrives.',['USB adapter and cable']),
+ ('foam','Foam shims','bought',2,'Home Depot (Frost King R338H)','One strip on the sleeve floor rib, one under the deck. Squeeze the bank so it cannot rattle.',['foam shims']),
  ('motobit','moto:bit carrier','bought',1,'SparkFun','Motor driver. Slides between the guides on the deck, held by two zip ties.',['moto:bit']),
  ('microbit','micro:bit v2','bought',1,'Adafruit','Plugs flat into the connector on the front of the moto:bit and sticks out over the brush, LEDs facing up.',['micro:bit']),
  ('m130','130 brush motor','bought',1,'Adafruit','Drives the roller through the gear train.',['130 brush motor']),
@@ -38,7 +42,7 @@ G = [
 ]
 COL = {'base':'#f0b43c','deck':'#f0b43c','post':'#f0b43c','dowel':'#f0b43c','cradle':'#e8793a','tray':'#5cc98a',
        'roller':'#b48cff','axle':'#b48cff','collar':'#b48cff','pinion':'#4aa8ff','compound':'#4aa8ff',
-       'roller_gear':'#4aa8ff','washer':'#4aa8ff','carrier_R':'#ff6f9a','carrier_L':'#ff6f9a'}
+       'roller_gear':'#4aa8ff','washer':'#4aa8ff','carrier_R':'#ff6f9a','carrier_L':'#ff6f9a','sleeve':'#e0e0e0','keeper':'#e0e0e0'}
 GCOL = '#9fb3c8'
 items = []
 allv = []
