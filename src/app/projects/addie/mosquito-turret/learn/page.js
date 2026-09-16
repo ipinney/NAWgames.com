@@ -167,14 +167,14 @@ const TOPICS = [
     title: 'Running a fair test',
     big: 'Change one thing, measure what happens, and keep everything else the same.',
     body: [
-      'The engineering goal is to build a robot that finds, tracks, and hits a flying mosquito by itself. The science question is what makes it miss more: a faster, farther, or smaller mosquito. There are three tests: speed (10, 20, 30 degrees), distance (3, 5, 7 feet), and target size (a black cover over the pod with a 40, 20, or 10 mm hole).',
-      'Each setting gets 5 runs, and each run lasts 30 seconds. 3 tests, 3 settings each, 5 runs each: 3 × 3 × 5 = 45 runs. The wand saves the test, setting, run number, hits, time to first hit, and room light level for every run. The test that drops the hits the most is the biggest reason the MS-2000 misses.',
+      'The engineering goal is to build a robot that finds, tracks, and hits a flying mosquito by itself. The science question is what makes it miss more: a faster mosquito or a smaller one. There are two tests: speed (10, 20, 30 degrees) and target size (a black cover over the pod with a 40, 20, or 10 mm hole). Every run is 3 feet from the camera, because that is where the laser is lined up.',
+      'Each setting gets 5 runs, and each run lasts 30 seconds. 2 tests, 3 settings each, 5 runs each: 2 × 3 × 5 = 30 runs. The wand saves the test, setting, run number, hits, time to first hit, and room light level for every run. The test that drops the hits the most is the biggest reason the MS-2000 misses.',
       'To find the average, add up the 5 runs and divide by 5. Then make one bar graph for each test, with one bar for each setting.',
     ],
     words: [
-      ['Variable you change', 'What you change on purpose (swing angle, distance, or target size).'],
+      ['Variable you change', 'What you change on purpose (swing angle or target size).'],
       ['Variable you measure', 'What you count (hits, and time to first hit).'],
-      ['Controlled variables', 'Everything you keep the same (room, batteries, who holds the line).'],
+      ['Controlled variables', 'Everything you keep the same (the 3 foot distance, room, batteries, camera training).'],
       ['Hypothesis', 'Your best guess before you test, and why.'],
     ],
     visual: 'average',

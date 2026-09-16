@@ -33,7 +33,7 @@ SPEC = [
     ('pin', 'Pivot pin (P3)', '#f0b43c', (-55, 0, 85), 'Printed. The left tilt axle; an M2 screw holds it in the head.'),
     ('head', 'Camera + laser head (P4)', '#4ad0e8', (0, 0, 85), 'Printed. Holds the camera and the laser, aimed the same way.'),
     ('husky', 'HuskyLens camera', '#e8e8e8', (0, -45, 105), 'Bought. Learns the mosquito and reports where it is. Screen faces the back.'),
-    ('laser', 'Laser, Class 2 (under 1 mW)', '#ff4040', (0, -70, 70), 'Bought. Under the camera, tilted up 1.4 degrees so the dot meets the camera aim at 5 ft.'),
+    ('laser', 'Laser, Class 2 (under 1 mW)', '#ff4040', (0, -70, 70), 'Bought. Under the camera, tilted up 2.4 degrees so the dot meets the camera aim at 3 ft.'),
 ]
 
 
@@ -55,7 +55,7 @@ for k, name, col, off, note in SPEC:
     allv.append(np.asarray(v))
 # laser beam stub
 LZ = p4['LZ']
-toe = math.atan((p4['LENS'][2] - LZ) / 1524.0)
+toe = math.atan((p4['LENS'][2] - LZ) / 914.4)
 lf = np.array([0.4, -14.0, LZ]) + [0, PAN_Y, Z0 + TZ]
 L = 260.0
 d = np.array([0, -1.0, math.tan(toe)]); d /= np.linalg.norm(d)

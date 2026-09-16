@@ -1,7 +1,7 @@
 """Whole MS-2000 setup in 3D: turret, backdrop, pendulum, stuffed mosquito with its pod, wand, cables.
 Usage: python make_setup.py OUT_DIR   -> OUT_DIR/ms2000-3d.html
 World frame (mm): x right, y back (turret base front face at y = 0, the turret looks toward -y), z up (table).
-The mosquito hangs 5 ft (1524 mm) in front of the camera lens, at lens height: the Test 1 and Test 3 setting."""
+The mosquito hangs 3 ft (914 mm) in front of the camera lens, at lens height: the test and demo distance."""
 import os, sys, json, math, pickle, html, runpy
 import numpy as np, trimesh
 import manifold3d as m
@@ -19,8 +19,8 @@ load_stl = lambda stem: (lambda t: (np.asarray(t.vertices), np.asarray(t.faces))
 PAN_Y, Z0, TZ = 66.0, p2['Z0'], p2['TZ']
 LENS = np.array(p4['LENS']) + [0, PAN_Y, Z0 + TZ]          # world lens point
 LZ = p4['LZ']
-TOE = math.atan((p4['LENS'][2] - LZ) / 1524.0)
-DIST = 1524.0
+TOE = math.atan((p4['LENS'][2] - LZ) / 914.4)
+DIST = 914.4
 
 
 def T(arr, rows):
@@ -48,7 +48,7 @@ def polyline(pts, r):
 
 
 # ---------------- layout ----------------
-POD_FRONT_Y = LENS[1] - DIST            # pod face 5 ft from the lens
+POD_FRONT_Y = LENS[1] - DIST            # pod face 3 ft from the lens
 MZ = LENS[2]                            # pod center at lens height
 POD_Y0 = POD_FRONT_Y - 20.0             # pod local z = 0 (the stuffy side)
 TAB = (0.0, 33.7, 3.0)                  # pod line tab, pod local
@@ -143,14 +143,14 @@ bounds_of = lambda vs: (lambda a: [a.min(0).tolist(), a.max(0).tolist()])(np.vst
 focus = {k: bounds_of(v) for k, v in focus_sets.items()}
 bb = focus['setup']
 dims = [
-    {'a': [BOARD_W / 2 + 40, LENS[1], 0], 'b': [BOARD_W / 2 + 40, POD_FRONT_Y, 0], 'off': [0, 0, 0], 'text': '5 ft', 'note': 'lens to mosquito (1524 mm)'},
+    {'a': [BOARD_W / 2 + 40, LENS[1], 0], 'b': [BOARD_W / 2 + 40, POD_FRONT_Y, 0], 'off': [0, 0, 0], 'text': '3 ft', 'note': 'lens to mosquito (914 mm)'},
     {'a': [-BOARD_W / 2, BOARD_Y, BOARD_TOP], 'b': [BOARD_W / 2, BOARD_Y, BOARD_TOP], 'off': [0, 0, 60], 'text': '30 in', 'note': 'foam board'},
     {'a': [-BOARD_W / 2, BOARD_Y, BOARD_Z0], 'b': [-BOARD_W / 2, BOARD_Y, BOARD_TOP], 'off': [-60, 0, 0], 'text': '20 in', 'note': ''},
 ]
 COL = [('turret base', '#ff5fa2'), ('turntable + backdrop parts', '#9be15d'), ('camera + laser head', '#4ad0e8'),
        ('pivots', '#f0b43c'), ('wand', '#b48cff'), ('mosquito pod', '#f4f4f4'), ('ribbon cable', '#ff9f43'), ('laser beam', '#ff2020')]
 legend = ''.join(f'<span><i style="background:{c}"></i>{html.escape(n)}</span>' for n, c in COL)
-specs = [('Distance', '5 ft, adjustable 3 to 7'), ('Turret', '142 × 133 × 143 mm'),
+specs = [('Distance', '3 ft (demo 2 to 3 ft)'), ('Turret', '142 × 133 × 143 mm'),
          ('Backdrop', '30 × 20 in foam board'), ('Printing', '5 plates, ~10 h, ~320 g')]
 focus_btns = ''.join(f'<button data-f="{k}"{" class=on" if k == "turret" else ""}>{t}</button>'
                      for k, t in (('turret', 'Turret'), ('mosquito', 'Mosquito and wand'), ('setup', 'Whole setup')))

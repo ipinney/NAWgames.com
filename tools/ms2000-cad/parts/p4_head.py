@@ -37,7 +37,7 @@ LZ = -25.0                            # laser axis height
 LD = V('laser', 'd') + 0.3            # clamp bore
 BOSS_END = -(XI - 0.5)
 SOCK = 3.5
-CONVERGE = 1524.0                     # laser crosses the camera line at 5 ft (middle test distance)
+CONVERGE = 914.4                      # laser crosses the camera line at 3 ft (the only test distance; fits a 3 ft fair table)
 
 
 def xf(s, rows):
@@ -163,7 +163,7 @@ for t in range(-int(L.TILT_DOWN) - 5, int(L.TILT_UP) + 6, 5):
 print('outside P2 envelope (mm3):', round(extra, 1))
 print('stops past the limits:', stops_hit)
 print('FIT', problems or 'clear')
-print(f'laser toe-in {TOE:.2f} deg; beam height vs camera line at 3/5/7 ft:', [round(-(hz(12.1) - LZ) + d * math.tan(math.radians(TOE)), 1) for d in (914, 1524, 2134)])
+print(f'laser toe-in {TOE:.2f} deg; beam height vs camera line at 2/3/4 ft:', [round(-(hz(12.1) - LZ) + d * math.tan(math.radians(TOE)), 1) for d in (610, 914, 1219)])
 print(f'lens y {hy(12.3):.1f} z {hz(12.1):.1f}; laser axis z {LZ}, x {LENS_X}; laser below lens {hz(12.1) - LZ:.1f} mm')
 
 arr = lambda s: (np.array(s.to_mesh().vert_properties)[:, :3], np.array(s.to_mesh().tri_verts))
@@ -173,7 +173,7 @@ pickle.dump({'head': arr(head), 'laser': arr(laser), 'husky_mesh': (hvh, hf_), '
             open(os.path.join(OUT, 'p4_parts.pkl'), 'wb'))
 
 finish(head, 'ms2000-p4-head', OUT, 'MS-2000 <span>camera + laser head</span>, Rev A',
-       specs=[('Size', '61.2 wide'), ('Camera', 'HuskyLens, 2 × M3'), ('Laser', f'{ZTOP - 12.1 - LZ:.0f} below lens, meets it at 5 ft'),
+       specs=[('Size', '61.2 wide'), ('Camera', 'HuskyLens, 2 × M3'), ('Laser', f'{ZTOP - 12.1 - LZ:.0f} below lens, meets it at 3 ft'),
               ('Print', 'on its bottom, no supports')],
        dims=[dim([-C, YF, ZB], [C, YF, ZB], [0, -10, -4], f'{2 * C:g}', 'wide'),
              dim([C, YF, ZB], [C, YB, ZB], [12, 0, 0], f'{YB - YF:g}', 'deep'),

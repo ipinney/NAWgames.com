@@ -1,4 +1,4 @@
-# MS-2000 Mosquito Shooter: plan v8 (Sep 16, 2026)
+# MS-2000 Mosquito Shooter: plan v9 (Sep 16, 2026)
 
 Repo copy of the claude.ai Project file claude/mosquito-turret-plan.md. Keep both in sync.
 
@@ -74,8 +74,8 @@ Build guide written (Sep 16). Next on the site when it happens: photos and real-
 - By Sep 30: order parts, start journal
 - Oct 1 to Nov 13: print and build (mosquito + wand, pan-tilt head, backdrop + pendulum, code + sounds); caliper check first, reprint anything off
 - Nov 14 to Dec 11: teach camera, pick hit threshold, practice runs, verify data saves. School: question Nov 18, research Dec 2, hypothesis Dec 9 (hypothesis before first real run)
-- Dec 12 to Jan 15: experiments, 45 runs, one test per day, winter break; buffer to Jan 19 for redos
-- Jan 16 to Jan 25: averages, 3 bar graphs, conclusion
+- Dec 12 to Jan 15: experiments, 30 runs, one test per day, winter break; buffer to Jan 19 for redos
+- Jan 16 to Jan 25: averages, 2 bar graphs, conclusion
 - Jan 26 to Feb 1: trifold board, finish journal, demo practice
 - Feb 3 exhibition; Feb 25 Archdiocesan if picked
 
@@ -88,16 +88,17 @@ Build guide written (Sep 16). Next on the site when it happens: photos and real-
 - Sound effects required: laser pew or cannon boom on fire (chosen with the wand's touch logo; turret buttons are inside the base), lock-on beep, hit splat on wand, victory sound on turret. DFRobot FIT0449 speaker module, grille in printed base.
 - Experiment and data gathering is a core requirement.
 - Experiment reframed (Sep 16): engineering goal + science question "what makes it miss". Light test dropped (it mostly tested the HuskyLens); target size test added.
+- 3 ft fair table (Sep 16): laser recalibrated to cross the camera line at 3 ft (P4 toe 2.37 deg; dot 12.6 mm off at 2 and 4 ft, face tolerates ~17 mm, so good ~2 to 4.3 ft). Distance test dropped. Every run at 3 ft; fair demo 2 to 3 ft. Board materials page: /projects/addie/ms2000-board.html.
 - Budget flexible (~$192 primary + ~$35 local). Printer: Flashforge Adventurer 5M. All equipment in printed housings.
 
 ## Experiments and data
 Engineering goal: Can I build a robot that finds, tracks, and hits a flying mosquito by itself?
-Science question: What makes the MS-2000 miss more: a faster, farther, or smaller mosquito? Hits = accuracy; the test that drops hits most is the biggest cause of misses.
-- Test 1 speed: pendulum release 10/20/30 deg, 5 ft, 40 mm cover, room lights (5 ft chosen because the laser is aimed to cross the camera line at 1524 mm)
-- Test 2 distance: 3/5/7 ft, 10 deg, 40 mm cover, room lights
-- Test 3 target size: black paper cover over the 40 mm pod face with a 40/20/10 mm hole (10 mm ~ real mosquito; same outside size so camera sees the same object; train once, no retraining between covers); 10 deg, 5 ft, room lights
-- Wand names array: speed 10/20/30, distance 3/5/7, size 40/20/10. Light level still logged as a room check.
-- 5 runs each, 45 total, 30 s per run. Measured: hits in 30 s, time to first hit. Controls: room, batteries, person on the line.
+Science question: What makes the MS-2000 miss more: a faster mosquito or a smaller one? Hits = accuracy; the test that drops hits most is the biggest cause of misses.
+- All runs at 3 ft (914 mm lens to pod), where the laser crosses the camera line.
+- Test 1 speed: pendulum release 10/20/30 deg, 40 mm cover, room lights
+- Test 2 target size: black paper cover over the 40 mm pod face with a 40/20/10 mm hole (10 mm ~ real mosquito; same outside size so camera sees the same object; train once, no retraining between covers); 10 deg, room lights
+- Wand names array: speed 10/20/30, size 40/20/10 (pick 0..5). Light level still logged as a room check.
+- 5 runs each, 30 total, 30 s per run. Measured: hits in 30 s, time to first hit. Controls: room, batteries, person on the line.
 - Wand micro:bit V2 datalogger saves test, setting, run, hits, time to first hit, light level; MY_DATA opens as table/graph/CSV and survives power off. Paper backup sheet.
 - Rules: every run counts, 5 per setting, redo only broken runs with a note, one test per day, photo each setup. Averages, one bar graph per test, conclusion frame.
 

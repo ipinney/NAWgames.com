@@ -25,7 +25,7 @@ const STEPS = [
   },
   {
     title: 'Teach it and test it',
-    text: 'Train the camera on the mosquito, check every hit is saved, then run the 45 experiment runs.',
+    text: 'Train the camera on the mosquito, check every hit is saved, then run the 30 experiment runs.',
     action: { href: `${BASE}/learn#fair-test`, label: 'How to test' },
   },
 ];
@@ -54,7 +54,7 @@ const PRINTS = [
   ['p1-floor-plate', 'Floor plate', 'The bottom. The board and battery pack sit on it.', 1, 2],
   ['p2-turntable-yoke', 'Turntable and tilt yoke', 'Spins left and right on the pan servo and holds the head.', 1, 3],
   ['p3-pivot-pin', 'Pivot pin', 'The axle on the left side of the head.', 1, 3],
-  ['p4-head', 'Camera and laser head', 'Holds the camera and the laser, lined up to meet 5 feet away.', 1, 3],
+  ['p4-head', 'Camera and laser head', 'Holds the camera and the laser, lined up to meet 3 feet away.', 1, 3],
   ['p5-wand', 'Wand handle', 'Holds the wand micro:bit and batteries on the fishing rod.', 1, 3],
   ['p6-pod-cap', 'Sensor pod, back', 'Holds the light sensor inside the mosquito.', 1, 3],
   ['p6-pod-cup', 'Sensor pod, front', 'The white cup that glows when the laser hits it.', 1, 4, true],

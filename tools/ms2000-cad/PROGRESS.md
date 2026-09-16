@@ -19,7 +19,7 @@ Project plan, school due dates, site map, and deploy gotchas: PLAN.md in this fo
   - [x] P2 turntable + tilt yoke, one print (Sep 16): parts/p2_turntable.py, ~39 g. Also P3 pivot pin (same script).
     Checks: tilt servo vs yoke/head, head sweep -30..+35 vs yoke, stops engage at +40/-35 and not inside the range, whole turret pan sweep -90..+90 vs base shell and pan servo. All clear.
   - [x] P4 camera + laser head (Sep 16): parts/p4_head.py, ~11 g. HuskyLens via tab (2x M3, nut traps), screen back, top edge z 25.
-    Laser axis z -25, x 0.4 (lens x), 37.9 below lens, bore toed up 1.42 deg to cross the camera line at 1524 mm (+-15 mm at 3/7 ft).
+    Laser axis z -25, x 0.4 (lens x), 37.9 below lens, bore toed up 2.37 deg to cross the camera line at 914 mm / 3 ft (+-12.6 mm at 2/4 ft). Was 1.42 deg at 1524 mm until the Sep 16 3 ft table change.
     Pinch clamp: slit on +x front 12 mm, M2 x 10 from below, screw 3 mm clear of the case.
     Left boss: pin socket 6.1 x 3.5, M2 x 12 from the pin head into a nut trap open to the inside. Top bar z 29..31.5 (53 mm bridge).
     Checks: HuskyLens envelope and laser vs head, beam path clear, head+camera+laser sweep -30..+35 vs yoke and tilt servo, stops hit at -35/+40.
@@ -41,7 +41,7 @@ Project plan, school due dates, site map, and deploy gotchas: PLAN.md in this fo
 - [ ] 5. Parts arrive: calipers, set basis 'cal', rebuild, reprint what changed
 
 ## Whole-setup viewer (Sep 16)
-- make_setup.py -> ms2000-3d.html (template setup.tpl.html, from dusty-chassis/assembly.tpl.html): turret + backdrop (30x20 in board on 2 feet, clip, 1/4 in dowel 250 mm), pendulum pivot, stuffed-mosquito stand-in with pod 1524 mm from the lens at lens height, wand on the dowel, line, ribbon, line clips, laser beam.
+- make_setup.py -> ms2000-3d.html (template setup.tpl.html, from dusty-chassis/assembly.tpl.html): turret + backdrop (30x20 in board on 2 feet, clip, 1/4 in dowel 250 mm), pendulum pivot, stuffed-mosquito stand-in with pod 914 mm (3 ft) from the lens at lens height, wand on the dowel, line, ribbon, line clips, laser beam.
 - Focus buttons (Turret, default / Mosquito and wand / Whole setup); this is the main 3D link on the MS-2000 page, Bought and Laser toggles, Turret view. make_hero.py renders ms2000-hero.png for the MS-2000 page.
 - make_assembly.py now only writes when run as a script (make_setup imports its ITEMS).
 

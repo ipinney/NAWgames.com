@@ -34,7 +34,7 @@ export const DUE = [
     date: '2027-01-19',
     label: 'Tue Jan 19',
     title: 'Conduct and complete experiments',
-    text: 'All 45 runs done, written in the journal, with a photo of every setup.',
+    text: 'All 30 runs done, written in the journal, with a photo of every setup.',
     rubric: ['procedure', 'journal', 'other'],
   },
   {

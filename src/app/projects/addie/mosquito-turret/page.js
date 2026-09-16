@@ -19,8 +19,8 @@ const PHASES = [
   { title: 'Order the parts', when: 'By Sep 30', status: 'now', text: 'About $192 from DFRobot and DigiKey, plus batteries and craft supplies. Start the journal now.', link: `${BASE}/build#shopping` },
   { title: 'Print and build', when: 'Oct 1 to Nov 13', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head, then the backdrop and pendulum, then the code and sounds.', link: `${BASE}/build` },
   { title: 'Teach the camera and practice', when: 'Nov 14 to Dec 11', status: 'next', text: 'Train the camera, pick the hit threshold, and make sure the data saves. The question (Nov 18), research (Dec 2), and hypothesis (Dec 9) are due at school in these weeks.', link: `${FAIR}#question` },
-  { title: 'Experiments', when: 'Dec 12 to Jan 15', status: 'next', text: 'Speed, distance, and target size. 45 runs, one test per day, over winter break. Due Jan 19, so a few days are left for redos.', link: `${FAIR}#experiments` },
-  { title: 'Data and conclusion', when: 'Jan 16 to Jan 25', status: 'next', text: 'Averages, three bar graphs, and the conclusion. Due Jan 25.', link: `${FAIR}#results` },
+  { title: 'Experiments', when: 'Dec 12 to Jan 15', status: 'next', text: 'Speed and target size, all at 3 feet. 30 runs, one test per day, over winter break. Due Jan 19, so a few days are left for redos.', link: `${FAIR}#experiments` },
+  { title: 'Data and conclusion', when: 'Jan 16 to Jan 25', status: 'next', text: 'Averages, two bar graphs, and the conclusion. Due Jan 25.', link: `${FAIR}#results` },
   { title: 'Board and demo', when: 'Jan 26 to Feb 1', status: 'next', text: 'Trifold board, finished journal, and the 30-second demo. Due Feb 1. Exhibition Feb 3 at 2:00 PM.', link: `${FAIR}#final` },
   { title: 'Archdiocesan fair', when: 'Feb 25', status: 'next', text: 'If the MS-2000 is picked as a St. Rose winner.' },
 ];
@@ -126,7 +126,7 @@ export default function MosquitoTurretPage() {
           <div className="grid md:grid-cols-2 gap-4 mt-8">
             <div className="rounded-2xl border border-naw-cyan/30 bg-naw-cyan/10 p-4">
               <div className="text-naw-cyan text-xs font-semibold">The big question</div>
-              <div className="text-white font-semibold mt-1">What makes the MS-2000 miss more: a faster, farther, or smaller mosquito?</div>
+              <div className="text-white font-semibold mt-1">What makes the MS-2000 miss more: a faster mosquito or a smaller one?</div>
               <div className="text-white/55 text-sm mt-1">Engineering goal: build a robot that finds, tracks, and hits a flying mosquito by itself.</div>
             </div>
             <div className="rounded-2xl border border-naw-green/30 bg-naw-green/10 p-4">

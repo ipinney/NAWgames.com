@@ -192,6 +192,7 @@
     <li><b>The mosquito hangs from a fishing line and can be held and moved by a person.</b><span class="why">A "mosquito wand": a short rod, a thin line, a mosquito on the end. The turret has to follow it up, down, left, and right.</span></li>
     <li><b>A hit is proven, not guessed.</b><span class="why">A light sensor inside the mosquito feels the laser. The mosquito's eyes flash, the wand buzzes and shows an X, and the turret adds a point. Every hit is counted by the machine, which is what the experiment needs.</span></li>
     <li><b>It records its own data.</b><span class="why">The wand micro:bit saves every run (test, setting, run number, hits, time to first hit) in its memory. Plug it into a computer and the data opens as a table and a graph, ready for a spreadsheet.</span></li>
+    <li><b>It fits a 3 foot fair table.</b><span class="why">The laser is lined up for 3 feet, every test runs at 3 feet, and at the fair the mosquito hangs 2 to 3 feet from the camera.</span></li>
     <li><b>The test can be repeated the same way every time.</b><span class="why">For the experiment, the wand clips onto a hook so the mosquito swings like a pendulum from a marked starting angle.</span></li>
     <li class="safety"><b>Class 2 laser, under 1 milliwatt, with the maker's label on it.</b><span class="why">No stronger laser, even though a stronger one is what it would take to kill a real mosquito. See the next section for the math.</span></li>
     <li class="safety"><b>Mounted, never handheld, and the beam cannot leave the flight zone.</b><span class="why">The mosquito flies inside a black box with a top and a back. The turret's tilt has a printed stop so it cannot aim above the box. The person holding the wand stands to the side, behind the turret line.</span></li>
@@ -262,7 +263,7 @@
       <p class="small muted">Turns left, right, up, and down to follow the mosquito wherever the wand moves it. The camera and laser point the same way, so when the mosquito is in the middle of the camera, the laser is on it.</p>
       <dl>
         <dt>At the fair</dt><dd>A judge swings the mosquito. The turret chases it, flashes, and the mosquito lights up.</dd>
-        <dt>The science</dt><dd>What makes it miss: speed, distance, or target size?</dd>
+        <dt>The science</dt><dd>What makes it miss: speed or target size?</dd>
         <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span> Medium-hard</dd>
         <dt>Cost</dt><dd>About $227 (final list)</dd>
       </dl>
@@ -415,23 +416,23 @@
 <!-- EXPERIMENT -->
 <div class="card" id="experiment">
   <h2>Experiments and data</h2>
-  <p class="sub">The build answers the engineering goal. The experiment answers the science question. Three tests, 45 runs, all recorded by the machine itself, done over winter break.</p>
+  <p class="sub">The build answers the engineering goal. The experiment answers the science question. Two tests, 30 runs, all recorded by the machine itself, done over winter break.</p>
 
   <div class="qbox">Engineering goal: Can I build a robot that finds, tracks, and hits a flying mosquito by itself?</div>
-  <div class="qbox" style="margin-top:10px">Science question: What makes the MS-2000 miss more: a faster, farther, or smaller mosquito?</div>
+  <div class="qbox" style="margin-top:10px">Science question: What makes the MS-2000 miss more: a faster mosquito or a smaller one?</div>
   <p class="small muted" style="margin-top:8px">Hits are how accuracy is measured. Each test changes one thing and keeps the rest the same, so the test that drops the hits the most is the biggest reason the MS-2000 misses.</p>
   <div class="two" style="margin-top:14px">
     <div class="box">
       <h3>Hypothesis</h3>
-      <p>If the mosquito is <span class="blank">&nbsp;</span> (faster, farther, or smaller), then the MS-2000 will get <span class="blank">&nbsp;</span> hits, because <span class="blank" style="min-width:160px">&nbsp;</span>. One for each test.</p>
+      <p>If the mosquito is <span class="blank">&nbsp;</span> (faster or smaller), then the MS-2000 will get <span class="blank">&nbsp;</span> hits, because <span class="blank" style="min-width:160px">&nbsp;</span>. One for each test.</p>
       <p>I think <span class="blank">&nbsp;</span> will make it miss the most, because <span class="blank" style="min-width:160px">&nbsp;</span>.</p>
     </div>
     <div class="box">
       <h3>Variables</h3>
       <ul>
-        <li><b>Change (one per test):</b> swing angle (farther back means faster), distance from the turret, or the size of the target hole</li>
+        <li><b>Change (one per test):</b> swing angle (farther back means faster) or the size of the target hole</li>
         <li><b>Measure:</b> hits in 30 seconds, and time to the first hit</li>
-        <li><b>Keep the same:</b> same turret, mosquito, line length, room lights, camera training, and fresh batteries. When one thing changes, the others stay at 10&deg;, 5 feet, and the 40 mm hole.</li>
+        <li><b>Keep the same:</b> same turret, mosquito, line length, room lights, camera training, and fresh batteries. Every run is 3 feet from the camera, the distance the laser is lined up for. When one thing changes, the other stays at 10&deg; or the 40 mm hole.</li>
       </ul>
     </div>
   </div>
@@ -439,9 +440,8 @@
   <div class="tablewrap" style="margin-top:14px">
   <table>
     <tr><th>Test</th><th>Question</th><th>What changes</th><th>Runs</th></tr>
-    <tr><td><b>1. Speed</b></td><td>Does a faster mosquito get hit less?</td><td>Swing angle: 10&deg;, 20&deg;, 30&deg; (5 ft, 40 mm)</td><td>3 &times; 5 = 15</td></tr>
-    <tr><td><b>2. Distance</b></td><td>Does the MS-2000 hit less when the mosquito is farther away?</td><td>Turret at 3, 5, and 7 feet (10&deg;, 40 mm)</td><td>3 &times; 5 = 15</td></tr>
-    <tr><td><b>3. Target size</b></td><td>Does a smaller target get hit less?</td><td>Black paper cover over the pod face with a 40, 20, or 10 mm hole. 10 mm is about the size of a real mosquito. (10&deg;, 5 ft)</td><td>3 &times; 5 = 15</td></tr>
+    <tr><td><b>1. Speed</b></td><td>Does a faster mosquito get hit less?</td><td>Swing angle: 10&deg;, 20&deg;, 30&deg; (3 ft, 40 mm)</td><td>3 &times; 5 = 15</td></tr>
+    <tr><td><b>2. Target size</b></td><td>Does a smaller target get hit less?</td><td>Black paper cover over the pod face with a 40, 20, or 10 mm hole. 10 mm is about the size of a real mosquito. (10&deg;, 3 ft)</td><td>3 &times; 5 = 15</td></tr>
   </table>
   </div>
 
@@ -459,7 +459,7 @@
     <div class="box">
       <h3>What gets saved for every run</h3>
       <ul>
-        <li>Test (speed, distance, or size)</li>
+        <li>Test (speed or size)</li>
         <li>Setting (for example 20&deg;)</li>
         <li>Run number (1 to 5)</li>
         <li>Hits in 30 seconds</li>
@@ -514,7 +514,7 @@
       <h3>The table</h3>
       <ul>
         <li>Trifold board behind</li>
-        <li>Turret at one end, flight zone at the other, beam running sideways along the table, not toward the judges</li>
+        <li>Fits a 3 foot table: turret at one end, backdrop at the other, mosquito 2 to 3 feet from the camera, beam running sideways along the table, not toward the judges. See the <a href="/projects/addie/ms2000-board.html#table">table layout</a>.</li>
         <li>"Class 2 laser" sign, maker's label visible</li>
         <li>Camera screen turned so judges can see the box it draws</li>
         <li>Spare batteries and a spare mosquito</li>
@@ -528,7 +528,7 @@
         <li>The MS-2000 chases it, flash, the eyes blink, the wand buzzes. "HIT!"</li>
         <li>"It knows it's a mosquito because I trained it." (camera screen)</li>
         <li>"A laser that kills mosquitoes would need to be 14,000 times stronger. That's too dangerous for school."</li>
-        <li>"The MS-2000 recorded 45 runs by itself. Here's what happened when the mosquito went faster, farther, and smaller. The thing that made it miss most was ___." (graphs)</li>
+        <li>"The MS-2000 recorded 30 runs by itself. Here's what happened when the mosquito went faster and got smaller. The thing that made it miss most was ___." (graphs)</li>
       </ol>
     </div>
   </div>
@@ -609,8 +609,8 @@
     <li class="now"><span class="dot">5</span><div><h3>Final parts list and order</h3><div class="when">List done Sep 16; order by Sep 30</div><div class="muted small">Order the primary parts from DFRobot and DigiKey using the <a href="/projects/addie/ms2000-parts-list.pdf" target="_blank" rel="noopener">parts list</a>. Pick up the local items. Start the cursive journal.</div></div></li>
     <li><span class="dot">6</span><div><h3>Print and build</h3><div class="when">Oct 1 to Nov 13</div><div class="muted small">Mosquito and wand first (prove a hit lights the eyes). Then the pan and tilt head. Then the backdrop and pendulum. Then the code and sound effects.</div></div></li>
     <li><span class="dot">7</span><div><h3>Camera training and practice runs</h3><div class="when">Nov 14 to Dec 11</div><div class="muted small">Teach the camera, set the hit threshold, make sure the data saves. At school: question due Nov 18, research Dec 2, hypothesis Dec 9.</div></div></li>
-    <li><span class="dot">8</span><div><h3>Experiments</h3><div class="when">Dec 12 to Jan 15 (due Jan 19)</div><div class="muted small">Test 1 speed, Test 2 distance, Test 3 target size. 45 runs, one test per day, over winter break.</div></div></li>
-    <li><span class="dot">9</span><div><h3>Data and conclusion</h3><div class="when">Due Jan 25</div><div class="muted small">Averages, three bar graphs, and the conclusion.</div></div></li>
+    <li><span class="dot">8</span><div><h3>Experiments</h3><div class="when">Dec 12 to Jan 15 (due Jan 19)</div><div class="muted small">Test 1 speed, Test 2 target size. 30 runs, all at 3 feet, one test per day, over winter break.</div></div></li>
+    <li><span class="dot">9</span><div><h3>Data and conclusion</h3><div class="when">Due Jan 25</div><div class="muted small">Averages, two bar graphs, and the conclusion.</div></div></li>
     <li><span class="dot">10</span><div><h3>Board and practice</h3><div class="when">Due Feb 1; exhibition Feb 3</div><div class="muted small">Question, hypothesis, variables, materials, steps, results, conclusion, Catholic connection, sources, and the "14,000 times" fact. Practice the 30-second demo on the family.</div></div></li>
   </ul>
 </div>

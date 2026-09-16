@@ -32,7 +32,7 @@ ITEMS = [
     ('plate', 'Floor plate', 'printed', 1, 'P1', 'Board posts and battery rails. Four M2 screws up into the shell.', T(p1['plate']), '#c9477f'),
     ('yoke', 'Turntable + yoke', 'printed', 1, 'P2', 'Pan horn underneath, tilt servo on the right, pivot bushing and tilt stops on the left.', tt(p2['yoke']), '#9be15d'),
     ('pin', 'Pivot pin', 'printed', 1, 'P3', 'Left tilt axle, M2 x 12 into a nut in the head.', tt(T(p2['pin'], ROT_PIN, (-XO - 1.6, 0, TZ))), '#f0b43c'),
-    ('head', 'Camera + laser head', 'printed', 1, 'P4', 'HuskyLens on two M3 screws, laser in a plastic pinch clamp toed in 1.4 degrees to meet the camera line at 5 ft.', hd(p4['head']), '#4ad0e8'),
+    ('head', 'Camera + laser head', 'printed', 1, 'P4', 'HuskyLens on two M3 screws, laser in a plastic pinch clamp toed in 2.4 degrees to meet the camera line at 3 ft.', hd(p4['head']), '#4ad0e8'),
     ('board', 'Xia mi + micro:bit', 'bought', 1, 'DFRobot MBT0042 + MBT0039', 'micro:bit stands up behind the front window.', T(g1['board']), '#2f6fbf'),
     ('pack', '4xAA pack', 'bought', 1, 'DFRobot FIT0918', 'Slides in from the right side.', T(g1['pack']), '#50555e'),
     ('pservo', 'Pan servo', 'bought', 1, 'DFRobot SER0049', 'Hangs from the deck.', T(g1['servo']), '#474c55'),
