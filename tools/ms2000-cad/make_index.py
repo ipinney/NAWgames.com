@@ -20,8 +20,11 @@ PARTS = [
      'Closed frame 61 mm wide. HuskyLens on two M3 screws, lens forward, screen readable from behind. Laser 38 mm under the lens in a plastic pinch clamp, toed up 1.4 degrees so the dot meets the camera line at 5 ft (15 mm off at 3 and 7 ft). Horn pocket right, pivot socket and stop finger left. About 11 g. The top bar is a 53 mm bridge: if it sags, print the head on its back.'),
     ('P5', 'Wand handle', 'done', [('3D viewer', 'ms2000-p5-wand.html'), ('STL', 'stl/ms2000-p5-wand.stl')],
      '56 x 119 mm paddle. micro:bit face up; M2 screws through its big rings clamp the cable wires (P0 sensor, P1 eyes, 3V, GND) with no soldering. 2xAAA pack behind it. A V under it centers rods from 9 to 30 mm; the rear zip ties go over the pack and under the rod. About 50 g.'),
-    ('P6', 'Mosquito sensor pod', 'now', [], 'Clips onto the stuffed mosquito: light sensor behind a 30 mm light collector (the dot can land 15 mm off at 3 and 7 ft), two LED eyes, line tie.'),
-    ('P7', 'Pendulum pivot and angle guide', 'next', [], '10, 20, and 30 degree release marks for the speed test.'),
+    ('P6', 'Mosquito sensor pod, front', 'done', [('3D viewer', 'ms2000-p6-pod-cup.html'), ('STL', 'stl/ms2000-p6-pod-cup.stl')],
+     'Print in WHITE. A 40 mm face 0.8 mm thick: the laser dot anywhere on it makes the whole cup glow, so hits count even when the dot lands up to 17 mm off center. Eye bar on top with two red LEDs facing the turret (outside the cup, so the eyes never set off the sensor), cable slot, fishing-line tab. About 8 g.'),
+    ('P6', 'Mosquito sensor pod, back', 'done', [('3D viewer', 'ms2000-p6-pod-cap.html'), ('STL', 'stl/ms2000-p6-pod-cap.stl')],
+     'Plugs into the front. Holds the light sensor facing into the cup; wires and the two 220 ohm resistors go in the open back. Sew the four lugs or strap it to the stuffed mosquito. About 9 g.'),
+    ('P7', 'Pendulum pivot and angle guide', 'now', [], '10, 20, and 30 degree release marks for the speed test.'),
     ('P8', 'Cable clips', 'next', [], ''),
 ]
 COL = {'done': '#9be15d', 'now': '#ff5fa2', 'next': '#7d93ad'}

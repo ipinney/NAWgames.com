@@ -26,7 +26,10 @@ Read this first every session. Update it and commit after every finished step.
   - [x] P5 wand handle (Sep 16): parts/p5_wand.py, ~50 g, 56 x 119 x 19. Board face up at z 8..9.6 on ring bosses (M2 self-tap through the rings = wire clamps), top edge under corner lips.
     Plug/USB notch in the bay top wall; pack lead points at the micro:bit. Rails: 45 deg V (apex z 4), fits rods 9-30 mm (checked 9.5/16/25/30). Ties at y 4.5 and over the pack.
     Checks: micro:bit and pack vs wand, lift-out path, USB plug path. Prints face up on the rail bottoms.
-  - [ ] P6 sensor pod for stuffed mosquito (ALS-PT19, 2 LEDs, line tie)
+  - [x] P6 sensor pod (Sep 16): parts/p6_pod.py -> cup (WHITE PLA, 40 mm face 0.8 thick, eye bar + line tab, ~8 g) + cap (sensor pocket, open back for wiring, 4 sewing lugs, strap slots, ~9 g).
+    Light-collector idea: the dot lights the whole white cup; sensor at the back sees it. 6 mm dot fully on the face up to 17 mm off center (laser offset 15.2 at 3/7 ft).
+    LEDs sit outside the cavity (checked). Cup prints face down, cap plug face down.
+    Wiring: 3V + GND to sensor VIN/GND, sensor OUT -> P0, LED anodes via 220 ohm each -> P1, cathodes -> GND.
   - [ ] P7 pendulum pivot + 10/20/30 deg guide
   - [ ] P8 cable clips
 - [ ] 3. Assembly: turret in place, collision check, pan/tilt sweep, exploded view; catalog "In turret" mode
