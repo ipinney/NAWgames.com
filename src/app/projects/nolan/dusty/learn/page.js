@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BASE, Nav } from '../ui';
+import { BASE, Nav, Back } from '../ui';
 
 const P = '/projects/nolan';
 const OG = 'https://nawgames.com/projects/nolan/dusty-og.png';
@@ -450,8 +450,9 @@ export default function DustyLearnPage() {
       <Nav current="learn" />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-yellow-300/10 via-transparent to-transparent" />
-        <div className="relative max-w-4xl mx-auto px-4 pt-8">
-          <h1 className="font-game text-2xl sm:text-3xl glow">
+        <div className="relative max-w-4xl mx-auto px-4 pt-6">
+          <Back />
+          <h1 className="font-game text-2xl sm:text-3xl glow mt-5">
             <span className="bg-gradient-to-r from-naw-orange to-yellow-300 bg-clip-text text-transparent">LEARN THE SCIENCE</span>
           </h1>
           <p className="text-white text-lg font-semibold mt-4 leading-snug">
@@ -535,9 +536,9 @@ export default function DustyLearnPage() {
           </div>
           <div className="flex flex-wrap gap-2 mt-6">
             <Btn href={`${BASE}/build`} primary internal>Build it</Btn>
-            <Btn href={`${P}/research.html`}>Research notes</Btn>
-            <Btn href={`${P}/invention-packet.html`}>Packet guide</Btn>
-            <Btn href={`${P}/dusty.html`}>The experiment</Btn>
+            <Btn href={`${BASE}/research`} internal>Research notes</Btn>
+            <Btn href={`${BASE}/packet`} internal>Packet guide</Btn>
+            <Btn href={`${BASE}/invention#experiment`} internal>The experiment</Btn>
           </div>
         </section>
       </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-const PACKET = '/projects/nolan/invention-packet.html';
+const PACKET = '/projects/nolan/dusty/packet';
 
 export const DUE = [
   {
@@ -12,7 +12,7 @@ export const DUE = [
     text: 'Topic, why it is interesting, the Know and Need to know boxes, and three questions that are not yes or no.',
     links: [
       { href: `${PACKET}#research-question`, label: 'How to fill it in' },
-      { href: '/projects/nolan/research.html', label: 'Research notes' },
+      { href: '/projects/nolan/dusty/research', label: 'Research notes' },
     ],
   },
   {

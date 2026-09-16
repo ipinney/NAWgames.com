@@ -32,17 +32,17 @@ const RULES = [
 
 const PAGES = [
   {
-    href: `${P}/invention-packet.html`,
+    href: '/projects/nolan/dusty/packet',
     title: 'Packet guide',
     text: 'Every page of the packet in order, with what to write, the rubric, and the board layout.',
   },
   {
-    href: `${P}/research.html`,
+    href: '/projects/nolan/dusty/research',
     title: 'Research notes',
     text: 'Six topics with real sources: the Roomba story, cliff sensors, dark surfaces, and more.',
   },
   {
-    href: `${P}/dusty.html`,
+    href: '/projects/nolan/dusty/invention',
     title: 'The invention and the experiment',
     text: 'The problem Dusty solves, how it works, and the speed test for the science part.',
   },
