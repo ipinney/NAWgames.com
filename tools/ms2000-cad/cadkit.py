@@ -83,7 +83,7 @@ def finish(solid, name, out_dir, title_html, specs=(), dims=(), hint='', fit_pad
     mesh = solid.to_mesh()
     v = np.array(mesh.vert_properties)[:, :3]
     f = np.array(mesh.tri_verts)
-    tm = trimesh.Trimesh(v, f, process=True)
+    tm = trimesh.Trimesh(v, f, process=False)  # manifold output is already indexed; merging can fake open edges
     stats = {
         'watertight': bool(tm.is_watertight),
         'volume_mm3': round(float(tm.volume), 1),

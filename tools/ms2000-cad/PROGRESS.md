@@ -15,8 +15,8 @@ Read this first every session. Update it and commit after every finished step.
 - [x] 1. Component library: components.py, make_components.py, DIMENSIONS.md, ms2000-components.html (Sep 16)
 - [ ] 2. Printed parts, one at a time (script in parts/, viewer + STL + check PNG each)
   - [x] P1 base (Sep 16): parts/p1_base.py -> base shell (142x133x67, ~160 g) + floor plate (~63 g). Fit check and swept paths (pack slide-in, micro:bit lift-out, DC plug) all clear.
-  - [ ] P2 pan turntable
-  - [ ] P3 tilt yoke
+  - [x] P2 turntable + tilt yoke, one print (Sep 16): parts/p2_turntable.py, ~39 g. Also P3 pivot pin (same script).
+    Checks: tilt servo vs yoke/head, head sweep -30..+35 vs yoke, stops engage at +40/-35 and not inside the range, whole turret pan sweep -90..+90 vs base shell and pan servo. All clear.
   - [ ] P4 camera + laser head (boresight, tilt stop, all-plastic laser clamp)
   - [ ] P5 wand handle (micro:bit, 2xAAA)
   - [ ] P6 sensor pod for stuffed mosquito (ALS-PT19, 2 LEDs, line tie)
@@ -38,8 +38,16 @@ Read this first every session. Update it and commit after every finished step.
 - Cable hole (0,112) d14 behind the turntable. Speaker on back wall at x 36 z 40, arm switch at x -36 z 40.
 - Corner posts at (+-65.5, 5.5 / 127.5), M2 up through the floor plate.
 
+## P2 numbers (turntable local frame: origin on pan axis at disc underside; world = local + (0, 66, 72.3))
+- Horn stack estimate: hub 1.3 above servo boss, plate flush with the printed face in a 2.0 pocket (layout.py).
+- Tilt axis local z 39 (world 111.3). Uprights 4 thick, inner faces +-34.9, y -13..24.
+- Head (P4) must fit: cheeks outer +-30.6, envelope y -14..8, z -30..26 about the axis; right cheek has the tilt horn pocket (arm points up); left cheek has a d10 boss out to x -34.4 with a 5.9 x 3.5 pin socket and M2 tap; stop finger r 6.5..10, +-8 deg, pointing straight down at tilt 0, x -34.4..-30.6.
+- p2_parts.pkl carries Z0, TZ, XI, XO, C, BT for P4.
+- cadkit finish now builds the trimesh with process=False (merging made false open edges on manifold output).
+
 ## Log
 - Sep 16: phases 0-1 done. HuskyLens from DFRobot STEP (decimated 8k faces). Laser case is electrically positive: plastic-only holder.
 - vendor/ keeps huskylens_lo.npz and the PDFs in git. Full STEP (not committed): curl -L -o vendor/sen0305_step.zip https://dfimg.dfrobot.com/wiki/22598/SEN0305_huskylens-ai-vision-sensor_stpfile_V1.0.zip
 - Sep 16: P1 base done. Xia mi photo showed a vertical micro:bit socket at one end and 4 corner holes, so the carrier-plate idea was dropped; floor plate is quick to reprint if holes are off.
 - index page: make_index.py (PARTS list holds status per part).
+- Sep 16: P2 + P3 done. Old P3 (tilt yoke) merged into P2; P3 is now the pivot pin.
