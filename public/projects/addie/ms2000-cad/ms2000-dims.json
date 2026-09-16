@@ -1,0 +1,588 @@
+{
+ "components": {
+  "microbit": {
+   "label": "micro:bit V2",
+   "qty": 2,
+   "sku": "DFRobot MBT0039",
+   "color": "#5a616c",
+   "role": "Turret brain (on the Xia mi) and wand brain (in the handle).",
+   "dims": {
+    "pcb_w": {
+     "v": 51.6,
+     "basis": "ds",
+     "note": "microbit.org board outline"
+    },
+    "pcb_h": {
+     "v": 42.0,
+     "basis": "ds",
+     "note": ""
+    },
+    "pcb_t": {
+     "v": 1.6,
+     "basis": "ds",
+     "note": ""
+    },
+    "front_parts": {
+     "v": 3.5,
+     "basis": "est",
+     "note": "buttons A/B above front face"
+    },
+    "back_parts": {
+     "v": 5.6,
+     "basis": "est",
+     "note": "battery JST and USB above back face"
+    },
+    "edge_conn_depth": {
+     "v": 8.0,
+     "basis": "est",
+     "note": "gold edge fingers along bottom edge"
+    },
+    "usb_x": {
+     "v": 0.0,
+     "basis": "est",
+     "note": "micro-USB centered on top edge, back side"
+    },
+    "bat_x": {
+     "v": 9.0,
+     "basis": "est",
+     "note": "JST PH battery socket right of USB, back side"
+    }
+   }
+  },
+  "xiami": {
+   "label": "Xia mi expansion board",
+   "qty": 1,
+   "sku": "DFRobot MBT0042",
+   "color": "#2f6fbf",
+   "role": "Turret board: servos, speaker, HuskyLens port, relay for the laser, battery input.",
+   "dims": {
+    "pcb_w": {
+     "v": 57.0,
+     "basis": "ds",
+     "note": "DFRobot page: 57 x 87 mm"
+    },
+    "pcb_l": {
+     "v": 87.0,
+     "basis": "ds",
+     "note": ""
+    },
+    "pcb_t": {
+     "v": 1.6,
+     "basis": "est",
+     "note": ""
+    },
+    "height": {
+     "v": 22.0,
+     "basis": "tbd",
+     "note": "tallest part incl. micro:bit socket; base bay leaves room"
+    },
+    "holes": {
+     "v": null,
+     "basis": "tbd",
+     "note": "mounting holes not published; base uses a drill-on-arrival carrier plate"
+    },
+    "bit_orientation": {
+     "v": null,
+     "basis": "tbd",
+     "note": "micro:bit slot direction not shown"
+    }
+   }
+  },
+  "huskylens": {
+   "label": "HuskyLens AI camera",
+   "qty": 1,
+   "sku": "DFRobot SEN0305",
+   "color": "#e8e8e8",
+   "role": "Learns the mosquito and reports where it is. Top of the tilt head.",
+   "dims": {
+    "body_w": {
+     "v": 52.0,
+     "basis": "ds",
+     "note": "layout drawing"
+    },
+    "body_h": {
+     "v": 36.2,
+     "basis": "ds",
+     "note": ""
+    },
+    "tab_w": {
+     "v": 22.0,
+     "basis": "ds",
+     "note": "mounting tab below the body"
+    },
+    "tab_h": {
+     "v": 8.3,
+     "basis": "ds",
+     "note": ""
+    },
+    "tab_hole_pitch": {
+     "v": 15.0,
+     "basis": "ds",
+     "note": "two M3 holes in the tab"
+    },
+    "tab_hole_y": {
+     "v": 40.2,
+     "basis": "step",
+     "note": "from top edge of body"
+    },
+    "hole_d": {
+     "v": 3.2,
+     "basis": "est",
+     "note": "M3"
+    },
+    "front_depth": {
+     "v": 8.8,
+     "basis": "step",
+     "note": "lens side, dial is the tallest"
+    },
+    "back_depth": {
+     "v": 3.5,
+     "basis": "step",
+     "note": "screen side"
+    },
+    "pcb_t": {
+     "v": 1.6,
+     "basis": "step",
+     "note": ""
+    },
+    "lens_x": {
+     "v": -0.4,
+     "basis": "ds",
+     "note": "lens center from body centerline"
+    },
+    "lens_y": {
+     "v": 12.1,
+     "basis": "ds",
+     "note": "lens center from top edge"
+    }
+   }
+  },
+  "servo": {
+   "label": "9g clutch servo",
+   "qty": 3,
+   "sku": "DFRobot SER0049",
+   "color": "#474c55",
+   "role": "Pan, tilt, and a spare. Clutch slips if a hand grabs the head.",
+   "dims": {
+    "body_w": {
+     "v": 23.0,
+     "basis": "ds",
+     "note": "DFRobot drawing"
+    },
+    "body_d": {
+     "v": 12.0,
+     "basis": "ds",
+     "note": ""
+    },
+    "body_h": {
+     "v": 23.2,
+     "basis": "ds",
+     "note": "bottom to top of case"
+    },
+    "flange_z": {
+     "v": 16.3,
+     "basis": "ds",
+     "note": "bottom to underside of mounting ears"
+    },
+    "flange_t": {
+     "v": 2.5,
+     "basis": "est",
+     "note": ""
+    },
+    "flange_w": {
+     "v": 32.5,
+     "basis": "ds",
+     "note": "ear tip to ear tip"
+    },
+    "hole_pitch": {
+     "v": 27.8,
+     "basis": "ds",
+     "note": ""
+    },
+    "hole_d": {
+     "v": 2.2,
+     "basis": "ds",
+     "note": ""
+    },
+    "spline_top": {
+     "v": 27.3,
+     "basis": "ds",
+     "note": "bottom to top of output spline"
+    },
+    "shaft_x": {
+     "v": 5.4,
+     "basis": "ds",
+     "note": "output shaft from body centerline, scaled from drawing"
+    },
+    "boss_d": {
+     "v": 11.8,
+     "basis": "est",
+     "note": "round boss under the spline"
+    },
+    "spline_d": {
+     "v": 4.8,
+     "basis": "est",
+     "note": ""
+    },
+    "horn_hub_d": {
+     "v": 7.0,
+     "basis": "est",
+     "note": ""
+    },
+    "horn_arm_len": {
+     "v": 16.0,
+     "basis": "est",
+     "note": ""
+    },
+    "horn_t": {
+     "v": 1.6,
+     "basis": "est",
+     "note": ""
+    },
+    "lead": {
+     "v": 250,
+     "basis": "est",
+     "note": "wire length, 3-pin 2.54 plug"
+    }
+   }
+  },
+  "laser": {
+   "label": "Class 2 laser, under 1 mW",
+   "qty": 1,
+   "sku": "Quarton VLM-650-03 LPT",
+   "color": "#b9bec6",
+   "role": "Rides under the HuskyLens, aimed the same way.",
+   "dims": {
+    "d": {
+     "v": 7.0,
+     "basis": "ds",
+     "note": "Quarton manual: 7 x 21 mm"
+    },
+    "len": {
+     "v": 21.0,
+     "basis": "ds",
+     "note": ""
+    },
+    "lens_d": {
+     "v": 5.0,
+     "basis": "ds",
+     "note": "aspherical lens"
+    },
+    "spot_5m": {
+     "v": 6.0,
+     "basis": "ds",
+     "note": "spot size at 5 m"
+    },
+    "note": {
+     "v": null,
+     "basis": "ds",
+     "note": "metal case is electrically positive: holder must insulate it, no metal clamps"
+    }
+   }
+  },
+  "arm_switch": {
+   "label": "Laser arm switch",
+   "qty": 1,
+   "sku": "Adafruit 805 (DigiKey)",
+   "color": "#5c6066",
+   "role": "Cuts laser power. Mounted in the base where a grown-up can reach it.",
+   "dims": {
+    "body_w": {
+     "v": 8.6,
+     "basis": "est",
+     "note": ""
+    },
+    "body_d": {
+     "v": 4.4,
+     "basis": "est",
+     "note": ""
+    },
+    "body_h": {
+     "v": 4.0,
+     "basis": "est",
+     "note": ""
+    },
+    "lever_w": {
+     "v": 2.0,
+     "basis": "est",
+     "note": ""
+    },
+    "lever_h": {
+     "v": 4.0,
+     "basis": "est",
+     "note": ""
+    },
+    "lever_throw": {
+     "v": 3.0,
+     "basis": "est",
+     "note": ""
+    },
+    "pin_pitch": {
+     "v": 2.54,
+     "basis": "ds",
+     "note": ""
+    }
+   }
+  },
+  "light_sensor": {
+   "label": "Light sensor ALS-PT19",
+   "qty": 3,
+   "sku": "Adafruit 2748 (DigiKey)",
+   "color": "#3b4fc4",
+   "role": "Inside the sensor pod on the mosquito. Feels the laser dot.",
+   "dims": {
+    "w": {
+     "v": 7.8,
+     "basis": "ds",
+     "note": "Adafruit: 7.8 x 10.6 x 2.4 mm"
+    },
+    "l": {
+     "v": 10.6,
+     "basis": "ds",
+     "note": ""
+    },
+    "h": {
+     "v": 2.4,
+     "basis": "ds",
+     "note": ""
+    },
+    "pads": {
+     "v": 3,
+     "basis": "ds",
+     "note": "VIN, GND, OUT along one short edge"
+    }
+   }
+  },
+  "led": {
+   "label": "Red LED, 5 mm",
+   "qty": 10,
+   "sku": "Kingbright WP7113ID",
+   "color": "#d8262a",
+   "role": "Mosquito eyes, flash on a hit.",
+   "dims": {
+    "d": {
+     "v": 5.0,
+     "basis": "ds",
+     "note": ""
+    },
+    "flange_d": {
+     "v": 5.8,
+     "basis": "ds",
+     "note": ""
+    },
+    "flange_t": {
+     "v": 1.0,
+     "basis": "ds",
+     "note": ""
+    },
+    "h": {
+     "v": 8.6,
+     "basis": "ds",
+     "note": "flange to dome tip"
+    },
+    "hole_d": {
+     "v": 5.2,
+     "basis": "est",
+     "note": "press-fit hole in print"
+    }
+   }
+  },
+  "speaker": {
+   "label": "Speaker module",
+   "qty": 1,
+   "sku": "DFRobot FIT0449",
+   "color": "#1d7a3a",
+   "role": "Pew, boom, lock-on beep, victory sound. Faces the grille in the base.",
+   "dims": {
+    "pcb_w": {
+     "v": 40.0,
+     "basis": "ds",
+     "note": "DFRobot: 40 x 40 mm"
+    },
+    "pcb_h": {
+     "v": 40.0,
+     "basis": "ds",
+     "note": ""
+    },
+    "pcb_t": {
+     "v": 1.6,
+     "basis": "est",
+     "note": ""
+    },
+    "spk_d": {
+     "v": 30.0,
+     "basis": "ds",
+     "note": "scaled from dimension drawing"
+    },
+    "spk_h": {
+     "v": 5.0,
+     "basis": "est",
+     "note": ""
+    },
+    "hole_pitch": {
+     "v": 30.0,
+     "basis": "ds",
+     "note": "M3 holes on a 30 x 30 square (Gravity standard)"
+    },
+    "hole_d": {
+     "v": 3.1,
+     "basis": "est",
+     "note": ""
+    },
+    "conn_h": {
+     "v": 6.0,
+     "basis": "est",
+     "note": "Gravity PH2.0 socket on the top edge, back side"
+    },
+    "knob_h": {
+     "v": 5.0,
+     "basis": "est",
+     "note": "volume pot, back side"
+    }
+   }
+  },
+  "aa_pack": {
+   "label": "4xAA battery holder",
+   "qty": 1,
+   "sku": "DFRobot FIT0918",
+   "color": "#50555e",
+   "role": "Turret power, about 6 V into the Xia mi. Slides into the base.",
+   "dims": {
+    "w": {
+     "v": 64.5,
+     "basis": "ds",
+     "note": "DFRobot: 70 x 64.5 x 19.6 mm"
+    },
+    "l": {
+     "v": 70.0,
+     "basis": "ds",
+     "note": ""
+    },
+    "h": {
+     "v": 19.6,
+     "basis": "ds",
+     "note": ""
+    },
+    "lead": {
+     "v": 250,
+     "basis": "ds",
+     "note": "to DC 2.1 plug"
+    },
+    "switch_side": {
+     "v": null,
+     "basis": "tbd",
+     "note": "which face the switch is on"
+    }
+   }
+  },
+  "aaa_pack": {
+   "label": "2xAAA battery holder",
+   "qty": 2,
+   "sku": "DFRobot FIT0625",
+   "color": "#50555e",
+   "role": "Wand power; turret micro:bit backup power.",
+   "dims": {
+    "w": {
+     "v": 26.0,
+     "basis": "est",
+     "note": "size not published"
+    },
+    "l": {
+     "v": 57.0,
+     "basis": "est",
+     "note": ""
+    },
+    "h": {
+     "v": 15.0,
+     "basis": "est",
+     "note": ""
+    },
+    "plug": {
+     "v": null,
+     "basis": "ds",
+     "note": "JST PH2.0 2-pin"
+    }
+   }
+  },
+  "stuffy": {
+   "label": "Stuffed mosquito (to buy)",
+   "qty": 1,
+   "sku": "not chosen yet",
+   "color": "#8a6d4b",
+   "role": "Target on the fishing line. The printed sensor pod clips onto it.",
+   "dims": {
+    "len": {
+     "v": 80.0,
+     "basis": "tbd",
+     "note": "placeholder until one is picked"
+    },
+    "span": {
+     "v": 70.0,
+     "basis": "tbd",
+     "note": ""
+    },
+    "h": {
+     "v": 30.0,
+     "basis": "tbd",
+     "note": ""
+    }
+   }
+  }
+ },
+ "hardware": {
+  "m2_clear": {
+   "v": 2.2,
+   "basis": "ds",
+   "note": "M2 clearance hole"
+  },
+  "m2_tap": {
+   "v": 1.7,
+   "basis": "est",
+   "note": "M2 self-tap into PLA"
+  },
+  "m2_nut_af": {
+   "v": 4.0,
+   "basis": "ds",
+   "note": "M2 nut across flats; trap prints at 4.3"
+  },
+  "m2_nut_t": {
+   "v": 1.6,
+   "basis": "ds",
+   "note": ""
+  },
+  "m2_head_d": {
+   "v": 3.8,
+   "basis": "ds",
+   "note": ""
+  },
+  "m3_clear": {
+   "v": 3.3,
+   "basis": "ds",
+   "note": "HuskyLens only"
+  },
+  "m3_nut_af": {
+   "v": 5.5,
+   "basis": "ds",
+   "note": ""
+  },
+  "fit_clear": {
+   "v": 0.3,
+   "basis": "ds",
+   "note": "per side, from print-part skill"
+  },
+  "min_wall": {
+   "v": 1.6,
+   "basis": "ds",
+   "note": "4 perimeters at 0.4 mm"
+  },
+  "bed": {
+   "v": [
+    220,
+    220,
+    220
+   ],
+   "basis": "ds",
+   "note": "Flashforge Adventurer 5M build volume"
+  }
+ }
+}

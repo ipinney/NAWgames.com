@@ -18,6 +18,7 @@ export const metadata = {
 };
 
 const PLAN = '/projects/addie/mosquito-turret.html';
+const CAD = '/projects/addie/ms2000-cad/ms2000-components.html';
 
 // status: done | now | next
 const PHASES = [
@@ -26,7 +27,8 @@ const PHASES = [
   { title: 'Pick a design', when: 'Done Sep 15', status: 'done', text: 'Addie picked Design A, the Pan and Tilt Camera Turret.', link: `${PLAN}#pick` },
   { title: 'Lock in the design', when: 'Done Sep 16', status: 'done', text: 'Design A locked. Still to do by hand: why Design A, a labeled drawing, and the teacher laser-rules question.', link: `${PLAN}#design` },
   { title: 'Parts list and order', when: 'List done Sep 16; order next', status: 'now', text: 'Final list: primary and backup for every part, $192 from DFRobot and DigiKey. Order next.', link: '/projects/addie/ms2000-parts-list.pdf' },
-  { title: 'Build', when: 'October to November', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head and camera training, then the flight zone, then the code and sound effects.', link: `${PLAN}#prints` },
+  { title: '3D print design', when: 'Started Sep 16', status: 'now', text: 'Every bought part measured and modeled first, then each printed piece one at a time: base, pan turntable, tilt yoke, camera and laser head, wand handle, and the sensor pod for the stuffed mosquito. Redone with real measurements when the parts arrive.', link: CAD },
+  { title: 'Build', when: 'October to November', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head and camera training, then the poster board backdrop and pendulum, then the code and sound effects.', link: `${PLAN}#prints` },
   { title: 'Practice runs and fixes', when: 'December', status: 'next', text: 'Make sure the data saves correctly and the MS-2000 hits reliably.' },
   { title: 'Experiments and data', when: 'January to February', status: 'next', text: 'Speed, distance, and light tests. 45 runs recorded by the MS-2000, averages, and graphs.', link: `${PLAN}#experiment` },
   { title: 'Board and practice', when: 'March', status: 'next', text: 'The trifold board and the 30-second demo, ready for any spring fair date.', link: `${PLAN}#demo` },
@@ -85,6 +87,14 @@ export default function MosquitoTurretPage() {
             >
               Parts list (PDF)
             </a>
+            <a
+              href={CAD}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 ml-2 inline-flex items-center bg-naw-green/15 border border-naw-green/40 text-naw-green px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-naw-green/25 transition-colors"
+            >
+              3D parts
+            </a>
           </div>
         </div>
       </section>
@@ -92,7 +102,7 @@ export default function MosquitoTurretPage() {
       <div className="max-w-5xl mx-auto px-4 pb-20">
         <section className="mt-10">
           <h2 className="text-white text-xl sm:text-2xl font-bold">The steps</h2>
-          <p className="text-white/50 text-sm mt-1">One at a time. The pink one is where we are. The fair is in spring 2027.</p>
+          <p className="text-white/50 text-sm mt-1">One at a time. The pink ones are where we are. The fair is in spring 2027.</p>
           <ol className="relative border-l-2 border-white/10 ml-3 space-y-4 mt-5">
             {PHASES.map((p, i) => (
               <li key={p.title} className="pl-6 relative">
