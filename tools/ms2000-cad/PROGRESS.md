@@ -1,6 +1,7 @@
 # MS-2000 CAD: progress checkpoint
 
 Read this first every session. Update it and commit after every finished step.
+Project plan, school due dates, site map, and deploy gotchas: PLAN.md in this folder (fair due Feb 1, 2027).
 
 ## Setup
 - Printer: Flashforge Adventurer 5M, 220 mm cube, 0.4 nozzle, PLA. Slicing reuses tools/dusty-chassis/orca (Flash Studio CLI in docker).
