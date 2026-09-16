@@ -647,7 +647,7 @@ hero = '''
     <div class="facts">
       <span class="fact">DUE <b>NOV 16</b></span>
       <span class="fact">CHASSIS <b>3D PRINTED</b></span>
-      <span class="fact">SCREWS <b>19 &times; M2</b></span>
+      <span class="fact">SCREWS <b>23 &times; M2</b></span>
       <span class="fact">SOLDERING <b>A LITTLE</b></span>
     </div>
   </div>
@@ -692,7 +692,40 @@ hero = '''
     </div>
   </div>'''
 
+# ---- MS-2000 look: dark theme, pink / lime / sky accents ----
+import os as _os
+css = open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'theme-ms2000.css.html')).read()
 page = (head + css + '\n<body>\n<div class="wrap">\n' + hero + screws + '\n' + '\n'.join(steps) + trouble + gloss + links +
         '\n  <footer>DUSTY &middot; BUILD GUIDE &middot; 3D PRINTED VERSION &middot; DUE MON NOV 16, 2026</footer>\n</div>\n</body>\n</html>\n')
+def _recolor(html):
+    """Drawings were made for a light page; retune them for the dark MS-2000 page."""
+    def svg_fix(m):
+        svg = m.group(0)
+        # text first: dark ink becomes light ink
+        def text_fix(t):
+            x = t.group(0)
+            for a_, b_ in (('#14202F', '#EEF2F8'), ('#566A83', '#A9B6CA'), ('#8C9CB1', '#74839B'), ('#BBD9F2', '#CFE8FF')):
+                x = x.replace(a_, b_)
+            return x
+        svg = re.sub(r'<text[^>]*>', text_fix, svg)
+        svg = re.sub(r'<g[^>]*font-family[^>]*>', text_fix, svg)
+        for a_, b_ in (('fill="#14202F"', 'fill="#2B2F3A"'), ('stroke="#14202F"', 'stroke="#A9B6CA"'),
+                       ('#566A83', '#8A99B0'), ('#8C9CB1', '#74839B'), ('#E9EEF4', '#0F1420'), ('#D2DCE7', '#2B3650'),
+                       ('#D95B21', '#F0609E'), ('#0D8159', '#9BE15D'), ('#2B5FA8', '#5DB7F0'), ('#C3432F', '#F0605E'),
+                       ('#BBD9F2', '#CFE8FF')):
+            svg = svg.replace(a_, b_)
+        return svg
+    html = re.sub(r'<svg.*?</svg>', svg_fix, html, flags=re.S)
+    # tool icons: white bodies become card-colored
+    html = re.sub(r'(<div class="tool">.*?</div>)', lambda m: m.group(1).replace('fill="#fff"', 'fill="#1F2940"'), html, flags=re.S)
+    # jump links under the hero
+    steps_found = re.findall(r'<div class="step" id="step-(\d+)"', html)
+    if steps_found and '<div class="jump">' not in html:
+        jump = '    <div class="jump">' + ''.join(f'<a href="#step-{n}">{n}</a>' for n in steps_found) + '</div>\n  </div>'
+        i = html.index('<div class="facts">')
+        j = html.index('</div>', html.index('</div>', i) + 1)  # end of hero
+        html = html[:html.index('</div>', i) + 6] + '\n' + jump + html[j + 6:]
+    return html
+page = _recolor(page)
 open(OUT, 'w').write(page)
 print('wrote', OUT, len(page))

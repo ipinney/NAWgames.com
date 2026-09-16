@@ -14,241 +14,212 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   :root {
-    --paper: #E9EEF4;
-    --card: #FFFFFF;
-    --ink: #14202F;
-    --ink-2: #566A83;
-    --ink-3: #8C9CB1;
-    --line: #D2DCE7;
-    --orange: #D95B21;
-    --orange-soft: #FCEFE8;
-    --blue: #2B5FA8;
-    --blue-soft: #E8F0FA;
-    --green: #0D8159;
-    --green-soft: #E4F3ED;
-    --red: #C3432F;
-    --red-soft: #FBEAE7;
-    --metal: #B9C4D1;
-    --metal-2: #8E9CAC;
-    --brass: #D8A34A;
+    --ground: #0F1420;
+    --card: #182032;
+    --card-2: #1F2940;
+    --deep: #121A2B;
+    --ink: #EEF2F8;
+    --ink-2: #A9B6CA;
+    --ink-3: #74839B;
+    --line: #2B3650;
+    --pink: #F0609E;
+    --pink-soft: rgba(240,96,158,.12);
+    --lime: #9BE15D;
+    --lime-soft: rgba(155,225,93,.10);
+    --sky: #5DB7F0;
+    --sky-soft: rgba(93,183,240,.10);
+    --amber: #F5B642;
+    --amber-soft: rgba(245,182,66,.10);
+    --red: #F0605E;
+    --red-soft: rgba(240,96,94,.10);
   }
-
-  body {
-    font-family: 'Nunito', system-ui, sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.55;
-    padding: 18px;
-    font-size: 16px;
-  }
-
+  body { font-family: 'Nunito', system-ui, sans-serif; background: var(--ground); color: var(--ink); line-height: 1.55; padding: 18px; font-size: 16px; }
+  a { color: var(--sky); }
   .wrap { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
-
-  h1, h2, h3, h4, .num, .chip { font-family: 'Fredoka', 'Nunito', sans-serif; }
-  .mono, .spec { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
-
+  h1, h2, h3, h4, .num { font-family: 'Fredoka', 'Nunito', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: .92em; color: var(--lime); }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
 
-  /* ---------------- hero ---------------- */
-  .hero {
-    background: linear-gradient(145deg, #1B2C42 0%, #2E4A6B 58%, #A8461A 165%);
-    color: #fff;
-    border: none;
-    text-align: center;
-    padding: 34px 24px 28px;
-  }
-  .hero .bot { font-size: 54px; line-height: 1; display: block; margin-bottom: 8px; }
-  .hero h1 { font-size: clamp(30px, 7vw, 50px); font-weight: 700; letter-spacing: 0.01em; line-height: 1.02; }
-  .hero h1 span { display: block; font-size: 0.42em; letter-spacing: 0.16em; color: #F0A878; text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
-  .hero p { color: rgba(255,255,255,0.84); max-width: 48ch; margin: 10px auto 0; font-size: 16px; }
-  .facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
-  .fact {
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 999px;
-    padding: 7px 15px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.05em;
-  }
-  .fact b { color: #F5B98C; font-weight: 600; }
+  /* hero */
+  .hero { text-align: center; padding: 32px 22px 26px; border: none; background: radial-gradient(120% 90% at 50% 0%, #3A2150 0%, #1B2238 60%, #182032 100%); }
+  .hero .bug { font-size: 50px; line-height: 1; display: block; margin-bottom: 6px; }
+  .hero h1 { font-size: clamp(32px, 7vw, 50px); font-weight: 700; line-height: 1.02; }
+  .hero h1 span { display: block; font-size: .4em; letter-spacing: .16em; color: var(--pink); text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
+  .hero h1 em { font-style: normal; color: var(--lime); }
+  .hero p { color: var(--ink-2); max-width: 52ch; margin: 10px auto 0; }
+  .facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 18px; }
+  .fact { background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .05em; color: var(--ink-2); }
+  .fact b { color: var(--lime); font-weight: 600; }
+  .jump { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-top: 18px; }
+  .jump a { text-decoration: none; font-size: 13px; font-weight: 700; color: var(--ink); background: var(--card-2); border: 1px solid var(--line); padding: 5px 10px; border-radius: 10px; }
 
-  /* ---------------- section heads ---------------- */
-  .eyebrow {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--orange);
-    margin-bottom: 5px;
-  }
+  /* section heads */
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--pink); margin-bottom: 5px; }
   h2 { font-size: 28px; font-weight: 600; line-height: 1.15; margin-bottom: 8px; }
   h3 { font-size: 19px; font-weight: 600; margin-bottom: 4px; }
-  p.lead { color: var(--ink-2); font-size: 16px; }
+  p.lead { color: var(--ink-2); }
 
-  /* ---------------- safety ---------------- */
-  .safety { background: var(--red-soft); border: 1px solid #F0C9C1; border-radius: 16px; padding: 20px 24px; }
+  /* safety */
+  .safety { background: var(--red-soft); border: 1px solid rgba(240,96,94,.45); border-radius: 16px; padding: 20px 24px; }
   .safety h2 { color: var(--red); font-size: 24px; }
-  .safety ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px 22px; margin-top: 10px; }
-  .safety li { font-size: 15px; color: var(--ink-2); padding-left: 24px; position: relative; }
-  .safety li::before { content: "!"; position: absolute; left: 0; top: 0; width: 17px; height: 17px; border-radius: 50%; background: var(--red); color: #fff; font-family: 'Fredoka', sans-serif; font-size: 12px; font-weight: 700; display: grid; place-items: center; margin-top: 3px; }
+  .safety ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px 22px; margin-top: 10px; }
+  .safety li { font-size: 15px; color: var(--ink-2); padding-left: 25px; position: relative; }
+  .safety li::before { content: "!"; position: absolute; left: 0; top: 3px; width: 17px; height: 17px; border-radius: 50%; background: var(--red); color: #1a0e18; font-family: 'Fredoka', sans-serif; font-size: 12px; font-weight: 700; display: grid; place-items: center; }
   .safety li b { color: var(--ink); }
 
-  /* ---------------- tools ---------------- */
-  .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 14px; }
-  .tool { background: var(--paper); border-radius: 12px; padding: 14px 12px; text-align: center; }
+  /* jobs */
+  .jobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 14px; }
+  .job { background: var(--card-2); border-radius: 12px; padding: 14px 16px; }
+  .job h3 { font-size: 17px; }
+  .job.a h3 { color: var(--pink); }
+  .job.g h3 { color: var(--amber); }
+  .job ul { padding-left: 18px; font-size: 14.5px; color: var(--ink-2); }
+  .job li + li { margin-top: 3px; }
+
+  /* tools */
+  .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 12px; margin-top: 14px; }
+  .tool { background: var(--card-2); border-radius: 12px; padding: 14px 10px; text-align: center; }
   .tool svg { display: block; margin: 0 auto 7px; width: 46px; height: 42px; }
-  .tool b { display: block; font-size: 14.5px; font-weight: 700; }
+  .tool b { display: block; font-size: 14.5px; }
   .tool span { font-size: 12.5px; color: var(--ink-3); }
 
-  /* ---------------- parts gallery ---------------- */
-  .parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; margin-top: 14px; }
-  .pcard { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
-  .pic { background: var(--paper); padding: 16px; display: grid; place-items: center; border-bottom: 1px solid var(--line); }
+  /* parts */
+  .parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; margin-top: 14px; }
+  .pcard { background: var(--card-2); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .pic { background: var(--deep); padding: 14px; display: grid; place-items: center; border-bottom: 1px solid var(--line); }
   .pic svg { width: 100%; max-width: 210px; height: auto; display: block; }
-  .pbody { padding: 15px 17px 16px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+  .pbody { padding: 14px 16px 15px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
   .pbody h3 { margin: 0; }
+  .pbody h3 small { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-3); font-weight: 500; margin-left: 6px; }
   .pbody .what { font-size: 14.5px; color: var(--ink-2); }
-  .pbody .does { font-size: 14.5px; color: var(--ink); background: var(--orange-soft); border-radius: 8px; padding: 9px 11px; }
-  .pbody .does b { color: var(--orange); }
-  .pbody .spec { margin-top: auto; padding-top: 8px; font-size: 11.5px; color: var(--ink-3); letter-spacing: 0.03em; border-top: 1px dashed var(--line); }
+  .pbody .does { font-size: 14.5px; background: var(--pink-soft); border-radius: 8px; padding: 9px 11px; }
+  .pbody .does b { color: var(--pink); }
+  .pbody .spec { margin-top: auto; padding-top: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-3); letter-spacing: .03em; border-top: 1px dashed var(--line); text-transform: uppercase; }
 
-  /* ---------------- explainer boxes ---------------- */
-  .explain { background: var(--blue-soft); border: 1px solid #C6DAF2; border-radius: 12px; padding: 15px 17px; margin-top: 14px; }
-  .explain h4 { font-size: 16.5px; color: var(--blue); margin-bottom: 4px; display: flex; align-items: center; gap: 7px; }
-  .explain h4::before { content: "?"; flex: none; width: 21px; height: 21px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 14px; display: grid; place-items: center; }
+  /* explainers, tips */
+  .explain { background: var(--sky-soft); border: 1px solid rgba(93,183,240,.35); border-radius: 12px; padding: 14px 16px; margin-top: 14px; }
+  .explain h4 { font-size: 16.5px; color: var(--sky); margin-bottom: 4px; display: flex; align-items: center; gap: 7px; }
+  .explain h4::before { content: "?"; flex: none; width: 21px; height: 21px; border-radius: 50%; background: var(--sky); color: #0b1522; font-size: 14px; display: grid; place-items: center; }
   .explain p { font-size: 14.5px; color: var(--ink-2); }
   .explain p + p { margin-top: 7px; }
   .explain b { color: var(--ink); }
+  .try { margin-top: 12px; background: var(--pink-soft); border: 1px solid rgba(240,96,158,.35); border-radius: 12px; padding: 12px 15px; font-size: 14.5px; color: var(--ink-2); }
+  .try b { color: var(--pink); }
+  .gotcha { margin-top: 12px; background: var(--amber-soft); border-left: 3px solid var(--amber); border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: 14.5px; color: var(--ink-2); }
+  .gotcha b { color: var(--amber); }
+  .grownup { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: #1a1206; background: var(--amber); border-radius: 5px; padding: 1px 6px; margin-left: 4px; vertical-align: 2px; }
 
-  /* ---------------- steps ---------------- */
-  .step { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 20px; }
+  /* steps */
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 20px; scroll-margin-top: 12px; }
   .step-head { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 4px; }
-  .num {
-    flex: none;
-    width: 46px; height: 46px;
-    border-radius: 12px;
-    background: var(--orange);
-    color: #fff;
-    font-size: 23px;
-    font-weight: 700;
-    display: grid;
-    place-items: center;
-    line-height: 1;
-  }
-  .step-head h2 { margin: 0; font-size: 27px; }
-  .step-head .when { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: 0.07em; text-transform: uppercase; margin-top: 3px; }
-  .why { color: var(--ink-2); font-size: 15.5px; margin: 8px 0 0; }
+  .num { flex: none; width: 46px; height: 46px; border-radius: 12px; background: var(--pink); color: #1a0e18; font-size: 23px; font-weight: 700; display: grid; place-items: center; line-height: 1; }
+  .part-head .num { background: var(--lime); }
+  .step-head h2 { margin: 0; font-size: 26px; }
+  .step-head .when { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: .07em; text-transform: uppercase; margin-top: 3px; }
+  .why { color: var(--ink-2); font-size: 15.5px; margin-top: 8px; }
+  .chapter { text-align: center; padding: 8px 0 0; }
+  .chapter .eyebrow { color: var(--lime); }
+  .chapter h2 { font-size: 30px; }
+  .chapter p { color: var(--ink-2); max-width: 56ch; margin: 0 auto; }
 
-  .diagram { background: var(--paper); border-radius: 12px; padding: 16px; margin-top: 16px; overflow-x: auto; }
-  .diagram svg { display: block; width: 100%; min-width: 420px; height: auto; }
-  .caption { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); margin-top: 9px; letter-spacing: 0.04em; }
+  .diagram { background: var(--deep); border-radius: 12px; padding: 14px; margin-top: 16px; overflow-x: auto; }
+  .diagram svg { display: block; width: 100%; min-width: 440px; height: auto; }
+  .diagram svg.fit { min-width: 0; max-width: 560px; margin: 0 auto; }
+  .diagram img { display: block; width: 100%; max-width: 620px; height: auto; margin: 0 auto; border-radius: 8px; }
+  .caption { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); margin-top: 9px; letter-spacing: .04em; text-transform: uppercase; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .pair .diagram { margin-top: 0; }
 
   ol.do { list-style: none; counter-reset: d; margin-top: 16px; display: flex; flex-direction: column; gap: 9px; }
   ol.do li { counter-increment: d; padding-left: 34px; position: relative; font-size: 15.5px; }
-  ol.do li::before {
-    content: counter(d);
-    position: absolute; left: 0; top: 1px;
-    width: 23px; height: 23px;
-    border-radius: 7px;
-    background: var(--ink);
-    color: #fff;
-    font-family: 'Fredoka', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    display: grid; place-items: center;
-  }
-  ol.do li b { font-weight: 700; }
+  ol.do li::before { content: counter(d); position: absolute; left: 0; top: 1px; width: 23px; height: 23px; border-radius: 7px; background: var(--ink); color: var(--ground); font-family: 'Fredoka', sans-serif; font-size: 13px; font-weight: 600; display: grid; place-items: center; }
   ol.do li .tip { display: block; font-size: 13.5px; color: var(--ink-3); margin-top: 2px; }
 
-  .checkpoint {
-    margin-top: 16px;
-    background: var(--green-soft);
-    border: 1px solid #BFE2D4;
-    border-radius: 12px;
-    padding: 14px 16px;
-    display: flex;
-    gap: 13px;
-    align-items: flex-start;
-  }
-  .checkpoint .tick { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--green); display: grid; place-items: center; margin-top: 1px; }
+  .checkpoint { margin-top: 16px; background: var(--lime-soft); border: 1px solid rgba(155,225,93,.4); border-radius: 12px; padding: 13px 16px; display: flex; gap: 13px; align-items: flex-start; }
+  .checkpoint .tick { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--lime); display: grid; place-items: center; margin-top: 1px; }
   .checkpoint .tick svg { width: 13px; height: 13px; display: block; }
-  .checkpoint h4 { font-size: 15.5px; color: var(--green); margin-bottom: 2px; }
+  .checkpoint h4 { font-size: 15.5px; color: var(--lime); margin-bottom: 2px; }
   .checkpoint p { font-size: 14.5px; color: var(--ink-2); }
+  .journal { margin-top: 10px; font-size: 14px; color: var(--ink-2); border: 1px dashed var(--line); border-radius: 10px; padding: 9px 13px; }
+  .journal b { color: var(--pink); font-family: 'Fredoka', sans-serif; font-weight: 600; }
 
-  .gotcha { margin-top: 12px; background: var(--red-soft); border-left: 3px solid var(--red); border-radius: 0 10px 10px 0; padding: 11px 14px; font-size: 14.5px; color: var(--ink-2); }
-  .gotcha b { color: var(--red); }
+  .order { list-style: none; counter-reset: o; display: grid; gap: 10px; margin-top: 14px; }
+  .order li { counter-increment: o; background: var(--card-2); border-radius: 12px; padding: 12px 14px 12px 54px; position: relative; }
+  .order li::before { content: counter(o); position: absolute; left: 14px; top: 12px; width: 28px; height: 28px; border-radius: 8px; background: var(--sky); color: #0b1522; font-family: 'Fredoka', sans-serif; font-weight: 600; display: grid; place-items: center; }
+  .order b { display: block; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; }
+  .order span { font-size: 14.5px; color: var(--ink-2); }
+  .order .t { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: .05em; display: block; margin-top: 3px; text-transform: uppercase; }
+  .order .w { color: var(--ink); background: #EEF2F8; color: #111; border-radius: 4px; padding: 0 5px; font-size: 11px; }
 
-  /* ---------------- code blocks ---------------- */
-  .blocks { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
-  .blk {
-    border-radius: 9px;
-    padding: 10px 14px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13.5px;
-    color: #fff;
-  }
-  .blk.start { background: #2E8B57; }
-  .blk.loop { background: #1F6FB2; }
-  .blk.logic { background: #7A4FB5; }
-  .blk.act { background: #C3562A; }
-  .blk.var { background: #B5482F; }
-  .blk small { display: block; font-family: 'Nunito', sans-serif; font-size: 12.5px; opacity: 0.82; margin-top: 2px; }
-  .blk .ind { display: inline-block; width: 18px; }
+  /* MakeCode blocks, in MakeCode's own colors */
+  .prog { margin-top: 16px; background: var(--deep); border-radius: 12px; padding: 14px; }
+  .prog h4 { font-size: 16px; margin-bottom: 2px; }
+  .prog > p { font-size: 13.5px; color: var(--ink-3); margin-bottom: 10px; }
+  .blocks { display: flex; flex-direction: column; gap: 5px; }
+  .blk { border-radius: 8px; padding: 8px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #fff; position: relative; }
+  .blk i { font-style: normal; float: right; font-family: 'Nunito', sans-serif; font-size: 10.5px; opacity: .75; margin-left: 10px; text-transform: uppercase; letter-spacing: .06em; }
+  .blk small { display: block; font-family: 'Nunito', sans-serif; font-size: 12.5px; opacity: .85; margin-top: 1px; }
+  .blk.gap { margin-top: 8px; }
+  .i1 { margin-left: 18px; } .i2 { margin-left: 36px; } .i3 { margin-left: 54px; }
+  .b-basic { background: #1E90FF; } .b-input { background: #B400B4; } .b-music { background: #D0301F; }
+  .b-radio { background: #C8007C; } .b-loops { background: #00902F; } .b-logic { background: #00888A; }
+  .b-var { background: #C4122F; } .b-math { background: #7E00B5; } .b-pins { background: #A21E1E; }
+  .b-led { background: #5C2D91; } .b-fn { background: #3455DB; } .b-husky { background: #C9580A; } .b-xiami { background: #0B9A0E; } .b-log { background: #378273; }
+  .keylist { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .keylist span { font-size: 11.5px; font-family: 'IBM Plex Mono', monospace; color: #fff; padding: 2px 8px; border-radius: 6px; }
 
-  /* ---------------- troubleshooting ---------------- */
+  /* tables */
   .table-wrap { overflow-x: auto; margin-top: 14px; }
-  table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 500px; }
-  th { text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; padding: 9px 12px; border-bottom: 2px solid var(--line); }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 520px; }
+  th { text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; padding: 9px 12px; border-bottom: 2px solid var(--line); }
   td { padding: 10px 12px; border-bottom: 1px solid var(--line); color: var(--ink-2); vertical-align: top; }
   td:first-child { color: var(--ink); font-weight: 700; }
   tr:last-child td { border-bottom: none; }
+  .screws td:nth-child(2), .screws td:nth-child(3) { font-family: 'IBM Plex Mono', monospace; white-space: nowrap; color: var(--lime); }
 
-  /* ---------------- glossary ---------------- */
+  /* glossary */
   .gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 14px; }
-  .gterm { background: var(--paper); border-radius: 11px; padding: 13px 15px; }
-  .gterm b { display: block; font-family: 'Fredoka', sans-serif; font-size: 16px; color: var(--blue); margin-bottom: 2px; }
+  .gterm { background: var(--card-2); border-radius: 11px; padding: 12px 14px; }
+  .gterm b { display: block; font-family: 'Fredoka', sans-serif; font-size: 16px; color: var(--sky); margin-bottom: 2px; font-weight: 600; }
   .gterm span { font-size: 14px; color: var(--ink-2); }
 
   .linkrow { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-  .linkrow a { flex: 1 1 200px; text-align: center; text-decoration: none; font-weight: 700; font-size: 15px; padding: 13px 16px; border-radius: 11px; }
-  .linkrow a.primary { background: var(--orange); color: #fff; }
-  .linkrow a.secondary { background: var(--paper); color: var(--ink); border: 1px solid var(--line); }
-
-  footer { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: 0.06em; padding: 6px 0 14px; }
+  .linkrow a { flex: 1 1 200px; text-align: center; text-decoration: none; font-weight: 700; font-size: 15px; padding: 12px 16px; border-radius: 11px; }
+  .linkrow a.primary { background: var(--pink); color: #1a0e18; }
+  .linkrow a.secondary { background: var(--card-2); color: var(--ink); border: 1px solid var(--line); }
+  .link3d { display: inline-block; margin-top: 10px; font-weight: 700; color: var(--sky); text-decoration: none; font-size: 14.5px; }
+  footer { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: .06em; padding: 6px 0 14px; }
 
   @media (max-width: 560px) {
-    body { padding: 11px; font-size: 15.5px; }
-    .card, .step { padding: 17px; }
+    body { padding: 10px; font-size: 15.5px; }
+    .card, .step { padding: 16px; }
     .step-head { gap: 11px; }
     .num { width: 38px; height: 38px; font-size: 19px; }
-    .step-head h2 { font-size: 22px; }
+    .step-head h2 { font-size: 21px; }
+    h2 { font-size: 23px; }
+    .diagram { padding: 10px; }
+    .blk { font-size: 12px; padding: 7px 10px; }
+    .i1 { margin-left: 12px; } .i2 { margin-left: 24px; } .i3 { margin-left: 36px; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
   @media print {
-    body { background: #fff; padding: 0; }
-    .step, .card, .pcard { break-inside: avoid; page-break-inside: avoid; }
+    .step, .card, .pcard, .prog { break-inside: avoid; page-break-inside: avoid; }
+    .jump { display: none; }
   }
 
+  /* Dusty additions on the MS-2000 theme */
+  .hero .bot { font-size: 50px; line-height: 1; display: block; margin-bottom: 6px; }
   .pcard .pic.new svg { max-width: 190px; }
-  .order { list-style: none; counter-reset: o; display: grid; gap: 10px; margin-top: 14px; }
-  .order li { counter-increment: o; background: var(--paper); border-radius: 12px; padding: 12px 14px 12px 54px; position: relative; }
-  .order li::before { content: counter(o); position: absolute; left: 14px; top: 12px; width: 28px; height: 28px; border-radius: 8px; background: var(--blue); color: #fff; font-family: 'Fredoka', sans-serif; font-weight: 600; display: grid; place-items: center; }
-  .order b { display: block; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; }
-  .order span { font-size: 14.5px; color: var(--ink-2); }
-  .order .t { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: .05em; display: block; margin-top: 3px; }
-  .screws td:nth-child(2), .screws td:nth-child(3) { font-family: 'IBM Plex Mono', monospace; white-space: nowrap; }
+  .blk.start { background: #1E90FF; } .blk.loop { background: #00902F; } .blk.logic { background: #00888A; }
+  .blk.act { background: #C9580A; } .blk.var { background: #C4122F; }
+  .blk .ind { display: inline-block; width: 18px; }
   .math { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; font-family: 'Fredoka', sans-serif; font-size: 20px; }
-  .math .box { background: #fff; border: 1px solid #C6DAF2; border-radius: 10px; padding: 6px 12px; text-align: center; line-height: 1.1; }
+  .math .box { background: var(--card-2); border: 1px solid var(--line); border-radius: 10px; padding: 6px 12px; text-align: center; line-height: 1.1; }
   .math .box small { display: block; font-family: 'Nunito', sans-serif; font-size: 11.5px; color: var(--ink-3); }
-  .try { margin-top: 12px; background: var(--orange-soft); border: 1px solid #F3CDB8; border-radius: 12px; padding: 13px 16px; font-size: 14.5px; color: var(--ink-2); }
-  .try b { color: var(--orange); }
-  .diagram svg.fit { min-width: 0; max-width: 560px; margin: 0 auto; }
-  .step[id] { scroll-margin-top: 12px; }
-  .link3d { display: inline-block; margin-top: 10px; font-weight: 700; color: var(--blue); text-decoration: none; font-size: 14.5px; }
+  .tool svg rect, .tool svg circle { }
 </style>
 <body>
 <div class="wrap">
@@ -260,9 +231,10 @@
     <div class="facts">
       <span class="fact">DUE <b>NOV 16</b></span>
       <span class="fact">CHASSIS <b>3D PRINTED</b></span>
-      <span class="fact">SCREWS <b>19 &times; M2</b></span>
+      <span class="fact">SCREWS <b>23 &times; M2</b></span>
       <span class="fact">SOLDERING <b>A LITTLE</b></span>
     </div>
+    <div class="jump"><a href="#step-1">1</a><a href="#step-2">2</a><a href="#step-3">3</a><a href="#step-4">4</a><a href="#step-5">5</a><a href="#step-6">6</a><a href="#step-7">7</a><a href="#step-8">8</a><a href="#step-9">9</a><a href="#step-10">10</a><a href="#step-11">11</a></div>
   </div>
 
   <div class="safety">
@@ -285,14 +257,14 @@
     <h2>Tools you need</h2>
     <p class="lead">A grown-up with a 3D printer, plus a few small things.</p>
     <div class="tools">
-      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="6" width="44" height="44" rx="4" fill="#fff" stroke="#566A83" stroke-width="2.5"/><path d="M14 16 h32" stroke="#566A83" stroke-width="2.5"/><path d="M26 16 v10 h8 v-10" fill="#B9C4D1" stroke="#566A83" stroke-width="2"/><rect x="18" y="38" width="24" height="5" fill="#F0B43C"/></svg><b>3D printer</b><span>Grown-up runs it</span></div>
-      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M30 6 v30" stroke="#566A83" stroke-width="3"/><path d="M24 36 h12 v14 h-12 Z" fill="#D95B21" stroke="#566A83" stroke-width="2.5" stroke-linejoin="round"/><path d="M26 6 h8" stroke="#566A83" stroke-width="5" stroke-linecap="round"/></svg><b>Small screwdriver</b><span>Phillips #0 for M2</span></div>
-      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M20 50 L28 26 M40 50 L32 26" stroke="#D95B21" stroke-width="5" stroke-linecap="round"/><path d="M28 26 L30 6 L32 26" fill="#8E9CAC" stroke="#566A83" stroke-width="2"/></svg><b>Needle-nose pliers</b><span>To hold the nuts</span></div>
-      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M10 46 L36 20" stroke="#D95B21" stroke-width="7" stroke-linecap="round"/><path d="M36 20 L50 8" stroke="#8E9CAC" stroke-width="3" stroke-linecap="round"/></svg><b>Soldering iron</b><span>Grown-up only</span></div>
-      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="24" width="44" height="12" rx="2" fill="#fff" stroke="#566A83" stroke-width="2.5"/><path d="M16 24 v7 M24 24 v5 M32 24 v7 M40 24 v5 M48 24 v7" stroke="#566A83" stroke-width="2"/></svg><b>Ruler</b><span>Millimeters matter</span></div>
-      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="26" width="44" height="20" rx="4" fill="#fff" stroke="#566A83" stroke-width="2.5"/><rect x="20" y="16" width="20" height="10" rx="2" fill="#D2DCE7" stroke="#566A83" stroke-width="2"/><text x="30" y="41" font-family="IBM Plex Mono" font-size="10" text-anchor="middle" fill="#14202F">5.0g</text></svg><b>Kitchen scale</b><span>To weigh crumbs</span></div>
-      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="10" y="18" width="40" height="22" rx="4" fill="#fff" stroke="#566A83" stroke-width="2.5"/><path d="M18 29 h24" stroke="#D95B21" stroke-width="3" stroke-linecap="round"/><path d="M30 23 v12" stroke="#D95B21" stroke-width="3" stroke-linecap="round"/></svg><b>Laptop</b><span>To load the code</span></div>
-      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><circle cx="30" cy="28" r="18" fill="#fff" stroke="#566A83" stroke-width="2.5"/><path d="M30 16 v12 l8 6" stroke="#14202F" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg><b>Stopwatch</b><span>A phone works</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="6" width="44" height="44" rx="4" fill="#1F2940" stroke="#8A99B0" stroke-width="2.5"/><path d="M14 16 h32" stroke="#8A99B0" stroke-width="2.5"/><path d="M26 16 v10 h8 v-10" fill="#B9C4D1" stroke="#8A99B0" stroke-width="2"/><rect x="18" y="38" width="24" height="5" fill="#F0B43C"/></svg><b>3D printer</b><span>Grown-up runs it</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M30 6 v30" stroke="#8A99B0" stroke-width="3"/><path d="M24 36 h12 v14 h-12 Z" fill="#F0609E" stroke="#8A99B0" stroke-width="2.5" stroke-linejoin="round"/><path d="M26 6 h8" stroke="#8A99B0" stroke-width="5" stroke-linecap="round"/></svg><b>Small screwdriver</b><span>Phillips #0 for M2</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M20 50 L28 26 M40 50 L32 26" stroke="#F0609E" stroke-width="5" stroke-linecap="round"/><path d="M28 26 L30 6 L32 26" fill="#8E9CAC" stroke="#8A99B0" stroke-width="2"/></svg><b>Needle-nose pliers</b><span>To hold the nuts</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M10 46 L36 20" stroke="#F0609E" stroke-width="7" stroke-linecap="round"/><path d="M36 20 L50 8" stroke="#8E9CAC" stroke-width="3" stroke-linecap="round"/></svg><b>Soldering iron</b><span>Grown-up only</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="24" width="44" height="12" rx="2" fill="#1F2940" stroke="#8A99B0" stroke-width="2.5"/><path d="M16 24 v7 M24 24 v5 M32 24 v7 M40 24 v5 M48 24 v7" stroke="#8A99B0" stroke-width="2"/></svg><b>Ruler</b><span>Millimeters matter</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="26" width="44" height="20" rx="4" fill="#1F2940" stroke="#8A99B0" stroke-width="2.5"/><rect x="20" y="16" width="20" height="10" rx="2" fill="#2B3650" stroke="#8A99B0" stroke-width="2"/><text x="30" y="41" font-family="IBM Plex Mono" font-size="10" text-anchor="middle" fill="#EEF2F8">5.0g</text></svg><b>Kitchen scale</b><span>To weigh crumbs</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="10" y="18" width="40" height="22" rx="4" fill="#1F2940" stroke="#8A99B0" stroke-width="2.5"/><path d="M18 29 h24" stroke="#F0609E" stroke-width="3" stroke-linecap="round"/><path d="M30 23 v12" stroke="#F0609E" stroke-width="3" stroke-linecap="round"/></svg><b>Laptop</b><span>To load the code</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><circle cx="30" cy="28" r="18" fill="#1F2940" stroke="#8A99B0" stroke-width="2.5"/><path d="M30 16 v12 l8 6" stroke="#A9B6CA" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg><b>Stopwatch</b><span>A phone works</span></div>
     </div>
   </div>
 
@@ -306,14 +278,14 @@
           <svg viewBox="0 0 220 150" role="img" aria-label="micro:bit board with a five by five grid of LEDs, buttons A and B, and gold edge connector fingers">
             <rect x="20" y="16" width="180" height="108" rx="12" fill="#2E8B57"/>
             <rect x="20" y="16" width="180" height="108" rx="12" fill="none" stroke="#1E6B41" stroke-width="2"/>
-            <g fill="#14202F">
+            <g fill="#2B2F3A">
               <rect x="70" y="36" width="9" height="9" rx="1.5"/><rect x="88" y="36" width="9" height="9" rx="1.5"/><rect x="106" y="36" width="9" height="9" rx="1.5"/><rect x="124" y="36" width="9" height="9" rx="1.5"/><rect x="142" y="36" width="9" height="9" rx="1.5"/>
               <rect x="70" y="52" width="9" height="9" rx="1.5"/><rect x="88" y="52" width="9" height="9" rx="1.5"/><rect x="106" y="52" width="9" height="9" rx="1.5"/><rect x="124" y="52" width="9" height="9" rx="1.5"/><rect x="142" y="52" width="9" height="9" rx="1.5"/>
               <rect x="70" y="68" width="9" height="9" rx="1.5"/><rect x="88" y="68" width="9" height="9" rx="1.5"/><rect x="106" y="68" width="9" height="9" rx="1.5"/><rect x="124" y="68" width="9" height="9" rx="1.5"/><rect x="142" y="68" width="9" height="9" rx="1.5"/>
               <rect x="70" y="84" width="9" height="9" rx="1.5"/><rect x="88" y="84" width="9" height="9" rx="1.5"/><rect x="106" y="84" width="9" height="9" rx="1.5"/><rect x="124" y="84" width="9" height="9" rx="1.5"/><rect x="142" y="84" width="9" height="9" rx="1.5"/>
               <rect x="70" y="100" width="9" height="9" rx="1.5"/><rect x="88" y="100" width="9" height="9" rx="1.5"/><rect x="106" y="100" width="9" height="9" rx="1.5"/><rect x="124" y="100" width="9" height="9" rx="1.5"/><rect x="142" y="100" width="9" height="9" rx="1.5"/>
             </g>
-            <g fill="#D95B21">
+            <g fill="#F0609E">
               <rect x="70" y="52" width="9" height="9" rx="1.5"/><rect x="142" y="52" width="9" height="9" rx="1.5"/>
               <rect x="70" y="84" width="9" height="9" rx="1.5"/><rect x="88" y="100" width="9" height="9" rx="1.5"/><rect x="106" y="100" width="9" height="9" rx="1.5"/><rect x="124" y="100" width="9" height="9" rx="1.5"/><rect x="142" y="84" width="9" height="9" rx="1.5"/>
             </g>
@@ -341,15 +313,15 @@
             <g fill="#D8A34A">
               <rect x="56" y="26" width="6" height="10"/><rect x="72" y="26" width="6" height="10"/><rect x="88" y="26" width="6" height="10"/><rect x="104" y="26" width="6" height="10"/><rect x="120" y="26" width="6" height="10"/><rect x="136" y="26" width="6" height="10"/><rect x="152" y="26" width="6" height="10"/>
             </g>
-            <text x="110" y="58" font-family="IBM Plex Mono, monospace" font-size="9" fill="#BBD9F2" text-anchor="middle" letter-spacing="1">MICRO:BIT SLOTS IN HERE</text>
-            <rect x="22" y="78" width="30" height="26" rx="4" fill="#14202F"/>
-            <circle cx="37" cy="91" r="6" fill="#4A5A6D"/><circle cx="37" cy="91" r="2.5" fill="#14202F"/>
-            <text x="37" y="115" font-family="IBM Plex Mono, monospace" font-size="8" fill="#BBD9F2" text-anchor="middle">POWER</text>
-            <rect x="106" y="78" width="34" height="18" rx="3" fill="#14202F"/>
+            <text x="110" y="58" font-family="IBM Plex Mono, monospace" font-size="9" fill="#CFE8FF" text-anchor="middle" letter-spacing="1">MICRO:BIT SLOTS IN HERE</text>
+            <rect x="22" y="78" width="30" height="26" rx="4" fill="#2B2F3A"/>
+            <circle cx="37" cy="91" r="6" fill="#4A5A6D"/><circle cx="37" cy="91" r="2.5" fill="#2B2F3A"/>
+            <text x="37" y="115" font-family="IBM Plex Mono, monospace" font-size="8" fill="#CFE8FF" text-anchor="middle">POWER</text>
+            <rect x="106" y="78" width="34" height="18" rx="3" fill="#2B2F3A"/>
             <text x="123" y="91" font-family="IBM Plex Mono, monospace" font-size="9" fill="#F0A878" text-anchor="middle">M A</text>
-            <rect x="152" y="78" width="34" height="18" rx="3" fill="#14202F"/>
+            <rect x="152" y="78" width="34" height="18" rx="3" fill="#2B2F3A"/>
             <text x="169" y="91" font-family="IBM Plex Mono, monospace" font-size="9" fill="#F0A878" text-anchor="middle">M B</text>
-            <text x="146" y="112" font-family="IBM Plex Mono, monospace" font-size="8" fill="#BBD9F2" text-anchor="middle">MOTORS</text>
+            <text x="146" y="112" font-family="IBM Plex Mono, monospace" font-size="8" fill="#CFE8FF" text-anchor="middle">MOTORS</text>
           </svg>
         </div>
         <div class="pbody">
@@ -368,11 +340,11 @@
             <circle cx="77" cy="75" r="9" fill="#C08F34" stroke="#B0813A" stroke-width="1.5"/>
             <rect x="26" y="70" width="32" height="10" rx="2" fill="#8E9CAC"/>
             <rect x="26" y="72" width="32" height="4" fill="#6F7E90"/>
-            <path d="M172 62 h26" stroke="#C3432F" stroke-width="4" stroke-linecap="round"/>
-            <path d="M172 88 h26" stroke="#14202F" stroke-width="4" stroke-linecap="round"/>
-            <text x="42" y="98" font-family="IBM Plex Mono, monospace" font-size="9" fill="#566A83" text-anchor="middle">SHAFT</text>
-            <text x="204" y="66" font-family="IBM Plex Mono, monospace" font-size="10" fill="#C3432F" text-anchor="end">+</text>
-            <text x="204" y="92" font-family="IBM Plex Mono, monospace" font-size="10" fill="#14202F" text-anchor="end">-</text>
+            <path d="M172 62 h26" stroke="#F0605E" stroke-width="4" stroke-linecap="round"/>
+            <path d="M172 88 h26" stroke="#A9B6CA" stroke-width="4" stroke-linecap="round"/>
+            <text x="42" y="98" font-family="IBM Plex Mono, monospace" font-size="9" fill="#A9B6CA" text-anchor="middle">SHAFT</text>
+            <text x="204" y="66" font-family="IBM Plex Mono, monospace" font-size="10" fill="#F0605E" text-anchor="end">+</text>
+            <text x="204" y="92" font-family="IBM Plex Mono, monospace" font-size="10" fill="#EEF2F8" text-anchor="end">-</text>
           </svg>
         </div>
         <div class="pbody">
@@ -385,16 +357,16 @@
 <div class="pcard">
         <div class="pic">
           <svg viewBox="0 0 220 150" role="img" aria-label="Rubber wheel, 32 millimeters across, with tread around the outside and a D shaped hole in the hub">
-            <circle cx="110" cy="70" r="54" fill="#14202F"/>
+            <circle cx="110" cy="70" r="54" fill="#2B2F3A"/>
             <g stroke="#3A4757" stroke-width="3">
               <path d="M110 16 v10 M110 114 v10 M56 70 h10 M154 70 h10"/>
               <path d="M71 31 l7 7 M142 102 l7 7 M149 31 l-7 7 M78 102 l-7 7"/>
             </g>
             <circle cx="110" cy="70" r="37" fill="#2A3746"/>
-            <circle cx="110" cy="70" r="19" fill="#D2DCE7"/>
-            <rect x="97" y="62" width="26" height="15" rx="2" fill="#566A83"/>
-            <path d="M97 66 h26" stroke="#D2DCE7" stroke-width="2.5"/>
-            <text x="110" y="143" font-family="IBM Plex Mono, monospace" font-size="10" fill="#566A83" text-anchor="middle">32 mm ACROSS</text>
+            <circle cx="110" cy="70" r="19" fill="#2B3650"/>
+            <rect x="97" y="62" width="26" height="15" rx="2" fill="#8A99B0"/>
+            <path d="M97 66 h26" stroke="#2B3650" stroke-width="2.5"/>
+            <text x="110" y="143" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A9B6CA" text-anchor="middle">32 mm ACROSS</text>
           </svg>
         </div>
         <div class="pbody">
@@ -407,14 +379,14 @@
 <div class="pcard">
         <div class="pic">
           <svg viewBox="0 0 220 150" role="img" aria-label="Ball caster, a small plastic housing holding a metal ball that rolls in any direction">
-            <path d="M74 40 h72 v30 a36 36 0 0 1 -72 0 Z" fill="#D2DCE7" stroke="#8E9CAC" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M74 40 h72 v30 a36 36 0 0 1 -72 0 Z" fill="#2B3650" stroke="#8E9CAC" stroke-width="2.5" stroke-linejoin="round"/>
             <rect x="62" y="30" width="96" height="12" rx="3" fill="#B9C4D1" stroke="#8E9CAC" stroke-width="2"/>
-            <circle cx="72" cy="36" r="3" fill="#566A83"/><circle cx="148" cy="36" r="3" fill="#566A83"/>
+            <circle cx="72" cy="36" r="3" fill="#8A99B0"/><circle cx="148" cy="36" r="3" fill="#8A99B0"/>
             <circle cx="110" cy="84" r="30" fill="#8E9CAC"/>
             <circle cx="110" cy="84" r="30" fill="none" stroke="#6F7E90" stroke-width="2"/>
             <ellipse cx="100" cy="74" rx="9" ry="7" fill="#C8D2DD" opacity="0.8"/>
-            <path d="M40 116 h140" stroke="#566A83" stroke-width="2.5" stroke-dasharray="6 5"/>
-            <text x="110" y="136" font-family="IBM Plex Mono, monospace" font-size="10" fill="#566A83" text-anchor="middle">ROLLS ANY DIRECTION</text>
+            <path d="M40 116 h140" stroke="#8A99B0" stroke-width="2.5" stroke-dasharray="6 5"/>
+            <text x="110" y="136" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A9B6CA" text-anchor="middle">ROLLS ANY DIRECTION</text>
           </svg>
         </div>
         <div class="pbody">
@@ -433,12 +405,12 @@
             <g fill="#D8A34A">
               <rect x="66" y="34" width="5" height="8"/><rect x="82" y="34" width="5" height="8"/><rect x="98" y="34" width="5" height="8"/>
             </g>
-            <path d="M88 66 L76 112" stroke="#D95B21" stroke-width="2" stroke-dasharray="4 4"/>
-            <path d="M76 112 L132 66" stroke="#D95B21" stroke-width="2" stroke-dasharray="4 4"/>
-            <path d="M30 112 h160" stroke="#566A83" stroke-width="3"/>
-            <text x="86" y="92" font-family="IBM Plex Mono, monospace" font-size="8" fill="#D95B21" text-anchor="middle">OUT</text>
-            <text x="142" y="92" font-family="IBM Plex Mono, monospace" font-size="8" fill="#D95B21" text-anchor="middle">BACK</text>
-            <text x="110" y="132" font-family="IBM Plex Mono, monospace" font-size="10" fill="#566A83" text-anchor="middle">TABLE SURFACE</text>
+            <path d="M88 66 L76 112" stroke="#F0609E" stroke-width="2" stroke-dasharray="4 4"/>
+            <path d="M76 112 L132 66" stroke="#F0609E" stroke-width="2" stroke-dasharray="4 4"/>
+            <path d="M30 112 h160" stroke="#8A99B0" stroke-width="3"/>
+            <text x="86" y="92" font-family="IBM Plex Mono, monospace" font-size="8" fill="#F0609E" text-anchor="middle">OUT</text>
+            <text x="142" y="92" font-family="IBM Plex Mono, monospace" font-size="8" fill="#F0609E" text-anchor="middle">BACK</text>
+            <text x="110" y="132" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A9B6CA" text-anchor="middle">TABLE SURFACE</text>
           </svg>
         </div>
         <div class="pbody">
@@ -451,16 +423,16 @@
 <div class="pcard">
         <div class="pic">
           <svg viewBox="0 0 220 150" role="img" aria-label="Lever microswitch with a roller on the end of a metal arm">
-            <rect x="60" y="56" width="98" height="40" rx="3" fill="#14202F"/>
-            <circle cx="76" cy="66" r="3" fill="#566A83"/>
+            <rect x="60" y="56" width="98" height="40" rx="3" fill="#2B2F3A"/>
+            <circle cx="76" cy="66" r="3" fill="#8A99B0"/>
             <path d="M64 52 L150 38" stroke="#B9C4D1" stroke-width="5" stroke-linecap="round"/>
             <circle cx="152" cy="38" r="8" fill="#8E9CAC" stroke="#6F7E90" stroke-width="2"/>
             <g stroke="#D8A34A" stroke-width="4" stroke-linecap="round">
               <path d="M76 96 v18"/><path d="M109 96 v18"/><path d="M142 96 v18"/>
             </g>
-            <text x="76" y="132" font-family="IBM Plex Mono, monospace" font-size="9" fill="#566A83" text-anchor="middle">C</text>
-            <text x="109" y="132" font-family="IBM Plex Mono, monospace" font-size="9" fill="#566A83" text-anchor="middle">NO</text>
-            <text x="142" y="132" font-family="IBM Plex Mono, monospace" font-size="9" fill="#566A83" text-anchor="middle">NC</text>
+            <text x="76" y="132" font-family="IBM Plex Mono, monospace" font-size="9" fill="#A9B6CA" text-anchor="middle">C</text>
+            <text x="109" y="132" font-family="IBM Plex Mono, monospace" font-size="9" fill="#A9B6CA" text-anchor="middle">NO</text>
+            <text x="142" y="132" font-family="IBM Plex Mono, monospace" font-size="9" fill="#A9B6CA" text-anchor="middle">NC</text>
           </svg>
         </div>
         <div class="pbody">
@@ -480,9 +452,9 @@
             <g stroke="#D8A34A" stroke-width="3" stroke-linecap="round">
               <path d="M152 75 l26 -22 M152 75 l30 -8 M152 75 l30 8 M152 75 l26 22 M152 75 l18 -28 M152 75 l18 28"/>
             </g>
-            <path d="M40 60 h14" stroke="#C3432F" stroke-width="4" stroke-linecap="round"/>
-            <path d="M40 90 h14" stroke="#14202F" stroke-width="4" stroke-linecap="round"/>
-            <text x="172" y="122" font-family="IBM Plex Mono, monospace" font-size="9" fill="#566A83" text-anchor="middle">BRUSH</text>
+            <path d="M40 60 h14" stroke="#F0605E" stroke-width="4" stroke-linecap="round"/>
+            <path d="M40 90 h14" stroke="#A9B6CA" stroke-width="4" stroke-linecap="round"/>
+            <text x="172" y="122" font-family="IBM Plex Mono, monospace" font-size="9" fill="#A9B6CA" text-anchor="middle">BRUSH</text>
           </svg>
         </div>
         <div class="pbody">
@@ -495,11 +467,11 @@
 <div class="pcard">
         <div class="pic new"><svg viewBox="0 0 220 150" role="img" aria-label="Printed parts: a flat base plate, a shelf, gears and a tray">
   <rect x="18" y="70" width="120" height="62" rx="6" fill="#F0B43C" stroke="#9A6A12" stroke-width="2"/>
-  <rect x="34" y="84" width="22" height="12" rx="2" fill="#E9EEF4"/><rect x="100" y="84" width="22" height="12" rx="2" fill="#E9EEF4"/>
+  <rect x="34" y="84" width="22" height="12" rx="2" fill="#0F1420"/><rect x="100" y="84" width="22" height="12" rx="2" fill="#0F1420"/>
   <rect x="30" y="22" width="98" height="40" rx="5" fill="#F0B43C" stroke="#9A6A12" stroke-width="2"/>
-  <rect x="60" y="32" width="38" height="20" rx="2" fill="#E9EEF4"/>
-  <g transform="translate(174 48)"><circle r="26" fill="#4AA8FF" stroke="#1F5E9C" stroke-width="2"/><circle r="10" fill="#E9EEF4"/></g>
-  <g transform="translate(176 110)"><rect x="-28" y="-16" width="56" height="30" rx="4" fill="#5CC98A" stroke="#237A4C" stroke-width="2"/><rect x="-22" y="-10" width="44" height="18" fill="#E9EEF4"/></g>
+  <rect x="60" y="32" width="38" height="20" rx="2" fill="#0F1420"/>
+  <g transform="translate(174 48)"><circle r="26" fill="#4AA8FF" stroke="#1F5E9C" stroke-width="2"/><circle r="10" fill="#0F1420"/></g>
+  <g transform="translate(176 110)"><rect x="-28" y="-16" width="56" height="30" rx="4" fill="#5CC98A" stroke="#237A4C" stroke-width="2"/><rect x="-22" y="-10" width="44" height="18" fill="#0F1420"/></g>
 </svg></div>
         <div class="pbody">
           <h3>Printed parts</h3>
@@ -510,11 +482,11 @@
       </div>
 <div class="pcard">
         <div class="pic new"><svg viewBox="0 0 220 150" role="img" aria-label="A spool of plastic filament">
-  <circle cx="110" cy="75" r="62" fill="#D2DCE7" stroke="#566A83" stroke-width="2.5"/>
+  <circle cx="110" cy="75" r="62" fill="#2B3650" stroke="#8A99B0" stroke-width="2.5"/>
   <circle cx="110" cy="75" r="50" fill="#F0B43C"/>
   <g stroke="#C98E1E" stroke-width="1.5" fill="none"><circle cx="110" cy="75" r="44"/><circle cx="110" cy="75" r="38"/><circle cx="110" cy="75" r="32"/></g>
-  <circle cx="110" cy="75" r="24" fill="#E9EEF4" stroke="#566A83" stroke-width="2.5"/>
-  <circle cx="110" cy="75" r="9" fill="#fff" stroke="#566A83" stroke-width="2"/>
+  <circle cx="110" cy="75" r="24" fill="#0F1420" stroke="#8A99B0" stroke-width="2.5"/>
+  <circle cx="110" cy="75" r="9" fill="#fff" stroke="#8A99B0" stroke-width="2"/>
   <path d="M160 75 C 185 75, 190 100, 205 118" stroke="#F0B43C" stroke-width="4" fill="none" stroke-linecap="round"/>
 </svg></div>
         <div class="pbody">
@@ -526,13 +498,13 @@
       </div>
 <div class="pcard">
         <div class="pic new"><svg viewBox="0 0 220 150" role="img" aria-label="A small M2 screw and a nut">
-  <rect x="40" y="58" width="22" height="34" rx="4" fill="#B9C4D1" stroke="#566A83" stroke-width="2"/>
-  <path d="M44 75 h14 M51 68 v14" stroke="#566A83" stroke-width="2.5"/>
-  <rect x="62" y="68" width="92" height="14" fill="#B9C4D1" stroke="#566A83" stroke-width="2"/>
-  <path d="M70 68 l6 14 M80 68 l6 14 M90 68 l6 14 M100 68 l6 14 M110 68 l6 14 M120 68 l6 14 M130 68 l6 14 M140 68 l6 14" stroke="#566A83" stroke-width="1.3"/>
-  <path d="M170 60 h26 l8 15 l-8 15 h-26 l-8 -15 z" fill="#B9C4D1" stroke="#566A83" stroke-width="2"/>
-  <circle cx="183" cy="75" r="7" fill="#E9EEF4" stroke="#566A83" stroke-width="2"/>
-  <text x="108" y="112" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83" text-anchor="middle">2 mm thick, 6 to 10 mm long</text>
+  <rect x="40" y="58" width="22" height="34" rx="4" fill="#B9C4D1" stroke="#8A99B0" stroke-width="2"/>
+  <path d="M44 75 h14 M51 68 v14" stroke="#8A99B0" stroke-width="2.5"/>
+  <rect x="62" y="68" width="92" height="14" fill="#B9C4D1" stroke="#8A99B0" stroke-width="2"/>
+  <path d="M70 68 l6 14 M80 68 l6 14 M90 68 l6 14 M100 68 l6 14 M110 68 l6 14 M120 68 l6 14 M130 68 l6 14 M140 68 l6 14" stroke="#8A99B0" stroke-width="1.3"/>
+  <path d="M170 60 h26 l8 15 l-8 15 h-26 l-8 -15 z" fill="#B9C4D1" stroke="#8A99B0" stroke-width="2"/>
+  <circle cx="183" cy="75" r="7" fill="#0F1420" stroke="#8A99B0" stroke-width="2"/>
+  <text x="108" y="112" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="middle">2 mm thick, 6 to 10 mm long</text>
 </svg></div>
         <div class="pbody">
           <h3>M2 screws and nuts</h3>
@@ -544,7 +516,7 @@
 <div class="pcard">
         <div class="pic new"><svg viewBox="0 0 220 150" role="img" aria-label="Fuzzy pipe cleaners threaded through a roller">
   <rect x="40" y="62" width="140" height="26" rx="13" fill="#B48CFF" stroke="#6A45B8" stroke-width="2"/>
-  <g stroke="#D95B21" stroke-width="7" stroke-linecap="round">
+  <g stroke="#F0609E" stroke-width="7" stroke-linecap="round">
     <path d="M58 40 v70"/><path d="M82 34 v82"/><path d="M106 40 v70"/><path d="M130 34 v82"/><path d="M154 40 v70"/>
   </g>
 </svg></div>
@@ -557,8 +529,8 @@
       </div>
 <div class="pcard">
         <div class="pic new"><svg viewBox="0 0 220 150" role="img" aria-label="A small rocker switch">
-  <rect x="70" y="38" width="80" height="56" rx="6" fill="#14202F"/>
-  <path d="M80 50 L140 44 L140 88 L80 82 Z" fill="#2E3B4E" stroke="#8C9CB1" stroke-width="1.5"/>
+  <rect x="70" y="38" width="80" height="56" rx="6" fill="#2B2F3A"/>
+  <path d="M80 50 L140 44 L140 88 L80 82 Z" fill="#2E3B4E" stroke="#74839B" stroke-width="1.5"/>
   <text x="95" y="72" font-family="IBM Plex Mono, monospace" font-size="14" fill="#fff">I</text>
   <circle cx="127" cy="67" r="6" fill="none" stroke="#fff" stroke-width="2"/>
   <rect x="88" y="94" width="8" height="22" fill="#D8A34A"/><rect x="124" y="94" width="8" height="22" fill="#D8A34A"/>
@@ -574,9 +546,9 @@
         <div class="pic new"><svg viewBox="0 0 220 150" role="img" aria-label="A rounded black power bank with two ports on one end and four small lights">
   <rect x="30" y="44" width="150" height="62" rx="18" fill="#2A3340" stroke="#0E141B" stroke-width="2"/>
   <circle cx="120" cy="66" r="3" fill="#4AA8FF"/><circle cx="130" cy="70" r="3" fill="#4AA8FF"/><circle cx="140" cy="74" r="3" fill="#4AA8FF"/><circle cx="150" cy="78" r="3" fill="#4AA8FF"/>
-  <rect x="180" y="58" width="10" height="12" rx="2" fill="#E9EEF4" stroke="#566A83"/><rect x="180" y="80" width="10" height="16" rx="1" fill="#E9EEF4" stroke="#566A83"/>
-  <rect x="96" y="104" width="18" height="5" rx="2" fill="#566A83"/>
-  <text x="110" y="136" font-family="IBM Plex Mono, monospace" font-size="11" fill="#566A83" text-anchor="middle">USB-C to charge, USB-A to power Dusty</text>
+  <rect x="180" y="58" width="10" height="12" rx="2" fill="#0F1420" stroke="#8A99B0"/><rect x="180" y="80" width="10" height="16" rx="1" fill="#0F1420" stroke="#8A99B0"/>
+  <rect x="96" y="104" width="18" height="5" rx="2" fill="#8A99B0"/>
+  <text x="110" y="136" font-family="IBM Plex Mono, monospace" font-size="11" fill="#A9B6CA" text-anchor="middle">USB-C to charge, USB-A to power Dusty</text>
 </svg></div>
         <div class="pbody">
           <h3>Power bank</h3>
@@ -587,12 +559,12 @@
       </div>
 <div class="pcard">
         <div class="pic new"><svg viewBox="0 0 220 150" role="img" aria-label="A Y cable with one round plug splitting into two">
-  <rect x="16" y="64" width="34" height="22" rx="6" fill="#14202F"/>
-  <path d="M50 75 H100" stroke="#14202F" stroke-width="6"/>
-  <path d="M100 75 C130 75, 130 40, 160 40 M100 75 C130 75, 130 110, 160 110" stroke="#14202F" stroke-width="6" fill="none"/>
-  <rect x="160" y="30" width="30" height="20" rx="5" fill="#14202F"/><rect x="160" y="100" width="30" height="20" rx="5" fill="#14202F"/>
+  <rect x="16" y="64" width="34" height="22" rx="6" fill="#2B2F3A"/>
+  <path d="M50 75 H100" stroke="#A9B6CA" stroke-width="6"/>
+  <path d="M100 75 C130 75, 130 40, 160 40 M100 75 C130 75, 130 110, 160 110" stroke="#A9B6CA" stroke-width="6" fill="none"/>
+  <rect x="160" y="30" width="30" height="20" rx="5" fill="#2B2F3A"/><rect x="160" y="100" width="30" height="20" rx="5" fill="#2B2F3A"/>
   <rect x="190" y="104" width="16" height="12" fill="#2B8A57"/>
-  <text x="110" y="140" font-family="IBM Plex Mono, monospace" font-size="11" fill="#566A83" text-anchor="middle">one to the board, one to the brush</text>
+  <text x="110" y="140" font-family="IBM Plex Mono, monospace" font-size="11" fill="#A9B6CA" text-anchor="middle">one to the board, one to the brush</text>
 </svg></div>
         <div class="pbody">
           <h3>Power cable and switch</h3>
@@ -638,21 +610,21 @@
     <div class="diagram">
       <svg class="fit" viewBox="0 0 420 235" role="img" aria-label="A printer nozzle laying thin layers of melted plastic on a heated bed">
   <path d="M210 0 V40" stroke="#F0B43C" stroke-width="5"/>
-  <path d="M190 40 h40 v34 l-12 14 h-16 l-12 -14 z" fill="#B9C4D1" stroke="#566A83" stroke-width="2"/>
-  <path d="M205 88 h10 l-3 10 h-4 z" fill="#D8A34A" stroke="#566A83" stroke-width="1.5"/>
-  <text x="244" y="56" font-family="Fredoka, sans-serif" font-size="16" fill="#14202F">Nozzle, about 220&deg;C</text>
-  <text x="244" y="75" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83">melts the plastic</text>
+  <path d="M190 40 h40 v34 l-12 14 h-16 l-12 -14 z" fill="#B9C4D1" stroke="#8A99B0" stroke-width="2"/>
+  <path d="M205 88 h10 l-3 10 h-4 z" fill="#D8A34A" stroke="#8A99B0" stroke-width="1.5"/>
+  <text x="244" y="56" font-family="Fredoka, sans-serif" font-size="16" fill="#EEF2F8">Nozzle, about 220&deg;C</text>
+  <text x="244" y="75" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">melts the plastic</text>
   <g fill="#F0B43C" stroke="#9A6A12" stroke-width="1">
     <rect x="60" y="166" width="240" height="12" rx="6"/><rect x="60" y="154" width="240" height="12" rx="6"/>
     <rect x="60" y="142" width="240" height="12" rx="6"/><rect x="60" y="130" width="240" height="12" rx="6"/>
     <rect x="60" y="118" width="150" height="12" rx="6"/>
   </g>
-  <text x="60" y="110" font-family="IBM Plex Mono, monospace" font-size="12" fill="#D95B21">new layer going down</text>
-  <path d="M304 136 h10" stroke="#566A83" stroke-width="1.5"/>
-  <text x="318" y="140" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83">each layer</text>
-  <text x="318" y="156" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83">0.2 mm</text>
+  <text x="60" y="110" font-family="IBM Plex Mono, monospace" font-size="12" fill="#F0609E">new layer going down</text>
+  <path d="M304 136 h10" stroke="#8A99B0" stroke-width="1.5"/>
+  <text x="318" y="140" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">each layer</text>
+  <text x="318" y="156" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">0.2 mm</text>
   <rect x="20" y="178" width="380" height="16" rx="4" fill="#F4C9C0"/>
-  <text x="210" y="220" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83" text-anchor="middle">heated bed, about 60&deg;C, so the first layer sticks</text>
+  <text x="210" y="220" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="middle">heated bed, about 60&deg;C, so the first layer sticks</text>
 </svg>
       <p class="caption">A 3D PRINTER BUILDS A PART LIKE A STACK OF VERY THIN PANCAKES.</p>
     </div>
@@ -702,22 +674,22 @@
     <p class="why">The two motors hang under the base on small printed pads. The pads put the wheels at exactly the right height, so there is nothing to measure.</p>
     <div class="diagram">
       <svg class="fit" viewBox="0 0 420 215" role="img" aria-label="Front view of the right side: the motor bracket screws up into a pad under the base plate, and the wheel sits outside">
-  <text x="200" y="28" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83" text-anchor="middle">base plate (printed)</text>
+  <text x="200" y="28" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="middle">base plate (printed)</text>
   <rect x="20" y="36" width="300" height="14" rx="3" fill="#F0B43C" stroke="#9A6A12" stroke-width="1.5"/>
   <rect x="236" y="50" width="52" height="26" fill="#F0B43C" stroke="#9A6A12" stroke-width="1.5"/>
   <text x="262" y="67" font-family="IBM Plex Mono, monospace" font-size="11" fill="#6B4A0C" text-anchor="middle">PAD</text>
   <rect x="228" y="76" width="68" height="5" fill="#8E9CAC"/>
-  <rect x="222" y="81" width="68" height="26" rx="4" fill="#B9C4D1" stroke="#566A83" stroke-width="1.5"/>
+  <rect x="222" y="81" width="68" height="26" rx="4" fill="#B9C4D1" stroke="#8A99B0" stroke-width="1.5"/>
   <rect x="290" y="84" width="20" height="20" fill="#D8A34A" stroke="#8C6A1E" stroke-width="1.5"/>
   <rect x="310" y="91" width="16" height="6" fill="#8E9CAC"/>
-  <rect x="324" y="44" width="20" height="100" rx="6" fill="#14202F"/>
-  <path d="M244 106 V56 M280 106 V56" stroke="#D95B21" stroke-width="3" stroke-dasharray="4 3"/>
-  <text x="210" y="96" font-family="Fredoka, sans-serif" font-size="15" fill="#D95B21" text-anchor="end">M2 &times; 8 screws</text>
-  <text x="210" y="114" font-family="Fredoka, sans-serif" font-size="15" fill="#D95B21" text-anchor="end">go up into the pad</text>
-  <path d="M10 144 H410" stroke="#566A83" stroke-width="2"/>
-  <text x="20" y="164" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83">table</text>
-  <text x="334" y="164" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83" text-anchor="middle">wheel</text>
-  <text x="210" y="200" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83" text-anchor="middle">right side shown, left side is a mirror image</text>
+  <rect x="324" y="44" width="20" height="100" rx="6" fill="#2B2F3A"/>
+  <path d="M244 106 V56 M280 106 V56" stroke="#F0609E" stroke-width="3" stroke-dasharray="4 3"/>
+  <text x="210" y="96" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="end">M2 &times; 8 screws</text>
+  <text x="210" y="114" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="end">go up into the pad</text>
+  <path d="M10 144 H410" stroke="#8A99B0" stroke-width="2"/>
+  <text x="20" y="164" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">table</text>
+  <text x="334" y="164" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="middle">wheel</text>
+  <text x="210" y="200" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="middle">right side shown, left side is a mirror image</text>
 </svg>
       <p class="caption">EACH BRACKET GETS TWO M2 &times; 8 SCREWS. FOUR SCREWS IN ALL.</p>
     </div>
@@ -843,23 +815,23 @@
       
       <svg viewBox="0 0 640 220" role="img" aria-label="Wiring diagram showing the left motor going to socket A and the right motor going to socket B on the driver board">
         <rect x="220" y="26" width="200" height="86" rx="8" fill="#1F6FB2"/>
-        <text x="320" y="50" font-family="IBM Plex Mono, monospace" font-size="11" fill="#BBD9F2" text-anchor="middle">DRIVER BOARD</text>
-        <rect x="240" y="62" width="60" height="30" rx="4" fill="#14202F"/>
+        <text x="320" y="50" font-family="IBM Plex Mono, monospace" font-size="11" fill="#CFE8FF" text-anchor="middle">DRIVER BOARD</text>
+        <rect x="240" y="62" width="60" height="30" rx="4" fill="#2B2F3A"/>
         <text x="270" y="82" font-family="IBM Plex Mono, monospace" font-size="13" fill="#F0A878" text-anchor="middle">A</text>
-        <rect x="340" y="62" width="60" height="30" rx="4" fill="#14202F"/>
+        <rect x="340" y="62" width="60" height="30" rx="4" fill="#2B2F3A"/>
         <text x="370" y="82" font-family="IBM Plex Mono, monospace" font-size="13" fill="#F0A878" text-anchor="middle">B</text>
 
         <rect x="64" y="146" width="90" height="42" rx="5" fill="#B9C4D1" stroke="#8E9CAC" stroke-width="2"/>
-        <text x="109" y="172" font-family="IBM Plex Mono, monospace" font-size="11" fill="#14202F" text-anchor="middle">LEFT</text>
+        <text x="109" y="172" font-family="IBM Plex Mono, monospace" font-size="11" fill="#EEF2F8" text-anchor="middle">LEFT</text>
         <rect x="486" y="146" width="90" height="42" rx="5" fill="#B9C4D1" stroke="#8E9CAC" stroke-width="2"/>
-        <text x="531" y="172" font-family="IBM Plex Mono, monospace" font-size="11" fill="#14202F" text-anchor="middle">RIGHT</text>
+        <text x="531" y="172" font-family="IBM Plex Mono, monospace" font-size="11" fill="#EEF2F8" text-anchor="middle">RIGHT</text>
 
-        <path d="M154 158 q80 -10 96 -66" stroke="#C3432F" stroke-width="3.5" fill="none"/>
-        <path d="M154 176 q90 0 106 -84" stroke="#14202F" stroke-width="3.5" fill="none"/>
-        <path d="M486 158 q-80 -10 -96 -66" stroke="#C3432F" stroke-width="3.5" fill="none"/>
-        <path d="M486 176 q-90 0 -106 -84" stroke="#14202F" stroke-width="3.5" fill="none"/>
+        <path d="M154 158 q80 -10 96 -66" stroke="#F0605E" stroke-width="3.5" fill="none"/>
+        <path d="M154 176 q90 0 106 -84" stroke="#A9B6CA" stroke-width="3.5" fill="none"/>
+        <path d="M486 158 q-80 -10 -96 -66" stroke="#F0605E" stroke-width="3.5" fill="none"/>
+        <path d="M486 176 q-90 0 -106 -84" stroke="#A9B6CA" stroke-width="3.5" fill="none"/>
 
-        <text x="320" y="210" font-family="IBM Plex Mono, monospace" font-size="11" fill="#8C9CB1" text-anchor="middle">RED AND BLACK &middot; IF A WHEEL SPINS BACKWARD, FIX IT IN THE CODE</text>
+        <text x="320" y="210" font-family="IBM Plex Mono, monospace" font-size="11" fill="#74839B" text-anchor="middle">RED AND BLACK &middot; IF A WHEEL SPINS BACKWARD, FIX IT IN THE CODE</text>
       </svg>
       
     
@@ -910,20 +882,20 @@
     <p class="why">The two pink arms carry the cliff sensors out in front of the wheels. That head start is what lets Dusty stop in time.</p>
     <div class="diagram">
       <svg class="fit" viewBox="0 0 420 235" role="img" aria-label="Side view: the sensor arm holds the sensor 62 millimeters ahead of the wheel and 3 millimeters above the table">
-  <text x="10" y="24" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83">FRONT</text>
+  <text x="10" y="24" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">FRONT</text>
   <rect x="96" y="46" width="314" height="9" rx="3" fill="#F0B43C" stroke="#9A6A12" stroke-width="1.5"/>
   <rect x="88" y="46" width="10" height="120" fill="#FF6F9A" stroke="#B23A62" stroke-width="1.5"/>
   <rect x="94" y="80" width="0" height="0"/>
   <rect x="62" y="160" width="36" height="7" fill="#FF6F9A" stroke="#B23A62" stroke-width="1.5"/>
   <rect x="68" y="167" width="24" height="4" fill="#2E8B57"/>
-  <circle cx="300" cy="140" r="34" fill="#14202F"/><circle cx="300" cy="140" r="6" fill="#8E9CAC"/>
-  <circle cx="392" cy="166" r="8" fill="#8E9CAC" stroke="#566A83" stroke-width="1.5"/>
-  <path d="M10 174 H414" stroke="#566A83" stroke-width="2"/>
-  <text x="108" y="100" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83">slot: slide up or down,</text>
-  <text x="108" y="116" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83">then tighten</text>
-  <text x="56" y="160" font-family="Fredoka, sans-serif" font-size="15" fill="#D95B21" text-anchor="end">3 mm</text>
-  <path d="M80 194 H300 M80 188 v12 M300 188 v12" stroke="#0D8159" stroke-width="2"/>
-  <text x="190" y="222" font-family="Fredoka, sans-serif" font-size="17" fill="#0D8159" text-anchor="middle">62 mm head start</text>
+  <circle cx="300" cy="140" r="34" fill="#2B2F3A"/><circle cx="300" cy="140" r="6" fill="#8E9CAC"/>
+  <circle cx="392" cy="166" r="8" fill="#8E9CAC" stroke="#8A99B0" stroke-width="1.5"/>
+  <path d="M10 174 H414" stroke="#8A99B0" stroke-width="2"/>
+  <text x="108" y="100" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">slot: slide up or down,</text>
+  <text x="108" y="116" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">then tighten</text>
+  <text x="56" y="160" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="end">3 mm</text>
+  <path d="M80 194 H300 M80 188 v12 M300 188 v12" stroke="#9BE15D" stroke-width="2"/>
+  <text x="190" y="222" font-family="Fredoka, sans-serif" font-size="17" fill="#9BE15D" text-anchor="middle">62 mm head start</text>
 </svg>
       <p class="caption">THE SENSOR SEES THE EDGE 62 MM BEFORE THE WHEELS GET THERE.</p>
     </div>
@@ -1025,25 +997,25 @@
     <div class="diagram">
       
       <svg viewBox="0 0 640 230" role="img" aria-label="Two panels showing the whisker wire held up by the table and then dropping when the table ends">
-        <rect x="24" y="24" width="288" height="182" rx="10" fill="#fff" stroke="#D2DCE7" stroke-width="2"/>
-        <text x="168" y="48" font-family="Fredoka, sans-serif" font-size="15" fill="#0D8159" text-anchor="middle">TABLE IS THERE</text>
-        <rect x="70" y="72" width="130" height="14" rx="3" fill="#D2DCE7" stroke="#566A83" stroke-width="2"/>
-        <rect x="186" y="66" width="34" height="18" rx="3" fill="#14202F"/>
+        <rect x="24" y="24" width="288" height="182" rx="10" fill="#fff" stroke="#2B3650" stroke-width="2"/>
+        <text x="168" y="48" font-family="Fredoka, sans-serif" font-size="15" fill="#9BE15D" text-anchor="middle">TABLE IS THERE</text>
+        <rect x="70" y="72" width="130" height="14" rx="3" fill="#2B3650" stroke="#8A99B0" stroke-width="2"/>
+        <rect x="186" y="66" width="34" height="18" rx="3" fill="#2B2F3A"/>
         <path d="M204 84 L250 128" stroke="#8E9CAC" stroke-width="4" stroke-linecap="round"/>
         <circle cx="252" cy="130" r="5" fill="#8E9CAC"/>
-        <path d="M56 132 h230" stroke="#566A83" stroke-width="3"/>
-        <text x="168" y="164" font-family="IBM Plex Mono, monospace" font-size="11" fill="#0D8159" text-anchor="middle">ARM PUSHED UP = CLICKED</text>
-        <text x="168" y="184" font-family="IBM Plex Mono, monospace" font-size="11" fill="#566A83" text-anchor="middle">KEEP DRIVING</text>
+        <path d="M56 132 h230" stroke="#8A99B0" stroke-width="3"/>
+        <text x="168" y="164" font-family="IBM Plex Mono, monospace" font-size="11" fill="#9BE15D" text-anchor="middle">ARM PUSHED UP = CLICKED</text>
+        <text x="168" y="184" font-family="IBM Plex Mono, monospace" font-size="11" fill="#A9B6CA" text-anchor="middle">KEEP DRIVING</text>
 
-        <rect x="328" y="24" width="288" height="182" rx="10" fill="#fff" stroke="#D2DCE7" stroke-width="2"/>
-        <text x="472" y="48" font-family="Fredoka, sans-serif" font-size="15" fill="#C3432F" text-anchor="middle">TABLE IS GONE</text>
-        <rect x="374" y="72" width="130" height="14" rx="3" fill="#D2DCE7" stroke="#566A83" stroke-width="2"/>
-        <rect x="490" y="66" width="34" height="18" rx="3" fill="#14202F"/>
+        <rect x="328" y="24" width="288" height="182" rx="10" fill="#fff" stroke="#2B3650" stroke-width="2"/>
+        <text x="472" y="48" font-family="Fredoka, sans-serif" font-size="15" fill="#F0605E" text-anchor="middle">TABLE IS GONE</text>
+        <rect x="374" y="72" width="130" height="14" rx="3" fill="#2B3650" stroke="#8A99B0" stroke-width="2"/>
+        <rect x="490" y="66" width="34" height="18" rx="3" fill="#2B2F3A"/>
         <path d="M508 84 L536 150" stroke="#8E9CAC" stroke-width="4" stroke-linecap="round"/>
         <circle cx="538" cy="152" r="5" fill="#8E9CAC"/>
-        <path d="M360 132 h168" stroke="#566A83" stroke-width="3"/>
-        <path d="M528 132 v30" stroke="#566A83" stroke-width="3"/>
-        <text x="472" y="180" font-family="IBM Plex Mono, monospace" font-size="11" fill="#C3432F" text-anchor="middle">ARM DROPS = STOP EVERYTHING</text>
+        <path d="M360 132 h168" stroke="#8A99B0" stroke-width="3"/>
+        <path d="M528 132 v30" stroke="#8A99B0" stroke-width="3"/>
+        <text x="472" y="180" font-family="IBM Plex Mono, monospace" font-size="11" fill="#F0605E" text-anchor="middle">ARM DROPS = STOP EVERYTHING</text>
       </svg>
       
     
@@ -1082,24 +1054,24 @@
     <p class="why">Now Dusty earns its name. The brush motor spins far too fast for a brush, so three printed gears slow it down before it reaches the roller.</p>
     <div class="diagram">
       <svg class="fit" viewBox="0 0 420 350" role="img" aria-label="Gear train in two stages. Stage one: a 12 tooth motor gear turns a 36 tooth big gear. Stage two: a 10 tooth gear on the same shaft as the big gear turns an 18 tooth roller gear.">
-  <text x="10" y="22" font-family="Fredoka, sans-serif" font-size="15" fill="#D95B21">Stage 1</text>
-  <g transform="rotate(0.0 300 112)"><path d="M372.0 112.0 L379.0 114.8 L378.7 118.9 L371.5 120.8 L370.9 124.5 L377.3 128.4 L376.3 132.4 L368.9 133.1 L367.7 136.6 L373.2 141.6 L371.6 145.4 L364.2 144.7 L362.4 148.0 L367.0 153.9 L364.7 157.3 L357.5 155.3 L355.2 158.3 L358.7 164.9 L355.9 167.9 L349.1 164.7 L346.3 167.2 L348.6 174.3 L345.3 176.7 L339.2 172.4 L336.0 174.4 L337.1 181.8 L333.4 183.6 L328.1 178.3 L324.6 179.7 L324.4 187.1 L320.4 188.3 L316.2 182.2 L312.5 182.9 L311.0 190.2 L306.9 190.7 L303.8 183.9 L300.0 184.0 L297.2 191.0 L293.1 190.7 L291.2 183.5 L287.5 182.9 L283.6 189.3 L279.6 188.3 L278.9 180.9 L275.4 179.7 L270.4 185.2 L266.6 183.6 L267.3 176.2 L264.0 174.4 L258.1 179.0 L254.7 176.7 L256.7 169.5 L253.7 167.2 L247.1 170.7 L244.1 167.9 L247.3 161.1 L244.8 158.3 L237.7 160.6 L235.3 157.3 L239.6 151.2 L237.6 148.0 L230.2 149.1 L228.4 145.4 L233.7 140.1 L232.3 136.6 L224.9 136.4 L223.7 132.4 L229.8 128.2 L229.1 124.5 L221.8 123.0 L221.3 118.9 L228.1 115.8 L228.0 112.0 L221.0 109.2 L221.3 105.1 L228.5 103.2 L229.1 99.5 L222.7 95.6 L223.7 91.6 L231.1 90.9 L232.3 87.4 L226.8 82.4 L228.4 78.6 L235.8 79.3 L237.6 76.0 L233.0 70.1 L235.3 66.7 L242.5 68.7 L244.8 65.7 L241.3 59.1 L244.1 56.1 L250.9 59.3 L253.7 56.8 L251.4 49.7 L254.7 47.3 L260.8 51.6 L264.0 49.6 L262.9 42.2 L266.6 40.4 L271.9 45.7 L275.4 44.3 L275.6 36.9 L279.6 35.7 L283.8 41.8 L287.5 41.1 L289.0 33.8 L293.1 33.3 L296.2 40.1 L300.0 40.0 L302.8 33.0 L306.9 33.3 L308.8 40.5 L312.5 41.1 L316.4 34.7 L320.4 35.7 L321.1 43.1 L324.6 44.3 L329.6 38.8 L333.4 40.4 L332.7 47.8 L336.0 49.6 L341.9 45.0 L345.3 47.3 L343.3 54.5 L346.3 56.8 L352.9 53.3 L355.9 56.1 L352.7 62.9 L355.2 65.7 L362.3 63.4 L364.7 66.7 L360.4 72.8 L362.4 76.0 L369.8 74.9 L371.6 78.6 L366.3 83.9 L367.7 87.4 L375.1 87.6 L376.3 91.6 L370.2 95.8 L370.9 99.5 L378.2 101.0 L378.7 105.1 L371.9 108.2 Z" fill="#E8F0FA" stroke="#2B5FA8" stroke-width="1.5"/></g><circle cx="300" cy="112" r="4" fill="#fff" stroke="#2B5FA8" stroke-width="1.5"/>
-  <g transform="rotate(15 199 112)"><path d="M220.0 112.0 L226.8 114.9 L226.0 119.2 L218.6 119.5 L217.2 122.5 L221.7 128.5 L218.8 131.8 L212.2 128.3 L209.5 130.2 L210.4 137.6 L206.2 139.0 L202.3 132.7 L199.0 133.0 L196.1 139.8 L191.8 139.0 L191.5 131.6 L188.5 130.2 L182.5 134.7 L179.2 131.8 L182.7 125.2 L180.8 122.5 L173.4 123.4 L172.0 119.2 L178.3 115.3 L178.0 112.0 L171.2 109.1 L172.0 104.8 L179.4 104.5 L180.8 101.5 L176.3 95.5 L179.2 92.2 L185.8 95.7 L188.5 93.8 L187.6 86.4 L191.8 85.0 L195.7 91.3 L199.0 91.0 L201.9 84.2 L206.2 85.0 L206.5 92.4 L209.5 93.8 L215.5 89.3 L218.8 92.2 L215.3 98.8 L217.2 101.5 L224.6 100.6 L226.0 104.8 L219.7 108.7 Z" fill="#FCEFE8" stroke="#D95B21" stroke-width="1.5"/></g><circle cx="199" cy="112" r="4" fill="#fff" stroke="#D95B21" stroke-width="1.5"/>
-  <text x="300" y="108" font-family="Fredoka, sans-serif" font-size="16" fill="#14202F" text-anchor="middle">Big gear</text>
-  <text x="300" y="128" font-family="IBM Plex Mono, monospace" font-size="12" fill="#2B5FA8" text-anchor="middle">36 teeth</text>
-  <text x="168" y="104" font-family="Fredoka, sans-serif" font-size="16" fill="#14202F" text-anchor="end">Motor gear</text>
-  <text x="168" y="122" font-family="IBM Plex Mono, monospace" font-size="12" fill="#D95B21" text-anchor="end">12 teeth</text>
-  <path d="M300 140 V246" stroke="#566A83" stroke-width="2" stroke-dasharray="5 4"/>
-  <text x="310" y="214" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83">same shaft,</text>
-  <text x="310" y="229" font-family="IBM Plex Mono, monospace" font-size="12" fill="#566A83">turn together</text>
-  <text x="10" y="222" font-family="Fredoka, sans-serif" font-size="15" fill="#0D8159">Stage 2</text>
+  <text x="10" y="22" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E">Stage 1</text>
+  <g transform="rotate(0.0 300 112)"><path d="M372.0 112.0 L379.0 114.8 L378.7 118.9 L371.5 120.8 L370.9 124.5 L377.3 128.4 L376.3 132.4 L368.9 133.1 L367.7 136.6 L373.2 141.6 L371.6 145.4 L364.2 144.7 L362.4 148.0 L367.0 153.9 L364.7 157.3 L357.5 155.3 L355.2 158.3 L358.7 164.9 L355.9 167.9 L349.1 164.7 L346.3 167.2 L348.6 174.3 L345.3 176.7 L339.2 172.4 L336.0 174.4 L337.1 181.8 L333.4 183.6 L328.1 178.3 L324.6 179.7 L324.4 187.1 L320.4 188.3 L316.2 182.2 L312.5 182.9 L311.0 190.2 L306.9 190.7 L303.8 183.9 L300.0 184.0 L297.2 191.0 L293.1 190.7 L291.2 183.5 L287.5 182.9 L283.6 189.3 L279.6 188.3 L278.9 180.9 L275.4 179.7 L270.4 185.2 L266.6 183.6 L267.3 176.2 L264.0 174.4 L258.1 179.0 L254.7 176.7 L256.7 169.5 L253.7 167.2 L247.1 170.7 L244.1 167.9 L247.3 161.1 L244.8 158.3 L237.7 160.6 L235.3 157.3 L239.6 151.2 L237.6 148.0 L230.2 149.1 L228.4 145.4 L233.7 140.1 L232.3 136.6 L224.9 136.4 L223.7 132.4 L229.8 128.2 L229.1 124.5 L221.8 123.0 L221.3 118.9 L228.1 115.8 L228.0 112.0 L221.0 109.2 L221.3 105.1 L228.5 103.2 L229.1 99.5 L222.7 95.6 L223.7 91.6 L231.1 90.9 L232.3 87.4 L226.8 82.4 L228.4 78.6 L235.8 79.3 L237.6 76.0 L233.0 70.1 L235.3 66.7 L242.5 68.7 L244.8 65.7 L241.3 59.1 L244.1 56.1 L250.9 59.3 L253.7 56.8 L251.4 49.7 L254.7 47.3 L260.8 51.6 L264.0 49.6 L262.9 42.2 L266.6 40.4 L271.9 45.7 L275.4 44.3 L275.6 36.9 L279.6 35.7 L283.8 41.8 L287.5 41.1 L289.0 33.8 L293.1 33.3 L296.2 40.1 L300.0 40.0 L302.8 33.0 L306.9 33.3 L308.8 40.5 L312.5 41.1 L316.4 34.7 L320.4 35.7 L321.1 43.1 L324.6 44.3 L329.6 38.8 L333.4 40.4 L332.7 47.8 L336.0 49.6 L341.9 45.0 L345.3 47.3 L343.3 54.5 L346.3 56.8 L352.9 53.3 L355.9 56.1 L352.7 62.9 L355.2 65.7 L362.3 63.4 L364.7 66.7 L360.4 72.8 L362.4 76.0 L369.8 74.9 L371.6 78.6 L366.3 83.9 L367.7 87.4 L375.1 87.6 L376.3 91.6 L370.2 95.8 L370.9 99.5 L378.2 101.0 L378.7 105.1 L371.9 108.2 Z" fill="#E8F0FA" stroke="#5DB7F0" stroke-width="1.5"/></g><circle cx="300" cy="112" r="4" fill="#fff" stroke="#5DB7F0" stroke-width="1.5"/>
+  <g transform="rotate(15 199 112)"><path d="M220.0 112.0 L226.8 114.9 L226.0 119.2 L218.6 119.5 L217.2 122.5 L221.7 128.5 L218.8 131.8 L212.2 128.3 L209.5 130.2 L210.4 137.6 L206.2 139.0 L202.3 132.7 L199.0 133.0 L196.1 139.8 L191.8 139.0 L191.5 131.6 L188.5 130.2 L182.5 134.7 L179.2 131.8 L182.7 125.2 L180.8 122.5 L173.4 123.4 L172.0 119.2 L178.3 115.3 L178.0 112.0 L171.2 109.1 L172.0 104.8 L179.4 104.5 L180.8 101.5 L176.3 95.5 L179.2 92.2 L185.8 95.7 L188.5 93.8 L187.6 86.4 L191.8 85.0 L195.7 91.3 L199.0 91.0 L201.9 84.2 L206.2 85.0 L206.5 92.4 L209.5 93.8 L215.5 89.3 L218.8 92.2 L215.3 98.8 L217.2 101.5 L224.6 100.6 L226.0 104.8 L219.7 108.7 Z" fill="#FCEFE8" stroke="#F0609E" stroke-width="1.5"/></g><circle cx="199" cy="112" r="4" fill="#fff" stroke="#F0609E" stroke-width="1.5"/>
+  <text x="300" y="108" font-family="Fredoka, sans-serif" font-size="16" fill="#EEF2F8" text-anchor="middle">Big gear</text>
+  <text x="300" y="128" font-family="IBM Plex Mono, monospace" font-size="12" fill="#5DB7F0" text-anchor="middle">36 teeth</text>
+  <text x="168" y="104" font-family="Fredoka, sans-serif" font-size="16" fill="#EEF2F8" text-anchor="end">Motor gear</text>
+  <text x="168" y="122" font-family="IBM Plex Mono, monospace" font-size="12" fill="#F0609E" text-anchor="end">12 teeth</text>
+  <path d="M300 140 V246" stroke="#8A99B0" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="310" y="214" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">same shaft,</text>
+  <text x="310" y="229" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">turn together</text>
+  <text x="10" y="222" font-family="Fredoka, sans-serif" font-size="15" fill="#9BE15D">Stage 2</text>
   <rect x="30" y="264" width="210" height="28" rx="14" fill="#B48CFF" stroke="#6A45B8" stroke-width="1.5"/>
   <text x="100" y="283" font-family="Fredoka, sans-serif" font-size="14" fill="#fff" text-anchor="middle">brush roller</text>
-  <g transform="rotate(5 240 278)"><path d="M275.0 278.0 L281.9 280.9 L281.4 285.3 L274.0 286.5 L272.9 290.0 L278.4 295.1 L276.4 299.0 L269.0 297.6 L266.8 300.5 L270.2 307.2 L267.0 310.2 L260.6 306.3 L257.5 308.3 L258.4 315.7 L254.4 317.5 L249.6 311.6 L246.1 312.5 L244.4 319.8 L240.0 320.0 L237.6 312.9 L233.9 312.5 L229.8 318.8 L225.6 317.5 L225.8 310.0 L222.5 308.3 L216.5 312.8 L213.0 310.2 L215.7 303.2 L213.2 300.5 L206.0 302.7 L203.6 299.0 L208.5 293.3 L207.1 290.0 L199.6 289.6 L198.6 285.3 L205.2 281.7 L205.0 278.0 L198.1 275.1 L198.6 270.7 L206.0 269.5 L207.1 266.0 L201.6 260.9 L203.6 257.0 L211.0 258.4 L213.2 255.5 L209.8 248.8 L213.0 245.8 L219.4 249.7 L222.5 247.7 L221.6 240.3 L225.6 238.5 L230.4 244.4 L233.9 243.5 L235.6 236.2 L240.0 236.0 L242.4 243.1 L246.1 243.5 L250.2 237.2 L254.4 238.5 L254.2 246.0 L257.5 247.7 L263.5 243.2 L267.0 245.8 L264.3 252.8 L266.8 255.5 L274.0 253.3 L276.4 257.0 L271.5 262.7 L272.9 266.0 L280.4 266.4 L281.4 270.7 L274.8 274.3 Z" fill="#E4F3ED" stroke="#0D8159" stroke-width="1.5"/></g><circle cx="240" cy="278" r="4" fill="#fff" stroke="#0D8159" stroke-width="1.5"/>
+  <g transform="rotate(5 240 278)"><path d="M275.0 278.0 L281.9 280.9 L281.4 285.3 L274.0 286.5 L272.9 290.0 L278.4 295.1 L276.4 299.0 L269.0 297.6 L266.8 300.5 L270.2 307.2 L267.0 310.2 L260.6 306.3 L257.5 308.3 L258.4 315.7 L254.4 317.5 L249.6 311.6 L246.1 312.5 L244.4 319.8 L240.0 320.0 L237.6 312.9 L233.9 312.5 L229.8 318.8 L225.6 317.5 L225.8 310.0 L222.5 308.3 L216.5 312.8 L213.0 310.2 L215.7 303.2 L213.2 300.5 L206.0 302.7 L203.6 299.0 L208.5 293.3 L207.1 290.0 L199.6 289.6 L198.6 285.3 L205.2 281.7 L205.0 278.0 L198.1 275.1 L198.6 270.7 L206.0 269.5 L207.1 266.0 L201.6 260.9 L203.6 257.0 L211.0 258.4 L213.2 255.5 L209.8 248.8 L213.0 245.8 L219.4 249.7 L222.5 247.7 L221.6 240.3 L225.6 238.5 L230.4 244.4 L233.9 243.5 L235.6 236.2 L240.0 236.0 L242.4 243.1 L246.1 243.5 L250.2 237.2 L254.4 238.5 L254.2 246.0 L257.5 247.7 L263.5 243.2 L267.0 245.8 L264.3 252.8 L266.8 255.5 L274.0 253.3 L276.4 257.0 L271.5 262.7 L272.9 266.0 L280.4 266.4 L281.4 270.7 L274.8 274.3 Z" fill="#E4F3ED" stroke="#9BE15D" stroke-width="1.5"/></g><circle cx="240" cy="278" r="4" fill="#fff" stroke="#9BE15D" stroke-width="1.5"/>
   <g transform="rotate(8 300 278)"><path d="M316.0 278.0 L322.8 280.9 L321.9 285.1 L314.5 284.8 L312.9 287.4 L316.8 293.7 L313.5 296.6 L307.7 292.0 L304.9 293.2 L304.3 300.6 L300.0 301.0 L298.0 293.9 L295.1 293.2 L290.2 298.8 L286.5 296.6 L289.0 289.7 L287.1 287.4 L279.8 289.1 L278.1 285.1 L284.3 281.0 L284.0 278.0 L277.2 275.1 L278.1 270.9 L285.5 271.2 L287.1 268.6 L283.2 262.3 L286.5 259.4 L292.3 264.0 L295.1 262.8 L295.7 255.4 L300.0 255.0 L302.0 262.1 L304.9 262.8 L309.8 257.2 L313.5 259.4 L311.0 266.3 L312.9 268.6 L320.2 266.9 L321.9 270.9 L315.7 275.0 Z" fill="#4AA8FF" stroke="#1F5E9C" stroke-width="1.5"/></g><circle cx="300" cy="278" r="4" fill="#fff" stroke="#1F5E9C" stroke-width="1.5"/>
-  <text x="330" y="274" font-family="Fredoka, sans-serif" font-size="16" fill="#14202F">Small gear</text>
+  <text x="330" y="274" font-family="Fredoka, sans-serif" font-size="16" fill="#EEF2F8">Small gear</text>
   <text x="330" y="292" font-family="IBM Plex Mono, monospace" font-size="12" fill="#1F5E9C">10 teeth</text>
-  <text x="240" y="338" font-family="Fredoka, sans-serif" font-size="16" fill="#14202F" text-anchor="middle">Roller gear <tspan font-family="IBM Plex Mono, monospace" font-size="12" fill="#0D8159">18 teeth</tspan></text>
+  <text x="240" y="338" font-family="Fredoka, sans-serif" font-size="16" fill="#EEF2F8" text-anchor="middle">Roller gear <tspan font-family="IBM Plex Mono, monospace" font-size="12" fill="#9BE15D">18 teeth</tspan></text>
 </svg>
       <p class="caption">THE BRUSH GEAR TRAIN, SEEN FROM THE RIGHT SIDE OF THE ROBOT.</p>
     </div>
@@ -1197,17 +1169,17 @@
     <div class="diagram">
       
       <svg viewBox="0 0 640 250" role="img" aria-label="Two search patterns compared, random bouncing on the left and an expanding spiral on the right">
-        <rect x="24" y="30" width="278" height="182" rx="8" fill="#fff" stroke="#14202F" stroke-width="2.5"/>
-        <path d="M60 70 L250 140 L70 180 L240 60 L90 195 L260 110" stroke="#D95B21" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
-        <circle cx="60" cy="70" r="5" fill="#0D8159"/>
-        <text x="163" y="22" font-family="Fredoka, sans-serif" font-size="15" fill="#14202F" text-anchor="middle">BUTTON A: RANDOM BOUNCE</text>
-        <text x="163" y="234" font-family="IBM Plex Mono, monospace" font-size="10" fill="#8C9CB1" text-anchor="middle">GOOD AT CORNERS, SLOW ON A PILE</text>
+        <rect x="24" y="30" width="278" height="182" rx="8" fill="#fff" stroke="#A9B6CA" stroke-width="2.5"/>
+        <path d="M60 70 L250 140 L70 180 L240 60 L90 195 L260 110" stroke="#F0609E" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+        <circle cx="60" cy="70" r="5" fill="#9BE15D"/>
+        <text x="163" y="22" font-family="Fredoka, sans-serif" font-size="15" fill="#EEF2F8" text-anchor="middle">BUTTON A: RANDOM BOUNCE</text>
+        <text x="163" y="234" font-family="IBM Plex Mono, monospace" font-size="10" fill="#74839B" text-anchor="middle">GOOD AT CORNERS, SLOW ON A PILE</text>
 
-        <rect x="338" y="30" width="278" height="182" rx="8" fill="#fff" stroke="#14202F" stroke-width="2.5"/>
-        <path d="M477 120 m0 0 a10 10 0 1 1 -0.1 0 M477 120 m0 0 a26 26 0 1 1 -0.1 0 M477 120 m0 0 a44 44 0 1 1 -0.1 0 M477 120 m0 0 a64 64 0 1 1 -0.1 0" stroke="#2B5FA8" stroke-width="2.5" fill="none"/>
-        <circle cx="477" cy="120" r="5" fill="#0D8159"/>
-        <text x="477" y="22" font-family="Fredoka, sans-serif" font-size="15" fill="#14202F" text-anchor="middle">BUTTON B: SPIRAL</text>
-        <text x="477" y="234" font-family="IBM Plex Mono, monospace" font-size="10" fill="#8C9CB1" text-anchor="middle">GREAT ON A PILE, MISSES THE CORNERS</text>
+        <rect x="338" y="30" width="278" height="182" rx="8" fill="#fff" stroke="#A9B6CA" stroke-width="2.5"/>
+        <path d="M477 120 m0 0 a10 10 0 1 1 -0.1 0 M477 120 m0 0 a26 26 0 1 1 -0.1 0 M477 120 m0 0 a44 44 0 1 1 -0.1 0 M477 120 m0 0 a64 64 0 1 1 -0.1 0" stroke="#5DB7F0" stroke-width="2.5" fill="none"/>
+        <circle cx="477" cy="120" r="5" fill="#9BE15D"/>
+        <text x="477" y="22" font-family="Fredoka, sans-serif" font-size="15" fill="#EEF2F8" text-anchor="middle">BUTTON B: SPIRAL</text>
+        <text x="477" y="234" font-family="IBM Plex Mono, monospace" font-size="10" fill="#74839B" text-anchor="middle">GREAT ON A PILE, MISSES THE CORNERS</text>
       </svg>
       
     
