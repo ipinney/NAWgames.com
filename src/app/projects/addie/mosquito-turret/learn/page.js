@@ -388,6 +388,8 @@ export default function LearnPage() {
           </div>
           <div className="flex flex-wrap gap-2 mt-6">
             <Btn href={`${BASE}/build`} primary>Build it</Btn>
+            <Btn href={`${BASE}/fair`}>Fair guide</Btn>
+            <Btn href={`${BASE}/make`}>Build your own</Btn>
             <Btn href={`${PLAN}#experiment`}>Experiment rules in the full plan</Btn>
           </div>
         </section>

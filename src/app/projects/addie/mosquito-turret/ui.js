@@ -25,9 +25,11 @@ export function meta(title, desc, path) {
 
 const TABS = [
   ['overview', 'Overview', BASE],
+  ['fair', 'Fair guide', `${BASE}/fair`],
   ['build', 'Build', `${BASE}/build`],
   ['print', 'Print plan', `${BASE}/build/batches`],
   ['learn', 'Learn the science', `${BASE}/learn`],
+  ['make', 'Build your own', `${BASE}/make`],
 ];
 
 export function Nav({ current }) {

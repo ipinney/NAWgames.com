@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { A, BASE, CAD, PLAN, PARTS_PDF, meta, Nav, Back, Btn, Section, Title } from './ui';
+import { FAIR } from './fair';
+import DueDates from './DueDates';
 
 export const metadata = meta(
   "MS-2000 Mosquito Shooter: Addie's science fair project",
@@ -12,23 +14,39 @@ const PHASES = [
   { title: 'Brainstorm', when: 'Sep 15', status: 'done', text: 'Air cannon, vacuum, and light beam ideas. The family picked lasers.', link: `${PLAN}#requirements` },
   { title: 'Requirements', when: 'Sep 15', status: 'done', text: 'Laser, sound effects, a trainable mosquito on a fishing line, proven hits, and data it saves by itself.', link: `${PLAN}#requirements` },
   { title: 'Pick a design', when: 'Sep 15', status: 'done', text: 'Addie picked Design A, the Pan and Tilt Camera Turret.', link: `${PLAN}#pick` },
-  { title: 'Lock in the design', when: 'Sep 16', status: 'done', text: 'Design A locked. Still to do by hand: why Design A, a labeled drawing, and the teacher laser-rules question.', link: `${PLAN}#design` },
+  { title: 'Lock in the design', when: 'Sep 16', status: 'done', text: 'Design A locked. Still to do by hand: why Design A and a labeled drawing, both in the journal. Ask Miss Taggart about laser rules.', link: `${PLAN}#design` },
   { title: '3D print design', when: 'Sep 16', status: 'done', text: '12 printed parts on five print plates, about 10 hours and 320 g of PLA. Checked with calipers when the parts arrive.', link: `${BASE}/build/batches` },
-  { title: 'Order the parts', when: 'Late September', status: 'now', text: 'About $192 from DFRobot and DigiKey, plus batteries and craft supplies.', link: `${BASE}/build#shopping` },
-  { title: 'Print and build', when: 'October to November', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head and camera training, then the backdrop and pendulum, then the code and sounds.', link: `${BASE}/build` },
-  { title: 'Practice runs', when: 'December', status: 'next', text: 'Make sure the data saves and the MS-2000 hits every time.' },
-  { title: 'Experiments', when: 'January to February', status: 'next', text: 'Speed, distance, and light tests. 45 runs, averages, and graphs.', link: `${BASE}/learn#fair-test` },
-  { title: 'Board and demo', when: 'March', status: 'next', text: 'The trifold board and a 30-second demo, ready for any spring fair date.', link: `${PLAN}#demo` },
+  { title: 'Order the parts', when: 'By Sep 30', status: 'now', text: 'About $192 from DFRobot and DigiKey, plus batteries and craft supplies. Start the journal now.', link: `${BASE}/build#shopping` },
+  { title: 'Print and build', when: 'Oct 1 to Nov 13', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head, then the backdrop and pendulum, then the code and sounds.', link: `${BASE}/build` },
+  { title: 'Teach the camera and practice', when: 'Nov 14 to Dec 11', status: 'next', text: 'Train the camera, pick the hit threshold, and make sure the data saves. The question (Nov 18), research (Dec 2), and hypothesis (Dec 9) are due at school in these weeks.', link: `${FAIR}#question` },
+  { title: 'Experiments', when: 'Dec 12 to Jan 15', status: 'next', text: 'Speed, distance, and light. 45 runs, one test per day, over winter break. Due Jan 19, so a few days are left for redos.', link: `${FAIR}#experiments` },
+  { title: 'Data and conclusion', when: 'Jan 16 to Jan 25', status: 'next', text: 'Averages, three bar graphs, and the conclusion. Due Jan 25.', link: `${FAIR}#results` },
+  { title: 'Board and demo', when: 'Jan 26 to Feb 1', status: 'next', text: 'Trifold board, finished journal, and the 30-second demo. Due Feb 1. Exhibition Feb 3 at 2:00 PM.', link: `${FAIR}#final` },
+  { title: 'Archdiocesan fair', when: 'Feb 25', status: 'next', text: 'If the MS-2000 is picked as a St. Rose winner.' },
 ];
 
 const RULES = [
   ['Never look into the laser', 'Even a weak laser is not for eyes. Point it only at the backdrop and the mosquito.'],
   ['The arm switch is off until go time', 'The laser cannot fire unless the red arm switch is on. A grown-up turns it on.'],
+  ['The journal is cursive, by hand', 'Write in it every day you work on the project. It gets its own grade.'],
+  ['Addie writes it', 'The research, question, hypothesis, and conclusion are in her own words.'],
   ['Every run counts', 'Five runs for every setting. Only redo a run if something broke, and write down why.'],
   ['One test per day', 'Same room, same batteries, same person holding the line. Take a photo of each setup.'],
 ];
 
 const PAGES = [
+  {
+    href: FAIR,
+    title: 'Fair guide',
+    text: 'The six graded parts, what each one needs, the journal, the board, the judges, and the rubric.',
+    color: 'pink',
+  },
+  {
+    href: `${BASE}/make`,
+    title: 'Build your own',
+    text: 'For any kid: start with a micro:bit hit detector, then a camera tracker, then the full turret.',
+    color: 'pink',
+  },
   {
     href: `${BASE}/learn`,
     title: 'Learn the science',
@@ -72,7 +90,7 @@ export default function MosquitoTurretPage() {
               <div className="flex flex-wrap gap-2">
                 <span className="bg-naw-pink/20 text-naw-pink text-xs font-semibold px-2 py-0.5 rounded-full">Science Fair</span>
                 <span className="bg-naw-orange/20 text-naw-orange text-xs font-semibold px-2 py-0.5 rounded-full">3rd grade</span>
-                <span className="bg-naw-cyan/20 text-naw-cyan text-xs font-semibold px-2 py-0.5 rounded-full">Spring 2027</span>
+                <span className="bg-naw-cyan/20 text-naw-cyan text-xs font-semibold px-2 py-0.5 rounded-full">Due Feb 1, 2027</span>
               </div>
               <div className="mt-4">
                 <Title>MS-2000</Title>
@@ -83,8 +101,9 @@ export default function MosquitoTurretPage() {
                 mosquito&apos;s eyes flash on every hit, and every hit is saved as data.
               </p>
               <div className="flex flex-wrap gap-2 mt-5">
-                <Btn href={`${BASE}/build`} primary>Build it</Btn>
-                <Btn href={`${BASE}/learn`}>Learn the science</Btn>
+                <Btn href={FAIR} primary>Fair guide</Btn>
+                <Btn href={`${BASE}/build`}>Build it</Btn>
+                <Btn href={`${BASE}/make`}>Build your own</Btn>
                 <Btn href={`${CAD}/ms2000-turret-3d.html`}>See it in 3D</Btn>
               </div>
             </div>
@@ -116,7 +135,11 @@ export default function MosquitoTurretPage() {
       </section>
 
       <div className="max-w-5xl mx-auto px-4 pb-20">
-        <Section title="Where we are" sub="Ten steps from idea to fair. Green is done, pink is now. The fair date is not set yet, so everything finishes by the end of March.">
+        <Section title="School due dates" sub="St. Rose 3rd grade. Six parts, each graded on its own. The orange one is next.">
+          <DueDates compact />
+        </Section>
+
+        <Section title="Where we are" sub="The build plan, fitted around the school dates. Green is done, pink is now.">
           <ol className="relative border-l-2 border-white/10 ml-3 space-y-3">
             {PHASES.map((p, i) => {
               const Wrap = p.link ? 'a' : 'div';

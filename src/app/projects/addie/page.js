@@ -11,10 +11,10 @@ const PROJECTS = [
     emoji: '🦟',
     description:
       'A trainable laser turret with sound effects that tracks a fake mosquito on a fishing line, proves every hit, and records its own data.',
-    dueLabel: 'Spring 2027',
+    dueLabel: 'Feb 1, 2027',
     color: 'from-fuchsia-700 to-lime-500',
     href: '/projects/addie/mosquito-turret',
-    tags: ['Build guide', 'Print files', 'Learn the science', 'Experiments and data', '3D models'],
+    tags: ['Fair guide', 'Build guide', 'Print files', 'Learn the science', 'Build your own', '3D models'],
   },
   {
     slug: 'herbert-hoover',
