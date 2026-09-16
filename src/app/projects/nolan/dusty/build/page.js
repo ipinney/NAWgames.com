@@ -169,6 +169,14 @@ export default function DustyBuildPage() {
           </ol>
         </Section>
 
+        <div className="mt-4 rounded-2xl border border-naw-orange/30 bg-naw-orange/10 p-4 text-sm text-white/80 leading-relaxed">
+          <b className="text-naw-orange">The design is locked.</b> Want to change a part, a size or the power? Write a change order
+          first.{' '}
+          <Link href="/projects/nolan/dusty/changes" className="text-naw-orange font-semibold hover:underline">
+            How changes work, and the history
+          </Link>
+        </div>
+
         <Section title="3D models" sub="Spin them with a finger or mouse. Download the file to keep a copy; it opens in any web browser with an internet connection.">
           <div className="grid md:grid-cols-3 gap-4">
             {VIEWERS.map((v) => (

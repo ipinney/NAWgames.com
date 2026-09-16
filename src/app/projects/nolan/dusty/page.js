@@ -46,6 +46,11 @@ const PAGES = [
     text: 'The problem Dusty solves, how it works, and the speed test for the science part.',
   },
   {
+    href: '/projects/nolan/dusty/changes',
+    title: 'Changes and lessons',
+    text: 'How engineers change a plan safely, the power bank change, the project history, and lessons for next time.',
+  },
+  {
     href: `${P}/board-prints.html`,
     title: 'Board print-outs',
     text: 'Big section titles to print and glue on the trifold.',
