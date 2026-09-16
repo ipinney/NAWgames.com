@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Nav } from '../ui';
 
 const OG = 'https://nawgames.com/projects/nolan/dusty-og.png';
 const TITLE = 'Build Dusty: print files, parts and 3D models';
@@ -112,6 +113,7 @@ function Section({ title, sub, children }) {
 export default function DustyBuildPage() {
   return (
     <div className="min-h-screen">
+      <Nav current="build" />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-naw-orange/10 via-transparent to-transparent" />
         <div className="relative max-w-5xl mx-auto px-4 pt-10">

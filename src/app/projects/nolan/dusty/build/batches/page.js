@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Nav } from '../../ui';
 
 const OG = 'https://nawgames.com/projects/nolan/dusty-og.png';
 const TITLE = 'Dusty: print and build plan';
@@ -37,13 +38,6 @@ const BEFORE = [
   ['Unbox everything that has arrived and check it against the parts list.', ''],
   ['Sort the M2 screws into three cups: 6 mm, 8 mm and 10 mm. Put the nuts in a fourth.', ''],
   ['Before Batch 3, measure the power bank and the 90 degree USB adapter with a ruler or calipers.', 'The bank must fit inside 104 x 48 x 29 mm, and the adapter must stick out less than 28 mm. If anything is off, the sleeve gets fixed before it prints.'],
-];
-
-const TABS = [
-  ['Overview', '/projects/nolan/dusty'],
-  ['Build', '/projects/nolan/dusty/build'],
-  ['Print plan', '/projects/nolan/dusty/build/batches'],
-  ['Changes', '/projects/nolan/dusty/changes'],
 ];
 
 const BATCHES = [
@@ -238,22 +232,7 @@ function List({ items }) {
 export default function DustyBatchesPage() {
   return (
     <div className="min-h-screen">
-      <nav className="bg-naw-card/60 border-b border-white/10">
-        <div className="max-w-5xl mx-auto px-4 flex items-center gap-1 overflow-x-auto">
-          <Link href="/projects/nolan/dusty" className="font-game text-[10px] text-naw-orange pr-3 py-3 whitespace-nowrap">DUSTY</Link>
-          {TABS.map(([label, href]) => (
-            <Link
-              key={label}
-              href={href}
-              className={`px-3 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors ${
-                label === 'Print plan' ? 'border-naw-orange text-white' : 'border-transparent text-white/50 hover:text-white/80'
-              }`}
-            >
-              {label}
-            </Link>
-          ))}
-        </div>
-      </nav>
+      <Nav current="print" />
       <div className="max-w-4xl mx-auto px-4 pt-8 pb-20">
         <Link href="/projects/nolan/dusty/build" className="text-white/40 hover:text-white/70 text-sm inline-flex items-center gap-1 transition-colors">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

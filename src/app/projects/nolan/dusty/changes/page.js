@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Nav } from '../ui';
 
 const OG = 'https://nawgames.com/projects/nolan/dusty-og.png';
 const TITLE = 'Dusty: changing the plan, and what we learned';
@@ -117,6 +118,7 @@ const TAG = {
 export default function DustyChangesPage() {
   return (
     <div className="min-h-screen">
+      <Nav current="changes" />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-naw-cyan/15 via-transparent to-transparent" />
         <div className="relative max-w-4xl mx-auto px-4 pt-10">

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Nav } from './ui';
 import DueDates from './DueDates';
 
 const OG = 'https://nawgames.com/projects/nolan/dusty-og.png';
@@ -46,6 +47,11 @@ const PAGES = [
     text: 'The problem Dusty solves, how it works, and the speed test for the science part.',
   },
   {
+    href: '/projects/nolan/dusty/learn',
+    title: 'Learn the science',
+    text: 'Every piece of Dusty explained: the micro:bit, motors, infrared, calibration, gears, power, 3D printing, and the fair test.',
+  },
+  {
     href: '/projects/nolan/dusty/changes',
     title: 'Changes and lessons',
     text: 'How engineers change a plan safely, the power bank change, the project history, and lessons for next time.',
@@ -60,6 +66,7 @@ const PAGES = [
 export default function DustyPage() {
   return (
     <div className="min-h-screen">
+      <Nav current="overview" />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-naw-cyan/15 via-transparent to-transparent" />
         <div className="relative max-w-5xl mx-auto px-4 pt-10">
@@ -117,8 +124,7 @@ export default function DustyPage() {
               <a
                 key={s.href}
                 href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                {...(s.href.endsWith('.html') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 className="group bg-naw-card rounded-2xl border border-naw-cyan/20 p-5 hover:border-naw-cyan/40 transition-colors"
               >
                 <h3 className="text-white font-bold text-lg group-hover:text-naw-cyan transition-colors">{s.title}</h3>
