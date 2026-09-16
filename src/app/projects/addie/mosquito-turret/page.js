@@ -19,6 +19,7 @@ export const metadata = {
 
 const PLAN = '/projects/addie/mosquito-turret.html';
 const CAD = '/projects/addie/ms2000-cad/index.html';
+const MODEL3D = '/projects/addie/ms2000-cad/ms2000-3d.html';
 
 // status: done | now | next
 const PHASES = [
@@ -94,6 +95,18 @@ export default function MosquitoTurretPage() {
               className="mt-5 ml-2 inline-flex items-center bg-naw-green/15 border border-naw-green/40 text-naw-green px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-naw-green/25 transition-colors"
             >
               3D parts
+            </a>
+            <a
+              href={MODEL3D}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 ml-2 inline-flex items-center bg-naw-pink/15 border border-naw-pink/40 text-naw-pink px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-naw-pink/25 transition-colors"
+            >
+              3D model
+            </a>
+            <a href={MODEL3D} target="_blank" rel="noopener noreferrer" className="mt-6 block rounded-2xl overflow-hidden border border-white/10 bg-[#0d1b2e] max-w-xl">
+              <img src="/projects/addie/ms2000-hero.png" alt="3D model of the MS-2000 turret with its laser beam" width={720} height={630} className="w-full h-auto" />
+              <div className="px-4 py-2 text-white/60 text-sm">Tap to explore the whole setup in 3D: turret, backdrop, pendulum, mosquito, and wand.</div>
             </a>
           </div>
         </div>

@@ -47,22 +47,27 @@ hp = tt(g2['pan_horn']); ht = tt(T(g2['tilt_horn']))
 ITEMS = [(k, n, g, q, s, no, (np.vstack([hp[0], ht[0]]), np.vstack([hp[1], ht[1] + len(hp[0])])) if k == 'horns' else mesh, c)
          for k, n, g, q, s, no, mesh, c in ITEMS]
 
-items, allv = [], []
-for k, n, g, q, s, note, (v, f), c in ITEMS:
-    t = trimesh.Trimesh(v, f, process=False)
-    b = [v.min(0).tolist(), v.max(0).tolist()]
-    gr = round(abs(t.volume) / 1000 * 1.24 * 0.62, 1) if g == 'printed' else None
-    items.append({'k': k, 'n': n, 'g': g, 'q': q, 's': s, 'note': note, 'c': c,
-                  'size': [round(float(x), 1) for x in (v.max(0) - v.min(0))], 'sb': b, 'b': b, 'gr': gr,
-                  'v': np.round(v, 2).flatten().tolist(), 'f': f.astype(int).flatten().tolist()})
-    allv.append(v)
-allv = np.vstack(allv)
-data = {'items': items, 'bounds': [allv.min(0).tolist(), allv.max(0).tolist()]}
-tpl = open(os.path.join(HERE, 'catalog.tpl.html')).read()
-tpl = tpl.replace('MS-2000 components', 'MS-2000 turret').replace('MS-2000 <span>components</span>', 'MS-2000 <span>turret</span>')
-tpl = tpl.replace('Tap a part below to see it alone with its measurements, or in place on the turret.',
-                  'Everything designed so far, in place. Tap a part to see it alone or highlighted on the turret. Grey parts are bought. Wand and mosquito pod come next.')
-tpl = tpl.replace("['PLA total',`~${Math.round(g)} g`]", "['PLA (15% infill est.)',`~${Math.round(g)} g`]")
-open(os.path.join(OUT, 'ms2000-turret.html'), 'w').write(tpl.replace('__DATA__', json.dumps(data, separators=(',', ':'))))
-print('assembly', len(items), 'items', os.path.getsize(os.path.join(OUT, 'ms2000-turret.html')) // 1024, 'KB',
-      'height', round(allv[:, 2].max(), 1), 'PLA est', round(sum(i['gr'] or 0 for i in items)), 'g')
+def main():
+    items, allv = [], []
+    for k, n, g, q, s, note, (v, f), c in ITEMS:
+        t = trimesh.Trimesh(v, f, process=False)
+        b = [v.min(0).tolist(), v.max(0).tolist()]
+        gr = round(abs(t.volume) / 1000 * 1.24 * 0.62, 1) if g == 'printed' else None
+        items.append({'k': k, 'n': n, 'g': g, 'q': q, 's': s, 'note': note, 'c': c,
+                      'size': [round(float(x), 1) for x in (v.max(0) - v.min(0))], 'sb': b, 'b': b, 'gr': gr,
+                      'v': np.round(v, 2).flatten().tolist(), 'f': f.astype(int).flatten().tolist()})
+        allv.append(v)
+    allv = np.vstack(allv)
+    data = {'items': items, 'bounds': [allv.min(0).tolist(), allv.max(0).tolist()]}
+    tpl = open(os.path.join(HERE, 'catalog.tpl.html')).read()
+    tpl = tpl.replace('MS-2000 components', 'MS-2000 turret').replace('MS-2000 <span>components</span>', 'MS-2000 <span>turret</span>')
+    tpl = tpl.replace('Tap a part below to see it alone with its measurements, or in place on the turret.',
+                      'Everything designed so far, in place. Tap a part to see it alone or highlighted on the turret. Grey parts are bought. Wand and mosquito pod come next.')
+    tpl = tpl.replace("['PLA total',`~${Math.round(g)} g`]", "['PLA (15% infill est.)',`~${Math.round(g)} g`]")
+    open(os.path.join(OUT, 'ms2000-turret.html'), 'w').write(tpl.replace('__DATA__', json.dumps(data, separators=(',', ':'))))
+    print('assembly', len(items), 'items', os.path.getsize(os.path.join(OUT, 'ms2000-turret.html')) // 1024, 'KB',
+          'height', round(allv[:, 2].max(), 1), 'PLA est', round(sum(i['gr'] or 0 for i in items)), 'g')
+
+
+if __name__ == '__main__':
+    main()

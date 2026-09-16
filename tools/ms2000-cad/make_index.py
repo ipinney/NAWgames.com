@@ -4,8 +4,8 @@ import sys, os, json, html
 
 PARTS = [
     # (id, name, status, files [(label, href)], note)
-    ('A', 'Turret, assembled', 'done', [('3D viewer', 'ms2000-turret.html')],
-     'Every printed and bought part in place. Tap a part to see it alone or highlighted. Pan and tilt sweeps are checked in the build scripts.'),
+    ('3D', 'Whole setup, assembled', 'done', [('3D model', 'ms2000-3d.html'), ('Turret part by part', 'ms2000-turret.html')],
+     'Everything together: the turret, the black backdrop on its feet, the dowel with the pendulum pivot, the stuffed mosquito with its glowing pod hanging 5 ft from the camera, the wand, the ribbon cable, and the laser beam. Zoom to the turret or the mosquito with one tap.'),
     ('C', 'Bought parts, measured', 'done', [('3D viewer', 'ms2000-components.html'), ('Numbers (JSON)', 'ms2000-dims.json')],
      'Every bought part as a stand-in model. Numbers marked estimate or photo get checked with calipers when the parts arrive.'),
     ('P1', 'Base shell', 'done', [('3D viewer', 'ms2000-p1-base-shell.html'), ('STL', 'stl/ms2000-p1-base-shell.stl')],

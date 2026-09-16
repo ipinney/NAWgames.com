@@ -39,6 +39,11 @@ Read this first every session. Update it and commit after every finished step.
   3mf published; gcode stays in /opt/ffstudio/work/ms2000/out (too big for git).
 - [ ] 5. Parts arrive: calipers, set basis 'cal', rebuild, reprint what changed
 
+## Whole-setup viewer (Sep 16)
+- make_setup.py -> ms2000-3d.html (template setup.tpl.html, from dusty-chassis/assembly.tpl.html): turret + backdrop (30x20 in board on 2 feet, clip, 1/4 in dowel 250 mm), pendulum pivot, stuffed-mosquito stand-in with pod 1524 mm from the lens at lens height, wand on the dowel, line, ribbon, line clips, laser beam.
+- Focus buttons (Whole setup / Turret / Mosquito and wand), Bought and Laser toggles, Turret view. make_hero.py renders ms2000-hero.png for the MS-2000 page.
+- make_assembly.py now only writes when run as a script (make_setup imports its ITEMS).
+
 ## Open numbers (see DIMENSIONS.md, basis est/tbd)
 - Xia mi: mounting holes, height, micro:bit slot direction, power jack side
 - 2xAAA pack size; arm switch size; servo horn; stuffed mosquito size
