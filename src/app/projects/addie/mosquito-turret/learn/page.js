@@ -54,7 +54,7 @@ const TOPICS = [
       ['Prototype', 'A first working model of an invention, used to test the idea.'],
       ['Lethal', 'Strong enough to kill.'],
     ],
-    tryit: 'Multiply it out: if 1 milliwatt were 1 step, how many steps would 14 watts be? (Answer: 14,000 steps, about 7 miles.)',
+    tryit: 'Multiply it out: if 1 milliwatt were 1 step, how many steps would 14 watts be? (Answer: 14,000 steps. That is about 5 miles of kid steps.)',
     fact: 'A 14 watt laser is Class 4, the most dangerous class. Science fairs do not allow them.',
   },
   {
@@ -194,7 +194,7 @@ const TOPICS = [
       ['Trade-off', 'Giving up a little of one thing to get more of another.'],
     ],
     tryit: 'Write down why you picked Design A over B and C. That goes on the board.',
-    fact: 'The first design is almost never the final one. The MS-2000 changed six times on paper before anything was printed.',
+    fact: 'The first design is almost never the final one. The MS-2000 plan was rewritten six times before anything was printed.',
   },
 ];
 
@@ -233,7 +233,7 @@ function Screen() {
       <circle cx="210" cy="114" r="3" fill="#ec4899" />
       <text x="192" y="90" fill="#ec4899" fontSize="11">mosquito 200, 104</text>
       <line x1="174" y1="114" x2="203" y2="114" stroke="#f59e0b" strokeWidth="2" />
-      <text x="140" y="78" fill="#f59e0b" fontSize="11">40 right, 16 up</text>
+      <text x="166" y="110" fill="#f59e0b" fontSize="11" textAnchor="end">40 right, 16 up</text>
       <text x="14" y="266" fill="#ffffff" fillOpacity=".5" fontSize="11">320 pixels wide × 240 tall</text>
     </svg>
   );

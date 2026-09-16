@@ -71,7 +71,7 @@ item(S5,'micro:bit battery pack',2,'Powers the wand micro:bit, and the turret mi
  'The micro:bit battery socket is JST PH 2.0 mm. Adafruit\'s 2xAAA version (4191) is out of stock, so the backup is 2xAA.')
 
 S6='Wiring and hardware'
-item(S6,'M2 screw, nut, and standoff kit',1,'Every printed housing: base, head, sensor mount, mosquito halves, wand handle, flight zone corners.',
+item(S6,'M2 screw, nut, and standoff kit',1,'Every printed part: base, turret head, wand handle, sensor pod, and backdrop parts.',
  src(DF,'FIT0665','Metal screw, nut and mounting kit, M2, 320 pcs',12.90,'https://www.dfrobot.com/product-2023.html','In stock'),
  src(DK,'1738-FIT0665-ND','DFRobot FIT0665 (same kit)',12.90,'https://www.digikey.com/en/products/detail/dfrobot/FIT0665/12324933','321 in stock*'),
  'Prints use M2 clearance holes (2.2 mm) and M2 nut traps. Exceptions: HuskyLens uses its own M3 kit; servos use their own horn screws.')

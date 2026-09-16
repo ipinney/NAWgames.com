@@ -147,7 +147,7 @@ export const BUY = [
   "sec": "Wiring and hardware",
   "name": "M2 screw, nut, and standoff kit",
   "qty": 1,
-  "role": "Every printed housing: base, head, sensor mount, mosquito halves, wand handle, flight zone corners.",
+  "role": "Every printed part: base, turret head, wand handle, sensor pod, and backdrop parts.",
   "vendor": "DFRobot",
   "pn": "FIT0665",
   "title": "Metal screw, nut and mounting kit, M2, 320 pcs",

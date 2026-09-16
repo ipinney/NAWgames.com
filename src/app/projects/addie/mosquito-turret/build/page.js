@@ -179,8 +179,8 @@ export default function BuildPage() {
                         <span className="text-white/40 text-sm"> × {b.qty}</span>
                       </div>
                       <div className="text-white tabular-nums text-sm text-right">{money(b.price)}</div>
-                      <div className="text-white/55 text-sm">{b.role}</div>
-                      <a href={b.url} target="_blank" rel="noopener noreferrer" className="text-naw-cyan text-sm font-semibold hover:underline text-right whitespace-nowrap">
+                      <div className="text-white/55 text-sm col-span-2 sm:col-span-1">{b.role}</div>
+                      <a href={b.url} target="_blank" rel="noopener noreferrer" className="text-naw-cyan text-sm font-semibold hover:underline col-span-2 sm:col-span-1 sm:text-right whitespace-nowrap">
                         {b.vendor} {b.pn}
                       </a>
                     </div>
