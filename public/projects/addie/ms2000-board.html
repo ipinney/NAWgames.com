@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS-2000 Trifold Board and Fair Table</title>
+<meta name="description" content="Addie's MS-2000 trifold board: two layout designs, what goes in each block, the 3 foot fair table setup, and print-outs for every section title.">
+<meta property="og:title" content="MS-2000 trifold board and fair table">
+<meta property="og:description" content="Board layouts, the 3 foot table plan, and print-outs for Addie's laser mosquito turret.">
+<meta property="og:image" content="https://nawgames.com/projects/addie/ms2000-og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:type" content="website"><meta property="og:site_name" content="NAW Games">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://nawgames.com/projects/addie/ms2000-og.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ground: #0F1420; --card: #182032; --card-2: #1F2940; --ink: #EEF2F8; --ink-2: #A9B6CA; --ink-3: #74839B;
+    --line: #2B3650; --pink: #F0609E; --lime: #9BE15D; --sky: #5DB7F0; --amber: #F5B642; --red: #F0605E;
+    --paper-ink: #15202E; --paper-ink-2: #53667E; --paper-line: #C9D3DF;
+  }
+  body { font-family: 'Nunito', system-ui, sans-serif; background: var(--ground); color: var(--ink); line-height: 1.55; padding: 18px; font-size: 16px; }
+  a { color: var(--sky); }
+  h1, h2, h3 { font-family: 'Fredoka', 'Nunito', sans-serif; }
+  .wrap { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+  .hero { text-align: center; padding: 32px 22px 26px; border: none; background: radial-gradient(120% 90% at 50% 0%, #3A2150 0%, #1B2238 60%, #182032 100%); }
+  .hero h1 { font-size: clamp(30px, 6.5vw, 46px); font-weight: 700; line-height: 1.05; }
+  .hero h1 span { display: block; font-size: .4em; letter-spacing: .16em; color: var(--pink); text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
+  .hero p { color: var(--ink-2); max-width: 54ch; margin: 10px auto 0; }
+  .jump { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-top: 18px; }
+  .jump a { text-decoration: none; font-size: 13px; font-weight: 700; color: var(--ink); background: var(--card-2); border: 1px solid var(--line); padding: 5px 10px; border-radius: 10px; }
+  .back { display: inline-block; margin-top: 14px; font-size: 14px; font-weight: 700; text-decoration: none; }
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--pink); margin-bottom: 5px; }
+  h2 { font-size: 26px; font-weight: 600; line-height: 1.15; margin-bottom: 8px; }
+  h3 { font-size: 18px; font-weight: 600; margin: 16px 0 6px; }
+  .sub { color: var(--ink-2); }
+  ul, ol { padding-left: 20px; }
+  li { margin-bottom: 5px; }
+  .muted { color: var(--ink-2); }
+  .small { font-size: 14px; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 14px; }
+  .fact { background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .fact b { display: block; font-family: 'Fredoka', sans-serif; font-size: 22px; color: var(--lime); font-weight: 600; }
+  .fact span { color: var(--ink-2); font-size: 14px; }
+  .diagram { background: #0B111C; border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-top: 14px; overflow-x: auto; }
+  .diagram svg { display: block; width: 100%; min-width: 560px; height: auto; }
+  .caption { color: var(--ink-3); font-size: 13px; margin-top: 8px; }
+  .pick { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; background: var(--pink); color: #0F1420; padding: 3px 9px; border-radius: 99px; font-weight: 600; }
+  .tablewrap { overflow-x: auto; margin-top: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 520px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--ink-3); font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: 500; }
+  td b { color: var(--ink); }
+  .note { background: rgba(245,182,66,.10); border: 1px solid rgba(245,182,66,.4); border-radius: 12px; padding: 12px 14px; margin-top: 14px; font-size: 15px; }
+  .safety { background: rgba(240,96,94,.10); border: 1px solid rgba(240,96,94,.45); border-radius: 12px; padding: 12px 14px; margin-top: 14px; font-size: 15px; }
+  .btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  button { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 15px; border: none; border-radius: 11px; padding: 12px 18px; cursor: pointer; color: #0F1420; background: var(--pink); }
+  button.alt { background: var(--card-2); color: var(--ink); border: 1px solid var(--line); }
+
+  /* ---------- print sheets (white paper) ---------- */
+  .stage { max-width: 980px; margin: 18px auto 0; }
+  .sheet { position: relative; width: 10in; height: 7.5in; background: #fff; color: var(--paper-ink); margin: 0 auto 26px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border-radius: 4px; }
+  .sheet .cut { position: absolute; inset: 0.18in; border: 1px dashed var(--paper-line); pointer-events: none; }
+  .sheet .tick { position: absolute; bottom: 0.05in; right: 0.12in; font-family: 'IBM Plex Mono', monospace; font-size: 8pt; color: var(--paper-line); letter-spacing: .1em; }
+  .t { font-family: 'Fredoka', sans-serif; font-weight: 700; line-height: 1.02; text-align: center; white-space: nowrap; color: var(--paper-ink); }
+  .t-name { font-size: 230px; letter-spacing: .02em; }
+  .t-name em { font-style: normal; color: var(--pink); }
+  .t-lg { font-size: 104px; }
+  .rule { width: 62%; height: 12px; background: var(--pink); border-radius: 99px; margin-top: 24px; }
+  .psub { font-size: 30px; color: var(--paper-ink-2); margin-top: 20px; font-weight: 700; }
+  .kicker { font-family: 'IBM Plex Mono', monospace; font-size: 20px; letter-spacing: .22em; text-transform: uppercase; color: var(--pink); margin-bottom: 16px; }
+  .strips { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-evenly; padding: .4in .5in; }
+  .strip { border: 1px dashed var(--paper-line); border-radius: 10px; padding: .2in .3in; text-align: center; }
+  .strip .t { font-size: 64px; }
+  .strip .ps { font-size: 20px; color: var(--paper-ink-2); font-weight: 700; margin-top: 4px; }
+  .sign { border: 10px solid var(--red); border-radius: 22px; padding: .35in .5in; text-align: center; width: 88%; }
+  .sign .t { font-size: 110px; color: var(--red); }
+  .sign p { font-size: 30px; font-weight: 800; margin-top: 10px; color: var(--paper-ink); }
+  .frame { justify-content: flex-start; padding: .35in .45in .3in; }
+  .frame .fh { font-family: 'Fredoka', sans-serif; font-size: 42px; font-weight: 700; }
+  .frame .fs { font-size: 17px; color: var(--paper-ink-2); margin: 2px 0 10px; text-align: center; }
+  .drawbox { flex: 1; width: 100%; border: 3px solid var(--paper-ink); border-radius: 12px; }
+  .graph { flex: 1; width: 100%; }
+  body.ink .rule { background: #000; }
+  body.ink .kicker, body.ink .t-name em { color: #000; }
+  body.ink .sign { border-color: #000; }
+  body.ink .sign .t { color: #000; }
+  @media screen { .stage { zoom: .9; } }
+  @media screen and (max-width: 1080px) { .stage { zoom: .6; } }
+  @media screen and (max-width: 720px) { .stage { zoom: .34; } }
+  @page { size: letter landscape; margin: .5in; }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .wrap, .noprint { display: none !important; }
+    .stage { zoom: 1; max-width: none; margin: 0; }
+    .sheet { margin: 0; width: 100%; height: 7.5in; border-radius: 0; page-break-after: always; break-after: page; }
+    .sheet:last-child { page-break-after: auto; break-after: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="card hero">
+  <h1><span>MS-2000 &middot; Fair display</span>The board and the table</h1>
+  <p>Two ways to lay out the trifold, what goes in each block, how everything fits on a 3 foot table, and big print-outs for every section title. Addie writes the words; this page only plans the space.</p>
+  <div class="jump">
+    <a href="#board">The board</a>
+    <a href="#layout-1">Layout 1</a>
+    <a href="#layout-2">Layout 2</a>
+    <a href="#blocks">What goes where</a>
+    <a href="#table">The 3 foot table</a>
+    <a href="#prints">Print-outs</a>
+  </div>
+  <a class="back" href="/projects/addie/mosquito-turret/fair">&larr; Fair guide</a>
+</div>
+
+<div class="card" id="board">
+  <p class="eyebrow">The board</p>
+  <h2>A standard trifold</h2>
+  <p class="sub">A 36 by 48 inch trifold: a 24 inch center panel and two 12 inch wings. On a 3 foot table the wings fold in a little more than usual so the whole board is 36 inches wide.</p>
+  <div class="facts">
+    <div class="fact"><b>36 &times; 48 in</b><span>Board, open flat</span></div>
+    <div class="fact"><b>12 | 24 | 12</b><span>Left wing, center, right wing</span></div>
+    <div class="fact"><b>3 in</b><span>Tallest title letters, readable across the room</span></div>
+    <div class="fact"><b>9 rows</b><span>Rubric, one row is the display</span></div>
+  </div>
+  <h3>Board rules from St. Rose</h3>
+  <ul>
+    <li>Board text may be typed and printed: title, question, photos, data, graphs, and captions.</li>
+    <li>Every graph has a title and labels on both sides. Every photo has a caption.</li>
+    <li>The words are Addie's. The print-outs below are only the section titles.</li>
+    <li>The journal is separate, handwritten in cursive, and sits on the table.</li>
+  </ul>
+  <div class="note"><b>Read order:</b> judges read left to right, top to bottom. Put the question where the eye lands first, and the graphs at eye level in the middle.</div>
+</div>
+
+<div class="card" id="layout-1">
+  <p class="eyebrow">Layout 1 <span class="pick">Recommended</span></p>
+  <h2>Science steps, left to right</h2>
+  <p class="sub">Follows the order of the school's six parts: the left wing asks, the center shows, the right wing answers. Easy for judges who score with the rubric in hand.</p>
+  <div class="diagram">
+    <svg viewBox="0 0 500 380" role="img" aria-label="Front view of the trifold, layout 1. Left wing top to bottom: engineering goal, question, research, hypothesis, variables. Center: MS-2000 title, photo and how it works side by side, the 14,000 times fact, then the speed graph and the size graph. Right wing: materials, procedure, results, conclusion, Catholic connection, sources.">
+      <g font-family="Nunito, sans-serif">
+      <rect x="10" y="10" width="480" height="360" rx="6" fill="#1A2233" stroke="#3A4763"/>
+      <path d="M130 10 V370 M370 10 V370" stroke="#3A4763" stroke-width="2" stroke-dasharray="6 5"/>
+      <!-- left -->
+      <rect x="18" y="18" width="104" height="44" rx="5" fill="#2A2140" stroke="#B48CFF"/><text x="70" y="44" text-anchor="middle" font-size="11" fill="#EEF2F8" font-weight="700">Engineering goal</text>
+      <rect x="18" y="68" width="104" height="60" rx="5" fill="#3A1D33" stroke="#F0609E" stroke-width="2"/><text x="70" y="96" text-anchor="middle" font-size="13" fill="#F0609E" font-weight="800">Question</text><text x="70" y="112" text-anchor="middle" font-size="9" fill="#A9B6CA">largest words on the wing</text>
+      <rect x="18" y="134" width="104" height="90" rx="5" fill="#1F2940" stroke="#5DB7F0"/><text x="70" y="172" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Research</text><text x="70" y="188" text-anchor="middle" font-size="9" fill="#A9B6CA">3 to 5 bullets</text>
+      <rect x="18" y="230" width="104" height="62" rx="5" fill="#1F2940" stroke="#5DB7F0"/><text x="70" y="265" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Hypothesis</text>
+      <rect x="18" y="298" width="104" height="64" rx="5" fill="#1F2940" stroke="#5DB7F0"/><text x="70" y="328" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Variables</text><text x="70" y="344" text-anchor="middle" font-size="9" fill="#A9B6CA">change, count, keep</text>
+      <!-- center -->
+      <rect x="138" y="18" width="224" height="46" rx="5" fill="#3A1D33" stroke="#F0609E" stroke-width="2"/><text x="250" y="50" text-anchor="middle" font-size="26" fill="#EEF2F8" font-weight="800" font-family="Fredoka, sans-serif">MS-2000</text>
+      <rect x="138" y="70" width="108" height="112" rx="5" fill="#16303A" stroke="#3BC9DB"/><text x="192" y="122" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Big photo</text><text x="192" y="138" text-anchor="middle" font-size="9" fill="#A9B6CA">of the turret</text>
+      <rect x="254" y="70" width="108" height="112" rx="5" fill="#16303A" stroke="#3BC9DB"/><text x="308" y="118" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">How it works</text><text x="308" y="134" text-anchor="middle" font-size="9" fill="#A9B6CA">labeled drawing</text><text x="308" y="147" text-anchor="middle" font-size="9" fill="#A9B6CA">train, track, fire, prove</text>
+      <rect x="138" y="188" width="224" height="30" rx="5" fill="#2E2A16" stroke="#F5B642"/><text x="250" y="208" text-anchor="middle" font-size="12" fill="#F5B642" font-weight="800">14,000&times; weaker than a mosquito-killing laser</text>
+      <rect x="138" y="224" width="108" height="138" rx="5" fill="#1C2E1A" stroke="#9BE15D" stroke-width="2"/><text x="192" y="284" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Graph 1</text><text x="192" y="300" text-anchor="middle" font-size="10" fill="#9BE15D">Speed</text>
+      <rect x="254" y="224" width="108" height="138" rx="5" fill="#1C2E1A" stroke="#9BE15D" stroke-width="2"/><text x="308" y="284" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Graph 2</text><text x="308" y="300" text-anchor="middle" font-size="10" fill="#9BE15D">Target size</text>
+      <!-- right -->
+      <rect x="378" y="18" width="104" height="42" rx="5" fill="#1F2940" stroke="#5DB7F0"/><text x="430" y="43" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Materials</text>
+      <rect x="378" y="66" width="104" height="80" rx="5" fill="#1F2940" stroke="#5DB7F0"/><text x="430" y="104" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Procedure</text><text x="430" y="120" text-anchor="middle" font-size="9" fill="#A9B6CA">numbered steps</text>
+      <rect x="378" y="152" width="104" height="66" rx="5" fill="#1C2E1A" stroke="#9BE15D"/><text x="430" y="182" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Results</text><text x="430" y="198" text-anchor="middle" font-size="9" fill="#A9B6CA">table of averages</text>
+      <rect x="378" y="224" width="104" height="70" rx="5" fill="#3A1D33" stroke="#F0609E" stroke-width="2"/><text x="430" y="256" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Conclusion</text><text x="430" y="272" text-anchor="middle" font-size="9" fill="#A9B6CA">what makes it miss</text>
+      <rect x="378" y="300" width="104" height="36" rx="5" fill="#2A2140" stroke="#B48CFF"/><text x="430" y="322" text-anchor="middle" font-size="10.5" fill="#EEF2F8" font-weight="700">Catholic connection</text>
+      <rect x="378" y="340" width="104" height="22" rx="5" fill="#1F2940" stroke="#3A4763"/><text x="430" y="355" text-anchor="middle" font-size="10" fill="#A9B6CA" font-weight="700">Sources</text>
+      </g>
+    </svg>
+    <p class="caption">Front view, to scale (48 in wide, 36 in tall). Pink blocks are what a judge should find first.</p>
+  </div>
+</div>
+
+<div class="card" id="layout-2">
+  <p class="eyebrow">Layout 2</p>
+  <h2>Big question in the middle</h2>
+  <p class="sub">The question takes the center, right under the title, with the turret photo and both graphs below it. The wings tell the story: the problem and the machine on the left, the test and the answer on the right. Best if Addie wants the board to read like a poster from far away.</p>
+  <div class="diagram">
+    <svg viewBox="0 0 500 380" role="img" aria-label="Front view of the trifold, layout 2. Left wing: engineering goal, the problem, research, how it works, the 14,000 times fact. Center: MS-2000 title, the question in large letters, a big photo, then two graphs. Right wing: hypothesis, variables, materials and procedure, results, conclusion, Catholic connection, sources.">
+      <g font-family="Nunito, sans-serif">
+      <rect x="10" y="10" width="480" height="360" rx="6" fill="#1A2233" stroke="#3A4763"/>
+      <path d="M130 10 V370 M370 10 V370" stroke="#3A4763" stroke-width="2" stroke-dasharray="6 5"/>
+      <rect x="18" y="18" width="104" height="40" rx="5" fill="#2A2140" stroke="#B48CFF"/><text x="70" y="42" text-anchor="middle" font-size="11" fill="#EEF2F8" font-weight="700">Engineering goal</text>
+      <rect x="18" y="64" width="104" height="62" rx="5" fill="#1F2940" stroke="#5DB7F0"/><text x="70" y="92" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">The problem</text><text x="70" y="108" text-anchor="middle" font-size="9" fill="#A9B6CA">mosquitoes and disease</text>
+      <rect x="18" y="132" width="104" height="80" rx="5" fill="#1F2940" stroke="#5DB7F0"/><text x="70" y="170" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Research</text><text x="70" y="186" text-anchor="middle" font-size="9" fill="#A9B6CA">the real laser fence</text>
+      <rect x="18" y="218" width="104" height="96" rx="5" fill="#16303A" stroke="#3BC9DB"/><text x="70" y="262" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">How it works</text><text x="70" y="278" text-anchor="middle" font-size="9" fill="#A9B6CA">labeled drawing</text>
+      <rect x="18" y="320" width="104" height="42" rx="5" fill="#2E2A16" stroke="#F5B642"/><text x="70" y="339" text-anchor="middle" font-size="12" fill="#F5B642" font-weight="800">14,000&times;</text><text x="70" y="353" text-anchor="middle" font-size="8.5" fill="#F5B642">too weak to kill, on purpose</text>
+      <rect x="138" y="18" width="224" height="44" rx="5" fill="#3A1D33" stroke="#F0609E" stroke-width="2"/><text x="250" y="49" text-anchor="middle" font-size="26" fill="#EEF2F8" font-weight="800" font-family="Fredoka, sans-serif">MS-2000</text>
+      <rect x="138" y="68" width="224" height="56" rx="5" fill="#3A1D33" stroke="#F0609E" stroke-width="3"/><text x="250" y="94" text-anchor="middle" font-size="15" fill="#F0609E" font-weight="800">QUESTION</text><text x="250" y="112" text-anchor="middle" font-size="9.5" fill="#EEF2F8">faster or smaller: what makes it miss?</text>
+      <rect x="138" y="130" width="224" height="104" rx="5" fill="#16303A" stroke="#3BC9DB"/><text x="250" y="180" text-anchor="middle" font-size="13" fill="#EEF2F8" font-weight="700">Big photo of the MS-2000</text><text x="250" y="196" text-anchor="middle" font-size="9" fill="#A9B6CA">hunting the mosquito, laser flash</text>
+      <rect x="138" y="240" width="108" height="122" rx="5" fill="#1C2E1A" stroke="#9BE15D" stroke-width="2"/><text x="192" y="296" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Graph 1</text><text x="192" y="312" text-anchor="middle" font-size="10" fill="#9BE15D">Speed</text>
+      <rect x="254" y="240" width="108" height="122" rx="5" fill="#1C2E1A" stroke="#9BE15D" stroke-width="2"/><text x="308" y="296" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Graph 2</text><text x="308" y="312" text-anchor="middle" font-size="10" fill="#9BE15D">Target size</text>
+      <rect x="378" y="18" width="104" height="46" rx="5" fill="#1F2940" stroke="#5DB7F0"/><text x="430" y="45" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Hypothesis</text>
+      <rect x="378" y="70" width="104" height="46" rx="5" fill="#1F2940" stroke="#5DB7F0"/><text x="430" y="97" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Variables</text>
+      <rect x="378" y="122" width="104" height="74" rx="5" fill="#1F2940" stroke="#5DB7F0"/><text x="430" y="156" text-anchor="middle" font-size="11" fill="#EEF2F8" font-weight="700">Materials and</text><text x="430" y="171" text-anchor="middle" font-size="11" fill="#EEF2F8" font-weight="700">procedure</text>
+      <rect x="378" y="202" width="104" height="50" rx="5" fill="#1C2E1A" stroke="#9BE15D"/><text x="430" y="231" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Results</text>
+      <rect x="378" y="258" width="104" height="54" rx="5" fill="#3A1D33" stroke="#F0609E" stroke-width="2"/><text x="430" y="289" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">Conclusion</text>
+      <rect x="378" y="318" width="104" height="22" rx="5" fill="#2A2140" stroke="#B48CFF"/><text x="430" y="333" text-anchor="middle" font-size="9.5" fill="#EEF2F8" font-weight="700">Catholic connection</text>
+      <rect x="378" y="344" width="104" height="18" rx="5" fill="#1F2940" stroke="#3A4763"/><text x="430" y="357" text-anchor="middle" font-size="9" fill="#A9B6CA" font-weight="700">Sources</text>
+      </g>
+    </svg>
+    <p class="caption">Front view, to scale. Uses the same print-outs as Layout 1, plus the Problem title.</p>
+  </div>
+</div>
+
+<div class="card" id="blocks">
+  <p class="eyebrow">What goes where</p>
+  <h2>Every block, and what fills it</h2>
+  <p class="sub">The fair guide has the questions for each part. This is only what ends up on the board.</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>Block</th><th>What goes in it</th><th>Where it comes from</th></tr>
+    <tr><td><b>Engineering goal</b></td><td>One sentence: build a robot that finds, tracks, and hits a flying mosquito by itself.</td><td>Addie's words</td></tr>
+    <tr><td><b>Question</b></td><td>The science question, big. What makes the MS-2000 miss more: a faster mosquito or a smaller one?</td><td>Due Nov 18</td></tr>
+    <tr><td><b>The problem</b> (Layout 2)</td><td>Why mosquitoes matter: bites, disease, how fast and how small they are.</td><td>Research notes</td></tr>
+    <tr><td><b>Research</b></td><td>3 to 5 facts, one per bullet. The real laser fence is a good one.</td><td>Due Dec 2</td></tr>
+    <tr><td><b>Hypothesis</b></td><td>One for speed, one for size, each with if, then, and because.</td><td>Due Dec 9</td></tr>
+    <tr><td><b>Variables</b></td><td>What changes (swing angle, target hole), what gets counted (hits in 30 seconds, time to first hit), what stays the same (3 feet, room, batteries, camera training).</td><td>Fair guide table</td></tr>
+    <tr><td><b>Big photo</b></td><td>The finished turret, printed 8 by 10. A second photo mid-flash is a bonus.</td><td>Take it in December</td></tr>
+    <tr><td><b>How it works</b></td><td>Addie's labeled drawing: camera, laser, servos, micro:bit, mosquito pod, wand, radio.</td><td>Copy from the journal drawing</td></tr>
+    <tr><td><b>14,000&times; fact</b></td><td>A killing laser would need about 14 watts. Ours is 0.001 watt, on purpose.</td><td>Plan, lethality math</td></tr>
+    <tr><td><b>Materials</b></td><td>The main parts, short list. Not every screw.</td><td>Parts list</td></tr>
+    <tr><td><b>Procedure</b></td><td>How one run works, as numbered steps.</td><td>Fair guide, experiments</td></tr>
+    <tr><td><b>Graphs</b></td><td>One bar graph per test: 3 bars, averages on top, a title, and both sides labeled.</td><td>Due Jan 25</td></tr>
+    <tr><td><b>Results</b></td><td>A small table of the averages for all 6 settings.</td><td>Due Jan 25</td></tr>
+    <tr><td><b>Conclusion</b></td><td>Was the hypothesis supported? Which one made it miss more, by how much? What next time?</td><td>Due Jan 25</td></tr>
+    <tr><td><b>Catholic connection</b></td><td>2 or 3 sentences.</td><td>Due Dec 2</td></tr>
+    <tr><td><b>Sources</b></td><td>2 or 3, written the same way.</td><td>Due Dec 2</td></tr>
+  </table>
+  </div>
+</div>
+
+<div class="card" id="table">
+  <p class="eyebrow">The table</p>
+  <h2>Fitting it all on 3 feet</h2>
+  <p class="sub">The laser is lined up for 3 feet, and the dot stays on the pod from 2 to 4 feet. At the fair the mosquito hangs about 2 feet from the camera, so the turret and the backdrop both fit across one table with the beam running sideways, never toward judges.</p>
+  <div class="diagram">
+    <svg viewBox="0 0 520 390" role="img" aria-label="Top view of a 36 by 24 inch table. The trifold stands along the back with its wings folded forward. The turret sits at the front left, facing right. A small black backdrop stands near the right edge, facing the turret, with the mosquito hanging about 2 feet from the camera. The beam runs sideways between them, in a lane about 7 inches from the front edge. The journal and spare mosquito sit in front of the center panel. Judges stand in front.">
+      <g font-family="Nunito, sans-serif">
+      <!-- table 36x24 in at 12 px/in, origin (40,40) -->
+      <rect x="40" y="40" width="432" height="288" rx="6" fill="#1A2233" stroke="#3A4763" stroke-width="2"/>
+      <!-- trifold: center x 112..400 at y 44; wings to (40,169) and (472,169) -->
+      <path d="M40 169 L112 44 H400 L472 169" fill="none" stroke="#F0609E" stroke-width="6" stroke-linejoin="round"/>
+      <text x="256" y="64" text-anchor="middle" font-size="12" fill="#F0609E" font-weight="800">Trifold board</text>
+      <text x="256" y="78" text-anchor="middle" font-size="10" fill="#A9B6CA">wings folded in so it is 36 in wide</text>
+      <!-- beam lane -->
+      <rect x="108" y="206" width="300" height="96" fill="#F0605E" opacity=".08"/>
+      <path d="M108 254 H392" stroke="#F0605E" stroke-width="2.5" stroke-dasharray="7 5"/>
+      <text x="250" y="296" text-anchor="middle" font-size="10" fill="#F0605E">beam lane: keep clear</text>
+      <!-- turret 5.5 x 5.6 in -->
+      <rect x="42" y="220" width="66" height="68" rx="6" fill="#F07ACB"/>
+      <rect x="92" y="243" width="18" height="22" rx="3" fill="#3BC9DB"/>
+      <text x="75" y="210" text-anchor="middle" font-size="11" fill="#EEF2F8" font-weight="700">Turret</text>
+      <!-- pod at ~2 ft from lens: x 110 + 288 = 398 -->
+      <ellipse cx="398" cy="254" rx="12" ry="18" fill="#6B4E3D"/><circle cx="392" cy="254" r="6" fill="#F4F4F4"/>
+      <path d="M398 222 V286" stroke="#F5B642" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <text x="398" y="214" text-anchor="middle" font-size="10" fill="#F5B642">swing</text>
+      <!-- backdrop 12 in wide at x 34 in -> 448 -->
+      <rect x="444" y="194" width="8" height="120" fill="#050505" stroke="#74839B"/>
+      <path d="M410 254 H444" stroke="#D9B98B" stroke-width="3"/>
+      <rect x="440" y="310" width="24" height="10" rx="2" fill="#9BE15D"/><rect x="440" y="186" width="24" height="10" rx="2" fill="#9BE15D"/>
+      <text x="492" y="256" text-anchor="middle" font-size="10" fill="#A9B6CA" transform="rotate(90 492 256)">black backdrop 12 x 12 in</text>
+      <!-- sign, journal, spare -->
+      <rect x="46" y="186" width="54" height="14" rx="3" fill="#F0605E"/><text x="73" y="196" text-anchor="middle" font-size="8.5" fill="#0F1420" font-weight="800">CLASS 2 sign</text>
+      <rect x="170" y="112" width="96" height="66" rx="4" fill="#2A2140" stroke="#B48CFF"/><text x="218" y="150" text-anchor="middle" font-size="11" fill="#EEF2F8" font-weight="700">Journal</text>
+      <rect x="286" y="126" width="70" height="46" rx="4" fill="#1F2940" stroke="#3A4763"/><text x="321" y="146" text-anchor="middle" font-size="9.5" fill="#A9B6CA">spare mosquito,</text><text x="321" y="159" text-anchor="middle" font-size="9.5" fill="#A9B6CA">batteries</text>
+      <!-- dims -->
+      <g stroke="#74839B" stroke-width="1.5"><path d="M40 348 H472 M40 342 v12 M472 342 v12"/><path d="M20 40 V328 M14 40 h12 M14 328 h12"/></g>
+      <text x="256" y="366" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700">36 in</text>
+      <text x="12" y="186" text-anchor="middle" font-size="12" fill="#EEF2F8" font-weight="700" transform="rotate(-90 12 186)">24 in</text>
+      <g stroke="#9BE15D" stroke-width="1.5"><path d="M110 236 H398 M110 231 v10 M398 231 v10"/></g>
+      <text x="250" y="232" text-anchor="middle" font-size="11" fill="#9BE15D" font-weight="700">about 2 ft, camera to mosquito</text>
+      <text x="256" y="384" text-anchor="middle" font-size="12" fill="#A9B6CA">judges stand here, in front</text>
+      </g>
+    </svg>
+    <p class="caption">Top view, to scale for a 36 by 24 inch table. A deeper table works the same with more room behind the beam lane.</p>
+  </div>
+  <h3>What changes for the fair</h3>
+  <ul>
+    <li><b>Small backdrop:</b> a 12 by 12 inch piece of black foam board in the two printed feet. The big 30 by 20 inch board stays home for the experiments.</li>
+    <li><b>Short dowel:</b> about 4 inches, so the mosquito hangs close to the small backdrop.</li>
+    <li><b>Tape marks:</b> the turret's spot and the mosquito's spot, 2 feet apart, so setup takes a minute.</li>
+    <li><b>Fair pan limits:</b> in the turret code, set the pan limits so the head cannot turn past the edges of the small backdrop. The tilt stop already keeps it low.</li>
+    <li><b>Demo:</b> the judge pulls the mosquito back on the pendulum and lets go, or holds the wand from the front right corner. Nobody stands at the right end of the table or in the beam lane.</li>
+    <li><b>Front edge clear:</b> nothing tall between the judges and the turret, so they can see the camera screen.</li>
+  </ul>
+  <div class="safety"><b>Before the first demo:</b> arm switch off while setting up. Check that every shot ends on the black backdrop, with the mosquito pulled to each side of its swing.</div>
+  <div class="note"><b>Check with Miss Taggart:</b> the table size, and whether the Parish Hall has an outlet or neighbors close on each side. Everything runs on batteries, so no outlet is needed.</div>
+</div>
+
+<div class="card" id="prints">
+  <p class="eyebrow">Print-outs</p>
+  <h2>Section titles, signs, and frames</h2>
+  <p class="sub">Print on plain paper, cut on the dashed lines, and lay everything on the board before gluing anything. Addie's own text, photos, and graphs go under each title.</p>
+  <ol>
+    <li>Press Print. Choose <b>Landscape</b> and set scale to <b>100%</b>, not Fit to Page.</li>
+    <li>12 pages come out: the title, the goal, the question, 4 sheets of section strips, the test labels, the laser sign, 2 graph frames, and a drawing frame.</li>
+    <li>The graph and drawing frames are for practice or for Addie to fill in by hand. Printed graphs from the data are fine too.</li>
+  </ol>
+  <div class="btns">
+    <button onclick="window.print()">Print all 12 sheets</button>
+    <button class="alt" onclick="document.body.classList.toggle('ink')">Switch color / black and white</button>
+  </div>
+</div>
+
+</div>
+
+<div class="stage">
+  <div class="sheet"><div class="cut"></div>
+    <div class="kicker">Addie Pinney &middot; 3rd grade</div>
+    <div class="t t-name">MS-<em>2000</em></div>
+    <div class="rule"></div>
+    <div class="psub">The Mosquito Shooter</div>
+    <div class="tick">1 / 12</div></div>
+
+  <div class="sheet"><div class="cut"></div>
+    <div class="kicker">What I built</div>
+    <div class="t t-lg">Engineering Goal</div>
+    <div class="rule"></div>
+    <div class="tick">2 / 12</div></div>
+
+  <div class="sheet"><div class="cut"></div>
+    <div class="kicker">What I tested</div>
+    <div class="t" style="font-size:190px">Question</div>
+    <div class="rule"></div>
+    <div class="tick">3 / 12</div></div>
+
+  <div class="sheet"><div class="cut"></div><div class="strips">
+    <div class="strip"><div class="t">The Problem</div></div>
+    <div class="strip"><div class="t">Research</div></div>
+    <div class="strip"><div class="t">Hypothesis</div></div>
+  </div><div class="tick">4 / 12</div></div>
+
+  <div class="sheet"><div class="cut"></div><div class="strips">
+    <div class="strip"><div class="t">Variables</div></div>
+    <div class="strip"><div class="t">How It Works</div></div>
+    <div class="strip"><div class="t">Materials</div></div>
+  </div><div class="tick">5 / 12</div></div>
+
+  <div class="sheet"><div class="cut"></div><div class="strips">
+    <div class="strip"><div class="t">Procedure</div></div>
+    <div class="strip"><div class="t">Results</div></div>
+    <div class="strip"><div class="t">Conclusion</div></div>
+  </div><div class="tick">6 / 12</div></div>
+
+  <div class="sheet"><div class="cut"></div><div class="strips">
+    <div class="strip"><div class="t" style="font-size:58px">Catholic Connection</div></div>
+    <div class="strip"><div class="t">Sources</div></div>
+    <div class="strip"><div class="t" style="font-size:58px">14,000&times; Too Weak</div><div class="ps">on purpose: a laser that kills mosquitoes is too dangerous for school</div></div>
+  </div><div class="tick">7 / 12</div></div>
+
+  <div class="sheet"><div class="cut"></div><div class="strips">
+    <div class="strip"><div class="t">Test 1: Speed</div><div class="ps">swing angle 10, 20, 30 degrees</div></div>
+    <div class="strip"><div class="t">Test 2: Target Size</div><div class="ps">hole 40, 20, 10 mm</div></div>
+    <div class="strip"><div class="t" style="font-size:54px">Try to escape the MS-2000!</div></div>
+  </div><div class="tick">8 / 12</div></div>
+
+  <div class="sheet"><div class="cut"></div>
+    <div class="sign">
+      <div class="t">CLASS 2 LASER</div>
+      <p>Under 1 milliwatt. Mounted, never handheld.</p>
+      <p>Do not look into the beam.</p>
+    </div>
+    <div class="tick">9 / 12</div></div>
+
+  <div class="sheet frame"><div class="cut"></div>
+    <div class="fh">Test 1: Speed</div>
+    <div class="fs">Average hits in 30 seconds, 5 runs each</div>
+    <svg class="graph" viewBox="0 0 900 470" aria-label="Blank bar graph frame for the speed test">
+      <g font-family="Nunito, sans-serif" fill="#15202E">
+      <path d="M110 30 V400 H870" stroke="#15202E" stroke-width="4" fill="none"/>
+      <g stroke="#C9D3DF" stroke-width="1.5"><path d="M110 326 H870 M110 252 H870 M110 178 H870 M110 104 H870"/></g>
+      <g stroke="#15202E" stroke-width="2" stroke-dasharray="8 6" fill="none"><rect x="190" y="150" width="140" height="250"/><rect x="420" y="150" width="140" height="250"/><rect x="650" y="150" width="140" height="250"/></g>
+      <text x="260" y="438" text-anchor="middle" font-size="26" font-weight="700">10&deg; (slow)</text>
+      <text x="490" y="438" text-anchor="middle" font-size="26" font-weight="700">20&deg;</text>
+      <text x="720" y="438" text-anchor="middle" font-size="26" font-weight="700">30&deg; (fast)</text>
+      <text x="490" y="468" text-anchor="middle" font-size="20" fill="#53667E">Swing angle</text>
+      <text x="40" y="215" text-anchor="middle" font-size="20" fill="#53667E" transform="rotate(-90 40 215)">Average hits</text>
+      </g>
+    </svg>
+    <div class="tick">10 / 12</div></div>
+
+  <div class="sheet frame"><div class="cut"></div>
+    <div class="fh">Test 2: Target Size</div>
+    <div class="fs">Average hits in 30 seconds, 5 runs each</div>
+    <svg class="graph" viewBox="0 0 900 470" aria-label="Blank bar graph frame for the target size test">
+      <g font-family="Nunito, sans-serif" fill="#15202E">
+      <path d="M110 30 V400 H870" stroke="#15202E" stroke-width="4" fill="none"/>
+      <g stroke="#C9D3DF" stroke-width="1.5"><path d="M110 326 H870 M110 252 H870 M110 178 H870 M110 104 H870"/></g>
+      <g stroke="#15202E" stroke-width="2" stroke-dasharray="8 6" fill="none"><rect x="190" y="150" width="140" height="250"/><rect x="420" y="150" width="140" height="250"/><rect x="650" y="150" width="140" height="250"/></g>
+      <text x="260" y="438" text-anchor="middle" font-size="26" font-weight="700">40 mm (big)</text>
+      <text x="490" y="438" text-anchor="middle" font-size="26" font-weight="700">20 mm</text>
+      <text x="720" y="438" text-anchor="middle" font-size="26" font-weight="700">10 mm (small)</text>
+      <text x="490" y="468" text-anchor="middle" font-size="20" fill="#53667E">Target hole size</text>
+      <text x="40" y="215" text-anchor="middle" font-size="20" fill="#53667E" transform="rotate(-90 40 215)">Average hits</text>
+      </g>
+    </svg>
+    <div class="tick">11 / 12</div></div>
+
+  <div class="sheet frame"><div class="cut"></div>
+    <div class="fh">How the MS-2000 Works</div>
+    <div class="fs">Draw it and label: camera, laser, servos, micro:bit, mosquito pod, wand, radio</div>
+    <div class="drawbox"></div>
+    <div class="tick">12 / 12</div></div>
+</div>
+
+</body>
+</html>

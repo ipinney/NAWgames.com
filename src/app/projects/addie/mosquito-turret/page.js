@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { A, BASE, CAD, PLAN, PARTS_PDF, GUIDE, meta, Nav, Back, Btn, Section, Title } from './ui';
+import { A, BASE, CAD, PLAN, PARTS_PDF, GUIDE, BOARD, meta, Nav, Back, Btn, Section, Title } from './ui';
 import { FAIR } from './fair';
 import DueDates from './DueDates';
 
@@ -39,6 +39,12 @@ const PAGES = [
     href: FAIR,
     title: 'Fair guide',
     text: 'The six graded parts, what each one needs, the journal, the board, the judges, and the rubric.',
+    color: 'pink',
+  },
+  {
+    href: BOARD,
+    title: 'Board and table',
+    text: 'Two trifold layouts, what goes in each block, how it all fits on a 3 foot table, and print-outs for every title.',
     color: 'pink',
   },
   {

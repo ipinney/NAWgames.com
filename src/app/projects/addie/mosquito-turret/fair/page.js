@@ -1,4 +1,4 @@
-import { BASE, CAD, PLAN, meta, Nav, Back, Btn, Section, Title, Steps } from '../ui';
+import { BASE, CAD, PLAN, BOARD, meta, Nav, Back, Btn, Section, Title, Steps } from '../ui';
 import { DUE, RUBRIC } from '../fair';
 import DueDates from '../DueDates';
 import RubricCheck from '../RubricCheck';
@@ -93,7 +93,7 @@ const PARTS = {
       ['On the table', 'The MS-2000, the mosquito on its line, the journal, and a laser safety sign.'],
     ],
     check: ['Big title you can read from across the room', 'Every graph has a title and labels', 'Photos have captions', 'Laser label showing', 'Practice the 30-second demo'],
-    links: [[`${PLAN}#demo`, 'The demo script'], [`${CAD}/ms2000-3d.html`, '3D model for the drawing']],
+    links: [[BOARD, 'Board layouts and print-outs'], [`${BOARD}#table`, 'The 3 foot table'], [`${PLAN}#demo`, 'The demo script'], [`${CAD}/ms2000-3d.html`, '3D model for the drawing']],
   },
 };
 

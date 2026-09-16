@@ -17,6 +17,7 @@ Repo copy of the claude.ai Project file claude/mosquito-turret-plan.md. Keep bot
 - Print plan: /projects/addie/mosquito-turret/build/batches
 - Learn: /projects/addie/mosquito-turret/learn (11 lessons + glossary)
 - Build your own: /projects/addie/mosquito-turret/make (Level 1 micro:bit hit detector with code, Level 2 camera tracker no laser, Level 3 full MS-2000; fair question ideas; grown-up notes)
+- Board and table (static): /projects/addie/ms2000-board.html (2 trifold layouts, block contents, 3 ft table top view + fair changes, 12 print sheets)
 - Full plan (static): /projects/addie/mosquito-turret.html
 - Parts list PDF: /projects/addie/ms2000-parts-list.pdf
 - 3D: /projects/addie/ms2000-cad/ (ms2000-turret-3d.html main, ms2000-3d.html whole setup, index.html parts)

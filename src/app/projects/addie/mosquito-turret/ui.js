@@ -6,6 +6,7 @@ export const CAD = '/projects/addie/ms2000-cad';
 export const PLAN = '/projects/addie/mosquito-turret.html';
 export const PARTS_PDF = '/projects/addie/ms2000-parts-list.pdf';
 export const GUIDE = '/projects/addie/ms2000-build-guide.html';
+export const BOARD = '/projects/addie/ms2000-board.html';
 export const OG = 'https://nawgames.com/projects/addie/ms2000-og.png';
 
 export function meta(title, desc, path) {
