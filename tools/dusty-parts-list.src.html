@@ -165,20 +165,20 @@
     <h3>Two ways to buy it</h3>
     <div class="brow">
       <span class="lab"><b>Path A: all US vendors</b>Adafruit, SparkFun, Pololu. Fastest and simplest.</span>
-      <span class="amt">$97</span>
+      <span class="amt">$132</span>
     </div>
     <div class="brow">
       <span class="lab"><b>Path B: budget</b>Cheaper motors and driver, mixed vendors, slower shipping.</span>
-      <span class="amt">$49</span>
+      <span class="amt">$84</span>
     </div>
     <div class="brow">
-      <span class="lab"><b>Plus consumables</b>Both paths. Foam board, batteries, glue, tape.</span>
-      <span class="amt">$28</span>
+      <span class="lab"><b>Plus consumables</b>Both paths. Glue, tape, zip ties, brush materials.</span>
+      <span class="amt">$19</span>
     </div>
   </div>
 </div>
 
-<div class="flag warn" style="margin-bottom:14px;"><b>Heads up on the budget.</b> The design doc estimated $72 from typical marketplace pricing. Verified vendor pricing lands higher: about $125 all-in on Path A, about $78 on Path B. The difference is mostly the motors and the driver board, which are the two places where buying the cheap version causes the most grief.</div>
+<div class="flag warn" style="margin-bottom:14px;"><b>Heads up on the budget.</b> The design doc estimated $72 from typical marketplace pricing. Verified vendor pricing lands higher: about $160 all-in on Path A, about $113 on Path B, including the rechargeable power bank added on Sep 15 (change order MOC-001, about $35 more than AA batteries). The rest of the difference is mostly the motors and the driver board, which are the two places where buying the cheap version causes the most grief.</div>
 
 <div class="sec">Brain and control</div>
 
@@ -212,7 +212,7 @@
     <span class="price">&pound;10.45<small>ex VAT, ~$13</small></span>
   </div>
   <div class="flag warn"><b>Two dead ends found.</b> Chicago Electronic Distributors comes up first in searches for this board and has stopped accepting orders entirely. PiShop's Kitronik motor driver page returns a 404. Order the Kitronik direct from Kitronik, or take the SparkFun primary and stay domestic.</div>
-  <div class="flag"><b>This choice decides part 10.</b> moto:bit takes power through a barrel jack. The Kitronik takes bare wires into screw terminals. Match the battery holder to whichever board is ordered.</div>
+  <div class="flag"><b>This choice decides part 10.</b> moto:bit takes power through a barrel jack, which the USB-to-barrel cable in part 10 plugs straight into. The Kitronik takes bare wires into screw terminals and would need a USB breakout instead.</div>
 </div>
 
 <div class="sec">Drive</div>
@@ -322,23 +322,39 @@
     <span><span class="name">DC Toy / Hobby Motor, 130 size</span> <span class="vend">&middot; Adafruit #711 &middot; in stock &middot; 4.5 to 9V</span><a class="url" href="https://www.adafruit.com/product/711">https://www.adafruit.com/product/711</a></span>
     <span class="price">$1.95</span>
   </div>
-  <div class="flag"><b>Current check.</b> 70 mA unloaded, 250 mA loaded, 500 mA if the brush jams on something. A 4xAA pack handles that comfortably, so the robot slows down rather than browning out when the brush catches.</div>
+  <div class="flag"><b>Current check.</b> 70 mA unloaded, 250 mA loaded, 500 mA if the brush jams on something. The power bank supplies up to 2.4 A, so a jammed brush does not brown out the micro:bit.</div>
 </div>
 
 <div class="part">
-  <div class="part-head"><span class="n">10</span><h3>Battery holder</h3><span class="qty">Qty 1</span></div>
-  <p class="job">Four AA batteries, about 6V fresh. No charging circuit and no lithium cell sitting next to a hot glue gun and a nine year old. The pack is also most of the robot's weight, and it sits over the drive wheels where that weight helps grip.</p>
+  <div class="part-head"><span class="n">10</span><h3>Rechargeable power bank and cable</h3><span class="qty">Changed Sep 15</span></div>
+  <p class="job">Replaces the 4 x AA holder (change order MOC-001). The bank rides in a printed sleeve and charges through USB-C without coming out, and it holds a steady 5 V, so the speed test is not skewed by fading batteries. It is a sealed commercial pack with its own protection circuits. Links checked Sep 15, 2026.</p>
   <div class="opt">
     <span class="tag p">Primary</span>
-    <span><span class="name">4 x AA Holder, 2.1mm Plug and On/Off Switch</span> <span class="vend">&middot; Adafruit #3788 &middot; 84 in stock &middot; for moto:bit</span><a class="url" href="https://www.adafruit.com/product/3788">https://www.adafruit.com/product/3788</a></span>
-    <span class="price">$3.95</span>
+    <span><span class="name">Anker 321 Power Bank (PowerCore 5K), A1112</span> <span class="vend">&middot; Walmart &middot; 97 x 45.8 x 22 mm, 5,200 mAh, USB-C in, USB-A out</span><a class="url" href="https://www.walmart.com/ip/Anker-5K-Power-Bank-12W-USB-C-USB-A-Port/2335161189">https://www.walmart.com/ip/Anker-5K-Power-Bank-12W-USB-C-USB-A-Port/2335161189</a></span>
+    <span class="price">$23.84</span>
   </div>
   <div class="opt">
-    <span class="tag s">Alt</span>
-    <span><span class="name">4 x AA Holder with On/Off Switch</span> <span class="vend">&middot; Adafruit #830 &middot; in stock &middot; for Kitronik</span><a class="url" href="https://www.adafruit.com/product/830">https://www.adafruit.com/product/830</a></span>
-    <span class="price">$2.95</span>
+    <span class="tag s">Backup</span>
+    <span><span class="name">Same bank</span> <span class="vend">&middot; Target A-86373147</span><a class="url" href="https://www.target.com/p/anker-5000mah-power-bank-powercore-5k-12w-1a1c-black/-/A-86373147">https://www.target.com/p/anker-5000mah-power-bank-powercore-5k-12w-1a1c-black/-/A-86373147</a></span>
+    <span class="price">~$20</span>
   </div>
-  <div class="flag warn"><b>These are not interchangeable.</b> The #3788 ends in a 5.5/2.1mm barrel plug, which is what the moto:bit's power jack wants. The #830 ends in bare jumper wires, which is what the Kitronik's screw terminals want. Ordering the wrong one means cutting the connector off a brand new cable.</div>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">USB to 2.1mm Male Barrel Jack Cable, 22AWG, 1 m</span> <span class="vend">&middot; Adafruit #2697 &middot; in stock</span><a class="url" href="https://www.adafruit.com/product/2697">https://www.adafruit.com/product/2697</a></span>
+    <span class="price">$2.75</span>
+  </div>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">In-line power switch for 2.1mm barrel jack, 2 A</span> <span class="vend">&middot; Adafruit #1125 &middot; in stock</span><a class="url" href="https://www.adafruit.com/product/1125">https://www.adafruit.com/product/1125</a></span>
+    <span class="price">$2.50</span>
+  </div>
+  <div class="opt">
+    <span class="tag p">Primary</span>
+    <span><span class="name">Cable Matters 90 degree USB-A adapters, left and right pair</span> <span class="vend">&middot; Amazon B07L6RW9RT, the one exception to the no-Amazon rule &middot; backup Walmart 709931832</span><a class="url" href="https://www.amazon.com/Cable-Matters-Combo-Pack-Degree-Adapters/dp/B07L6RW9RT">https://www.amazon.com/Cable-Matters-Combo-Pack-Degree-Adapters/dp/B07L6RW9RT</a></span>
+    <span class="price">~$10</span>
+  </div>
+  <div class="flag warn"><b>The adapter is not optional.</b> A straight USB plug sticks out about 35 mm from the side of Dusty and pushes it past the 5 inch limit. The 90 degree adapter turns the cable forward along the side. Keep whichever of the pair points forward.</div>
+  <div class="flag"><b>No trickle mode.</b> Two presses of the bank button turn on trickle mode, which caps the output under 0.5 A and shuts off after 2 hours. Dusty needs more than that. One press to wake it is all it needs.</div>
 </div>
 
 <div class="sec">Optional, Rev B only</div>
@@ -362,10 +378,11 @@
     <tbody>
       <tr><td>Foam board sheet</td><td>Rev A chassis. Cuts in seconds, which is the whole point of Rev A.</td><td class="r">$4</td></tr>
       <tr><td>Shallow plastic food container</td><td>Rev B chassis. Flat floor, straight walls, and the lid becomes the debris tray.</td><td class="r">$4</td></tr>
-      <tr><td>AA batteries, 8-pack</td><td>One set in the robot, one spare set for the fair.</td><td class="r">$8</td></tr>
       <tr><td>Hot glue sticks</td><td>Mounting everything.</td><td class="r">$4</td></tr>
       <tr><td>Zip ties, small</td><td>Cable management. Loose wires are what snag the brush.</td><td class="r">$4</td></tr>
-      <tr><td>Double-sided foam tape</td><td>Mounting the battery pack so it can still come off.</td><td class="r">$4</td></tr>
+      <tr><td>Frost King R338H rubber foam tape (Home Depot)</td><td>Shims that keep the power bank from rattling in its sleeve. Sticky side on the sleeve, never on the bank.</td><td class="r">$3</td></tr>
+      <tr><td>Scotch-Mount double-sided mounting tape</td><td>Sticks the in-line switch to the deck. Too strong for the power bank itself.</td><td class="r">$5</td></tr>
+      <tr><td>USB-C phone charger</td><td>Charging the power bank inside Dusty. Check the drawer first.</td><td class="r">$0</td></tr>
       <tr><td>Paintbrush, toothbrushes, pipe cleaners, felt</td><td>Brush material. Buy three kinds and test them, that is a data point.</td><td class="r">$6</td></tr>
       <tr><td>Micro-USB cable</td><td>Programming the micro:bit. Check the drawer first.</td><td class="r">$0</td></tr>
     </tbody>
@@ -376,12 +393,12 @@
 
 <div class="gotchas">
   <div class="g">
-    <h3>Match the battery to the board</h3>
+    <h3>Match the power cable to the board</h3>
     <p>Barrel plug for moto:bit, bare wires for Kitronik. The single easiest way to end up with a part that does not fit.</p>
   </div>
   <div class="g">
     <h3>Do not buy an L298N</h3>
-    <p>It is in half the tutorials online and it throws away about 2 volts as heat. Harmless on a 12V robot, crippling on a 4.8V pack.</p>
+    <p>It is in half the tutorials online and it throws away about 2 volts as heat. Harmless on a 12V robot, crippling on a 5V power bank.</p>
   </div>
   <div class="g">
     <h3>32 mm wheels, not 60 mm</h3>

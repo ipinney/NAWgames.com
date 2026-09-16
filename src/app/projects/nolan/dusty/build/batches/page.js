@@ -39,7 +39,7 @@ const BATCHES = [
     stem: 'dusty-plate-1-fit-check',
     title: 'Fit check',
     when: 'Wed Sep 16, after the M2 screws arrive',
-    time: 'About 10 minutes',
+    time: 'About 15 minutes',
     pieces: 'Motor gear, washer, axle collar, 2 dowels, 1 deck post',
     why: 'Six tiny parts that test whether this printer makes holes the right size. Finding out now takes 10 minutes. Finding out after the base takes an hour and a half.',
     need: ['M2 screws', '130 brush motor'],
@@ -61,7 +61,7 @@ const BATCHES = [
     title: 'Base plate',
     when: 'Wed Sep 16 or Thu Sep 17',
     time: 'About 1.5 hours',
-    pieces: 'Base plate (upside down), 3 deck posts, and a loose support block',
+    pieces: 'Base plate (upside down), 1 deck post, and a loose support block',
     why: 'The part everything else bolts to. It prints upside down so the top comes out perfectly flat.',
     need: [],
     printing: [
@@ -71,8 +71,8 @@ const BATCHES = [
     after: [
       ['Wait for the bed to cool, then pop the base off and peel away the brim.', ''],
       ['Lift off the small loose block that was standing under the gear peg.', 'It was only there to hold the peg up while it printed. Check the peg is round and smooth.'],
-      ['Run an M2 screw into each small pilot hole once, then back it out.', 'Four under the motor pads, two in the caster posts, one in the end of the gear peg.'],
-      ['Push the four posts into their holes to check they fit, then take them out again.', ''],
+      ['Run an M2 screw into each small pilot hole once, then back it out.', 'Four under the motor pads, two in the caster posts, one in the end of the gear peg. The four holes for the battery sleeve are plain through-holes.'],
+      ['Push the two posts into their holes near the front to check they fit, then take them out again.', ''],
     ],
     gate: 'The base is clean and the posts fit. Print Batch 3.',
     build: [
@@ -83,23 +83,24 @@ const BATCHES = [
   {
     n: 3,
     stem: 'dusty-plate-3-deck-and-arms',
-    title: 'Deck and sensor arms',
+    title: 'Deck, battery sleeve and sensor arms',
     when: 'Thu Sep 17 or Fri Sep 18',
-    time: 'About 40 minutes',
-    pieces: 'Deck, right sensor arm, left sensor arm (the one with the switch pad)',
-    why: 'The deck is needed for the first drive on Saturday. The arms print now too, so the sensor weekend has nothing left to print.',
+    time: 'About 1 hour 45 minutes',
+    pieces: 'Deck, battery sleeve (standing on its end), keeper bar, right sensor arm, left sensor arm (the one with the switch pad)',
+    why: 'The deck and the battery sleeve are needed for the first drive on Saturday. The arms print now too, so the sensor weekend has nothing left to print.',
     need: [],
     printing: [
       'Put the motors and caster on the base (Steps 2 and 3) if those parts have arrived.',
-      'Stick the hook-and-loop tape on the base and on the battery holder.',
+      'Charge the power bank with its USB-C cable so it is full for Saturday.',
     ],
     after: [
       ['Clean up the deck and slide the moto:bit between the guides to check the fit.', 'It should slide in with light pressure and touch the stop at the back.'],
+      ['Slide the power bank into the sleeve from the open end, ports facing out, all the way to the closed end.', 'Then push the keeper bar in through the slot in the back wall until its head sits flat. If the bank rattles, a grown-up adds a strip of foam tape to the floor rib.'],
       ['Hold each sensor arm against its ear on the base and push an M2 × 8 through the slot.', 'Just a test. Take them off again and put them in a cup labeled SENSORS.'],
     ],
-    gate: 'The moto:bit fits the deck. That is everything for the first drive.',
+    gate: 'The moto:bit fits the deck and the bank fits the sleeve. That is everything for the first drive.',
     build: [
-      [4, 'Add the deck, the brain and the power', 'Four posts, deck, moto:bit, micro:bit, battery holder and 4 AA, tape, two zip ties, Y splitter, four M2 × 8'],
+      [4, 'Add the deck, the brain and the power', 'Two posts, battery sleeve, keeper bar, deck, power bank, 90° USB adapter, USB to barrel cable, in-line switch, Y splitter, moto:bit, micro:bit, foam tape, two zip ties, eight M2 × 8'],
       [5, 'Wire the motors and make it drive', 'Laptop, micro-USB cable'],
       [6, 'Mount the sensor arms (Sat Sep 26)', 'Both arms, two QTR-1A sensors, soldering, 2 × M2 × 8 and 2 × M2 × 6 with nuts, six jumper wires'],
       [7, 'Teach Dusty about edges (Sep 26 and 27)', ''],
@@ -149,14 +150,14 @@ const BATCHES = [
     gate: 'All 19 pieces printed. Dusty is complete.',
     build: [
       [10, 'Slide in the tray and test the sweep (Sun Oct 4)', 'Kitchen scale, 5 g of crushed cereal'],
-      [11, 'Two brains, then run the experiment (Oct 10 and 11)', 'Fresh batteries, ruler, notebook'],
+      [11, 'Two brains, then run the experiment (Oct 10 and 11)', 'Charged power bank, ruler, notebook'],
     ],
   },
 ];
 
 const TIMELINE = [
   ['Wed Sep 16', 'Print 1, then 2', 'Fit check, then the base'],
-  ['Thu Sep 17', 'Print 3', 'Deck and sensor arms'],
+  ['Thu Sep 17', 'Print 3', 'Deck, battery sleeve and sensor arms'],
   ['Sat Sep 19', 'Build', 'Steps 2 to 5: first drive'],
   ['Week of Sep 21', 'Print 4, then 5', 'Brush drive, then tray'],
   ['Sep 26 and 27', 'Build', 'Steps 6 to 8: sensors and whisker'],
@@ -216,7 +217,7 @@ export default function DustyBatchesPage() {
         </p>
         <p className="text-white/55 text-sm mt-2 leading-relaxed">
           Print a batch, check it, build what it unlocks, then print the next. Small test parts go first, the big base
-          second, and the tray last. All 19 pieces use about 77 g of PLA.
+          second, and the tray last. All 19 pieces use about 101 g of PLA.
         </p>
 
         <section className="mt-8 bg-naw-card rounded-2xl border border-white/10 p-5">

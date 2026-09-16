@@ -25,12 +25,12 @@ const P = '/projects/nolan';
 const STEPS = [
   {
     title: 'Get the parts',
-    text: 'A micro:bit, a motor board, three small motors, wheels, two cliff sensors, switches, a battery pack, M2 screws, and a little soldering. The list has links and prices.',
+    text: 'A micro:bit, a motor board, three small motors, wheels, two cliff sensors, switches, a USB-C power bank, M2 screws, and a little soldering. The list has links and prices.',
     action: { href: `${P}/dusty-parts-list.pdf`, label: 'Parts list (PDF)' },
   },
   {
     title: 'Print in five batches',
-    text: '19 pieces, about 77 g of PLA. Each batch is one plate file, and each one unlocks the next build steps.',
+    text: '19 pieces, about 101 g of PLA. Each batch is one plate file, and each one unlocks the next build steps.',
     action: { href: '/projects/nolan/dusty/build/batches', label: 'Print and build plan', internal: true },
   },
   {
@@ -43,7 +43,7 @@ const STEPS = [
 const VIEWERS = [
   {
     title: 'Every part',
-    text: 'All 26 parts, printed and bought. Tap one to see it by itself with its size, or in place on the robot.',
+    text: 'All 30 parts, printed and bought. Tap one to see it by itself with its size, or in place on the robot.',
     open: `${F}/dusty-components-3d.html`,
     file: 'dusty-components-3d.html',
   },
@@ -66,7 +66,9 @@ const VIEWERS = [
 const PARTS = [
   ['base', 'Base plate', 1, '85 × 122 × 28', '36', 'Top face down'],
   ['deck', 'Electronics deck', 1, '79 × 77 × 6', '15', ''],
-  ['post', 'Deck post', 4, '6 × 6 × 25', '0.6', 'Peg up'],
+  ['post', 'Deck post', 2, '6 × 6 × 35', '0.8', 'Peg up'],
+  ['sleeve', 'Battery sleeve', 1, '35 × 58 × 106', '25', 'Standing on its closed end'],
+  ['keeper', 'Keeper bar', 1, '6 × 54 × 8', '0.6', 'Head down, flat'],
   ['cradle', 'Brush motor cradle', 1, '29 × 26 × 17', '2.1', ''],
   ['dowel', 'Cradle dowel', 2, '3 × 3 × 3', '<0.1', ''],
   ['tray', 'Crumb tray', 1, '57 × 42 × 23', '7.0', 'Sloped bottom flat on the bed'],
@@ -228,7 +230,7 @@ export default function DustyBuildPage() {
             </table>
           </div>
           <p className="text-white/40 text-xs mt-3">
-            Also needed and not printed: M2 screws and nuts, female jumper wires, pipe cleaners, a KCD11 mini rocker switch, a 5.5 × 2.1 mm Y splitter and screw-terminal jack, hook-and-loop tape, and small zip ties.
+            Also needed and not printed: M2 screws and nuts, female jumper wires, pipe cleaners, a KCD11 mini rocker switch, a 5.5 × 2.1 mm Y splitter and screw-terminal jack, a USB-C power bank, a 90° USB-A adapter, a USB to barrel cable, an in-line power switch, foam tape, and small zip ties.
           </p>
         </Section>
 
