@@ -121,7 +121,7 @@ const L3_STEPS = [
 ];
 
 const QUESTIONS = [
-  ['Does a faster target get hit less?', 'The MS-2000 question. Swing the target from different heights.'],
+  ['Does a faster target get hit less?', 'One of the MS-2000 tests. Swing the target from different heights.'],
   ['Does the camera learn better from more angles?', 'Teach it from 1 side, then 4 sides. Count how often it loses the target.'],
   ['Does the background color matter?', 'Try a black, white, and busy backdrop.'],
   ['Does target size matter?', 'Small, medium, and large targets. Time to first lock-on.'],

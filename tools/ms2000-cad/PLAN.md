@@ -1,4 +1,4 @@
-# MS-2000 Mosquito Shooter: plan v7 (Sep 16, 2026)
+# MS-2000 Mosquito Shooter: plan v8 (Sep 16, 2026)
 
 Repo copy of the claude.ai Project file claude/mosquito-turret-plan.md. Keep both in sync.
 
@@ -87,13 +87,16 @@ Build guide written (Sep 16). Next on the site when it happens: photos and real-
 - Tracking is automatic: HuskyLens (Object Tracking, ID1) reports the box center; the turret micro:bit moves pan (P1) and tilt (P2) by (offset from 160,120) / 20 degrees each loop, clamped to limits, and fires when within 12 px, at most once per second, only during a wand-started run. No search sweep yet: if the camera loses the mosquito the head holds still.
 - Sound effects required: laser pew or cannon boom on fire (chosen with the wand's touch logo; turret buttons are inside the base), lock-on beep, hit splat on wand, victory sound on turret. DFRobot FIT0449 speaker module, grille in printed base.
 - Experiment and data gathering is a core requirement.
+- Experiment reframed (Sep 16): engineering goal + science question "what makes it miss". Light test dropped (it mostly tested the HuskyLens); target size test added.
 - Budget flexible (~$192 primary + ~$35 local). Printer: Flashforge Adventurer 5M. All equipment in printed housings.
 
 ## Experiments and data
-Main Q: does a faster mosquito get hit less?
-- Test 1 speed: pendulum release 10/20/30 deg, 5 ft, room lights (5 ft chosen on the site because the laser is aimed to cross the camera line at 1524 mm; change if Ivan wants otherwise)
-- Test 2 distance: 3/5/7 ft, 10 deg, room lights
-- Test 3 light: room lights, one lamp, off; 10 deg, 5 ft
+Engineering goal: Can I build a robot that finds, tracks, and hits a flying mosquito by itself?
+Science question: What makes the MS-2000 miss more: a faster, farther, or smaller mosquito? Hits = accuracy; the test that drops hits most is the biggest cause of misses.
+- Test 1 speed: pendulum release 10/20/30 deg, 5 ft, 40 mm cover, room lights (5 ft chosen because the laser is aimed to cross the camera line at 1524 mm)
+- Test 2 distance: 3/5/7 ft, 10 deg, 40 mm cover, room lights
+- Test 3 target size: black paper cover over the 40 mm pod face with a 40/20/10 mm hole (10 mm ~ real mosquito; same outside size so camera sees the same object; train once, no retraining between covers); 10 deg, 5 ft, room lights
+- Wand names array: speed 10/20/30, distance 3/5/7, size 40/20/10. Light level still logged as a room check.
 - 5 runs each, 45 total, 30 s per run. Measured: hits in 30 s, time to first hit. Controls: room, batteries, person on the line.
 - Wand micro:bit V2 datalogger saves test, setting, run, hits, time to first hit, light level; MY_DATA opens as table/graph/CSV and survives power off. Paper backup sheet.
 - Rules: every run counts, 5 per setting, redo only broken runs with a note, one test per day, photo each setup. Averages, one bar graph per test, conclusion frame.

@@ -262,7 +262,7 @@
       <p class="small muted">Turns left, right, up, and down to follow the mosquito wherever the wand moves it. The camera and laser point the same way, so when the mosquito is in the middle of the camera, the laser is on it.</p>
       <dl>
         <dt>At the fair</dt><dd>A judge swings the mosquito. The turret chases it, flashes, and the mosquito lights up.</dd>
-        <dt>The science</dt><dd>Does a faster mosquito get hit less?</dd>
+        <dt>The science</dt><dd>What makes it miss: speed, distance, or target size?</dd>
         <dt>How hard</dt><dd><span class="meter"><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span> Medium-hard</dd>
         <dt>Cost</dt><dd>About $227 (final list)</dd>
       </dl>
@@ -415,20 +415,23 @@
 <!-- EXPERIMENT -->
 <div class="card" id="experiment">
   <h2>Experiments and data</h2>
-  <p class="sub">The build is the invention. The science is what the MS-2000 measures. Three tests, 45 runs, all recorded by the machine itself, done in January and February.</p>
+  <p class="sub">The build answers the engineering goal. The experiment answers the science question. Three tests, 45 runs, all recorded by the machine itself, done over winter break.</p>
 
-  <div class="qbox">Main question: Does a faster mosquito get hit less often by the MS-2000?</div>
+  <div class="qbox">Engineering goal: Can I build a robot that finds, tracks, and hits a flying mosquito by itself?</div>
+  <div class="qbox" style="margin-top:10px">Science question: What makes the MS-2000 miss more: a faster, farther, or smaller mosquito?</div>
+  <p class="small muted" style="margin-top:8px">Hits are how accuracy is measured. Each test changes one thing and keeps the rest the same, so the test that drops the hits the most is the biggest reason the MS-2000 misses.</p>
   <div class="two" style="margin-top:14px">
     <div class="box">
       <h3>Hypothesis</h3>
-      <p>If the mosquito swings faster, then the MS-2000 will get <span class="blank">&nbsp;</span> hits, because <span class="blank" style="min-width:160px">&nbsp;</span>.</p>
+      <p>If the mosquito is <span class="blank">&nbsp;</span> (faster, farther, or smaller), then the MS-2000 will get <span class="blank">&nbsp;</span> hits, because <span class="blank" style="min-width:160px">&nbsp;</span>. One for each test.</p>
+      <p>I think <span class="blank">&nbsp;</span> will make it miss the most, because <span class="blank" style="min-width:160px">&nbsp;</span>.</p>
     </div>
     <div class="box">
       <h3>Variables</h3>
       <ul>
-        <li><b>Change:</b> how far back the mosquito is pulled before letting go (10, 20, or 30 degrees on the hook scale). Farther back means faster.</li>
+        <li><b>Change (one per test):</b> swing angle (farther back means faster), distance from the turret, or the size of the target hole</li>
         <li><b>Measure:</b> hits in 30 seconds, and time to the first hit</li>
-        <li><b>Keep the same:</b> same turret, mosquito, line length, spot, room lights, and fresh batteries</li>
+        <li><b>Keep the same:</b> same turret, mosquito, line length, room lights, camera training, and fresh batteries. When one thing changes, the others stay at 10&deg;, 5 feet, and the 40 mm hole.</li>
       </ul>
     </div>
   </div>
@@ -436,9 +439,9 @@
   <div class="tablewrap" style="margin-top:14px">
   <table>
     <tr><th>Test</th><th>Question</th><th>What changes</th><th>Runs</th></tr>
-    <tr><td><b>1. Speed</b> (main)</td><td>Does a faster mosquito get hit less?</td><td>Swing angle: 10&deg;, 20&deg;, 30&deg;</td><td>3 &times; 5 = 15</td></tr>
-    <tr><td><b>2. Distance</b></td><td>Does the MS-2000 hit less when the mosquito is farther away?</td><td>Hook at 3, 5, and 7 feet from the turret (10&deg; swing)</td><td>3 &times; 5 = 15</td></tr>
-    <tr><td><b>3. Light</b></td><td>Does the camera track worse in a darker room?</td><td>Room lights on, one lamp, lights off (10&deg; swing)</td><td>3 &times; 5 = 15</td></tr>
+    <tr><td><b>1. Speed</b></td><td>Does a faster mosquito get hit less?</td><td>Swing angle: 10&deg;, 20&deg;, 30&deg; (5 ft, 40 mm)</td><td>3 &times; 5 = 15</td></tr>
+    <tr><td><b>2. Distance</b></td><td>Does the MS-2000 hit less when the mosquito is farther away?</td><td>Turret at 3, 5, and 7 feet (10&deg;, 40 mm)</td><td>3 &times; 5 = 15</td></tr>
+    <tr><td><b>3. Target size</b></td><td>Does a smaller target get hit less?</td><td>Black paper cover over the pod face with a 40, 20, or 10 mm hole. 10 mm is about the size of a real mosquito. (10&deg;, 5 ft)</td><td>3 &times; 5 = 15</td></tr>
   </table>
   </div>
 
@@ -456,12 +459,12 @@
     <div class="box">
       <h3>What gets saved for every run</h3>
       <ul>
-        <li>Test (speed, distance, or light)</li>
+        <li>Test (speed, distance, or size)</li>
         <li>Setting (for example 20&deg;)</li>
         <li>Run number (1 to 5)</li>
         <li>Hits in 30 seconds</li>
         <li>Time to the first hit</li>
-        <li>Light level (the micro:bit measures it)</li>
+        <li>Room light level, to check the room stayed the same</li>
       </ul>
       <p class="small muted" style="margin-top:8px">The micro:bit V2 keeps this data even when the batteries come out. Plugged into a computer, the file called MY_DATA opens as a table with graphs and can be downloaded for a spreadsheet.</p>
     </div>
@@ -493,12 +496,13 @@
         <li>Average: add the 5 runs and divide by 5.</li>
         <li>One bar graph per test, averages on the bars.</li>
         <li>Compare: which setting got the most hits, and by how much?</li>
+        <li>Answer the question: which test dropped the hits the most? That is the biggest reason the MS-2000 misses.</li>
         <li>Conclusion: "My hypothesis was (right / wrong) because the data showed ___."</li>
         <li>What I would change next time.</li>
       </ul>
     </div>
   </div>
-  <div class="bigidea"><b>Start this fall, no parts needed:</b> hang a paper mosquito on a string and watch how the swing changes with the starting angle. Addie can also write the wand code and try the datalogger blocks in MakeCode on the website.</div>
+  <div class="bigidea"><b>Start this fall, no parts needed:</b> hang a paper mosquito on a string and watch how the swing changes with the starting angle. Cut the three black paper covers (40, 20, and 10 mm holes) for the size test; all three covers are the same size outside so the camera sees the same mosquito. Addie can also write the wand code and try the datalogger blocks in MakeCode on the website.</div>
 </div>
 
 <!-- DEMO -->
@@ -524,7 +528,7 @@
         <li>The MS-2000 chases it, flash, the eyes blink, the wand buzzes. "HIT!"</li>
         <li>"It knows it's a mosquito because I trained it." (camera screen)</li>
         <li>"A laser that kills mosquitoes would need to be 14,000 times stronger. That's too dangerous for school."</li>
-        <li>"The MS-2000 recorded 45 runs by itself. Here's what happened when the mosquito went faster, farther, and into the dark." (graphs)</li>
+        <li>"The MS-2000 recorded 45 runs by itself. Here's what happened when the mosquito went faster, farther, and smaller. The thing that made it miss most was ___." (graphs)</li>
       </ol>
     </div>
   </div>
@@ -605,7 +609,7 @@
     <li class="now"><span class="dot">5</span><div><h3>Final parts list and order</h3><div class="when">List done Sep 16; order by Sep 30</div><div class="muted small">Order the primary parts from DFRobot and DigiKey using the <a href="/projects/addie/ms2000-parts-list.pdf" target="_blank" rel="noopener">parts list</a>. Pick up the local items. Start the cursive journal.</div></div></li>
     <li><span class="dot">6</span><div><h3>Print and build</h3><div class="when">Oct 1 to Nov 13</div><div class="muted small">Mosquito and wand first (prove a hit lights the eyes). Then the pan and tilt head. Then the backdrop and pendulum. Then the code and sound effects.</div></div></li>
     <li><span class="dot">7</span><div><h3>Camera training and practice runs</h3><div class="when">Nov 14 to Dec 11</div><div class="muted small">Teach the camera, set the hit threshold, make sure the data saves. At school: question due Nov 18, research Dec 2, hypothesis Dec 9.</div></div></li>
-    <li><span class="dot">8</span><div><h3>Experiments</h3><div class="when">Dec 12 to Jan 15 (due Jan 19)</div><div class="muted small">Test 1 speed, Test 2 distance, Test 3 light. 45 runs, one test per day, over winter break.</div></div></li>
+    <li><span class="dot">8</span><div><h3>Experiments</h3><div class="when">Dec 12 to Jan 15 (due Jan 19)</div><div class="muted small">Test 1 speed, Test 2 distance, Test 3 target size. 45 runs, one test per day, over winter break.</div></div></li>
     <li><span class="dot">9</span><div><h3>Data and conclusion</h3><div class="when">Due Jan 25</div><div class="muted small">Averages, three bar graphs, and the conclusion.</div></div></li>
     <li><span class="dot">10</span><div><h3>Board and practice</h3><div class="when">Due Feb 1; exhibition Feb 3</div><div class="muted small">Question, hypothesis, variables, materials, steps, results, conclusion, Catholic connection, sources, and the "14,000 times" fact. Practice the 30-second demo on the family.</div></div></li>
   </ul>
@@ -626,7 +630,7 @@
   </ul>
 </div>
 
-<div class="foot">NAW Games &middot; Addie's Projects &middot; MS-2000 plan v6 (design locked, parts list), Sep 16, 2026</div>
+<div class="foot">NAW Games &middot; Addie's Projects &middot; MS-2000 plan v8 (engineering goal and science question), Sep 16, 2026</div>
 </div>
 </body>
 </html>

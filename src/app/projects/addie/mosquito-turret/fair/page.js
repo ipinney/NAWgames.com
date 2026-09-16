@@ -25,12 +25,12 @@ const RULES = [
 const PARTS = {
   question: {
     what: 'A question the MS-2000 can answer by testing. A good test question names the thing you change and the thing you count.',
-    ours: 'Does a faster mosquito get hit less?',
+    ours: 'What makes the MS-2000 miss more: a faster, farther, or smaller mosquito?',
     ask: [
-      ['What will I change on purpose?', 'For the MS-2000: how fast the mosquito swings.'],
+      ['What will I change on purpose?', 'For the MS-2000: how fast the mosquito swings, how far away it is, and how big the target is. One at a time.'],
       ['What will I count?', 'Hits in 30 seconds, and how long until the first hit.'],
       ['Can a test answer it?', 'If the answer comes from counting, yes.'],
-      ['Why does it matter?', 'Real mosquitoes fly fast. A turret that only hits slow ones would not help anyone.'],
+      ['Why does it matter?', 'Real mosquitoes are small and fast. Finding what makes the MS-2000 miss shows what a real laser turret has to be good at.'],
     ],
     check: ['Written as a question with a question mark', 'Names what changes', 'Names what gets counted', 'In my own words'],
     links: [[`${L}#fair-test`, 'Fair test lesson'], [`${PLAN}#experiment`, 'The experiment plan']],
@@ -53,15 +53,16 @@ const PARTS = {
     ask: [
       ['Speed', 'If it swings faster, more hits, fewer, or the same? Why?'],
       ['Distance', 'If it is farther away, more hits, fewer, or the same? Why?'],
-      ['Light', 'If the room is darker, more hits, fewer, or the same? Why? (Hint: the camera needs light to see.)'],
+      ['Size', 'If the target is smaller, more hits, fewer, or the same? Why? (Hint: the laser dot does not always land dead center.)'],
+      ['Biggest miss', 'Which of the three will make it miss the most? Why?'],
     ],
     check: ['Written before the first real run', 'Has if, then, and because', 'One for each test', 'Uses the variable words'],
-    links: [[`${L}#fair-test`, 'Variables lesson'], [`${L}#camera`, 'Why light matters to the camera']],
+    links: [[`${L}#fair-test`, 'Variables lesson'], [`${L}#sensor`, 'How a hit is felt']],
   },
   experiments: {
     what: 'All 45 runs done and written down. Three tests, three settings each, five runs each, 30 seconds a run.',
     ask: [
-      ['Set up', 'Backdrop up, tape measure from the camera lens to the mosquito, lights set, fresh batteries in both.'],
+      ['Set up', 'Backdrop up, tape measure from the camera lens to the mosquito, the right target cover on, room lights on, fresh batteries in both.'],
       ['Label the run', 'Set the wand to the test, the setting, and the run number.'],
       ['Arm', 'A grown-up turns the arm switch on.'],
       ['Release', 'Pull the mosquito back to the angle mark, let go, and start the 30 seconds.'],
@@ -78,7 +79,8 @@ const PARTS = {
       ['Averages', 'For each setting, add the 5 runs and divide by 5.'],
       ['Graphs', 'One bar graph per test. One bar per setting. Label both sides and give it a title.'],
       ['Compare', 'Which setting had the most hits? The fewest? Was the difference big or tiny?'],
-      ['Connect', 'Does the answer match the research? Why might the camera miss more in some settings?'],
+      ['Answer', 'Which test dropped the hits the most? That is the biggest reason the MS-2000 misses.'],
+      ['Connect', 'Does the answer match the research? Why might it miss more in some settings?'],
     ],
     check: ['A table of all 45 runs', '3 averages per test', '3 bar graphs with titles and labels', 'Conclusion answers the question', 'Uses numbers from the data'],
     links: [[`${L}#fair-test`, 'How to average'], ['https://microbit.org/get-started/user-guide/data-logging/', 'Open the MY_DATA file']],
@@ -86,7 +88,7 @@ const PARTS = {
   final: {
     what: 'The trifold board, the finished journal, and the MS-2000. Then the exhibition on Wednesday, February 3.',
     ask: [
-      ['Left panel', 'Question, purpose, research bullets, hypothesis, variables.'],
+      ['Left panel', 'Engineering goal, science question, research bullets, hypothesis, variables.'],
       ['Middle panel', 'Title, a big photo of the MS-2000, how it works, and the three graphs.'],
       ['Right panel', 'Materials, procedure steps, results, conclusion, Catholic connection, sources.'],
       ['On the table', 'The MS-2000, the mosquito on its line, the journal, and a laser safety sign.'],
@@ -97,9 +99,9 @@ const PARTS = {
 };
 
 const VARIABLES = [
-  ['Speed', 'Swing angle: 10, 20, 30 degrees', 'Hits in 30 s, time to first hit', '5 feet away, room lights on'],
-  ['Distance', '3, 5, 7 feet away', 'Hits in 30 s, time to first hit', '10 degree swing, room lights on'],
-  ['Light', 'Room lights, one lamp, lights off', 'Hits in 30 s, time to first hit', '10 degree swing, 5 feet away'],
+  ['Speed', 'Swing angle: 10, 20, 30 degrees', 'Hits in 30 s, time to first hit', '5 feet away, 40 mm target, room lights on'],
+  ['Distance', '3, 5, 7 feet away', 'Hits in 30 s, time to first hit', '10 degree swing, 40 mm target, room lights on'],
+  ['Target size', 'Hole in the black cover: 40, 20, 10 mm', 'Hits in 30 s, time to first hit', '10 degree swing, 5 feet away, room lights on'],
 ];
 
 const CATHOLIC = [
