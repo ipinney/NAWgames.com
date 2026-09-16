@@ -19,8 +19,7 @@ export const metadata = {
 
 const PLAN = '/projects/addie/mosquito-turret.html';
 const CAD = '/projects/addie/ms2000-cad/index.html';
-const MODEL3D = '/projects/addie/ms2000-cad/ms2000-turret-3d.html';
-const SETUP3D = '/projects/addie/ms2000-cad/ms2000-3d.html';
+const MODEL3D = '/projects/addie/ms2000-cad/ms2000-3d.html';
 
 // status: done | now | next
 const PHASES = [
@@ -103,19 +102,11 @@ export default function MosquitoTurretPage() {
               rel="noopener noreferrer"
               className="mt-5 ml-2 inline-flex items-center bg-naw-pink/15 border border-naw-pink/40 text-naw-pink px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-naw-pink/25 transition-colors"
             >
-              3D turret
-            </a>
-            <a
-              href={SETUP3D}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 ml-2 inline-flex items-center bg-white/5 border border-white/20 text-white/80 px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-white/10 transition-colors"
-            >
-              Whole setup in 3D
+              3D model
             </a>
             <a href={MODEL3D} target="_blank" rel="noopener noreferrer" className="mt-6 block rounded-2xl overflow-hidden border border-white/10 bg-[#0d1b2e] max-w-xl">
               <img src="/projects/addie/ms2000-hero.png" alt="3D model of the MS-2000 turret with its laser beam" width={720} height={630} className="w-full h-auto" />
-              <div className="px-4 py-2 text-white/60 text-sm">Tap to explore the turret in 3D: every part, highlight any one, or pull it apart.</div>
+              <div className="px-4 py-2 text-white/60 text-sm">Tap to explore in 3D: the turret, then the mosquito and wand, then the whole setup.</div>
             </a>
           </div>
         </div>
