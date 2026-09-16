@@ -26,7 +26,7 @@ const WHY = [
 ];
 
 const STEPS = [
-  ['Say what you want and why', 'Write one or two sentences. "Swapping AA batteries is hard. I want to charge Dusty with a USB-C cable instead."'],
+  ['Say what you want and why', 'Write one or two sentences. "Swapping AA batteries is hard and a set only lasts 90 minutes. I want a cheap way to charge Dusty with a USB-C cable instead."'],
   ['Check what it touches', 'Space, wiring, weight, safety, cost, the schedule, and the experiment. Measure, do not guess.'],
   ['Pick the parts', 'Find real parts with real sizes and prices from stores you can check. Write down a backup.'],
   ['Get a yes, then lock it', 'The person in charge approves it. Now the design is locked. Any new change starts a new change order.'],
@@ -181,7 +181,7 @@ export default function DustyChangesPage() {
           <div className="grid sm:grid-cols-3 gap-3">
             <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
               <div className="text-white/45 text-xs font-semibold">The problem</div>
-              <div className="text-white text-sm mt-1 leading-relaxed">Taking batteries in and out of Dusty was hard.</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">Taking batteries in and out of Dusty was hard, and one set of AA batteries only lasts about 90 minutes. We needed a cheap, long-term way to charge quickly.</div>
             </div>
             <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
               <div className="text-white/45 text-xs font-semibold">The idea</div>
@@ -192,6 +192,12 @@ export default function DustyChangesPage() {
               <div className="text-white text-sm mt-1 leading-relaxed">It gives a steady 5 volts, so batteries running down cannot mess up the speed test.</div>
             </div>
           </div>
+          <h3 className="text-white font-bold mt-6">Options we compared</h3>
+          <p className="text-white/60 text-sm mt-1 leading-relaxed">
+            Regular AA batteries, rechargeable AA batteries, AA batteries with their own USB-C plug, a bare lithium battery
+            with a charging board, and a store-bought power bank. Only the power bank charges without taking anything out,
+            and it is sealed and made safe by the company that builds it. It cost about $24.
+          </p>
           <h3 className="text-white font-bold mt-6">What checking it found</h3>
           <p className="text-white/50 text-sm mt-1">Each of these would have been a nasty surprise on build day.</p>
           <div className="mt-3">
