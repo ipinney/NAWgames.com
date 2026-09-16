@@ -4,6 +4,8 @@ import sys, os, json, html
 
 PARTS = [
     # (id, name, status, files [(label, href)], note)
+    ('3D', 'Turret, every component', 'done', [('3D turret', 'ms2000-turret-3d.html')],
+     'The turret with every printed and bought part in place. Tap a name to highlight it, Explode to pull it apart, Head or Base to zoom in.'),
     ('3D', 'Whole setup, assembled', 'done', [('3D model', 'ms2000-3d.html'), ('Turret part by part', 'ms2000-turret.html')],
      'Everything together: the turret, the black backdrop on its feet, the dowel with the pendulum pivot, the stuffed mosquito with its glowing pod hanging 5 ft from the camera, the wand, the ribbon cable, and the laser beam. Zoom to the turret or the mosquito with one tap.'),
     ('C', 'Bought parts, measured', 'done', [('3D viewer', 'ms2000-components.html'), ('Numbers (JSON)', 'ms2000-dims.json')],

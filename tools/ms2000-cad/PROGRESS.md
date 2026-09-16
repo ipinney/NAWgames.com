@@ -44,6 +44,10 @@ Read this first every session. Update it and commit after every finished step.
 - Focus buttons (Whole setup / Turret / Mosquito and wand), Bought and Laser toggles, Turret view. make_hero.py renders ms2000-hero.png for the MS-2000 page.
 - make_assembly.py now only writes when run as a script (make_setup imports its ITEMS).
 
+## Turret 3D viewer (Sep 16)
+- make_turret3d.py -> ms2000-turret-3d.html (template turret.tpl.html = setup template + tappable legend highlight + Explode).
+- 15 components with their own colors and explode offsets (SPEC list), laser beam stub, focus Whole turret / Head / Base. This is the main 3D link and the hero image source.
+
 ## Open numbers (see DIMENSIONS.md, basis est/tbd)
 - Xia mi: mounting holes, height, micro:bit slot direction, power jack side
 - 2xAAA pack size; arm switch size; servo horn; stuffed mosquito size

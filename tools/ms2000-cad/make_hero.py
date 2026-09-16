@@ -8,7 +8,10 @@ with sync_playwright() as p:
     b = p.chromium.launch(args=['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'])
     pg = b.new_page(viewport={'width': 720, 'height': 630}, device_scale_factor=2)
     pg.goto('file://' + os.path.abspath(viewer)); pg.wait_for_timeout(2500)
-    pg.click('[data-f=turret]'); pg.wait_for_timeout(2500)
+    if pg.query_selector('[data-f=turret]'):
+        pg.click('[data-f=turret]'); pg.wait_for_timeout(2500)
+    if pg.query_selector('#dims.on'):
+        pg.click('#dims'); pg.wait_for_timeout(300)
     pg.add_style_tag(content=HIDE)
     # the footer no longer reserves space once hidden: refit to the whole window
     pg.evaluate("() => { document.querySelector('.specs').style.position='fixed'; document.querySelector('.specs').style.top='630px'; window.dispatchEvent(new Event('resize')); }")
