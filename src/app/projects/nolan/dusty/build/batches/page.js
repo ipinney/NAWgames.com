@@ -33,6 +33,19 @@ const SETTINGS = [
   ['Hole size', 'X-Y hole compensation 0. Batch 1 tells you if it needs to change.'],
 ];
 
+const BEFORE = [
+  ['Unbox everything that has arrived and check it against the parts list.', ''],
+  ['Sort the M2 screws into three cups: 6 mm, 8 mm and 10 mm. Put the nuts in a fourth.', ''],
+  ['Before Batch 3, measure the power bank and the 90 degree USB adapter with a ruler or calipers.', 'The bank must fit inside 104 x 48 x 29 mm, and the adapter must stick out less than 28 mm. If anything is off, the sleeve gets fixed before it prints.'],
+];
+
+const TABS = [
+  ['Overview', '/projects/nolan/dusty'],
+  ['Build', '/projects/nolan/dusty/build'],
+  ['Print plan', '/projects/nolan/dusty/build/batches'],
+  ['Changes', '/projects/nolan/dusty/changes'],
+];
+
 const BATCHES = [
   {
     n: 1,
@@ -43,10 +56,14 @@ const BATCHES = [
     pieces: 'Motor gear, washer, axle collar, 2 dowels, 1 deck post',
     why: 'Six tiny parts that test whether this printer makes holes the right size. Finding out now takes 10 minutes. Finding out after the base takes an hour and a half.',
     need: ['M2 screws', '130 brush motor'],
-    printing: [
-      'Unbox everything that has arrived and check it against the parts list.',
-      'Sort the M2 screws into three cups: 6 mm, 8 mm and 10 mm. Put the nuts in a fourth.',
-    ],
+    grams: 1.6,
+    learn: {
+      title: 'How a 3D printer builds',
+      items: [
+        ['Watch the first layer go down. It should be flat and squished, not round like spaghetti.', 'The first layer is the most important one. If it does not stick, nothing above it will.'],
+        ['Each layer is 0.2 mm thick. The deck post is 35 mm tall. How many layers is that?', 'Answer: 35 divided by 0.2 is 175 layers.'],
+      ],
+    },
     after: [
       ['Twist an M2 × 8 screw into the small hole in the top of the deck post.', 'It should bite and hold. If it spins loose, the holes print too big. If it will not start, too small. Either way, a grown-up changes X-Y hole compensation in the printer software (Quality tab): -0.05 if loose, +0.05 if tight. Print this plate again, and use the same number for every plate after.'],
       ['Push the motor gear onto the 130 motor shaft.', 'Snug, and it should not turn on the shaft when you hold the gear. A little loose is OK; a drop of superglue fixes it in Batch 4.'],
@@ -64,10 +81,15 @@ const BATCHES = [
     pieces: 'Base plate (upside down), 1 deck post, and a loose support block',
     why: 'The part everything else bolts to. It prints upside down so the top comes out perfectly flat.',
     need: [],
-    printing: [
-      'Read Steps 2 and 3 of the build guide so you know where the motors and caster go.',
-      'Solder practice: a grown-up warms up the iron on a spare header pin (the sensors come later).',
-    ],
+    grams: 36.7,
+    learn: {
+      title: 'Meet the micro:bit',
+      items: [
+        ['Open makecode.microbit.org and make the micro:bit show a heart when you press button A.', 'Code is a list of steps the computer follows exactly, in order.'],
+        ['Read Steps 2 and 3 of the build guide so you know where the motors and caster go.', ''],
+        ['Solder practice: a grown-up warms up the iron on a spare header pin.', 'The sensors get soldered later, so practice now while nothing is at stake.'],
+      ],
+    },
     after: [
       ['Wait for the bed to cool, then pop the base off and peel away the brim.', ''],
       ['Lift off the small loose block that was standing under the gear peg.', 'It was only there to hold the peg up while it printed. Check the peg is round and smooth.'],
@@ -89,10 +111,15 @@ const BATCHES = [
     pieces: 'Deck, battery sleeve (standing on its end), keeper bar, right sensor arm, left sensor arm (the one with the switch pad)',
     why: 'The deck and the battery sleeve are needed for the first drive on Saturday. The arms print now too, so the sensor weekend has nothing left to print.',
     need: [],
-    printing: [
-      'Put the motors and caster on the base (Steps 2 and 3) if those parts have arrived.',
-      'Charge the power bank with its USB-C cable so it is full for Saturday.',
-    ],
+    grams: 42.5,
+    learn: {
+      title: 'How a power bank works',
+      items: [
+        ['Plug the power bank into a USB-C charger and watch the four blue lights.', 'Each light is about a quarter full. When all four stay on, it is charged.'],
+        ['The bank holds 5,200 mAh. Dusty uses about 450 mA. Roughly how many hours is that?', 'Answer: 5,200 divided by 450 is about 11, but the bank loses some energy changing its voltage, so plan on 6 to 7 hours.'],
+        ['Put the motors and caster on the base (Steps 2 and 3) if those parts have arrived.', ''],
+      ],
+    },
     after: [
       ['Clean up the deck and slide the moto:bit between the guides to check the fit.', 'It should slide in with light pressure and touch the stop at the back.'],
       ['Slide the power bank into the sleeve from the open end, ports facing out, all the way to the closed end.', 'Then push the keeper bar in through the slot in the back wall until its head sits flat. If the bank rattles, a grown-up adds a strip of foam tape to the floor rib.'],
@@ -116,10 +143,15 @@ const BATCHES = [
     pieces: 'Brush motor mount, big gear, roller gear, brush roller (standing up), axle (lying flat)',
     why: 'Everything for the brush except the small pieces from Batch 1. Printed a week early so there is time to fix a gear before Oct 3.',
     need: [],
-    printing: [
-      'Cut about 20 pipe cleaner pieces, each 30 mm long.',
-      'Watch the first layers of the roller. It is tall and thin, and it must stick well.',
-    ],
+    grams: 13.6,
+    learn: {
+      title: 'Gears trade speed for strength',
+      items: [
+        ['Look at the plate picture. The motor gear has 12 teeth and the big gear has 36. How many times does the motor turn for one turn of the big gear?', 'Answer: 36 divided by 12 is 3. Slower, but three times stronger.'],
+        ['The small gear has 10 teeth and the roller gear has 18. Multiply both steps together.', 'Answer: 3 times 1.8 is 5.4. The brush turns 5.4 times slower than the motor.'],
+        ['Cut about 20 pipe cleaner pieces, each 30 mm long.', 'Watch the first layers of the roller while you cut. It is tall and thin, and it must stick well.'],
+      ],
+    },
     after: [
       ['Check the gear teeth are clean.', 'The gears print with no brim, so there is nothing to trim. If a tooth has a stray string, a grown-up cleans it with a hobby knife.'],
       ['Slide the axle through the roller and the roller gear.', 'The flat side of the axle matches the flat inside each one. They should slide on, not wobble.'],
@@ -140,9 +172,14 @@ const BATCHES = [
     pieces: 'Crumb tray',
     why: 'Last, because it sits right behind the brush. If the brush needed changes, the tray can change too.',
     need: [],
-    printing: [
-      'Crush some cereal and weigh out 5 grams for the sweep test.',
-    ],
+    grams: 7.0,
+    learn: {
+      title: 'Measure like a scientist',
+      items: [
+        ['Put a small bowl on the kitchen scale and press the zero (tare) button.', 'Now the scale only counts what you add, not the bowl.'],
+        ['Crush some cereal and weigh out exactly 5 grams for the sweep test.', 'Saying "Dusty picked up 3.8 of 5 grams" is a measurement. "It cleans pretty well" is an opinion.'],
+      ],
+    },
     after: [
       ['Check the bottom of the tray is flat and the front edge is thin and clean.', 'The tray prints tipped back a little so its sloped bottom lies flat on the bed. Trim any brim off the front edge, because that edge rides on the table.'],
       ['Turn Dusty upside down on a towel and press the tray on until the back clicks.', 'The two side bumps click too. Push the back wall forward a little to take it off.'],
@@ -201,7 +238,23 @@ function List({ items }) {
 export default function DustyBatchesPage() {
   return (
     <div className="min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 pt-10 pb-20">
+      <nav className="bg-naw-card/60 border-b border-white/10">
+        <div className="max-w-5xl mx-auto px-4 flex items-center gap-1 overflow-x-auto">
+          <Link href="/projects/nolan/dusty" className="font-game text-[10px] text-naw-orange pr-3 py-3 whitespace-nowrap">DUSTY</Link>
+          {TABS.map(([label, href]) => (
+            <Link
+              key={label}
+              href={href}
+              className={`px-3 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors ${
+                label === 'Print plan' ? 'border-naw-orange text-white' : 'border-transparent text-white/50 hover:text-white/80'
+              }`}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+      </nav>
+      <div className="max-w-4xl mx-auto px-4 pt-8 pb-20">
         <Link href="/projects/nolan/dusty/build" className="text-white/40 hover:text-white/70 text-sm inline-flex items-center gap-1 transition-colors">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -213,14 +266,22 @@ export default function DustyBatchesPage() {
           <span className="bg-gradient-to-r from-naw-orange to-yellow-300 bg-clip-text text-transparent">PRINT AND BUILD PLAN</span>
         </h1>
         <p className="text-white text-lg font-semibold mt-4 leading-snug">
-          Five print batches. Each one gives you the parts for the next few build steps.
+          Five print batches. Each one comes with something to learn while it prints, and unlocks the next build steps.
         </p>
         <p className="text-white/55 text-sm mt-2 leading-relaxed">
           Print a batch, check it, build what it unlocks, then print the next. Small test parts go first, the big base
           second, and the tray last. All 19 pieces use about 101 g of PLA.
         </p>
 
-        <section className="mt-8 bg-naw-card rounded-2xl border border-white/10 p-5">
+        <nav className="mt-6 flex flex-wrap gap-2">
+          {BATCHES.map((b) => (
+            <a key={b.n} href={`#batch-${b.n}`} className="bg-naw-card border border-white/10 hover:border-naw-orange/50 rounded-lg px-3 py-1.5 text-sm text-white/80 transition-colors">
+              <span className="text-naw-orange font-bold">{b.n}</span> {b.title}
+            </a>
+          ))}
+        </nav>
+
+        <section className="mt-6 bg-naw-card rounded-2xl border border-white/10 p-5">
           <h2 className="text-white font-bold text-lg">The calendar</h2>
           <div className="mt-3 divide-y divide-white/5">
             {TIMELINE.map(([d, what, detail]) => (
@@ -247,8 +308,13 @@ export default function DustyBatchesPage() {
           </div>
           <p className="text-white/45 text-xs mt-3">
             Each plate leaves at least 15 mm between parts and 10 mm from the bed edge, so every brim fits. The times below are the slicer's
-            estimates for the Adventurer 5M, about 3.5 hours in all.
+            estimates for the Adventurer 5M, about 4.5 hours in all.
           </p>
+        </section>
+
+        <section className="mt-6 rounded-2xl border border-naw-orange/40 bg-naw-orange/10 p-5">
+          <h2 className="text-white font-bold text-lg">Before the first print</h2>
+          <List items={BEFORE} />
         </section>
 
         {BATCHES.map((b) => (
@@ -259,7 +325,7 @@ export default function DustyBatchesPage() {
               </span>
               <div>
                 <h2 className="text-white text-xl sm:text-2xl font-bold">Batch {b.n}: {b.title}</h2>
-                <p className="text-white/50 text-sm">{b.when} · {b.time}</p>
+                <p className="text-white/50 text-sm">{b.when} · {b.time} · {b.grams} g</p>
               </div>
             </div>
 
@@ -282,9 +348,10 @@ export default function DustyBatchesPage() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-4 mt-4">
-              <div className="bg-naw-card rounded-2xl border border-white/10 p-5">
-                <h3 className="text-naw-cyan font-bold">While it prints</h3>
-                <List items={b.printing.map((t) => [t, ''])} />
+              <div className="bg-naw-card rounded-2xl border border-lime-300/25 p-5">
+                <div className="text-lime-300 text-xs font-semibold">Learn while it prints</div>
+                <h3 className="text-white font-bold">{b.learn.title}</h3>
+                <List items={b.learn.items} />
               </div>
               <div className="bg-naw-card rounded-2xl border border-white/10 p-5">
                 <h3 className="text-naw-cyan font-bold">When it is done</h3>
