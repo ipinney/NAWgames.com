@@ -179,24 +179,34 @@ export const LOCAL = [
   "where": "Grocery store"
  },
  {
+  "name": "Stuffed mosquito toy (the target)",
+  "qty": "1",
+  "where": "Toy store or online"
+ },
+ {
   "name": "Short fishing rod or 3/8\" dowel, clear 10 lb line",
   "qty": "1",
   "where": "Sporting goods or hardware store"
  },
  {
-  "name": "Black foam board (20x30 in) and 1/4\" dowels",
-  "qty": "2 boards, 4 dowels",
+  "name": "Black foam board, 20x30 in, 3/16\" thick",
+  "qty": "1",
   "where": "Craft store"
  },
  {
-  "name": "Pipe cleaners, wing film or vellum, googly eyes",
-  "qty": "1 each",
-  "where": "Craft store"
+  "name": "1/4\" wood dowel",
+  "qty": "1",
+  "where": "Craft or hardware store"
  },
  {
-  "name": "White and colored PLA",
-  "qty": "About 250 g",
-  "where": "On hand"
+  "name": "Small zip ties and hook-and-loop tape",
+  "qty": "1 pack each",
+  "where": "Hardware store"
+ },
+ {
+  "name": "PLA filament, any color plus a little white",
+  "qty": "About 310 g + 11 g white",
+  "where": "On hand (check for white)"
  },
  {
   "name": "Solder, heat-shrink tubing, hot glue",

@@ -201,7 +201,7 @@ export default function BuildPage() {
                   </div>
                 ))}
               </div>
-              <p className="text-white/45 text-xs mt-2">Plus a stuffed mosquito for the target. About $35 in all.</p>
+              <p className="text-white/45 text-xs mt-2">About $35 in all.</p>
             </div>
             <div className="bg-naw-card rounded-2xl border border-white/10 p-5">
               <h3 className="text-white font-bold">Tools</h3>
