@@ -83,3 +83,10 @@ Project plan, school due dates, site map, and deploy gotchas: PLAN.md in this fo
 - Plate thumbnails: render_plates.py (dump with cad-venv, render with batchzero venv) -> public/.../ms2000-cad/plates/*.png.
 - OG card: `/opt/batchzero/venv/bin/python make_og.py ../../public/projects/addie/ms2000-cad/ms2000-turret-3d.html ../../public/projects/addie/ms2000-og.png`.
 - Build steps are a placeholder until Addie writes them (PLANNED list in build/page.js).
+
+## Build guide (Sep 16)
+- public/projects/addie/ms2000-build-guide.html: static page in the Dusty guide format, MS-2000 dark palette. 16 steps in parts A to E (anchors #step-1..#step-16, #part-1..#part-5, #wiring, #screws, #fix, #words), 7 MakeCode programs drawn as blocks in MakeCode category colors.
+- Images: public/projects/addie/ms2000-guide/*.jpg from `make_guide_shots.py OUT_DIR` (batchzero venv), then convert PNG to JPG with system python3 (PIL).
+- Linked from build/page.js (hero button, step card, Build steps section), hub PAGES, make/page.js Level 3. GUIDE constant in ui.js.
+- Design choices written into the guide: pew/boom on the wand logo (turret buttons are inside the base); wand runs each test (A test/setting, B run, A+B start, 30 s, GO/STOP/HIT/PEW/BOOM on radio group 7); relay block "relay V1/V2 Actuation/Release" from pxt-DFRobot_xia_mi_Board, version read off the board in step 1; tilt limits found in step 11.
+- When the build happens, add photos and correct anything that differs from the real parts.

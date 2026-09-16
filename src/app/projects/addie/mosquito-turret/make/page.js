@@ -1,4 +1,4 @@
-import { BASE, CAD, PARTS_PDF, meta, Nav, Back, Btn, Section, Title, Steps } from '../ui';
+import { BASE, CAD, PARTS_PDF, GUIDE, meta, Nav, Back, Btn, Section, Title, Steps } from '../ui';
 import { BUY } from '../parts';
 
 export const metadata = meta(
@@ -116,7 +116,7 @@ const L3_STEPS = [
   ['Buy the parts', 'Every part, two stores, with a backup for each.', [[`${BASE}/build#shopping`, 'Shopping list'], [PARTS_PDF, 'Parts list PDF']]],
   ['Print the body', '12 parts on five plates, about 10 hours of printing.', [[`${BASE}/build/batches`, 'Print plan']]],
   ['Look at it in 3D first', 'Spin it, tap a part, pull it apart.', [[`${CAD}/ms2000-turret-3d.html`, 'Turret in 3D'], [`${CAD}/ms2000-3d.html`, 'Whole setup']]],
-  ['Build and code it', 'Addie adds the build steps and the code as she builds.', [[`${BASE}/build#steps`, 'Build steps']]],
+  ['Build and code it', 'Sixteen steps with wiring maps and all seven MakeCode programs.', [[GUIDE, 'Build guide']]],
   ['Learn how it works', 'Eleven short lessons with things to try.', [[`${BASE}/learn`, 'Learn the science']]],
 ];
 

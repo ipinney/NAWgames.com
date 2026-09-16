@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { A, BASE, CAD, PLAN, PARTS_PDF, meta, Nav, Back, Btn, Section, Title } from './ui';
+import { A, BASE, CAD, PLAN, PARTS_PDF, GUIDE, meta, Nav, Back, Btn, Section, Title } from './ui';
 import { FAIR } from './fair';
 import DueDates from './DueDates';
 
@@ -57,6 +57,12 @@ const PAGES = [
     href: `${BASE}/build`,
     title: 'Build the MS-2000',
     text: 'Everything to buy, the 3D printed parts, the 3D models, and the build steps.',
+    color: 'pink',
+  },
+  {
+    href: GUIDE,
+    title: 'Build guide',
+    text: 'Step by step: every part, wiring maps, diagrams, and the MakeCode programs.',
     color: 'pink',
   },
   {

@@ -12,7 +12,8 @@ Repo copy of the claude.ai Project file claude/mosquito-turret-plan.md. Keep bot
 ## Live pages (nawgames.com)
 - Hub: /projects/addie/mosquito-turret (school due dates, build timeline, rules, page cards)
 - Fair guide: /projects/addie/mosquito-turret/fair (due dates, part-by-part guide, variables, Catholic connection, sources, journal, judges, rubric self-score)
-- Build: /projects/addie/mosquito-turret/build (steps, how it works, shopping list from parts.js, 3D models, print files, build steps placeholder)
+- Build: /projects/addie/mosquito-turret/build (steps, how it works, shopping list from parts.js, 3D models, print files, links into the build guide)
+- Build guide (static): /projects/addie/ms2000-build-guide.html (16 steps, wiring maps, screw table, 7 MakeCode programs, fixes, glossary)
 - Print plan: /projects/addie/mosquito-turret/build/batches
 - Learn: /projects/addie/mosquito-turret/learn (11 lessons + glossary)
 - Build your own: /projects/addie/mosquito-turret/make (Level 1 micro:bit hit detector with code, Level 2 camera tracker no laser, Level 3 full MS-2000; fair question ideas; grown-up notes)
@@ -38,6 +39,7 @@ Repo copy of the claude.ai Project file claude/mosquito-turret-plan.md. Keep bot
 ## Build, check, deploy (gotchas)
 - Local build fails at prerender without Firebase env (every page, not our code). Build with dummy env:
   NEXT_PUBLIC_FIREBASE_API_KEY=AIzaDummyKeyForLocalBuildOnly000000000 plus APP_ID, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID set to any value, then `npx next build`.
+- Before `next start -p 3917`, check nothing is already listening (`ss -ltnp | grep 3917`); a stale server from an earlier session serves mismatched files (React error 423, wrong page heights).
 - Put build + `npx next start -p 3917` + screenshots in a script file (/tmp/nawcheck.sh) and run it with bash. Never `pkill -f "next start..."` or `pgrep -f next-server | xargs kill` inline: the pattern matches the shell's own command line and kills the whole call.
 - Screenshots: /opt/batchzero/venv/bin/python (playwright), 390x844. Check `document.documentElement.scrollWidth == 390` for sideways overflow. Grid children holding `<pre>` need `[&>*]:min-w-0`.
 - PIL is in system python3 on Vultr, not in the batchzero venv. Screenshots cannot be viewed from chat by base64 dumping; rely on scrollWidth, page errors, and element checks.
@@ -66,7 +68,7 @@ Rubric (0 not evident, 1 not clear, 3 somewhat clear, 5 very clear; 9 rows, 45 m
 Done: brainstorm, requirements, design pick (A), design lock, 3D print design (12 parts, 5 plates, ~10 h, ~320 g), parts list, website fair guide + build-your-own (commit 0c76d1e).
 Now: order parts by Sep 30; start the cursive journal (catch-up entries for Sep 15 and Sep 16).
 Still by hand: Addie's written reason for A and labeled drawing (journal); ask Miss Taggart about laser rules (Parish Hall and Archdiocesan fair; no published Archdiocesan elementary laser rules found).
-Next on the site when it happens: build steps (build/page.js Placeholder), code, photos, advancing PHASES.
+Build guide written (Sep 16). Next on the site when it happens: photos and real-part corrections in the guide, advancing PHASES.
 
 ## Schedule (refit to Feb 1)
 - By Sep 30: order parts, start journal
@@ -117,4 +119,4 @@ Backups: Adafruit 4781, micro:Driver DFR0548, DigiKey HuskyLens $54.90, Adafruit
 - Place the DFRobot and DigiKey orders (by Sep 30)
 - Laser rules from Miss Taggart (school and Archdiocesan)
 - Journal: start now; reason for A; labeled drawing
-- Build steps, code, and photos onto build/page.js as the build happens
+- Photos and real-part corrections into ms2000-build-guide.html as the build happens

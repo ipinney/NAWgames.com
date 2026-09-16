@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How To Build the MS-2000 Mosquito Shooter</title>
+<meta name="description" content="Step-by-step build guide for Addie's MS-2000: a 3D printed laser turret with an AI camera that tracks a toy mosquito and proves every hit. Parts, wiring, assembly, and MakeCode programs.">
+<meta property="og:title" content="How to build the MS-2000 Mosquito Shooter">
+<meta property="og:description" content="Addie's laser mosquito turret, step by step: parts, wiring diagrams, 3D printed body, and the MakeCode programs.">
+<meta property="og:image" content="https://nawgames.com/projects/addie/ms2000-og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:type" content="website"><meta property="og:site_name" content="NAW Games">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://nawgames.com/projects/addie/ms2000-og.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ground: #0F1420;
+    --card: #182032;
+    --card-2: #1F2940;
+    --deep: #121A2B;
+    --ink: #EEF2F8;
+    --ink-2: #A9B6CA;
+    --ink-3: #74839B;
+    --line: #2B3650;
+    --pink: #F0609E;
+    --pink-soft: rgba(240,96,158,.12);
+    --lime: #9BE15D;
+    --lime-soft: rgba(155,225,93,.10);
+    --sky: #5DB7F0;
+    --sky-soft: rgba(93,183,240,.10);
+    --amber: #F5B642;
+    --amber-soft: rgba(245,182,66,.10);
+    --red: #F0605E;
+    --red-soft: rgba(240,96,94,.10);
+  }
+  body { font-family: 'Nunito', system-ui, sans-serif; background: var(--ground); color: var(--ink); line-height: 1.55; padding: 18px; font-size: 16px; }
+  a { color: var(--sky); }
+  .wrap { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+  h1, h2, h3, h4, .num { font-family: 'Fredoka', 'Nunito', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: .92em; color: var(--lime); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+
+  /* hero */
+  .hero { text-align: center; padding: 32px 22px 26px; border: none; background: radial-gradient(120% 90% at 50% 0%, #3A2150 0%, #1B2238 60%, #182032 100%); }
+  .hero .bug { font-size: 50px; line-height: 1; display: block; margin-bottom: 6px; }
+  .hero h1 { font-size: clamp(32px, 7vw, 50px); font-weight: 700; line-height: 1.02; }
+  .hero h1 span { display: block; font-size: .4em; letter-spacing: .16em; color: var(--pink); text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
+  .hero h1 em { font-style: normal; color: var(--lime); }
+  .hero p { color: var(--ink-2); max-width: 52ch; margin: 10px auto 0; }
+  .facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 18px; }
+  .fact { background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .05em; color: var(--ink-2); }
+  .fact b { color: var(--lime); font-weight: 600; }
+  .jump { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-top: 18px; }
+  .jump a { text-decoration: none; font-size: 13px; font-weight: 700; color: var(--ink); background: var(--card-2); border: 1px solid var(--line); padding: 5px 10px; border-radius: 10px; }
+
+  /* section heads */
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--pink); margin-bottom: 5px; }
+  h2 { font-size: 28px; font-weight: 600; line-height: 1.15; margin-bottom: 8px; }
+  h3 { font-size: 19px; font-weight: 600; margin-bottom: 4px; }
+  p.lead { color: var(--ink-2); }
+
+  /* safety */
+  .safety { background: var(--red-soft); border: 1px solid rgba(240,96,94,.45); border-radius: 16px; padding: 20px 24px; }
+  .safety h2 { color: var(--red); font-size: 24px; }
+  .safety ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px 22px; margin-top: 10px; }
+  .safety li { font-size: 15px; color: var(--ink-2); padding-left: 25px; position: relative; }
+  .safety li::before { content: "!"; position: absolute; left: 0; top: 3px; width: 17px; height: 17px; border-radius: 50%; background: var(--red); color: #1a0e18; font-family: 'Fredoka', sans-serif; font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+  .safety li b { color: var(--ink); }
+
+  /* jobs */
+  .jobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 14px; }
+  .job { background: var(--card-2); border-radius: 12px; padding: 14px 16px; }
+  .job h3 { font-size: 17px; }
+  .job.a h3 { color: var(--pink); }
+  .job.g h3 { color: var(--amber); }
+  .job ul { padding-left: 18px; font-size: 14.5px; color: var(--ink-2); }
+  .job li + li { margin-top: 3px; }
+
+  /* tools */
+  .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 12px; margin-top: 14px; }
+  .tool { background: var(--card-2); border-radius: 12px; padding: 14px 10px; text-align: center; }
+  .tool svg { display: block; margin: 0 auto 7px; width: 46px; height: 42px; }
+  .tool b { display: block; font-size: 14.5px; }
+  .tool span { font-size: 12.5px; color: var(--ink-3); }
+
+  /* parts */
+  .parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; margin-top: 14px; }
+  .pcard { background: var(--card-2); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .pic { background: var(--deep); padding: 14px; display: grid; place-items: center; border-bottom: 1px solid var(--line); }
+  .pic svg { width: 100%; max-width: 210px; height: auto; display: block; }
+  .pbody { padding: 14px 16px 15px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+  .pbody h3 { margin: 0; }
+  .pbody h3 small { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-3); font-weight: 500; margin-left: 6px; }
+  .pbody .what { font-size: 14.5px; color: var(--ink-2); }
+  .pbody .does { font-size: 14.5px; background: var(--pink-soft); border-radius: 8px; padding: 9px 11px; }
+  .pbody .does b { color: var(--pink); }
+  .pbody .spec { margin-top: auto; padding-top: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-3); letter-spacing: .03em; border-top: 1px dashed var(--line); text-transform: uppercase; }
+
+  /* explainers, tips */
+  .explain { background: var(--sky-soft); border: 1px solid rgba(93,183,240,.35); border-radius: 12px; padding: 14px 16px; margin-top: 14px; }
+  .explain h4 { font-size: 16.5px; color: var(--sky); margin-bottom: 4px; display: flex; align-items: center; gap: 7px; }
+  .explain h4::before { content: "?"; flex: none; width: 21px; height: 21px; border-radius: 50%; background: var(--sky); color: #0b1522; font-size: 14px; display: grid; place-items: center; }
+  .explain p { font-size: 14.5px; color: var(--ink-2); }
+  .explain p + p { margin-top: 7px; }
+  .explain b { color: var(--ink); }
+  .try { margin-top: 12px; background: var(--pink-soft); border: 1px solid rgba(240,96,158,.35); border-radius: 12px; padding: 12px 15px; font-size: 14.5px; color: var(--ink-2); }
+  .try b { color: var(--pink); }
+  .gotcha { margin-top: 12px; background: var(--amber-soft); border-left: 3px solid var(--amber); border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: 14.5px; color: var(--ink-2); }
+  .gotcha b { color: var(--amber); }
+  .grownup { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: #1a1206; background: var(--amber); border-radius: 5px; padding: 1px 6px; margin-left: 4px; vertical-align: 2px; }
+
+  /* steps */
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 20px; scroll-margin-top: 12px; }
+  .step-head { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 4px; }
+  .num { flex: none; width: 46px; height: 46px; border-radius: 12px; background: var(--pink); color: #1a0e18; font-size: 23px; font-weight: 700; display: grid; place-items: center; line-height: 1; }
+  .part-head .num { background: var(--lime); }
+  .step-head h2 { margin: 0; font-size: 26px; }
+  .step-head .when { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: .07em; text-transform: uppercase; margin-top: 3px; }
+  .why { color: var(--ink-2); font-size: 15.5px; margin-top: 8px; }
+  .chapter { text-align: center; padding: 8px 0 0; }
+  .chapter .eyebrow { color: var(--lime); }
+  .chapter h2 { font-size: 30px; }
+  .chapter p { color: var(--ink-2); max-width: 56ch; margin: 0 auto; }
+
+  .diagram { background: var(--deep); border-radius: 12px; padding: 14px; margin-top: 16px; overflow-x: auto; }
+  .diagram svg { display: block; width: 100%; min-width: 440px; height: auto; }
+  .diagram svg.fit { min-width: 0; max-width: 560px; margin: 0 auto; }
+  .diagram img { display: block; width: 100%; max-width: 620px; height: auto; margin: 0 auto; border-radius: 8px; }
+  .caption { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); margin-top: 9px; letter-spacing: .04em; text-transform: uppercase; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .pair .diagram { margin-top: 0; }
+
+  ol.do { list-style: none; counter-reset: d; margin-top: 16px; display: flex; flex-direction: column; gap: 9px; }
+  ol.do li { counter-increment: d; padding-left: 34px; position: relative; font-size: 15.5px; }
+  ol.do li::before { content: counter(d); position: absolute; left: 0; top: 1px; width: 23px; height: 23px; border-radius: 7px; background: var(--ink); color: var(--ground); font-family: 'Fredoka', sans-serif; font-size: 13px; font-weight: 600; display: grid; place-items: center; }
+  ol.do li .tip { display: block; font-size: 13.5px; color: var(--ink-3); margin-top: 2px; }
+
+  .checkpoint { margin-top: 16px; background: var(--lime-soft); border: 1px solid rgba(155,225,93,.4); border-radius: 12px; padding: 13px 16px; display: flex; gap: 13px; align-items: flex-start; }
+  .checkpoint .tick { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--lime); display: grid; place-items: center; margin-top: 1px; }
+  .checkpoint .tick svg { width: 13px; height: 13px; display: block; }
+  .checkpoint h4 { font-size: 15.5px; color: var(--lime); margin-bottom: 2px; }
+  .checkpoint p { font-size: 14.5px; color: var(--ink-2); }
+  .journal { margin-top: 10px; font-size: 14px; color: var(--ink-2); border: 1px dashed var(--line); border-radius: 10px; padding: 9px 13px; }
+  .journal b { color: var(--pink); font-family: 'Fredoka', sans-serif; font-weight: 600; }
+
+  .order { list-style: none; counter-reset: o; display: grid; gap: 10px; margin-top: 14px; }
+  .order li { counter-increment: o; background: var(--card-2); border-radius: 12px; padding: 12px 14px 12px 54px; position: relative; }
+  .order li::before { content: counter(o); position: absolute; left: 14px; top: 12px; width: 28px; height: 28px; border-radius: 8px; background: var(--sky); color: #0b1522; font-family: 'Fredoka', sans-serif; font-weight: 600; display: grid; place-items: center; }
+  .order b { display: block; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; }
+  .order span { font-size: 14.5px; color: var(--ink-2); }
+  .order .t { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: .05em; display: block; margin-top: 3px; text-transform: uppercase; }
+  .order .w { color: var(--ink); background: #EEF2F8; color: #111; border-radius: 4px; padding: 0 5px; font-size: 11px; }
+
+  /* MakeCode blocks, in MakeCode's own colors */
+  .prog { margin-top: 16px; background: var(--deep); border-radius: 12px; padding: 14px; }
+  .prog h4 { font-size: 16px; margin-bottom: 2px; }
+  .prog > p { font-size: 13.5px; color: var(--ink-3); margin-bottom: 10px; }
+  .blocks { display: flex; flex-direction: column; gap: 5px; }
+  .blk { border-radius: 8px; padding: 8px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #fff; position: relative; }
+  .blk i { font-style: normal; float: right; font-family: 'Nunito', sans-serif; font-size: 10.5px; opacity: .75; margin-left: 10px; text-transform: uppercase; letter-spacing: .06em; }
+  .blk small { display: block; font-family: 'Nunito', sans-serif; font-size: 12.5px; opacity: .85; margin-top: 1px; }
+  .blk.gap { margin-top: 8px; }
+  .i1 { margin-left: 18px; } .i2 { margin-left: 36px; } .i3 { margin-left: 54px; }
+  .b-basic { background: #1E90FF; } .b-input { background: #B400B4; } .b-music { background: #D0301F; }
+  .b-radio { background: #C8007C; } .b-loops { background: #00902F; } .b-logic { background: #00888A; }
+  .b-var { background: #C4122F; } .b-math { background: #7E00B5; } .b-pins { background: #A21E1E; }
+  .b-led { background: #5C2D91; } .b-fn { background: #3455DB; } .b-husky { background: #C9580A; } .b-xiami { background: #0B9A0E; } .b-log { background: #378273; }
+  .keylist { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .keylist span { font-size: 11.5px; font-family: 'IBM Plex Mono', monospace; color: #fff; padding: 2px 8px; border-radius: 6px; }
+
+  /* tables */
+  .table-wrap { overflow-x: auto; margin-top: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 520px; }
+  th { text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; padding: 9px 12px; border-bottom: 2px solid var(--line); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--line); color: var(--ink-2); vertical-align: top; }
+  td:first-child { color: var(--ink); font-weight: 700; }
+  tr:last-child td { border-bottom: none; }
+  .screws td:nth-child(2), .screws td:nth-child(3) { font-family: 'IBM Plex Mono', monospace; white-space: nowrap; color: var(--lime); }
+
+  /* glossary */
+  .gloss { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 14px; }
+  .gterm { background: var(--card-2); border-radius: 11px; padding: 12px 14px; }
+  .gterm b { display: block; font-family: 'Fredoka', sans-serif; font-size: 16px; color: var(--sky); margin-bottom: 2px; font-weight: 600; }
+  .gterm span { font-size: 14px; color: var(--ink-2); }
+
+  .linkrow { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .linkrow a { flex: 1 1 200px; text-align: center; text-decoration: none; font-weight: 700; font-size: 15px; padding: 12px 16px; border-radius: 11px; }
+  .linkrow a.primary { background: var(--pink); color: #1a0e18; }
+  .linkrow a.secondary { background: var(--card-2); color: var(--ink); border: 1px solid var(--line); }
+  .link3d { display: inline-block; margin-top: 10px; font-weight: 700; color: var(--sky); text-decoration: none; font-size: 14.5px; }
+  footer { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-3); letter-spacing: .06em; padding: 6px 0 14px; }
+
+  @media (max-width: 560px) {
+    body { padding: 10px; font-size: 15.5px; }
+    .card, .step { padding: 16px; }
+    .step-head { gap: 11px; }
+    .num { width: 38px; height: 38px; font-size: 19px; }
+    .step-head h2 { font-size: 21px; }
+    h2 { font-size: 23px; }
+    .diagram { padding: 10px; }
+    .blk { font-size: 12px; padding: 7px 10px; }
+    .i1 { margin-left: 12px; } .i2 { margin-left: 24px; } .i3 { margin-left: 36px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  @media print {
+    .step, .card, .pcard, .prog { break-inside: avoid; page-break-inside: avoid; }
+    .jump { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card hero">
+    <span class="bug">&#129439;</span>
+    <h1><span>How To Build</span>MS-<em>2000</em></h1>
+    <p>A laser turret that learns what a mosquito looks like, follows it, and tags it with a safe laser. The mosquito flashes its eyes on every hit, and the wand saves every run as data. This guide goes from a box of parts to a working turret, one step at a time.</p>
+    <div class="facts">
+      <span class="fact">BUILD <b>OCT TO NOV</b></span>
+      <span class="fact">PRINTED PARTS <b>12</b></span>
+      <span class="fact">BRAINS <b>2 &times; MICRO:BIT</b></span>
+      <span class="fact">LASER <b>CLASS 2, UNDER 1 mW</b></span>
+      <span class="fact">DUE <b>FEB 1</b></span>
+    </div>
+    <nav class="jump">
+      <a href="#safety">Safety</a><a href="#how">How it works</a><a href="#tools">Tools</a><a href="#parts">Parts</a><a href="#wiring">Wiring</a><a href="#screws">Screws</a>
+      <a href="#part-1">A. Print</a><a href="#part-2">B. Mosquito and wand</a><a href="#part-3">C. Turret</a><a href="#part-4">D. Code</a><a href="#part-5">E. Test rig</a><a href="#fix">Fixing it</a><a href="#words">Words</a>
+    </nav>
+  </div>
+
+  <div class="safety" id="safety">
+    <h2>Read this part first</h2>
+    <ul>
+      <li><b>Never look into the laser.</b> Not even a weak one. Point it only at the backdrop and the mosquito.</li>
+      <li><b>The arm switch stays off</b> until a grown-up turns it on. No arm switch, no laser, no matter what the code says.</li>
+      <li><b>The beam runs sideways along the table</b>, never toward people. The printed tilt stop keeps the head from aiming up.</li>
+      <li><b>Only the Class 2 laser on the parts list.</b> Its maker label stays showing. Never swap in a laser pointer.</li>
+      <li><b>Soldering is a grown-up job.</b> The iron is hotter than an oven. Wear eye protection.</li>
+      <li><b>The laser's metal case carries power.</b> Only plastic touches it. No metal clips or screws against the case.</li>
+      <li><b>Fingers away from the servos</b> while the turret is on. The clutch servos slip instead of pinching hard, but they still move fast.</li>
+      <li><b>Batteries out</b> before any wiring change. Pack switch off when you are done for the day.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Who does what</p>
+    <h2>Addie's jobs and grown-up jobs</h2>
+    <p class="lead">Addie builds and codes. A grown-up handles the hot, sharp, and laser parts. Steps with a <span class="grownup">grown-up</span> tag need one right there.</p>
+    <div class="jobs">
+      <div class="job a"><h3>Addie</h3><ul>
+        <li>Checks the parts and sorts the screws</li>
+        <li>Builds the wand, the base, and the head</li>
+        <li>Teaches the camera the mosquito</li>
+        <li>Writes all the code in MakeCode</li>
+        <li>Designs the pew, boom, beep, and splat sounds</li>
+        <li>Runs every test and keeps the journal</li>
+      </ul></div>
+      <div class="job g"><h3>Grown-up</h3><ul>
+        <li>Runs the 3D printer and takes parts off the bed</li>
+        <li>Solders the sensor, the eyes, and the laser wires</li>
+        <li>Turns the arm switch on and off</li>
+        <li>Checks the laser lines up before it is ever switched on near people</li>
+        <li>Helps with the tricky code</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="card" id="how">
+    <p class="eyebrow">The big picture</p>
+    <h2>How the MS-2000 works</h2>
+    <p class="lead">Two micro:bits work as a team. The one in the turret sees, aims, and fires. The one in the wand feels the hit and keeps score. They talk by radio.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 660 300" role="img" aria-label="Seven steps in a loop. Turret: see with the camera, think with the micro:bit, aim with two servos, fire the laser. Mosquito and wand: feel the hit with the light sensor, prove it with the eyes and the data, then radio the turret, which cheers.">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#74839B"/></marker>
+        <marker id="arp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#F0609E"/></marker></defs>
+        <rect x="8" y="8" width="644" height="120" rx="14" fill="#182032" stroke="#2B3650"/>
+        <text x="22" y="30" font-family="IBM Plex Mono, monospace" font-size="11" fill="#F0609E" letter-spacing="2">TURRET</text>
+        <rect x="8" y="172" width="644" height="120" rx="14" fill="#182032" stroke="#2B3650"/>
+        <text x="22" y="194" font-family="IBM Plex Mono, monospace" font-size="11" fill="#9BE15D" letter-spacing="2">MOSQUITO AND WAND</text>
+        <g font-family="Fredoka, sans-serif" text-anchor="middle">
+          <rect x="30" y="44" width="128" height="68" rx="10" fill="#1F2940" stroke="#5DB7F0"/>
+          <text x="94" y="70" font-size="18" fill="#EEF2F8">1 See</text><text x="94" y="92" font-size="12" fill="#A9B6CA" font-family="Nunito, sans-serif">HuskyLens camera</text>
+          <rect x="186" y="44" width="128" height="68" rx="10" fill="#1F2940" stroke="#5DB7F0"/>
+          <text x="250" y="70" font-size="18" fill="#EEF2F8">2 Think</text><text x="250" y="92" font-size="12" fill="#A9B6CA" font-family="Nunito, sans-serif">turret micro:bit</text>
+          <rect x="342" y="44" width="128" height="68" rx="10" fill="#1F2940" stroke="#5DB7F0"/>
+          <text x="406" y="70" font-size="18" fill="#EEF2F8">3 Aim</text><text x="406" y="92" font-size="12" fill="#A9B6CA" font-family="Nunito, sans-serif">pan + tilt servos</text>
+          <rect x="498" y="44" width="136" height="68" rx="10" fill="#1F2940" stroke="#F0605E"/>
+          <text x="566" y="70" font-size="18" fill="#EEF2F8">4 Fire</text><text x="566" y="92" font-size="12" fill="#A9B6CA" font-family="Nunito, sans-serif">relay + laser, pew!</text>
+          <rect x="498" y="208" width="136" height="68" rx="10" fill="#1F2940" stroke="#9BE15D"/>
+          <text x="566" y="234" font-size="18" fill="#EEF2F8">5 Feel</text><text x="566" y="256" font-size="12" fill="#A9B6CA" font-family="Nunito, sans-serif">light sensor in pod</text>
+          <rect x="330" y="208" width="140" height="68" rx="10" fill="#1F2940" stroke="#9BE15D"/>
+          <text x="400" y="234" font-size="18" fill="#EEF2F8">6 Prove</text><text x="400" y="256" font-size="12" fill="#A9B6CA" font-family="Nunito, sans-serif">eyes flash, splat, save</text>
+          <rect x="30" y="208" width="140" height="68" rx="10" fill="#1F2940" stroke="#F5B642"/>
+          <text x="100" y="234" font-size="18" fill="#EEF2F8">7 Cheer</text><text x="100" y="256" font-size="12" fill="#A9B6CA" font-family="Nunito, sans-serif">turret score + song</text>
+        </g>
+        <g stroke="#74839B" stroke-width="2" fill="none" marker-end="url(#ar)">
+          <path d="M158 78 H182"/><path d="M314 78 H338"/><path d="M470 78 H494"/>
+          <path d="M498 242 H474"/>
+        </g>
+        <path d="M566 112 V204" stroke="#F0605E" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#arp)"/>
+        <text x="576" y="163" font-family="IBM Plex Mono, monospace" font-size="11" fill="#F0605E">laser dot</text>
+        <path d="M330 242 H174" stroke="#F0609E" stroke-width="2" stroke-dasharray="3 5" fill="none" marker-end="url(#arp)"/>
+        <text x="252" y="234" font-family="IBM Plex Mono, monospace" font-size="11" fill="#F0609E" text-anchor="middle">radio: "HIT"</text>
+        <path d="M100 208 V116 Q100 112 104 112" stroke="#74839B" stroke-width="2" fill="none" stroke-dasharray="2 4"/>
+        <text x="108" y="150" font-family="IBM Plex Mono, monospace" font-size="11" fill="#74839B">then hunt again</text>
+      </svg>
+      <p class="caption">All seven steps happen in less than a second.</p>
+    </div>
+    <div class="explain">
+      <h4>Why two micro:bits?</h4>
+      <p>The turret can not see the laser dot land. It only knows where it <b>aimed</b>. To prove a real hit, something has to be <b>inside the target</b> and feel the light. That is the wand's job. Having one machine shoot and a different machine check the score is how real tests stay honest.</p>
+    </div>
+    <a class="link3d" href="/projects/addie/ms2000-cad/ms2000-3d.html" target="_blank" rel="noopener">See the whole setup in 3D &rarr;</a>
+  </div>
+
+  <div class="card" id="tools">
+    <p class="eyebrow">Before you start</p>
+    <h2>Tools you need</h2>
+    <div class="tools">
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="6" width="44" height="44" rx="4" fill="none" stroke="#A9B6CA" stroke-width="2.5"/><path d="M14 16 h32" stroke="#A9B6CA" stroke-width="2.5"/><path d="M26 16 v10 h8 v-10" fill="#74839B" stroke="#A9B6CA" stroke-width="2"/><rect x="18" y="38" width="24" height="5" fill="#F0609E"/></svg><b>3D printer</b><span>Grown-up runs it</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M30 6 v30" stroke="#A9B6CA" stroke-width="3"/><path d="M24 36 h12 v14 h-12 Z" fill="#F0609E" stroke="#A9B6CA" stroke-width="2.5" stroke-linejoin="round"/><path d="M26 6 h8" stroke="#A9B6CA" stroke-width="5" stroke-linecap="round"/></svg><b>Tiny screwdrivers</b><span>Phillips #0, plus a stubby one</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M20 50 L28 26 M40 50 L32 26" stroke="#F0609E" stroke-width="5" stroke-linecap="round"/><path d="M28 26 L30 6 L32 26" fill="#74839B" stroke="#A9B6CA" stroke-width="2"/></svg><b>Needle-nose pliers</b><span>To hold the nuts</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M10 46 L36 20" stroke="#F5B642" stroke-width="7" stroke-linecap="round"/><path d="M36 20 L50 8" stroke="#A9B6CA" stroke-width="3" stroke-linecap="round"/></svg><b>Soldering iron</b><span>Grown-up only</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M14 44 L30 26 L46 44" stroke="#F0609E" stroke-width="5" stroke-linecap="round" fill="none"/><circle cx="30" cy="22" r="6" fill="none" stroke="#A9B6CA" stroke-width="2.5"/><path d="M30 16 v-10" stroke="#A9B6CA" stroke-width="2.5"/></svg><b>Wire strippers</b><span>For the ribbon cable</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M8 30 h30 l8 -6 v12 l-8 -6" fill="#F5B642" stroke="#A9B6CA" stroke-width="2"/><path d="M46 30 h8" stroke="#A9B6CA" stroke-width="3"/><path d="M16 30 v14 h10 v-14" fill="#1F2940" stroke="#A9B6CA" stroke-width="2"/></svg><b>Hot glue gun</b><span>Grown-up helps</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="8" y="20" width="28" height="24" rx="4" fill="#F5B642" stroke="#A9B6CA" stroke-width="2"/><path d="M36 30 h18" stroke="#A9B6CA" stroke-width="4"/><text x="22" y="37" font-family="IBM Plex Mono" font-size="9" text-anchor="middle" fill="#1a1206">5ft</text></svg><b>Tape measure</b><span>The 5 foot line</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="6" y="18" width="48" height="10" fill="none" stroke="#A9B6CA" stroke-width="2.5"/><path d="M12 18 v-10 h6 v10 M30 28 v16 h6 v-16" stroke="#A9B6CA" stroke-width="2.5" fill="none"/><path d="M14 22 h4 M22 22 h4 M30 22 h4 M38 22 h4" stroke="#9BE15D" stroke-width="2"/></svg><b>Calipers</b><span>Measure parts on arrival</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="10" y="12" width="40" height="26" rx="3" fill="none" stroke="#A9B6CA" stroke-width="2.5"/><path d="M4 44 h52" stroke="#A9B6CA" stroke-width="3" stroke-linecap="round"/><rect x="16" y="18" width="10" height="6" fill="#B400B4"/><rect x="16" y="26" width="16" height="6" fill="#00902F"/></svg><b>Laptop</b><span>makecode.microbit.org</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M10 28 h26" stroke="#A9B6CA" stroke-width="4" stroke-linecap="round"/><rect x="36" y="22" width="14" height="12" rx="2" fill="#5DB7F0"/><path d="M50 26 h4 v4 h-4" fill="#A9B6CA"/></svg><b>Data USB cable</b><span>Micro-USB, not charge-only</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M12 46 L46 10" stroke="#A9B6CA" stroke-width="2.5"/><ellipse cx="44" cy="12" rx="3" ry="5" transform="rotate(45 44 12)" fill="none" stroke="#A9B6CA" stroke-width="1.8"/><path d="M12 46 C 20 50, 30 40, 40 48" stroke="#F0609E" stroke-width="2" fill="none"/></svg><b>Needle and thread</b><span>Sew the pod on</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><path d="M14 44 L44 14" stroke="#A9B6CA" stroke-width="4" stroke-linecap="round"/><rect x="40" y="8" width="10" height="10" rx="2" fill="none" stroke="#A9B6CA" stroke-width="2.5" transform="rotate(45 45 13)"/><path d="M18 40 l3 3 M24 34 l3 3 M30 28 l3 3" stroke="#74839B" stroke-width="2"/></svg><b>Zip ties</b><span>3 small ones for the wand</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="22" y="8" width="16" height="12" rx="3" fill="#A9B6CA"/><path d="M24 20 L18 48 h24 L36 20 z" fill="#F5B642" stroke="#A9B6CA" stroke-width="2"/><path d="M30 28 v12" stroke="#1a1206" stroke-width="2"/></svg><b>Flashlight</b><span>For fake laser tests</span></div>
+      <div class="tool"><svg viewBox="0 0 60 56" aria-hidden="true"><rect x="16" y="10" width="28" height="36" rx="4" fill="none" stroke="#A9B6CA" stroke-width="2.5"/><path d="M22 20 h16 M22 28 h16 M22 36 h10" stroke="#F0609E" stroke-width="2"/></svg><b>The journal</b><span>Cursive, every build day</span></div>
+    </div>
+  </div>
+
+  <div class="card" id="parts">
+    <p class="eyebrow">Know your gear</p>
+    <h2>Meet the parts</h2>
+    <p class="lead">Lay everything out on a towel before you build. Find each item below so you know what you are holding. <a href="/projects/addie/ms2000-cad/ms2000-components.html" target="_blank" rel="noopener">Every bought part is also in 3D, with its size.</a></p>
+    <div class="parts">
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="micro:bit V2, a small board with a five by five grid of LEDs, buttons A and B, a gold logo, and big gold rings along the bottom edge">
+          <rect x="20" y="14" width="180" height="112" rx="12" fill="#1C1C1C" stroke="#444" stroke-width="2"/>
+          <g fill="#3a3a3a">
+            <rect x="72" y="34" width="9" height="9" rx="1.5"/><rect x="90" y="34" width="9" height="9" rx="1.5"/><rect x="108" y="34" width="9" height="9" rx="1.5"/><rect x="126" y="34" width="9" height="9" rx="1.5"/><rect x="144" y="34" width="9" height="9" rx="1.5"/>
+            <rect x="72" y="50" width="9" height="9" rx="1.5"/><rect x="90" y="50" width="9" height="9" rx="1.5"/><rect x="108" y="50" width="9" height="9" rx="1.5"/><rect x="126" y="50" width="9" height="9" rx="1.5"/><rect x="144" y="50" width="9" height="9" rx="1.5"/>
+            <rect x="72" y="66" width="9" height="9" rx="1.5"/><rect x="90" y="66" width="9" height="9" rx="1.5"/><rect x="108" y="66" width="9" height="9" rx="1.5"/><rect x="126" y="66" width="9" height="9" rx="1.5"/><rect x="144" y="66" width="9" height="9" rx="1.5"/>
+            <rect x="72" y="82" width="9" height="9" rx="1.5"/><rect x="90" y="82" width="9" height="9" rx="1.5"/><rect x="108" y="82" width="9" height="9" rx="1.5"/><rect x="126" y="82" width="9" height="9" rx="1.5"/><rect x="144" y="82" width="9" height="9" rx="1.5"/>
+          </g>
+          <g fill="#F0605E"><rect x="72" y="34" width="9" height="9" rx="1.5"/><rect x="144" y="34" width="9" height="9" rx="1.5"/><rect x="90" y="50" width="9" height="9" rx="1.5"/><rect x="126" y="50" width="9" height="9" rx="1.5"/><rect x="108" y="66" width="9" height="9" rx="1.5"/><rect x="90" y="82" width="9" height="9" rx="1.5"/><rect x="126" y="82" width="9" height="9" rx="1.5"/></g>
+          <ellipse cx="112" cy="22" rx="10" ry="5" fill="none" stroke="#D8A34A" stroke-width="2"/>
+          <circle cx="42" cy="64" r="10" fill="#333" stroke="#666"/><text x="42" y="68" font-family="IBM Plex Mono" font-size="11" fill="#fff" text-anchor="middle">A</text>
+          <circle cx="178" cy="64" r="10" fill="#333" stroke="#666"/><text x="178" y="68" font-family="IBM Plex Mono" font-size="11" fill="#fff" text-anchor="middle">B</text>
+          <g fill="#D8A34A"><circle cx="40" cy="112" r="8"/><circle cx="76" cy="112" r="8"/><circle cx="112" cy="112" r="8"/><circle cx="148" cy="112" r="8"/><circle cx="184" cy="112" r="8"/></g>
+          <g fill="#1C1C1C"><circle cx="40" cy="112" r="3.5"/><circle cx="76" cy="112" r="3.5"/><circle cx="112" cy="112" r="3.5"/><circle cx="148" cy="112" r="3.5"/><circle cx="184" cy="112" r="3.5"/></g>
+          <g font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle"><text x="40" y="142">P0</text><text x="76" y="142">P1</text><text x="112" y="142">P2</text><text x="148" y="142">3V</text><text x="184" y="142">GND</text></g>
+        </svg></div>
+        <div class="pbody">
+          <h3>micro:bit V2 <small>&times;2</small></h3>
+          <p class="what">A tiny computer with 25 lights, two buttons, a touch logo, a speaker, a microphone, a light sensor, and a radio built in. The five big gold rings are where wires connect.</p>
+          <p class="does"><b>Its job:</b> one is the turret's brain. The other lives in the wand, feels hits, and saves the data.</p>
+          <p class="spec">51.6 &times; 42 mm &middot; must be V2 (has the gold logo)</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Xia mi expansion board, a long green board with a slot for the micro:bit at one end, rows of pins, a relay, and a power jack">
+          <rect x="16" y="30" width="188" height="92" rx="8" fill="#1F6B3A" stroke="#2F8F50" stroke-width="2"/>
+          <rect x="28" y="40" width="10" height="72" rx="2" fill="#111"/><text x="33" y="130" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">micro:bit</text>
+          <rect x="30" y="36" width="6" height="80" fill="#1C1C1C" opacity=".6"/>
+          <g fill="#111"><rect x="60" y="44" width="8" height="30"/><rect x="72" y="44" width="8" height="30"/><rect x="84" y="44" width="8" height="30"/><rect x="96" y="44" width="8" height="30"/></g>
+          <g fill="#D8A34A"><circle cx="64" cy="50" r="1.6"/><circle cx="64" cy="59" r="1.6"/><circle cx="64" cy="68" r="1.6"/><circle cx="76" cy="50" r="1.6"/><circle cx="76" cy="59" r="1.6"/><circle cx="76" cy="68" r="1.6"/><circle cx="88" cy="50" r="1.6"/><circle cx="88" cy="59" r="1.6"/><circle cx="88" cy="68" r="1.6"/><circle cx="100" cy="50" r="1.6"/><circle cx="100" cy="59" r="1.6"/><circle cx="100" cy="68" r="1.6"/></g>
+          <g font-family="IBM Plex Mono" font-size="8" fill="#EEF2F8" text-anchor="middle"><text x="64" y="84">P0</text><text x="76" y="84">P1</text><text x="88" y="84">P2</text><text x="100" y="84">P8</text></g>
+          <rect x="118" y="44" width="30" height="24" rx="3" fill="#2B5FA8"/><text x="133" y="60" font-family="IBM Plex Mono" font-size="8" fill="#fff" text-anchor="middle">RELAY</text>
+          <rect x="118" y="74" width="30" height="10" fill="#1d7ad4"/>
+          <rect x="60" y="92" width="44" height="12" rx="2" fill="#EEF2F8"/><text x="82" y="101" font-family="IBM Plex Mono" font-size="7" fill="#111" text-anchor="middle">HUSKYLENS</text>
+          <rect x="182" y="58" width="22" height="18" rx="3" fill="#111"/><circle cx="193" cy="67" r="4" fill="#444"/>
+          <text x="180" y="94" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA" text-anchor="middle">DC in</text>
+          <circle cx="24" cy="36" r="3" fill="#0F1420"/><circle cx="196" cy="36" r="3" fill="#0F1420"/><circle cx="24" cy="116" r="3" fill="#0F1420"/><circle cx="196" cy="116" r="3" fill="#0F1420"/>
+        </svg></div>
+        <div class="pbody">
+          <h3>Xia mi board</h3>
+          <p class="what">A helper board the micro:bit plugs into. It adds 5 volt pins for servos, a special plug for the camera, a relay, and a jack for the battery pack.</p>
+          <p class="does"><b>Its job:</b> the turret's power station and switchboard. Its relay is the switch that fires the laser.</p>
+          <p class="spec">57 &times; 87 mm &middot; power switch stays ON</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="HuskyLens AI camera: a small board with a round lens in front and a color screen on the back, a dial and a learn button on top">
+          <rect x="30" y="30" width="72" height="52" rx="6" fill="#2B2F3A" stroke="#555" stroke-width="2"/>
+          <circle cx="66" cy="50" r="13" fill="#111" stroke="#888" stroke-width="2"/><circle cx="66" cy="50" r="6" fill="#1d3b6b"/><circle cx="63" cy="47" r="2" fill="#9cc7ff"/>
+          <rect x="54" y="82" width="24" height="12" fill="#2B2F3A" stroke="#555"/><circle cx="60" cy="88" r="2" fill="#111"/><circle cx="72" cy="88" r="2" fill="#111"/>
+          <rect x="40" y="22" width="10" height="8" rx="2" fill="#F5B642"/><rect x="82" y="22" width="10" height="8" rx="2" fill="#EEF2F8"/>
+          <text x="66" y="112" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">FRONT</text>
+          <rect x="120" y="30" width="72" height="52" rx="6" fill="#2B2F3A" stroke="#555" stroke-width="2"/>
+          <rect x="128" y="36" width="56" height="40" fill="#0b1522"/>
+          <rect x="146" y="46" width="18" height="18" fill="none" stroke="#9BE15D" stroke-width="2"/><text x="148" y="44" font-family="IBM Plex Mono" font-size="6" fill="#9BE15D">ID1</text>
+          <text x="156" y="112" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">BACK SCREEN</text>
+          <text x="45" y="18" font-family="IBM Plex Mono" font-size="7" fill="#F5B642" text-anchor="middle">dial</text><text x="87" y="18" font-family="IBM Plex Mono" font-size="7" fill="#EEF2F8" text-anchor="middle">learn</text>
+        </svg></div>
+        <div class="pbody">
+          <h3>HuskyLens AI camera</h3>
+          <p class="what">A camera with a tiny AI chip. Show it an object, hold the learn button, and it remembers it. Its screen draws a box around the object and it tells the micro:bit where the box is.</p>
+          <p class="does"><b>Its job:</b> the turret's eyes. It finds the mosquito 30 times a second or so.</p>
+          <p class="spec">52 &times; 36 mm &middot; 2 &times; M3 screws &middot; own cable included</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Small blue servo motor with mounting ears, a white horn on top, and a three wire cable with brown, red and orange wires">
+          <rect x="70" y="50" width="70" height="60" rx="4" fill="#2B6CB0" stroke="#5DB7F0" stroke-width="2"/>
+          <rect x="52" y="64" width="106" height="8" rx="2" fill="#2B6CB0" stroke="#5DB7F0" stroke-width="1.5"/>
+          <circle cx="58" cy="68" r="2.5" fill="#0F1420"/><circle cx="152" cy="68" r="2.5" fill="#0F1420"/>
+          <circle cx="92" cy="46" r="10" fill="#2B6CB0" stroke="#5DB7F0" stroke-width="1.5"/>
+          <rect x="72" y="36" width="56" height="8" rx="4" fill="#EEF2F8"/><circle cx="92" cy="40" r="3" fill="#888"/>
+          <path d="M140 96 C 160 96, 170 110, 196 112" stroke="#8B5A2B" stroke-width="3" fill="none"/>
+          <path d="M140 100 C 160 100, 170 114, 196 116" stroke="#E53935" stroke-width="3" fill="none"/>
+          <path d="M140 104 C 160 104, 170 118, 196 120" stroke="#FB8C00" stroke-width="3" fill="none"/>
+          <text x="106" y="132" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">brown G &middot; red V &middot; orange S</text>
+          <text x="30" y="30" font-family="IBM Plex Mono" font-size="9" fill="#9BE15D">horn</text>
+        </svg></div>
+        <div class="pbody">
+          <h3>Clutch servo <small>&times;3</small></h3>
+          <p class="what">A small motor that turns to an exact angle, from 0 to 180 degrees, and holds it. The white arm is the horn. A clutch inside slips if a hand grabs it, so the gears do not break.</p>
+          <p class="does"><b>Its job:</b> one turns the head left and right (pan), one tips it up and down (tilt). The third is a spare.</p>
+          <p class="spec">23 &times; 12 mm body &middot; 3-pin plug</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Small metal laser module, a tube 7 millimeters wide with two wires, next to a Class 2 warning label">
+          <rect x="40" y="62" width="90" height="26" rx="4" fill="#B9C4D1" stroke="#8E9CAC" stroke-width="2"/>
+          <rect x="130" y="66" width="10" height="18" rx="2" fill="#8E9CAC"/><circle cx="140" cy="75" r="4" fill="#F0605E"/>
+          <path d="M146 75 H206" stroke="#F0605E" stroke-width="2" stroke-dasharray="6 4"/>
+          <path d="M40 70 C 26 70, 22 58, 10 56" stroke="#E53935" stroke-width="3" fill="none"/>
+          <path d="M40 80 C 26 80, 22 92, 10 94" stroke="#222" stroke-width="3" fill="none"/>
+          <text x="10" y="50" font-family="IBM Plex Mono" font-size="9" fill="#E53935">+</text><text x="10" y="108" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA">&minus;</text>
+          <rect x="62" y="104" width="96" height="30" rx="3" fill="#F5B642"/><path d="M72 128 l8 -16 l8 16 z" fill="none" stroke="#1a1206" stroke-width="1.5"/>
+          <text x="126" y="116" font-family="IBM Plex Mono" font-size="8" fill="#1a1206" text-anchor="middle">CLASS 2</text><text x="126" y="127" font-family="IBM Plex Mono" font-size="8" fill="#1a1206" text-anchor="middle">&lt; 1 mW</text>
+          <text x="85" y="52" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">metal case = power</text>
+        </svg></div>
+        <div class="pbody">
+          <h3>Class 2 laser</h3>
+          <p class="what">A red laser, less than one thousandth of a watt, in a metal tube as thin as a pencil. The label says Class 2: safe enough that your blink protects you, but still never look into it.</p>
+          <p class="does"><b>Its job:</b> it rides under the camera and flashes for a quarter of a second when the mosquito is centered.</p>
+          <p class="spec">7 mm &times; 21 mm &middot; 650 nm red &middot; plastic holder only</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Tiny slide switch with a lever and three legs">
+          <rect x="70" y="60" width="80" height="34" rx="3" fill="#8E9CAC" stroke="#B9C4D1" stroke-width="2"/>
+          <rect x="96" y="40" width="16" height="22" rx="2" fill="#222" stroke="#555"/>
+          <path d="M84 94 v26 M110 94 v26 M136 94 v26" stroke="#D8A34A" stroke-width="3"/>
+          <text x="84" y="136" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">A</text><text x="110" y="136" font-family="IBM Plex Mono" font-size="9" fill="#9BE15D" text-anchor="middle">mid</text><text x="136" y="136" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">B</text>
+          <text x="104" y="32" font-family="IBM Plex Mono" font-size="9" fill="#F5B642" text-anchor="middle">slide me</text>
+        </svg></div>
+        <div class="pbody">
+          <h3>Arm switch</h3>
+          <p class="what">A slide switch smaller than a fingernail. The middle leg connects to one side or the other, depending on where the lever sits.</p>
+          <p class="does"><b>Its job:</b> the laser safety. It sits in the back wall. When it is off, the laser has no power at all.</p>
+          <p class="spec">About 9 &times; 4 mm &middot; hot glued in its frame</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Small light sensor board with three pads labeled VIN, GND and OUT">
+          <rect x="72" y="30" width="76" height="98" rx="6" fill="#1F4E8C" stroke="#5DB7F0" stroke-width="2"/>
+          <rect x="102" y="54" width="16" height="10" rx="2" fill="#EEF2F8"/><rect x="106" y="56" width="8" height="6" fill="#F5B642"/>
+          <g fill="#D8A34A"><circle cx="88" cy="112" r="6"/><circle cx="110" cy="112" r="6"/><circle cx="132" cy="112" r="6"/></g>
+          <g fill="#1F4E8C"><circle cx="88" cy="112" r="2.5"/><circle cx="110" cy="112" r="2.5"/><circle cx="132" cy="112" r="2.5"/></g>
+          <g font-family="IBM Plex Mono" font-size="8" fill="#EEF2F8" text-anchor="middle"><text x="88" y="98">VIN</text><text x="110" y="98">GND</text><text x="132" y="98">OUT</text></g>
+          <path d="M150 20 L120 52" stroke="#F0605E" stroke-width="2"/><path d="M166 26 L124 58" stroke="#F0605E" stroke-width="2" opacity=".6"/>
+          <text x="170" y="18" font-family="IBM Plex Mono" font-size="9" fill="#F0605E">light</text>
+        </svg></div>
+        <div class="pbody">
+          <h3>Light sensor <small>&times;3</small></h3>
+          <p class="what">A tiny sensor that lets more electricity through when more light hits it. The micro:bit reads it as a number from 0 (dark) to 1023 (very bright).</p>
+          <p class="does"><b>Its job:</b> it hides inside the mosquito pod and feels the laser dot. Two are spares.</p>
+          <p class="spec">7.8 &times; 10.6 mm &middot; VIN, GND, OUT</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="A red LED with a long leg and a short leg, next to a small resistor with colored stripes">
+          <path d="M50 40 a16 16 0 0 1 32 0 v34 h-32 z" fill="#F0605E" opacity=".9"/><rect x="46" y="74" width="40" height="6" rx="2" fill="#F0605E"/>
+          <path d="M60 80 v50 M72 80 v34" stroke="#B9C4D1" stroke-width="2.5"/>
+          <text x="60" y="144" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA" text-anchor="middle">long +</text><text x="84" y="124" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA">short &minus;</text>
+          <path d="M120 80 H140 M180 80 H200" stroke="#B9C4D1" stroke-width="2.5"/>
+          <rect x="140" y="70" width="40" height="20" rx="8" fill="#D9C7A0"/>
+          <rect x="148" y="70" width="4" height="20" fill="#E53935"/><rect x="156" y="70" width="4" height="20" fill="#E53935"/><rect x="164" y="70" width="4" height="20" fill="#8B5A2B"/><rect x="172" y="70" width="3" height="20" fill="#D8A34A"/>
+          <text x="160" y="110" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">220 &Omega;</text>
+          <text x="160" y="122" font-family="IBM Plex Mono" font-size="8" fill="#74839B" text-anchor="middle">red red brown</text>
+        </svg></div>
+        <div class="pbody">
+          <h3>Red LEDs and resistors <small>&times;10 each</small></h3>
+          <p class="what">An LED is a light that only works one way round: long leg to plus. A resistor slows electricity down so the LED does not burn out.</p>
+          <p class="does"><b>Their job:</b> two LEDs are the mosquito's eyes. Each gets its own 220 ohm resistor.</p>
+          <p class="spec">5 mm LEDs &middot; push in from the back of the pod</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Square speaker module with a round speaker, a volume knob, and a three pin plug">
+          <rect x="60" y="24" width="100" height="100" rx="6" fill="#1F4E8C" stroke="#5DB7F0" stroke-width="2"/>
+          <circle cx="110" cy="74" r="34" fill="#222" stroke="#666" stroke-width="2"/><circle cx="110" cy="74" r="12" fill="#444"/>
+          <g fill="#0F1420"><circle cx="70" cy="34" r="3"/><circle cx="150" cy="34" r="3"/><circle cx="70" cy="114" r="3"/><circle cx="150" cy="114" r="3"/></g>
+          <circle cx="178" cy="60" r="10" fill="#EEF2F8"/><path d="M178 52 v8" stroke="#111" stroke-width="2"/><text x="178" y="86" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA" text-anchor="middle">volume</text>
+          <rect x="96" y="124" width="28" height="10" fill="#EEF2F8"/><text x="110" y="146" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA" text-anchor="middle">to P0</text>
+          <path d="M34 60 q-8 14 0 28 M24 54 q-12 20 0 40" stroke="#F0609E" stroke-width="2" fill="none"/>
+        </svg></div>
+        <div class="pbody">
+          <h3>Speaker module</h3>
+          <p class="what">A speaker with its own amplifier, which makes quiet signals loud, and a volume knob.</p>
+          <p class="does"><b>Its job:</b> the pew, the boom, the lock-on beep, and the victory song. It faces the grille in the back of the base.</p>
+          <p class="spec">40 &times; 40 mm &middot; 4 &times; M2 &middot; Gravity cable</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Battery holders: a large one for four AA batteries with a switch and round plug, and a small one for two AAA batteries with a white plug">
+          <rect x="16" y="30" width="112" height="84" rx="6" fill="#222" stroke="#555" stroke-width="2"/>
+          <g fill="#555"><rect x="24" y="38" width="96" height="16" rx="8"/><rect x="24" y="56" width="96" height="16" rx="8"/><rect x="24" y="74" width="96" height="16" rx="8"/><rect x="24" y="92" width="96" height="16" rx="8"/></g>
+          <rect x="60" y="20" width="18" height="10" rx="2" fill="#9BE15D"/><text x="69" y="15" font-family="IBM Plex Mono" font-size="8" fill="#9BE15D" text-anchor="middle">switch</text>
+          <path d="M128 72 C 140 72, 140 130, 70 134" stroke="#222" stroke-width="3" fill="none"/><circle cx="66" cy="134" r="5" fill="#8E9CAC"/>
+          <text x="40" y="146" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA">4&times;AA, turret</text>
+          <rect x="152" y="48" width="44" height="64" rx="5" fill="#222" stroke="#555" stroke-width="2"/>
+          <g fill="#555"><rect x="158" y="54" width="14" height="52" rx="7"/><rect x="176" y="54" width="14" height="52" rx="7"/></g>
+          <path d="M174 112 v16" stroke="#E53935" stroke-width="2"/><rect x="167" y="128" width="14" height="7" fill="#EEF2F8"/>
+          <text x="174" y="42" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA" text-anchor="middle">2&times;AAA, wand</text>
+        </svg></div>
+        <div class="pbody">
+          <h3>Battery holders</h3>
+          <p class="what">The big one holds four AA batteries, has an on/off switch, and a round plug. The small ones hold two AAA batteries and have the white plug a micro:bit takes.</p>
+          <p class="does"><b>Their job:</b> the big pack powers the turret and its switch is the main power. A small pack powers the wand.</p>
+          <p class="spec">4&times;AA slides in from the right side &middot; 2&times;AAA zip-tied</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="A flat four wire ribbon cable next to a spool of fishing line with small clips">
+          <g stroke-width="4" fill="none"><path d="M14 50 C 70 30, 120 90, 206 60" stroke="#E53935"/><path d="M14 56 C 70 36, 120 96, 206 66" stroke="#222"/><path d="M14 62 C 70 42, 120 102, 206 72" stroke="#EEF2F8"/><path d="M14 68 C 70 48, 120 108, 206 78" stroke="#43A047"/></g>
+          <text x="110" y="30" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">4-wire ribbon</text>
+          <path d="M30 128 H190" stroke="#CFE8FF" stroke-width="1.2"/>
+          <g fill="#F0609E"><rect x="60" y="122" width="10" height="12" rx="2"/><rect x="110" y="122" width="10" height="12" rx="2"/><rect x="160" y="122" width="10" height="12" rx="2"/></g>
+          <text x="110" y="146" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA" text-anchor="middle">fishing line + printed line clips</text>
+        </svg></div>
+        <div class="pbody">
+          <h3>Ribbon cable</h3>
+          <p class="what">Four thin wires stuck side by side, soft and bendy. It rides down the fishing line to the mosquito, held on by the little printed clips.</p>
+          <p class="does"><b>Its job:</b> carries power to the sensor and eyes, and brings the sensor signal back to the wand.</p>
+          <p class="spec">4 wires: 3V, GND, sensor, eyes &middot; write down your colors</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Small screws and nuts, and short cables with plugs">
+          <g><rect x="30" y="40" width="10" height="4" rx="1" fill="#B9C4D1"/><rect x="33" y="44" width="4" height="30" fill="#B9C4D1"/><path d="M33 50 h4 M33 56 h4 M33 62 h4 M33 68 h4" stroke="#74839B"/></g>
+          <g><rect x="54" y="40" width="10" height="4" rx="1" fill="#B9C4D1"/><rect x="57" y="44" width="4" height="22" fill="#B9C4D1"/></g>
+          <polygon points="84,50 92,46 100,50 100,58 92,62 84,58" fill="#B9C4D1"/><circle cx="92" cy="54" r="3" fill="#182032"/>
+          <text x="66" y="96" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">M2 kit</text>
+          <path d="M126 50 H196" stroke="#222" stroke-width="3"/><path d="M126 55 H196" stroke="#E53935" stroke-width="3"/><path d="M126 60 H196" stroke="#1d7ad4" stroke-width="3"/>
+          <rect x="118" y="44" width="10" height="22" rx="2" fill="#EEF2F8"/><rect x="194" y="44" width="10" height="22" rx="2" fill="#EEF2F8"/>
+          <text x="160" y="96" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">Gravity cables</text>
+        </svg></div>
+        <div class="pbody">
+          <h3>Screws and cables</h3>
+          <p class="what">A kit of tiny M2 screws and nuts (M2 means 2 millimeters thick), plus short cables with plugs on both ends.</p>
+          <p class="does"><b>Their job:</b> the screws hold the printed parts together. The cables connect the speaker.</p>
+          <p class="spec">M3 screws for the camera come in its own box</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="A stuffed mosquito with a white round pod on its body, hanging on a line in front of black foam board">
+          <rect x="120" y="14" width="86" height="120" fill="#0b0b0b" stroke="#2B3650"/>
+          <path d="M70 10 V58" stroke="#CFE8FF" stroke-width="1.2"/>
+          <ellipse cx="70" cy="84" rx="30" ry="14" fill="#6B4E3D"/><circle cx="42" cy="80" r="9" fill="#6B4E3D"/>
+          <path d="M34 80 L14 86" stroke="#6B4E3D" stroke-width="2"/>
+          <ellipse cx="62" cy="68" rx="22" ry="8" fill="#CFE8FF" opacity=".5" transform="rotate(-20 62 68)"/><ellipse cx="82" cy="68" rx="22" ry="8" fill="#CFE8FF" opacity=".5" transform="rotate(20 82 68)"/>
+          <path d="M52 96 l-10 22 M64 97 l-4 24 M78 97 l4 24 M90 95 l12 20" stroke="#6B4E3D" stroke-width="2"/>
+          <circle cx="70" cy="80" r="14" fill="#F4F4F4" stroke="#ccc"/><circle cx="64" cy="64" r="3" fill="#F0605E"/><circle cx="76" cy="64" r="3" fill="#F0605E"/>
+          <text x="163" y="146" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA" text-anchor="middle">black foam board</text>
+        </svg></div>
+        <div class="pbody">
+          <h3>Mosquito and backdrop</h3>
+          <p class="what">A store-bought stuffed mosquito, black foam board, a 1/4 inch dowel, fishing line, and a rod. The white pod gets sewn onto the mosquito.</p>
+          <p class="does"><b>Their job:</b> the target, and a plain black wall behind it so the camera can see it and the laser has somewhere safe to land.</p>
+          <p class="spec">Foam board 5 mm thick &middot; 30 &times; 20 in</p>
+        </div></div>
+
+      <div class="pcard"><div class="pic">
+        <svg viewBox="0 0 220 150" role="img" aria-label="Printed parts in pink, green, teal and white: a box-shaped base, a round turntable with a yoke, a head, a wand handle, and a white cup">
+          <path d="M20 70 h70 v50 h-70 z" fill="#F07ACB"/><path d="M20 70 l12 -12 h70 l-12 12 z" fill="#F7A4DC"/><path d="M90 70 l12 -12 v50 l-12 12 z" fill="#C85BA5"/>
+          <ellipse cx="60" cy="58" rx="22" ry="7" fill="#B6F08A"/>
+          <path d="M44 56 v-26 h6 v26 M70 56 v-26 h6 v26" fill="#9BE15D"/>
+          <rect x="50" y="26" width="20" height="24" fill="#3BC9DB"/>
+          <rect x="120" y="36" width="84" height="22" rx="4" fill="#B48CFF"/><text x="162" y="51" font-family="IBM Plex Mono" font-size="9" fill="#1a0e18" text-anchor="middle">wand</text>
+          <circle cx="150" cy="96" r="18" fill="#F4F4F4"/><circle cx="150" cy="96" r="10" fill="#E0E0E0"/>
+          <path d="M184 86 l10 -10 l10 10 l-10 30 z" fill="#F5B642"/>
+          <text x="110" y="142" font-family="IBM Plex Mono" font-size="8" fill="#A9B6CA" text-anchor="middle">12 pieces, 5 print batches</text>
+        </svg></div>
+        <div class="pbody">
+          <h3>Printed parts <small>12 pieces</small></h3>
+          <p class="what">Base shell and floor, turntable and yoke, pivot pin, camera head, wand, the white pod cup and its cap, pendulum pivot, backdrop clip, two feet, and cable clips.</p>
+          <p class="does"><b>Their job:</b> every electronic part lives inside something printed. Step 2 shows the print order.</p>
+          <p class="spec">About 320 g of PLA &middot; 11 g must be white</p>
+        </div></div>
+
+    </div>
+  </div>
+
+  <div class="card" id="wiring">
+    <p class="eyebrow">Where every wire goes</p>
+    <h2>The two wiring maps</h2>
+    <p class="lead">Keep this page open while you wire. <b>Batteries out</b> before you change any wire.</p>
+    <h3 style="margin-top:14px">Turret</h3>
+    <div class="diagram">
+      <svg viewBox="0 0 660 330" role="img" aria-label="Turret wiring. The micro:bit stands in the Xia mi board. HuskyLens on the HuskyLens port. Pan servo on P1, tilt servo on P2, speaker on P0. Battery pack into the DC jack. A 5 volt pin goes to the arm switch, then to the relay, then to the laser plus wire. The laser minus wire goes to ground.">
+        <rect x="220" y="70" width="220" height="190" rx="12" fill="#1F6B3A" stroke="#2F8F50" stroke-width="2"/>
+        <text x="376" y="252" font-family="Fredoka, sans-serif" font-size="16" fill="#EEF2F8" text-anchor="middle">Xia mi board</text>
+        <rect x="236" y="108" width="54" height="80" rx="4" fill="#1C1C1C" stroke="#555"/><text x="263" y="152" font-family="IBM Plex Mono" font-size="10" fill="#A9B6CA" text-anchor="middle">micro</text><text x="263" y="164" font-family="IBM Plex Mono" font-size="10" fill="#A9B6CA" text-anchor="middle">:bit</text>
+        <g font-family="IBM Plex Mono" font-size="11" fill="#EEF2F8">
+          <rect x="306" y="108" width="60" height="18" rx="3" fill="#111"/><text x="336" y="121" text-anchor="middle">HUSKY</text>
+          <rect x="306" y="134" width="60" height="18" rx="3" fill="#111"/><text x="336" y="147" text-anchor="middle">P0 SVG</text>
+          <rect x="306" y="160" width="60" height="18" rx="3" fill="#111"/><text x="336" y="173" text-anchor="middle">P1 SVG</text>
+          <rect x="306" y="186" width="60" height="18" rx="3" fill="#111"/><text x="336" y="199" text-anchor="middle">P2 SVG</text>
+          <rect x="378" y="108" width="50" height="18" rx="3" fill="#111"/><text x="403" y="121" text-anchor="middle">5V</text>
+          <rect x="378" y="146" width="50" height="48" rx="3" fill="#2B5FA8"/><text x="403" y="140" text-anchor="middle" font-size="10">RELAY</text><text x="403" y="164" text-anchor="middle" font-size="10">COM</text><text x="403" y="182" text-anchor="middle" font-size="10">NO</text>
+          <rect x="378" y="204" width="50" height="18" rx="3" fill="#111"/><text x="403" y="217" text-anchor="middle">G</text>
+          <rect x="236" y="214" width="60" height="30" rx="3" fill="#111"/><text x="266" y="233" text-anchor="middle">DC IN</text>
+        </g>
+        <g font-family="Nunito, sans-serif" font-size="13" fill="#EEF2F8">
+          <rect x="20" y="20" width="150" height="44" rx="8" fill="#2B2F3A" stroke="#5DB7F0"/><text x="95" y="47" text-anchor="middle">HuskyLens camera</text>
+          <rect x="20" y="104" width="150" height="40" rx="8" fill="#1F4E8C" stroke="#5DB7F0"/><text x="95" y="129" text-anchor="middle">Speaker module</text>
+          <rect x="20" y="152" width="150" height="40" rx="8" fill="#2B6CB0" stroke="#5DB7F0"/><text x="95" y="177" text-anchor="middle">Pan servo</text>
+          <rect x="20" y="200" width="150" height="40" rx="8" fill="#2B6CB0" stroke="#5DB7F0"/><text x="95" y="225" text-anchor="middle">Tilt servo</text>
+          <rect x="20" y="268" width="150" height="44" rx="8" fill="#222" stroke="#9BE15D"/><text x="95" y="289" text-anchor="middle">4&#215;AA pack</text><text x="95" y="304" text-anchor="middle" font-size="11" fill="#9BE15D">its switch = main power</text>
+          <rect x="490" y="20" width="150" height="50" rx="8" fill="#2B2F3A" stroke="#F5B642"/><text x="565" y="42" text-anchor="middle">Arm switch</text><text x="565" y="59" text-anchor="middle" font-size="11" fill="#F5B642">back wall, grown-up</text>
+          <rect x="490" y="214" width="150" height="56" rx="8" fill="#2B2F3A" stroke="#F0605E"/><text x="565" y="236" text-anchor="middle">Class 2 laser</text><text x="565" y="253" text-anchor="middle" font-size="11" fill="#F0605E">in the head clamp</text>
+        </g>
+        <g fill="none" stroke-width="3">
+          <path d="M170 42 H336 V108" stroke="#EEF2F8"/>
+          <path d="M170 124 H200 V143 H306" stroke="#F0609E"/>
+          <path d="M170 172 H200 V169 H306" stroke="#FB8C00"/>
+          <path d="M170 220 H200 V195 H306" stroke="#FB8C00"/>
+          <path d="M170 290 H210 V229 H236" stroke="#9BE15D"/>
+          <path d="M428 117 H450 V38 H490" stroke="#E53935"/>
+          <path d="M490 56 H470 V160 H428" stroke="#F5B642"/>
+          <path d="M428 178 H460 V230 H490" stroke="#E53935"/>
+          <path d="M428 213 H446 V256 H490" stroke="#9aa5b4" stroke-dasharray="5 3"/>
+        </g>
+        <g font-family="IBM Plex Mono" font-size="10.5">
+          <text x="236" y="36" fill="#EEF2F8">4-pin camera cable</text>
+          <text x="176" y="118" fill="#F0609E">P0</text><text x="176" y="166" fill="#FB8C00">P1</text><text x="176" y="214" fill="#FB8C00">P2</text>
+          <text x="454" y="84" fill="#E53935">5V</text>
+          <text x="476" y="110" fill="#F5B642">to COM</text>
+          <text x="476" y="196" fill="#E53935">NO to +</text>
+          <text x="500" y="292" fill="#9aa5b4">laser &minus; to G</text>
+        </g>
+      </svg>
+      <p class="caption">The laser only gets power when the arm switch is on AND the relay clicks.</p>
+    </div>
+    <h3 style="margin-top:18px">Mosquito and wand</h3>
+    <div class="diagram">
+      <svg viewBox="0 0 660 300" role="img" aria-label="Wand wiring. The wand micro:bit rings connect through four ribbon wires to the pod. 3V goes to the sensor VIN. GND goes to the sensor GND and both LED short legs. P0 comes from the sensor OUT. P1 goes through a 220 ohm resistor to each LED long leg.">
+        <rect x="20" y="40" width="200" height="220" rx="12" fill="#1C1C1C" stroke="#555" stroke-width="2"/>
+        <text x="120" y="66" font-family="Fredoka, sans-serif" font-size="17" fill="#EEF2F8" text-anchor="middle">Wand micro:bit</text>
+        <text x="120" y="86" font-family="IBM Plex Mono" font-size="10" fill="#A9B6CA" text-anchor="middle">screws clamp wires to the rings</text>
+        <g font-family="IBM Plex Mono" font-size="12" fill="#1C1C1C" text-anchor="middle">
+          <circle cx="190" cy="116" r="14" fill="#D8A34A"/><text x="190" y="120">3V</text>
+          <circle cx="190" cy="156" r="14" fill="#D8A34A"/><text x="190" y="160" font-size="10">GND</text>
+          <circle cx="190" cy="196" r="14" fill="#D8A34A"/><text x="190" y="200">P0</text>
+          <circle cx="190" cy="236" r="14" fill="#D8A34A"/><text x="190" y="240">P1</text>
+        </g>
+        <text x="40" y="136" font-family="Nunito, sans-serif" font-size="12" fill="#A9B6CA">2&#215;AAA plug</text>
+        <text x="40" y="152" font-family="Nunito, sans-serif" font-size="12" fill="#A9B6CA">in the white socket</text>
+        <rect x="236" y="96" width="88" height="160" rx="6" fill="#182032" stroke="#2B3650"/>
+        <text x="280" y="90" font-family="IBM Plex Mono" font-size="10" fill="#A9B6CA" text-anchor="middle">ribbon, down the line</text>
+        <g fill="none" stroke-width="3">
+          <path d="M204 116 H470" stroke="#E53935"/>
+          <path d="M204 156 H600" stroke="#9aa5b4"/>
+          <path d="M204 196 H470" stroke="#5DB7F0"/>
+          <path d="M204 236 H420" stroke="#F0609E"/>
+        </g>
+        <rect x="440" y="96" width="70" height="116" rx="8" fill="#1F4E8C" stroke="#5DB7F0"/>
+        <text x="475" y="84" font-family="Fredoka, sans-serif" font-size="14" fill="#EEF2F8" text-anchor="middle">Light sensor</text>
+        <g font-family="IBM Plex Mono" font-size="10" fill="#EEF2F8"><text x="480" y="120">VIN</text><text x="480" y="160">GND</text><text x="480" y="200">OUT</text></g>
+        <g fill="#D8A34A"><circle cx="470" cy="116" r="4"/><circle cx="470" cy="156" r="4"/><circle cx="470" cy="196" r="4"/></g>
+        <path d="M420 236 V270 H440 M420 236 H560" stroke="#F0609E" stroke-width="3" fill="none"/>
+        <rect x="440" y="262" width="36" height="16" rx="6" fill="#D9C7A0"/><text x="458" y="296" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">220 &Omega;</text>
+        <rect x="560" y="228" width="36" height="16" rx="6" fill="#D9C7A0"/><text x="578" y="222" font-family="IBM Plex Mono" font-size="9" fill="#A9B6CA" text-anchor="middle">220 &Omega;</text>
+        <path d="M476 270 H520" stroke="#F0609E" stroke-width="3"/><path d="M596 236 H612" stroke="#F0609E" stroke-width="3"/>
+        <path d="M520 262 v16 l14 -8 z" fill="#F0605E"/><path d="M534 262 v16" stroke="#F0605E" stroke-width="2"/>
+        <path d="M612 228 v16 l14 -8 z" fill="#F0605E"/><path d="M626 228 v16" stroke="#F0605E" stroke-width="2"/>
+        <path d="M534 270 H640 V156 H600 M626 236 H640" stroke="#9aa5b4" stroke-width="3" fill="none"/>
+        <text x="540" y="296" font-family="IBM Plex Mono" font-size="9" fill="#F0605E">eye</text><text x="600" y="262" font-family="IBM Plex Mono" font-size="9" fill="#F0605E">eye</text>
+        <g font-family="IBM Plex Mono" font-size="10.5">
+          <text x="340" y="110" fill="#E53935">3V power</text><text x="340" y="150" fill="#9aa5b4">ground</text><text x="340" y="190" fill="#5DB7F0">sensor signal</text><text x="340" y="230" fill="#F0609E">eyes</text>
+        </g>
+        <rect x="408" y="40" width="244" height="248" rx="14" fill="none" stroke="#EEF2F8" stroke-dasharray="4 6" opacity=".35"/>
+        <text x="646" y="56" font-family="IBM Plex Mono" font-size="10" fill="#EEF2F8" text-anchor="end" opacity=".7">INSIDE THE POD</text>
+      </svg>
+      <p class="caption">Long LED leg toward the resistor. Short leg to ground. Both eyes get their own resistor.</p>
+    </div>
+    <div class="explain">
+      <h4>What is a circuit?</h4>
+      <p>Electricity only flows around a <b>complete loop</b>: out of the battery, through the part, and back. Every part here has two paths: power in and <b>ground</b> back. Break the loop anywhere and nothing happens. That is exactly how the arm switch works: it breaks the laser's loop.</p>
+    </div>
+  </div>
+
+  <div class="card" id="screws">
+    <p class="eyebrow">Hardware</p>
+    <h2>Where every screw goes</h2>
+    <p class="lead">Sort the screws into a muffin tin before you start, one cup per row. Pick lengths from the M2 kit when the parts arrive; the two marked lengths matter.</p>
+    <div class="table-wrap">
+      <table class="screws">
+        <thead><tr><th>Where</th><th>Screw</th><th>How many</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Xia mi board to floor plate</td><td>M2</td><td>4</td><td>Into the four posts; the plastic makes its own thread</td></tr>
+          <tr><td>Floor plate to base shell</td><td>M2</td><td>4</td><td>Up from underneath into the corner posts</td></tr>
+          <tr><td>Pan servo to deck</td><td>M2 + nut</td><td>2</td><td>Down through the deck and the servo ears, nut underneath</td></tr>
+          <tr><td>Speaker to back wall</td><td>M2</td><td>4</td><td>Into the four round bosses</td></tr>
+          <tr><td>Tilt servo to yoke</td><td>M2</td><td>2</td><td>From the outside of the right upright</td></tr>
+          <tr><td>Servo horns</td><td>horn screw</td><td>2</td><td>Come in the servo bags</td></tr>
+          <tr><td>Pivot pin to head</td><td>M2 &times; 12 + nut</td><td>1</td><td>Nut drops into the trap inside the left side of the head</td></tr>
+          <tr><td>Laser clamp</td><td>M2 &times; 10</td><td>1</td><td>From below. It squeezes plastic, never the laser</td></tr>
+          <tr><td>HuskyLens to head</td><td>M3 + nut</td><td>2</td><td>From the camera's own kit; nuts go in the back traps</td></tr>
+          <tr><td>Wand micro:bit rings</td><td>M2</td><td>4</td><td>Through 3V, GND, P0, P1; each one clamps a wire</td></tr>
+          <tr><td><b>Total</b></td><td></td><td><b>26</b></td><td>22 &times; M2 (3 of them with nuts), 2 &times; M3 with nuts, 2 horn screws. Plus 3 zip ties for the wand.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="chapter" id="part-1">
+    <p class="eyebrow">Part A</p>
+    <h2>Check and print</h2>
+    <p>Measure what arrived, fix the print files if anything is off, then print in five batches. Each batch unlocks the next build steps.</p>
+  </div>
+
+  <div class="step" id="step-1">
+    <div class="step-head">
+      <span class="num">1</span>
+      <div><h2>Unbox and measure</h2><p class="when">The weekend the parts arrive &middot; about 1 hour</p></div>
+    </div>
+    <p class="why">The print files were drawn from datasheets and photos before anything arrived. A part that is 1 mm different can stop a screw from lining up. Ten minutes with calipers now saves a 3 hour reprint.</p>
+    <ol class="do">
+      <li><b>Check every item against the shopping list.</b> Tick them off on the <a href="/projects/addie/ms2000-parts-list.pdf" target="_blank" rel="noopener">parts list PDF</a>.<span class="tip">Keep the tiny parts (sensors, LEDs, resistors, switch) in a labeled bag.</span></li>
+      <li><b>Measure the Xia mi board:</b> the distance between its corner holes, both ways.<span class="tip">The base expects about 80.2 mm by 50.2 mm between hole centers.</span></li>
+      <li><b>Measure a servo, the 2&times;AAA pack, the arm switch, and the stuffed mosquito.</b> Write every number in the journal.</li>
+      <li><b>Read the Xia mi board</b> for a version number (V1 or V2). You need it for the relay block in Step 11.</li>
+      <li><b>Plug a micro:bit into the Xia mi</b>, plug in the 4&times;AA pack, switch on. Does the micro:bit light up by itself?<span class="tip">If it does, the board powers the micro:bit and the turret needs only one battery pack.</span></li>
+      <li><b>A grown-up compares your numbers</b> with the print files and fixes anything that is off before printing.</li>
+    </ol>
+    <div class="explain">
+      <h4>What are calipers, and what is tolerance?</h4>
+      <p><b>Calipers</b> are a ruler with jaws. Close them on a part and read the size to a tenth of a millimeter.</p>
+      <p>No two parts are exactly the same size. The small wiggle room between "the size it should be" and "the size it really is" is called <b>tolerance</b>. Printed holes are drawn 0.3 mm bigger on each side so parts slide in even when things are a little off.</p>
+    </div>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>Every part is checked off, the numbers are in the journal, and a grown-up says the print files match.</p></div></div>
+    <p class="journal"><b>Journal:</b> the date, what arrived, the numbers you measured, and anything that was different from the plan.</p>
+  </div>
+
+  <div class="step" id="step-2">
+    <div class="step-head">
+      <span class="num">2</span>
+      <div><h2>Print in five batches</h2><p class="when">Starts the same weekend &middot; about 10 hours of printing &middot; <span class="grownup">grown-up</span></p></div>
+    </div>
+    <p class="why">The small, quick batch goes first as a test. Then the parts for the mosquito and wand, so building can start while the big base prints. Each batch has something to learn while it prints on the <a href="/projects/addie/mosquito-turret/build/batches" target="_top">print plan page</a>.</p>
+    <ol class="order">
+      <li><b>Batch 1: the white pod and cable clips</b><span>The front of the sensor pod and 11 clips. Must be <span class="w">WHITE</span> PLA.</span><span class="t">About 35 minutes &middot; 11 g &middot; unlocks step 3</span></li>
+      <li><b>Batch 2: turret head, turntable, and wand</b><span>Turntable with the tilt yoke, camera head, pivot pin, wand handle, and the back of the pod.</span><span class="t">About 3.5 hours &middot; 77 g &middot; unlocks steps 3, 4, and 8</span></li>
+      <li><b>Batch 3: base shell</b><span>The biggest part. It prints upside down, deck on the bed.</span><span class="t">About 3 hours &middot; 125 g &middot; unlocks step 6</span></li>
+      <li><b>Batch 4: floor plate and one backdrop foot</b><span>The board and battery pack sit on the floor plate.</span><span class="t">About 1 hour 45 minutes &middot; 64 g &middot; unlocks step 6</span></li>
+      <li><b>Batch 5: pendulum pivot, backdrop clip, second foot</b><span>The test rig. The pivot has the 10, 20, and 30 degree marks.</span><span class="t">About 1.5 hours &middot; 44 g &middot; unlocks step 14</span></li>
+    </ol>
+    <div class="pair" style="margin-top:14px">
+      <div class="diagram"><img src="/projects/addie/ms2000-cad/plates/ms2000-plate-4-white.png" alt="Print plate 4: the white pod cup and cable clips" loading="lazy"><p class="caption">Batch 1 &middot; white</p></div>
+      <div class="diagram"><img src="/projects/addie/ms2000-cad/plates/ms2000-plate-3-turret-and-wand.png" alt="Print plate 3: turntable and yoke, head, pin, wand, pod cap" loading="lazy"><p class="caption">Batch 2 &middot; the moving parts</p></div>
+    </div>
+    <ol class="do">
+      <li>Open the batch's <b>.3mf plate file</b> in Orca-Flashforge and send it to the Adventurer 5M.<span class="tip">The settings are already inside: 0.2 mm layers, 3 walls, 15% gyroid infill, brims, no supports.</span></li>
+      <li>Wait for the bed to cool before a grown-up takes the parts off.</li>
+      <li>Peel off the brims. Run a screw into each small hole once to clear it.</li>
+      <li>Do the checks on the print plan page before starting the next batch.</li>
+    </ol>
+    <div class="explain">
+      <h4>Why is the inside of a print not solid?</h4>
+      <p>Solid plastic would take hours longer and waste filament. So the printer draws a strong outer skin (the <b>walls</b>) and fills the inside with a wavy pattern called <b>gyroid infill</b>, only 15% full. It works like the honeycomb inside a beehive: light, but strong in every direction.</p>
+      <p>The base is heavier because it is so big, and that is good. A heavy base does not tip when the head swings fast.</p>
+    </div>
+    <div class="gotcha"><b>PLA goes soft at about 60&deg;C.</b> A car in the Houston sun gets hotter than that. Never leave the MS-2000 in the car.</div>
+    <a class="link3d" href="/projects/addie/ms2000-cad/index.html" target="_blank" rel="noopener">See every printed part in 3D &rarr;</a>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>All five batches are printed and cleaned up: 13 big pieces (two of them are backdrop feet) and 11 little clips.</p></div></div>
+  </div>
+
+  <div class="chapter" id="part-2">
+    <p class="eyebrow">Part B</p>
+    <h2>The mosquito and the wand</h2>
+    <p>Build the target first. Once a flashlight can make the mosquito's eyes flash, you know the hardest part of the proof works, before the turret even exists.</p>
+  </div>
+
+  <div class="step" id="step-3">
+    <div class="step-head">
+      <span class="num">3</span>
+      <div><h2>Wire the mosquito pod</h2><p class="when">Batches 1 and 2 done &middot; about 1.5 hours &middot; <span class="grownup">grown-up solders</span></p></div>
+    </div>
+    <p class="why">The pod is the mosquito's hidden heart: a white cup that glows when the laser hits, a light sensor inside, and two red eyes on top.</p>
+    <div class="diagram">
+      <svg class="fit" viewBox="0 0 440 250" role="img" aria-label="Side cut of the sensor pod. The laser dot lands on the thin white face. The whole white cup glows. The light sensor at the back of the cup sees the glow. The two eye LEDs sit on top, outside the cup, facing the turret. The cap holds the sensor and the resistors, and is sewn to the mosquito.">
+        <path d="M20 120 H150" stroke="#F0605E" stroke-width="3" stroke-dasharray="8 5"/>
+        <text x="22" y="110" font-family="IBM Plex Mono" font-size="11" fill="#F0605E">laser from the turret</text>
+        <circle cx="156" cy="120" r="6" fill="#F0605E"/>
+        <path d="M156 60 H240 V180 H156 Z" fill="#FFF3F6" opacity=".12"/>
+        <path d="M156 60 V180" stroke="#F4F4F4" stroke-width="4"/>
+        <path d="M156 60 H240 M156 180 H240" stroke="#F4F4F4" stroke-width="4"/>
+        <g stroke="#F0609E" stroke-width="1.5" opacity=".7"><path d="M162 120 L200 90 M162 120 L205 120 M162 120 L200 150 M162 120 L190 70 M162 120 L190 170"/></g>
+        <rect x="240" y="56" width="50" height="128" rx="4" fill="#9aa5b4" opacity=".35" stroke="#A9B6CA"/>
+        <rect x="232" y="110" width="10" height="20" fill="#1F4E8C" stroke="#5DB7F0"/>
+        <rect x="160" y="38" width="80" height="18" rx="4" fill="#F4F4F4"/>
+        <path d="M170 38 a7 7 0 0 1 14 0" fill="#F0605E"/><path d="M212 38 a7 7 0 0 1 14 0" fill="#F0605E"/>
+        <rect x="236" y="24" width="10" height="14" fill="#F4F4F4"/><path d="M241 24 V2" stroke="#CFE8FF" stroke-width="1.2"/>
+        <rect x="258" y="130" width="22" height="8" rx="3" fill="#D9C7A0"/><rect x="258" y="144" width="22" height="8" rx="3" fill="#D9C7A0"/>
+        <path d="M290 76 C 330 76, 330 40, 380 36" stroke="#F5B642" stroke-width="3" fill="none"/>
+        <path d="M290 184 q20 10 40 0 q20 -10 40 0" stroke="#6B4E3D" stroke-width="12" fill="none" opacity=".8"/>
+        <g font-family="IBM Plex Mono" font-size="10.5" fill="#A9B6CA">
+          <text x="100" y="206">white face, 0.8 mm</text><path d="M156 186 V196" stroke="#A9B6CA"/>
+          <text x="180" y="236">the whole cup glows</text>
+          <text x="300" y="120" fill="#5DB7F0">light sensor, face out</text><path d="M296 116 H244" stroke="#5DB7F0"/>
+          <text x="300" y="152">2 resistors, open back</text>
+          <text x="252" y="20" fill="#F0605E">eyes, outside the cup</text>
+          <text x="336" y="66" fill="#F5B642">ribbon</text>
+          <text x="234" y="14" fill="#CFE8FF" text-anchor="end">line tab</text>
+          <text x="348" y="206" fill="#b08968">mosquito</text>
+        </g>
+      </svg>
+      <p class="caption">The dot can land anywhere on the 40 mm face and still count.</p>
+    </div>
+    <ol class="do">
+      <li><b>Pick a job for each ribbon wire</b> and write it in the journal: 3V power, ground, sensor signal, eyes.<span class="tip">Red for 3V and black for ground are good habits.</span></li>
+      <li><b>Push the two red LEDs</b> into the eye holes from the back of the eye bar. Long legs on the same side.</li>
+      <li><b>Solder</b> <span class="grownup">grown-up</span> the light sensor: 3V wire to VIN, ground wire to GND, signal wire to OUT.</li>
+      <li><b>Solder the eyes:</b> each long leg to its own 220 ohm resistor, both resistor ends to the eyes wire, both short legs to the ground wire.<span class="tip">Tape or a dab of hot glue over each joint so no bare metal can touch.</span></li>
+      <li><b>Seat the sensor</b> in the cap's pocket, face out, with the wires and resistors in the open back.</li>
+      <li><b>Glue the cap into the white cup.</b> Thread the ribbon through the entry on the eye bar.</li>
+      <li><b>Tie the fishing line</b> through the tab on top. Double knot.</li>
+      <li><b>Sew the pod</b> onto the mosquito's back through the four lug holes. Wait to do this until Step 5 works.</li>
+    </ol>
+    <div class="explain">
+      <h4>Why a white cup instead of just the sensor?</h4>
+      <p>The light sensor is smaller than a fingernail. The laser dot is about the size of a pea, and it does not always land dead center. At 3 feet and 7 feet it lands about 15 mm off from where the camera aims.</p>
+      <p>So the sensor hides behind a <b>light collector</b>. White plastic scatters light, so a dot anywhere on the face makes the whole cup glow, and the sensor sees the glow. The eyes sit outside the cup so their own light never fools the sensor.</p>
+    </div>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>The pod is closed up, four labeled wires come out of it, and no bare metal shows.</p></div></div>
+  </div>
+
+  <div class="step" id="step-4">
+    <div class="step-head">
+      <span class="num">4</span>
+      <div><h2>Build the wand</h2><p class="when">Same weekend &middot; about 45 minutes</p></div>
+    </div>
+    <p class="why">The wand is a handle for the second micro:bit and its batteries. It clips onto the rod for the hand-held demo, and sits by the pendulum pivot for experiments. No soldering here: screws clamp the wires.</p>
+    <div class="diagram"><img src="/projects/addie/ms2000-guide/mosquito.jpg" alt="3D model of the mosquito test rig: the purple wand at the top, the fishing line down past the pendulum pivot, and the stuffed mosquito with its white pod" loading="lazy">
+      <p class="caption">Purple wand at the top, ribbon riding the line down to the pod.</p></div>
+    <ol class="do">
+      <li><b>Lay the wand micro:bit face up</b> in its bay, gold rings toward the line end. Slide the top edge under the two corner lips.</li>
+      <li><b>Strip about 8 mm</b> off the end of each ribbon wire and twist the strands tight.</li>
+      <li><b>Clamp each wire:</b> wrap it clockwise around an M2 screw, then drive the screw down through its ring into the boss. 3V wire to <span class="mono">3V</span>, ground to <span class="mono">GND</span>, signal to <span class="mono">P0</span>, eyes to <span class="mono">P1</span>.<span class="tip">Clockwise, so tightening the screw pulls the wire in instead of pushing it out.</span></li>
+      <li><b>Put the 2&times;AAA pack</b> in its bay and push its plug into the white socket on the micro:bit.</li>
+      <li><b>Zip-tie the wand</b> to the rod: one tie at the front, two over the battery pack. The V-shaped rails center the rod.</li>
+      <li><b>Slide a line clip</b> onto the fishing line every 10 cm and snap the ribbon into each one. Rod clips hold it along the rod.</li>
+    </ol>
+    <div class="gotcha"><b>Stray strands are trouble.</b> If one wire whisker touches the next ring, 3V and ground can short and the batteries get hot. Trim anything sticking out.</div>
+    <a class="link3d" href="/projects/addie/ms2000-cad/ms2000-p5-wand.html" target="_blank" rel="noopener">See the wand in 3D &rarr;</a>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>With the pack plugged in, the micro:bit lights up, and gently tugging each wire does not pull it out.</p></div></div>
+  </div>
+
+  <div class="step" id="step-5">
+    <div class="step-head">
+      <span class="num">5</span>
+      <div><h2>Code the wand: prove a hit</h2><p class="when">The next weekend &middot; about 1.5 hours</p></div>
+    </div>
+    <p class="why">The first real test of the whole project. By the end, a flashlight flick on the pod makes the eyes flash, plays a splat, and sends "HIT" by radio. A laser dot will do the same thing later.</p>
+    <div class="diagram">
+      <svg class="fit" viewBox="0 0 460 230" role="img" aria-label="Graph of the light number over time. It sits low in room light, then jumps high three times when the flashlight hits. A dashed threshold line sits between. Each jump above the line counts as one hit.">
+        <path d="M50 20 V190 H440" stroke="#74839B" stroke-width="2" fill="none"/>
+        <text x="16" y="110" font-family="IBM Plex Mono" font-size="11" fill="#A9B6CA" transform="rotate(-90 16 110)" text-anchor="middle">light number</text>
+        <text x="245" y="214" font-family="IBM Plex Mono" font-size="11" fill="#A9B6CA" text-anchor="middle">time</text>
+        <path d="M50 110 H440" stroke="#F5B642" stroke-width="2" stroke-dasharray="7 5"/>
+        <text x="436" y="102" font-family="IBM Plex Mono" font-size="11" fill="#F5B642" text-anchor="end">threshold</text>
+        <path d="M50 160 L110 158 L120 156 L130 50 L150 48 L160 158 L220 160 L230 158 L240 40 L262 44 L272 159 L330 158 L340 60 L352 58 L362 158 L440 160" stroke="#5DB7F0" stroke-width="3" fill="none" stroke-linejoin="round"/>
+        <g font-family="Fredoka, sans-serif" font-size="14" fill="#F0609E" text-anchor="middle"><text x="140" y="38">HIT 1</text><text x="251" y="30">HIT 2</text><text x="346" y="48">HIT 3</text></g>
+        <text x="80" y="178" font-family="IBM Plex Mono" font-size="10.5" fill="#A9B6CA">room light</text>
+      </svg>
+      <p class="caption">A hit is the number jumping above the line. It has to drop back below before the next hit can count.</p>
+    </div>
+    <ol class="do">
+      <li>Go to <b>makecode.microbit.org</b> and start a new project called <b>wand</b>.</li>
+      <li><b>Load Program 1</b> and watch the number scroll. Write down the number in room light.</li>
+      <li><b>Shine the flashlight</b> on the white face from about 1 meter. Write down that number too.<span class="tip">The two numbers should be far apart. If they are close, check the sensor wires.</span></li>
+      <li><b>Load Program 2.</b> It measures the room when it starts and sets its own threshold.</li>
+      <li><b>Flick the flashlight</b> across the pod 20 times. Count the flashes.</li>
+      <li>If it misses flicks, make the <span class="mono">+ 100</span> smaller. If it counts hits with no flashlight, make it bigger.</li>
+    </ol>
+    <div class="prog">
+      <h4>Program 1: light reader</h4>
+      <p>The micro:bit reads the sensor on P0 and shows the number.</p>
+      <div class="blocks">
+        <div class="blk b-basic">forever<i>Basic</i></div>
+        <div class="blk b-basic i1">show number ( analog read pin P0 )<i>Basic + Pins</i></div>
+      </div>
+    </div>
+    <div class="prog">
+      <h4>Program 2: hit detector</h4>
+      <p>Calibrates, then flashes, splats, and radios on every hit.</p>
+      <div class="blocks">
+        <div class="blk b-basic">on start<i>Basic</i></div>
+        <div class="blk b-radio i1">radio set group 7<i>Radio</i><small>Both micro:bits must use the same group number</small></div>
+        <div class="blk b-var i1">set threshold to ( analog read pin P0 ) + 100<i>Variables</i><small>Whatever the room is, plus a safety gap</small></div>
+        <div class="blk b-basic i1">show icon: small square<i>Basic</i></div>
+        <div class="blk b-basic gap">forever<i>Basic</i></div>
+        <div class="blk b-logic i1">if ( analog read pin P0 ) &gt; threshold then<i>Logic</i></div>
+        <div class="blk b-pins i2">digital write pin P1 to 1<i>Pins</i><small>Eyes on</small></div>
+        <div class="blk b-radio i2">radio send string "HIT"<i>Radio</i></div>
+        <div class="blk b-music i2">play sound: splat (in background)<i>Music</i><small>Make it in the sound editor, Step 12</small></div>
+        <div class="blk b-basic i2">show icon: X<i>Basic</i></div>
+        <div class="blk b-basic i2">pause 300 ms<i>Basic</i></div>
+        <div class="blk b-pins i2">digital write pin P1 to 0<i>Pins</i><small>Eyes off</small></div>
+        <div class="blk b-loops i2">while ( analog read pin P0 ) &gt; threshold<i>Loops</i><small>Wait for the light to go away, so one flash is one hit</small></div>
+        <div class="blk b-basic i3">pause 20 ms<i>Basic</i></div>
+        <div class="blk b-basic i2">show icon: small square<i>Basic</i></div>
+      </div>
+      <p class="caption" style="text-align:left">Analog read pin and digital write pin are in Advanced &gt; Pins. Until the splat sound exists, use "play tone Middle C for 1/8 beat".</p>
+    </div>
+    <div class="explain">
+      <h4>What is a threshold, and why does the wand pick its own?</h4>
+      <p>A <b>threshold</b> is a line you draw in a measurement: above it means hit, below it means no hit.</p>
+      <p>The light test turns the room lights on, down, and off. The room number changes every time. If the line were stuck at one number, the wand would count hits in a bright room that never happened, or miss real ones in the dark. So the wand measures the room when it starts and puts the line just above that. Measuring your surroundings instead of guessing is called <b>calibration</b>. Judges love that word.</p>
+    </div>
+    <div class="try"><b>Try it:</b> cover the pod with your hand and press the reset button on the back. Now uncover it. Does it count a hit by itself? Why?</div>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>Twenty flashlight flicks give twenty flashes, with no extra hits when the flashlight is off. Now sew the pod onto the mosquito.</p></div></div>
+    <p class="journal"><b>Journal:</b> the room number, the flashlight number, your threshold gap, and how many of the 20 flicks counted.</p>
+  </div>
+
+  <div class="chapter" id="part-3">
+    <p class="eyebrow">Part C</p>
+    <h2>The turret</h2>
+    <p>Base first, then the pan and tilt head on top, then the wires. The picture below is the whole turret pulled apart, so you can see how the pieces stack.</p>
+  </div>
+
+  <div class="card">
+    <div class="diagram" style="margin-top:0"><img src="/projects/addie/ms2000-guide/turret-explode.jpg" alt="Exploded 3D model of the turret: floor plate and battery pack at the bottom, the pink base shell, the green turntable and yoke, the teal head with the camera, the tilt servo on the right, the laser under the camera" loading="lazy"></div>
+    <div class="legend">
+      <span><i style="background:#F07ACB"></i>base shell and floor</span>
+      <span><i style="background:#3B82F6"></i>Xia mi board and servos</span>
+      <span><i style="background:#9BE15D"></i>turntable and yoke</span>
+      <span><i style="background:#3BC9DB"></i>camera head</span>
+      <span><i style="background:#EEF2F8"></i>HuskyLens</span>
+      <span><i style="background:#F0605E"></i>laser</span>
+      <span><i style="background:#43A047"></i>speaker</span>
+    </div>
+    <a class="link3d" href="/projects/addie/ms2000-cad/ms2000-turret-3d.html" target="_blank" rel="noopener">Open the turret in 3D, tap Explode, and tap any part name &rarr;</a>
+  </div>
+
+  <div class="step" id="step-6">
+    <div class="step-head">
+      <span class="num">6</span>
+      <div><h2>Fill the base</h2><p class="when">Batches 3 and 4 done &middot; about 1 hour</p></div>
+    </div>
+    <p class="why">The base is the turret's body. It holds the brain, the batteries, the speaker, the arm switch, and the pan servo. It stays open underneath until Step 9.</p>
+    <div class="diagram"><img src="/projects/addie/ms2000-guide/base-inside.jpg" alt="Inside the base: the Xia mi board with the micro:bit standing up at the front left, the gray battery pack on the right, the blue pan servo under the deck, the green speaker on the back wall" loading="lazy">
+      <p class="caption">Board and micro:bit front left, battery pack right, speaker on the back wall, pan servo under the deck.</p></div>
+    <ol class="do">
+      <li><b>Screw the Xia mi board</b> onto the four posts on the floor plate, micro:bit end toward the front. 4 &times; M2.</li>
+      <li><b>Stand the turret micro:bit</b> in the board's socket. Its lights will show through the front window.</li>
+      <li><b>Screw the speaker</b> to the four bosses on the back wall, speaker facing the grille. 4 &times; M2.<span class="tip">Set the volume knob to the middle first. It is hard to reach later.</span></li>
+      <li><b>Press the arm switch</b> into its frame on the back wall so the lever pokes out of the slot. A grown-up tacks it with hot glue.</li>
+      <li><b>Push the pan servo up</b> through the pocket in the deck from underneath until its ears sit between the two ribs, shaft on top near the middle.</li>
+      <li><b>Screw it down</b> from the top through the deck and the ears, with a nut underneath. 2 &times; M2 + nuts.</li>
+    </ol>
+    <div class="gotcha"><b>Leave the floor plate off for now.</b> The wires go in first, in Step 9.</div>
+    <a class="link3d" href="/projects/addie/ms2000-cad/ms2000-p1-base-shell.html" target="_blank" rel="noopener">See the base in 3D &rarr;</a>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>The speaker, arm switch, and pan servo are solid in the shell, and the board is screwed to the floor plate.</p></div></div>
+  </div>
+
+  <div class="step" id="step-7">
+    <div class="step-head">
+      <span class="num">7</span>
+      <div><h2>Center the servos first</h2><p class="when">15 minutes &middot; before any horn goes on</p></div>
+    </div>
+    <p class="why">A servo can only turn 180 degrees. If the horn goes on while the servo is at one end, the head can only turn one way. So both servos go to the middle, 90 degrees, before anything is attached to them.</p>
+    <div class="diagram">
+      <svg class="fit" viewBox="0 0 440 210" role="img" aria-label="A servo seen from above. 0 degrees points left, 180 points right, 90 points straight ahead. Put the horn on at 90 so the head can turn 90 degrees each way.">
+        <path d="M100 170 A120 120 0 0 1 340 170" stroke="#2B3650" stroke-width="18" fill="none"/>
+        <path d="M100 170 A120 120 0 0 1 340 170" stroke="#5DB7F0" stroke-width="3" fill="none" stroke-dasharray="2 8"/>
+        <rect x="190" y="150" width="60" height="40" rx="6" fill="#2B6CB0"/>
+        <circle cx="220" cy="170" r="12" fill="#1F4E8C" stroke="#5DB7F0"/>
+        <path d="M220 170 V70" stroke="#EEF2F8" stroke-width="10" stroke-linecap="round"/>
+        <path d="M220 170 L128 170" stroke="#74839B" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 5"/>
+        <path d="M220 170 L312 170" stroke="#74839B" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 5"/>
+        <g font-family="Fredoka, sans-serif" font-size="18" text-anchor="middle">
+          <text x="72" y="176" fill="#A9B6CA">0&deg;</text><text x="372" y="176" fill="#A9B6CA">180&deg;</text><text x="220" y="40" fill="#9BE15D">90&deg;</text>
+        </g>
+        <text x="236" y="96" font-family="IBM Plex Mono" font-size="11" fill="#EEF2F8">horn goes on here</text>
+        <text x="220" y="206" font-family="IBM Plex Mono" font-size="11" fill="#A9B6CA" text-anchor="middle">90&deg; each way from the middle</text>
+      </svg>
+    </div>
+    <ol class="do">
+      <li>Plug the pan servo into <span class="mono">P1</span> and the tilt servo into <span class="mono">P2</span>, brown wire toward <b>G</b>.</li>
+      <li>Plug in the 4&times;AA pack and load the centering program.</li>
+      <li>Switch on. Both servos twitch to the middle and stay there.</li>
+      <li>Switch off, and leave them alone until they get their horns in Step 8.</li>
+    </ol>
+    <div class="prog">
+      <h4>Program 3: center</h4>
+      <p>Start a new project called <b>turret</b>.</p>
+      <div class="blocks">
+        <div class="blk b-basic">on start<i>Basic</i></div>
+        <div class="blk b-pins i1">servo write pin P1 to 90<i>Pins</i></div>
+        <div class="blk b-pins i1">servo write pin P2 to 90<i>Pins</i></div>
+      </div>
+    </div>
+    <div class="explain">
+      <h4>How does a servo know what angle to go to?</h4>
+      <p>The micro:bit sends the servo a short pulse about 50 times a second. The <b>length</b> of each pulse is the message: a short pulse means one end, a long pulse means the other end, and in between means in between. A tiny sensor inside the servo checks where the shaft is and keeps turning until it matches. That checking is a <b>feedback loop</b>.</p>
+    </div>
+  </div>
+
+  <div class="step" id="step-8">
+    <div class="step-head">
+      <span class="num">8</span>
+      <div><h2>Build the pan and tilt head</h2><p class="when">About 1.5 hours &middot; a stubby screwdriver helps</p></div>
+    </div>
+    <p class="why">The moving part. The turntable spins left and right on the pan servo. The yoke on top holds the head, which tips up and down on the tilt servo on one side and a printed pin on the other.</p>
+    <div class="pair" style="margin-top:14px">
+      <div class="diagram"><img src="/projects/addie/ms2000-guide/head.jpg" alt="Close-up of the head: camera on top, the red laser under it, the tilt servo on the right side of the yoke, the green turntable below" loading="lazy"><p class="caption">The finished head</p></div>
+      <div class="diagram"><img src="/projects/addie/ms2000-guide/servos.jpg" alt="The turret with only the two servos and their horns highlighted: the pan servo under the deck and the tilt servo on the side of the yoke" loading="lazy"><p class="caption">The two servos highlighted</p></div>
+    </div>
+    <ol class="do">
+      <li><b>Press a servo horn</b> into the pocket under the turntable.</li>
+      <li><b>Set the turntable on the pan servo</b> with the yoke's open side facing the front, and push it down onto the shaft. Drive the horn screw through the center hole.</li>
+      <li><b>Screw the tilt servo</b> to the right upright from the outside, shaft pointing in. 2 &times; M2.</li>
+      <li><b>Press the other horn</b> into the pocket on the head's right side, arm pointing up.</li>
+      <li><b>Set the head between the uprights</b> so the horn lands on the tilt shaft, head facing forward and level. Drive the horn screw from inside the head.</li>
+      <li><b>Slide the pivot pin</b> through the left upright into the head. Drop an M2 nut in the trap inside, then drive the M2 &times; 12 screw through the pin. The pin should turn freely in the upright.</li>
+      <li><b>Slide the laser</b> into its clamp under the camera spot, lens at the front, label showing, wires out the back. Snug the M2 &times; 10 screw from below. Snug, not tight.</li>
+      <li><b>Bolt the HuskyLens</b> on last: its tab against the plate, lens forward, screen facing back. 2 &times; M3 with the nuts in the back traps.</li>
+      <li><b>Route the cables</b> (camera, tilt servo, laser) through the arch at the back of the yoke and down the round hole in the deck.</li>
+    </ol>
+    <div class="explain">
+      <h4>Pan and tilt, and why the head has a stop</h4>
+      <p><b>Pan</b> is turning left and right, like shaking your head no. <b>Tilt</b> is tipping up and down, like nodding yes. With both, the head can point anywhere in front of it. Security cameras and movie cameras use the same idea.</p>
+      <p>A printed finger on the left side hits a block if the head tips more than about 40 degrees up or 35 down. Even if the code goes wrong, the laser physically <b>cannot point up at a face</b>. A safety that does not depend on code is called a <b>hard stop</b>.</p>
+    </div>
+    <div class="gotcha"><b>Do not force the head</b> past its stops by hand. The clutch will slip and click, which is fine once, but it is not a toy.</div>
+    <a class="link3d" href="/projects/addie/ms2000-cad/ms2000-p4-head.html" target="_blank" rel="noopener">See the head in 3D &rarr;</a>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>Power on with Program 3: the head faces straight ahead and level. Nothing rubs when you gently turn the turntable.</p></div></div>
+  </div>
+
+  <div class="step" id="step-9">
+    <div class="step-head">
+      <span class="num">9</span>
+      <div><h2>Wire the turret and close it up</h2><p class="when">About 1 hour &middot; <span class="grownup">grown-up</span> for the laser</p></div>
+    </div>
+    <p class="why">Follow the <a href="#wiring">turret wiring map</a>. The laser gets two switches in a row: the arm switch a person controls, and the relay the code controls. Both must be on for any light.</p>
+    <ol class="do">
+      <li><b>Camera cable</b> into the HuskyLens port.</li>
+      <li><b>Speaker</b> into <span class="mono">P0</span>, pan servo into <span class="mono">P1</span>, tilt servo into <span class="mono">P2</span>. Brown or black wires toward <b>G</b>.</li>
+      <li><span class="grownup">grown-up</span> <b>Laser power:</b> a wire from a 5V pin to the arm switch's middle leg; from one side leg to the relay's COM terminal; from the relay's NO terminal to the laser's plus wire. Laser minus wire to a G pin.</li>
+      <li><b>Arm switch OFF.</b> Tape a label next to it: ARM.</li>
+      <li><b>Plug the 4&times;AA pack</b> into the DC jack and slide the pack into the right-side bay.</li>
+      <li><b>Screw the floor plate</b> on from underneath. 4 &times; M2.</li>
+      <li><b>Load the relay test</b> and listen.</li>
+    </ol>
+    <div class="prog">
+      <h4>Program 4: relay test</h4>
+      <p>Add the xia_mi extension first: Extensions, then paste <span class="mono">github.com/DFRobot/pxt-DFRobot_xia_mi_Board</span>. Pick V1 or V2 to match the number you found on the board in Step 1.</p>
+      <div class="blocks">
+        <div class="blk b-basic">forever<i>Basic</i></div>
+        <div class="blk b-xiami i1">relay V2 Actuation<i>xia_mi Board</i><small>Click: relay closed</small></div>
+        <div class="blk b-basic i1">pause 500 ms<i>Basic</i></div>
+        <div class="blk b-xiami i1">relay V2 Release<i>xia_mi Board</i><small>Click: relay open</small></div>
+        <div class="blk b-basic i1">pause 2000 ms<i>Basic</i></div>
+      </div>
+    </div>
+    <div class="explain">
+      <h4>What is a relay?</h4>
+      <p>A relay is a switch flipped by a tiny electromagnet instead of a finger. The micro:bit sends a small signal, the magnet pulls a metal arm, and a separate circuit closes. You can hear it: <b>click</b>. That click is the moment the laser fires.</p>
+      <p><b>NO</b> means normally open: no connection until the relay clicks. <b>COM</b> is the common terminal that gets connected.</p>
+    </div>
+    <div class="gotcha"><b>Point the turret at the backdrop</b> before a grown-up slides the arm switch on for the first time.</div>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>The relay clicks every 2.5 seconds. With the arm switch off, no dot. With it on, a red dot blinks on the backdrop. Arm switch back off.</p></div></div>
+  </div>
+
+  <div class="chapter" id="part-4">
+    <p class="eyebrow">Part D</p>
+    <h2>Teach it and code it</h2>
+    <p>The turret learns the mosquito, follows it, and fires when it is centered. Then the laser gets lined up.</p>
+  </div>
+
+  <div class="step" id="step-10">
+    <div class="step-head">
+      <span class="num">10</span>
+      <div><h2>Teach the camera the mosquito</h2><p class="when">About 30 minutes</p></div>
+    </div>
+    <p class="why">This is machine learning, done with one button. The camera studies the mosquito from lots of angles and builds its own idea of what a mosquito looks like.</p>
+    <div class="diagram">
+      <svg class="fit" viewBox="0 0 420 300" role="img" aria-label="The camera screen, 320 dots wide and 240 tall. The center is at 160, 120. A small lock-on box surrounds the center. The mosquito's box is 40 dots right of center, so the turret turns right.">
+        <rect x="50" y="20" width="320" height="240" rx="6" fill="#0b1522" stroke="#5DB7F0" stroke-opacity=".6"/>
+        <path d="M210 20 V260 M50 140 H370" stroke="#EEF2F8" stroke-opacity=".15" stroke-dasharray="4 4"/>
+        <rect x="198" y="128" width="24" height="24" fill="none" stroke="#9BE15D" stroke-width="2"/>
+        <text x="120" y="124" font-family="IBM Plex Mono" font-size="10" fill="#9BE15D">lock-on box</text>
+        <rect x="226" y="124" width="48" height="44" fill="none" stroke="#F0609E" stroke-width="2.5"/>
+        <text x="226" y="118" font-family="IBM Plex Mono" font-size="10" fill="#F0609E">ID1 at x 200, y 126</text>
+        <circle cx="250" cy="146" r="3" fill="#F0609E"/>
+        <path d="M214 141 L246 146" stroke="#F5B642" stroke-width="2"/>
+        <text x="104" y="232" font-family="IBM Plex Mono" font-size="11" fill="#F5B642">40 right, 6 down: turn right</text>
+        <text x="210" y="286" font-family="IBM Plex Mono" font-size="11" fill="#A9B6CA" text-anchor="middle">320 wide &#215; 240 tall, center 160, 120</text>
+        <text x="44" y="30" font-family="IBM Plex Mono" font-size="10" fill="#A9B6CA" text-anchor="end">0,0</text>
+      </svg>
+    </div>
+    <ol class="do">
+      <li><b>Hang the mosquito</b> in front of the black backdrop and switch the turret on.</li>
+      <li><b>Check the camera's settings:</b> in General Settings, Protocol Type should be I2C or Auto.</li>
+      <li><b>Turn the dial</b> on top until the screen says <b>Object Tracking</b>.</li>
+      <li><b>Point the camera</b> so the mosquito sits inside the frame in the middle of the screen.</li>
+      <li><b>Press and hold the learn button.</b> While holding it, slowly move the mosquito closer, farther, and turn it a little. Let go.</li>
+      <li>A box labeled <b>ID1</b> now follows the mosquito. Swing it around and watch.</li>
+    </ol>
+    <div class="explain">
+      <h4>What is machine learning?</h4>
+      <p>Normal code is a list of rules someone writes. Nobody can write rules for "what a mosquito looks like." So instead, the camera looks at many <b>examples</b> and finds the pattern itself. That is machine learning.</p>
+      <p>A camera picture is made of tiny dots called <b>pixels</b>. The camera tells the micro:bit where the middle of the box is, as two numbers: <b>x</b> (across) and <b>y</b> (down). Those are <b>coordinates</b>.</p>
+    </div>
+    <div class="try"><b>Try it:</b> hold up a different stuffed animal. Does the camera get fooled? Teach it again from more sides and try once more. Write down what happened.</div>
+    <div class="gotcha"><b>Teach it where it will work:</b> same backdrop, same lights. If the camera forgets after being turned off, save the model in its settings menu, or just teach it again before each session. It takes 30 seconds.</div>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>The ID1 box stays on the mosquito while it swings, and does not jump to other things in the room.</p></div></div>
+  </div>
+
+  <div class="step" id="step-11">
+    <div class="step-head">
+      <span class="num">11</span>
+      <div><h2>Code the turret: follow the mosquito</h2><p class="when">About 1.5 hours</p></div>
+    </div>
+    <p class="why">The turret looks where the mosquito is, turns a little toward it, and looks again, many times a second. No firing yet.</p>
+    <ol class="do">
+      <li>In the <b>turret</b> project, add the <b>HuskyLens</b> extension (Extensions, search huskylens).</li>
+      <li><b>Build Program 5</b> below and download it.</li>
+      <li><b>Swing the mosquito slowly.</b> The head should chase it.</li>
+      <li>If the head turns <b>away</b> from the mosquito, change that line's minus to plus (or plus to minus).</li>
+      <li><b>Find the tilt limits:</b> tip the mosquito high and low and watch where the head stops before it touches its hard stop. Put those angles in the tilt constrain block.<span class="tip">Keep a few degrees of room so the servo never pushes against the stop.</span></li>
+      <li>If the head <b>shakes</b> back and forth, change both 20s to 30. If it is too slow, try 15.</li>
+    </ol>
+    <div class="prog">
+      <h4>Program 5: follow</h4>
+      <p>Variables to make first: pan, tilt, x, y.</p>
+      <div class="blocks">
+        <div class="blk b-basic">on start<i>Basic</i></div>
+        <div class="blk b-husky i1">HuskyLens initialize I2C until success<i>HuskyLens</i></div>
+        <div class="blk b-husky i1">HuskyLens switch algorithm to Object Tracking<i>HuskyLens</i></div>
+        <div class="blk b-var i1">set pan to 90 &middot; set tilt to 90<i>Variables</i></div>
+        <div class="blk b-pins i1">servo write pin P1 to pan &middot; servo write pin P2 to tilt<i>Pins</i></div>
+        <div class="blk b-basic gap">forever<i>Basic</i></div>
+        <div class="blk b-husky i1">HuskyLens request data once and save into the result<i>HuskyLens</i></div>
+        <div class="blk b-logic i1">if HuskyLens check if ID 1 frame is on screen from the result then<i>Logic</i></div>
+        <div class="blk b-var i2">set x to HuskyLens get X center of ID 1 frame from the result<i>Variables</i></div>
+        <div class="blk b-var i2">set y to HuskyLens get Y center of ID 1 frame from the result<i>Variables</i></div>
+        <div class="blk b-var i2">set pan to pan &minus; ( x &minus; 160 ) &divide; 20<i>Variables + Math</i><small>Farther off center means a bigger turn</small></div>
+        <div class="blk b-var i2">set tilt to tilt + ( y &minus; 120 ) &divide; 20<i>Variables + Math</i></div>
+        <div class="blk b-math i2">set pan to constrain pan between 20 and 160<i>Math</i></div>
+        <div class="blk b-math i2">set tilt to constrain tilt between 60 and 120<i>Math</i><small>Change 60 and 120 to the tilt limits you found</small></div>
+        <div class="blk b-pins i2">servo write pin P1 to pan &middot; servo write pin P2 to tilt<i>Pins</i></div>
+      </div>
+    </div>
+    <div class="explain">
+      <h4>Why divide by 20?</h4>
+      <p>If the mosquito is 40 pixels to the right, 40 &divide; 20 = <b>2 degrees</b> of turn. If it is 100 pixels away, the turn is 5 degrees. Big miss, big turn. Small miss, small turn. This is called <b>proportional control</b>, and it is how cruise control, thermostats, and drones steady themselves.</p>
+      <p>Divide by a small number and the turret over-shoots and wobbles. Divide by a big number and it is smooth but slow. Finding the best number is <b>tuning</b>. Write down each number you try and what happened.</p>
+    </div>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>The head follows a 10 degree swing smoothly and keeps the ID1 box near the middle of the screen.</p></div></div>
+    <p class="journal"><b>Journal:</b> every divide number you tried, and the tilt limits you picked.</p>
+  </div>
+
+  <div class="step" id="step-12">
+    <div class="step-head">
+      <span class="num">12</span>
+      <div><h2>Lock on, fire, and make the sounds</h2><p class="when">About 2 hours &middot; arm switch OFF while coding</p></div>
+    </div>
+    <p class="why">Now the turret fires when the mosquito is in the lock-on box, listens to the wand by radio, and gets its sound effects.</p>
+    <ol class="do">
+      <li><b>Design the sounds</b> in MakeCode. Drag in a "play sound" block and click the picture to open the <b>sound editor</b>.<span class="tip"><b>Pew:</b> a square wave sliding from high to low in a quarter second. <b>Boom:</b> noise, very low, half a second. <b>Splat</b> (for the wand): noise, short, falling. <b>Victory:</b> the built-in melody Power Up.</span></li>
+      <li><b>Add the new parts</b> below to the turret program: the variables, the fire function, the lock-on check, and the radio messages.</li>
+      <li><b>Put the splat sound</b> in the wand's Program 2 too.</li>
+      <li><b>For testing only,</b> set hunting to true in on start. Step 15 hands that job to the wand.</li>
+      <li><b>Arm switch off.</b> Swing the mosquito. Each lock-on should beep, click the relay, and pew.</li>
+    </ol>
+    <div class="prog">
+      <h4>Program 6: lock on and fire (added to Program 5)</h4>
+      <p>New variables: hunting, boom, score, lastShot.</p>
+      <div class="blocks">
+        <div class="blk b-basic">on start (add these)<i>Basic</i></div>
+        <div class="blk b-radio i1">radio set group 7<i>Radio</i></div>
+        <div class="blk b-var i1">set hunting to false &middot; set boom to false &middot; set score to 0 &middot; set lastShot to 0<i>Variables</i></div>
+        <div class="blk b-xiami i1">relay V2 Release<i>xia_mi Board</i></div>
+
+        <div class="blk b-logic gap">inside forever, after the servo write blocks:<i>Logic</i></div>
+        <div class="blk b-logic i1">if hunting and absolute of ( x &minus; 160 ) &lt; 12 and absolute of ( y &minus; 120 ) &lt; 12 then<i>Logic</i><small>The mosquito is inside the lock-on box</small></div>
+        <div class="blk b-logic i2">if ( running time (ms) &minus; lastShot ) &gt; 1000 then<i>Logic</i><small>At most one shot per second</small></div>
+        <div class="blk b-var i3">set lastShot to running time (ms)<i>Variables</i></div>
+        <div class="blk b-fn i3">call fire<i>Functions</i></div>
+
+        <div class="blk b-fn gap">function fire<i>Functions</i></div>
+        <div class="blk b-music i1">play tone High C for 1/16 beat until done<i>Music</i><small>The lock-on beep</small></div>
+        <div class="blk b-xiami i1">relay V2 Actuation<i>xia_mi Board</i><small>Laser on (only if the arm switch is on)</small></div>
+        <div class="blk b-logic i1">if boom then play sound boom (in background) else play sound pew (in background)<i>Logic + Music</i></div>
+        <div class="blk b-basic i1">pause 250 ms<i>Basic</i></div>
+        <div class="blk b-xiami i1">relay V2 Release<i>xia_mi Board</i><small>Laser off</small></div>
+
+        <div class="blk b-radio gap">on radio received receivedString<i>Radio</i></div>
+        <div class="blk b-logic i1">if receivedString = "GO": set hunting to true, set score to 0<i>Logic</i><small>The wand started a 30 second run</small></div>
+        <div class="blk b-logic i1">else if "STOP": set hunting to false, relay V2 Release, show number score<i>Logic</i></div>
+        <div class="blk b-logic i1">else if "HIT": change score by 1, play melody Power Up (in background)<i>Logic</i></div>
+        <div class="blk b-logic i1">else if "BOOM": set boom to true &middot; else if "PEW": set boom to false<i>Logic</i></div>
+      </div>
+    </div>
+    <div class="explain">
+      <h4>Why wait a whole second between shots?</h4>
+      <p>The camera sends a new picture many times a second. Without a wait, the turret would fire again and again at one lock-on, and one real hit would look like five. The <b>cooldown</b> makes every shot a separate try, so the data is fair. It also gives the eyes time to flash and the splat time to play.</p>
+    </div>
+    <div class="explain">
+      <h4>What is sound, and how does the editor make a pew?</h4>
+      <p>Sound is air shaking. How many times it shakes each second is its <b>frequency</b>, measured in <b>hertz</b>. A high shake is a high pitch. A pew is a high pitch that slides down fast. A boom is a very low, rough shake called <b>noise</b>.</p>
+    </div>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>With the arm switch off, every lock-on beeps, clicks, and pews, no more than once a second. A flashlight flick on the pod makes the turret play Power Up.</p></div></div>
+  </div>
+
+  <div class="step" id="step-13">
+    <div class="step-head">
+      <span class="num">13</span>
+      <div><h2>Line up the laser</h2><p class="when">About 45 minutes &middot; <span class="grownup">grown-up</span> runs the arm switch</p></div>
+    </div>
+    <p class="why">The laser sits 38 mm below the camera lens, aimed up a tiny bit (about 1.4 degrees) so the two lines cross 5 feet away. Now check that the dot really lands on the white face.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 660 230" role="img" aria-label="Side view. The camera looks straight ahead. The laser starts 38 millimeters lower and angles up slightly. The lines cross at 5 feet. At 3 feet the dot is 15 millimeters low, at 7 feet 15 millimeters high. Both are still on the 40 millimeter white face.">
+        <rect x="20" y="70" width="44" height="40" rx="4" fill="#2B2F3A" stroke="#5DB7F0"/><text x="42" y="64" font-family="IBM Plex Mono" font-size="10" fill="#5DB7F0" text-anchor="middle">camera</text>
+        <rect x="24" y="118" width="36" height="14" rx="3" fill="#B9C4D1"/><text x="42" y="150" font-family="IBM Plex Mono" font-size="10" fill="#F0605E" text-anchor="middle">laser</text>
+        <path d="M64 90 H640" stroke="#5DB7F0" stroke-width="2" stroke-dasharray="8 5"/>
+        <path d="M60 125 L640 62" stroke="#F0605E" stroke-width="2.5"/>
+        <path d="M70 90 V125" stroke="#F5B642" stroke-width="1.5"/><text x="76" y="112" font-family="IBM Plex Mono" font-size="10" fill="#F5B642">38 mm</text>
+        <g>
+          <rect x="226" y="70" width="8" height="40" fill="#F4F4F4"/><circle cx="230" cy="104" r="4" fill="#F0605E"/>
+          <rect x="386" y="70" width="8" height="40" fill="#F4F4F4"/><circle cx="390" cy="90" r="4" fill="#F0605E"/>
+          <rect x="546" y="70" width="8" height="40" fill="#F4F4F4"/><circle cx="550" cy="76" r="4" fill="#F0605E"/>
+        </g>
+        <path d="M60 190 H600" stroke="#74839B" stroke-width="2"/>
+        <g font-family="Fredoka, sans-serif" font-size="15" fill="#EEF2F8" text-anchor="middle"><text x="230" y="212">3 ft</text><text x="390" y="212">5 ft</text><text x="550" y="212">7 ft</text></g>
+        <g font-family="IBM Plex Mono" font-size="10" fill="#A9B6CA" text-anchor="middle"><text x="230" y="176">15 mm low</text><text x="390" y="176" fill="#9BE15D">dead center</text><text x="550" y="176">15 mm high</text></g>
+        <path d="M230 190 v-6 M390 190 v-6 M550 190 v-6" stroke="#74839B" stroke-width="2"/>
+        <text x="600" y="54" font-family="IBM Plex Mono" font-size="10" fill="#A9B6CA" text-anchor="end">white face: 40 mm tall</text>
+      </svg>
+      <p class="caption">Not to scale: the real angle is much flatter. At every test distance the dot stays on the face.</p>
+    </div>
+    <ol class="do">
+      <li><b>Hang the mosquito</b> so the pod is at camera height, 5 feet from the lens, backdrop behind it.</li>
+      <li><b>Wand on,</b> turret on, hunting on (testing setup from Step 12).</li>
+      <li><span class="grownup">grown-up</span> <b>Arm switch on.</b> Hold the mosquito still in the middle of the camera's view.</li>
+      <li><b>Watch where the dot lands</b> on each shot. Every shot should make the eyes flash.</li>
+      <li><b>If the dot is off to one side,</b> arm switch off, loosen the clamp screw, slide a thin strip of paper along one side of the laser to nudge it, tighten, and try again.</li>
+      <li><b>Repeat at 3 feet and 7 feet.</b> Arm switch off when you are done.</li>
+    </ol>
+    <div class="explain">
+      <h4>Why does the dot move with distance?</h4>
+      <p>Two straight lines that are not side by side can only cross at <b>one</b> point. The camera and laser are 38 mm apart, so they cross at 5 feet and drift apart before and after. The white face is 40 mm tall, big enough to catch the dot from 3 to 7 feet. That is why the test distances stop at 7 feet.</p>
+    </div>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>Ten shots out of ten make the eyes flash at 3, 5, and 7 feet, with the mosquito held still.</p></div></div>
+    <p class="journal"><b>Journal:</b> where the dot landed at each distance and anything you had to fix.</p>
+  </div>
+
+  <div class="chapter" id="part-5">
+    <p class="eyebrow">Part E</p>
+    <h2>The test rig and the data</h2>
+    <p>A backdrop, a pendulum that swings the mosquito the same way every time, and a wand that runs each test and saves the numbers by itself.</p>
+  </div>
+
+  <div class="step" id="step-14">
+    <div class="step-head">
+      <span class="num">14</span>
+      <div><h2>Set up the backdrop and pendulum</h2><p class="when">Batch 5 done &middot; about 45 minutes</p></div>
+    </div>
+    <p class="why">For experiments, nobody holds the mosquito. It hangs from a pivot and swings from a marked angle, so every run starts exactly the same way. That is what makes the test fair.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 660 300" role="img" aria-label="Side view of the test rig. The turret sits on the table on the left. On the right, black foam board stands in two printed feet. A clip on its top edge holds a dowel pointing toward the turret. The pendulum pivot clamps near the end of the dowel with the wand beside it. The line hangs down to the mosquito at camera height. A tape measure runs from the line to the turret lens, marked at 3, 5, and 7 feet.">
+        <path d="M10 250 H650" stroke="#74839B" stroke-width="3"/>
+        <rect x="30" y="196" width="70" height="54" rx="6" fill="#F07ACB"/>
+        <rect x="52" y="160" width="26" height="36" rx="3" fill="#3BC9DB"/>
+        <circle cx="78" cy="176" r="4" fill="#111"/>
+        <path d="M82 176 H540" stroke="#5DB7F0" stroke-width="1.5" stroke-dasharray="6 5" opacity=".7"/>
+        <text x="120" y="170" font-family="IBM Plex Mono" font-size="10" fill="#5DB7F0">camera height</text>
+        <rect x="596" y="30" width="10" height="210" fill="#0b0b0b" stroke="#2B3650"/>
+        <path d="M580 250 l12 -18 h24 l12 18" fill="#9BE15D"/>
+        <rect x="586" y="22" width="30" height="16" rx="3" fill="#9BE15D"/>
+        <path d="M586 30 H470" stroke="#D9B98B" stroke-width="5"/>
+        <rect x="476" y="18" width="36" height="10" rx="3" fill="#B48CFF"/><text x="494" y="12" font-family="IBM Plex Mono" font-size="10" fill="#B48CFF" text-anchor="middle">wand</text>
+        <circle cx="480" cy="42" r="10" fill="none" stroke="#F5B642" stroke-width="3"/>
+        <path d="M480 42 V168" stroke="#CFE8FF" stroke-width="1.4"/>
+        <path d="M480 42 L436 162" stroke="#CFE8FF" stroke-width="1" stroke-dasharray="3 4" opacity=".7"/>
+        <path d="M456 110 A72 72 0 0 1 480 114" stroke="#F5B642" stroke-width="2" fill="none"/>
+        <text x="420" y="104" font-family="IBM Plex Mono" font-size="10" fill="#F5B642">20&deg;</text>
+        <ellipse cx="480" cy="178" rx="22" ry="9" fill="#6B4E3D"/><circle cx="480" cy="176" r="8" fill="#F4F4F4"/>
+        <circle cx="434" cy="166" r="6" fill="#6B4E3D" opacity=".5"/>
+        <g stroke="#F5B642" stroke-width="2"><path d="M78 230 H480"/><path d="M78 224 v12 M193 224 v12 M308 224 v12 M480 224 v12"/></g>
+        <g font-family="Fredoka, sans-serif" font-size="14" fill="#EEF2F8" text-anchor="middle"><text x="110" y="218" text-anchor="start">7 ft</text><text x="193" y="218">5 ft</text><text x="308" y="218">3 ft</text><text x="480" y="218" font-size="11">0</text></g>
+        <text x="320" y="272" font-family="IBM Plex Mono" font-size="10" fill="#A9B6CA" text-anchor="middle">move the turret, not the backdrop, to change distance</text>
+        <g font-family="IBM Plex Mono" font-size="10" fill="#A9B6CA">
+          <text x="630" y="60" transform="rotate(90 630 60)">black foam board</text>
+          <text x="532" y="58">1/4 in dowel</text><text x="520" y="80" fill="#F5B642">pivot</text>
+          <text x="512" y="196">mosquito</text><text x="604" y="286" text-anchor="middle">feet</text>
+        </g>
+      </svg>
+      <p class="caption">Pull the mosquito to the angle mark, let go, and it swings side to side in front of the turret.</p>
+    </div>
+    <ol class="do">
+      <li><b>Stand the foam board</b> in the two printed feet, one near each end.</li>
+      <li><b>Push the clip</b> onto the middle of the top edge, and slide the dowel through it so it sticks straight out toward the turret.</li>
+      <li><b>Clamp the pendulum pivot</b> near the end of the dowel, angle marks facing the turret.</li>
+      <li><b>Loop the fishing line</b> over the peg and adjust it until the white pod hangs at camera height.</li>
+      <li><b>Set the wand</b> beside the pivot on the dowel, with the ribbon running down the line.</li>
+      <li><b>Tape a tape measure</b> to the table from the line toward the turret. Mark 3, 5, and 7 feet. Put a strip of tape where the turret's front edge goes for each.</li>
+      <li><b>Learn the marks:</b> one hole next to a notch is 10 degrees, two holes 20, three holes 30.</li>
+    </ol>
+    <div class="explain">
+      <h4>Why does a bigger angle make a faster mosquito?</h4>
+      <p>Pulling the mosquito back to a higher angle lifts it higher, which gives it more <b>energy</b>. At the bottom of the swing, that energy turns into speed. About twice the angle gives about twice the speed.</p>
+      <p>Here is the surprise: for small swings, <b>the time for one swing hardly changes</b>. Only the speed does. Galileo noticed this more than 400 years ago watching a lamp swing in a church.</p>
+    </div>
+    <div class="try"><b>Try it:</b> count the swings in 10 seconds from 10 degrees, then from 30 degrees. Write both numbers down. Are they close?</div>
+    <div class="gotcha"><b>Beam direction:</b> set the table up so the laser points at the wall of the room, not at a doorway or a couch where people sit.</div>
+    <a class="link3d" href="/projects/addie/ms2000-cad/ms2000-p7-pendulum-pivot.html" target="_blank" rel="noopener">See the pendulum pivot in 3D &rarr;</a>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>The mosquito swings smoothly from each mark, the pod passes through camera height, and the 3, 5, and 7 foot marks are on the table.</p></div></div>
+  </div>
+
+  <div class="step" id="step-15">
+    <div class="step-head">
+      <span class="num">15</span>
+      <div><h2>Code the wand: the run recorder</h2><p class="when">About 1.5 hours</p></div>
+    </div>
+    <p class="why">The wand becomes the boss of every run. It picks the test, starts the turret, times 30 seconds, counts hits, and saves one row of data that stays even when the batteries come out.</p>
+    <div class="diagram">
+      <svg class="fit" viewBox="-30 0 470 250" role="img" aria-label="The wand micro:bit controls. Button A picks the test and setting. Button B picks the run number from 1 to 5. Press A and B together to start a 30 second run. Touch the gold logo to switch between pew and boom.">
+        <rect x="110" y="50" width="220" height="140" rx="14" fill="#1C1C1C" stroke="#555" stroke-width="2"/>
+        <ellipse cx="220" cy="64" rx="12" ry="6" fill="none" stroke="#D8A34A" stroke-width="2.5"/>
+        <g fill="#333"><rect x="180" y="86" width="80" height="80" rx="4"/></g>
+        <g fill="#F0605E"><rect x="190" y="96" width="10" height="10" rx="2"/><rect x="240" y="96" width="10" height="10" rx="2"/><rect x="215" y="121" width="10" height="10" rx="2"/><rect x="190" y="146" width="10" height="10" rx="2"/><rect x="240" y="146" width="10" height="10" rx="2"/></g>
+        <circle cx="140" cy="126" r="14" fill="#333" stroke="#888"/><text x="140" y="131" font-family="IBM Plex Mono" font-size="13" fill="#fff" text-anchor="middle">A</text>
+        <circle cx="300" cy="126" r="14" fill="#333" stroke="#888"/><text x="300" y="131" font-family="IBM Plex Mono" font-size="13" fill="#fff" text-anchor="middle">B</text>
+        <g font-family="Nunito, sans-serif" font-size="13" fill="#EEF2F8">
+          <path d="M126 126 H96" stroke="#F0609E" stroke-width="2"/><text x="-24" y="112">A: pick</text><text x="-24" y="128">the test</text><text x="-24" y="144" fill="#A9B6CA" font-size="11">speed 10, 20, 30</text><text x="-24" y="158" fill="#A9B6CA" font-size="11">distance 3, 5, 7</text><text x="-24" y="172" fill="#A9B6CA" font-size="11">light room, lamp, off</text>
+          <path d="M314 126 H360" stroke="#F0609E" stroke-width="2"/><text x="366" y="120">B: run</text><text x="366" y="136">number</text><text x="366" y="152" fill="#A9B6CA" font-size="11">1 to 5</text>
+          <path d="M220 58 V26" stroke="#D8A34A" stroke-width="2"/><text x="220" y="18" text-anchor="middle">logo: pew or boom</text>
+          <text x="220" y="222" text-anchor="middle" fill="#9BE15D" font-family="Fredoka, sans-serif" font-size="17">A + B together: START</text>
+          <text x="220" y="242" text-anchor="middle" fill="#A9B6CA" font-size="12">30 seconds, then it beeps and saves</text>
+        </g>
+      </svg>
+    </div>
+    <ol class="do">
+      <li>In the <b>wand</b> project, add the <b>datalogger</b> extension (Extensions, search datalogger).</li>
+      <li><b>Build Program 7.</b> It replaces Program 2, but keeps its hit detector.</li>
+      <li><b>In the turret program,</b> set hunting back to false in on start. Now the turret only fires during a run.</li>
+      <li><b>Download both.</b> Press A a few times, then B, then A and B together. The turret should start hunting, and stop after 30 seconds.</li>
+    </ol>
+    <div class="prog">
+      <h4>Program 7: run recorder (wand)</h4>
+      <p>Variables: names, pick, run, running, start, hits, first, light, threshold, boom.</p>
+      <div class="blocks">
+        <div class="blk b-basic">on start<i>Basic</i></div>
+        <div class="blk b-radio i1">radio set group 7<i>Radio</i></div>
+        <div class="blk b-log i1">set columns "setting" "run" "hits" "first hit" "light"<i>Data Logger</i></div>
+        <div class="blk b-var i1">set names to array of "speed 10" "speed 20" "speed 30" "distance 3" "distance 5" "distance 7" "light room" "light lamp" "light off"<i>Variables + Arrays</i></div>
+        <div class="blk b-var i1">set pick to 0 &middot; set run to 1 &middot; set running to false &middot; set threshold to 1023<i>Variables</i></div>
+
+        <div class="blk b-input gap">on button A pressed<i>Input</i></div>
+        <div class="blk b-logic i1">if not running: change pick by 1, if pick &gt; 8 set pick to 0, show string ( names get value at pick )<i>Logic</i></div>
+        <div class="blk b-input gap">on button B pressed<i>Input</i></div>
+        <div class="blk b-logic i1">if not running: change run by 1, if run &gt; 5 set run to 1, show number run<i>Logic</i></div>
+        <div class="blk b-input gap">on logo pressed<i>Input</i></div>
+        <div class="blk b-logic i1">set boom to not boom; if boom radio send string "BOOM" else radio send string "PEW"<i>Logic</i></div>
+
+        <div class="blk b-input gap">on button A+B pressed<i>Input</i></div>
+        <div class="blk b-logic i1">if not running then<i>Logic</i></div>
+        <div class="blk b-var i2">set light to analog read pin P0<i>Variables</i><small>The room, measured right now</small></div>
+        <div class="blk b-var i2">set threshold to light + 100 &middot; set hits to 0 &middot; set first to 0<i>Variables</i></div>
+        <div class="blk b-var i2">set start to running time (ms) &middot; set running to true<i>Variables</i></div>
+        <div class="blk b-radio i2">radio send string "GO"<i>Radio</i></div>
+        <div class="blk b-basic i2">show icon: target<i>Basic</i></div>
+
+        <div class="blk b-basic gap">forever<i>Basic</i></div>
+        <div class="blk b-logic i1">if ( analog read pin P0 ) &gt; threshold then<i>Logic</i></div>
+        <div class="blk b-pins i2">digital write pin P1 to 1 &middot; play sound splat (in background)<i>Pins + Music</i></div>
+        <div class="blk b-logic i2">if running: change hits by 1; if hits = 1, set first to ( running time (ms) &minus; start ) &divide; 1000<i>Logic</i><small>Seconds to the first hit</small></div>
+        <div class="blk b-radio i2">radio send string "HIT" &middot; pause 300 ms &middot; digital write pin P1 to 0<i>Radio</i></div>
+        <div class="blk b-loops i2">while ( analog read pin P0 ) &gt; threshold: pause 20 ms<i>Loops</i></div>
+        <div class="blk b-logic i1">if running and ( running time (ms) &minus; start ) &gt; 30000 then<i>Logic</i><small>30 seconds are up</small></div>
+        <div class="blk b-var i2">set running to false<i>Variables</i></div>
+        <div class="blk b-radio i2">radio send string "STOP"<i>Radio</i></div>
+        <div class="blk b-log i2">log data: setting = names get value at pick, run = run, hits = hits, first hit = first, light = light<i>Data Logger</i></div>
+        <div class="blk b-music i2">play tone High C for 1 beat &middot; show number hits<i>Music + Basic</i></div>
+      </div>
+      <p class="caption" style="text-align:left">When the wand is not in a run, a hit still flashes the eyes and splats. That is the hand-held demo mode.</p>
+    </div>
+    <div class="explain">
+      <h4>What is data logging?</h4>
+      <p><b>Logging</b> means writing down a measurement every time something happens, automatically. The micro:bit V2 saves each row in its own memory, which keeps it even with the batteries out.</p>
+      <p>Plug the wand into a computer and open the file called <b>MY_DATA</b> on the MICROBIT drive. It shows a table, a graph, and a button to download the numbers for a spreadsheet.</p>
+    </div>
+    <div class="gotcha"><b>Never add a "delete log" block.</b> Download MY_DATA after every test day and keep a copy. Also write each run on the paper sheet, as a backup.</div>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>A+B starts the turret, it stops by itself after 30 seconds, and a new row appears in MY_DATA.</p></div></div>
+  </div>
+
+  <div class="step" id="step-16">
+    <div class="step-head">
+      <span class="num">16</span>
+      <div><h2>The first full test</h2><p class="when">About 1 hour &middot; then practice until Dec 11</p></div>
+    </div>
+    <p class="why">A dress rehearsal. Five practice runs, just like a real experiment, to find anything silly before the numbers count.</p>
+    <ol class="do">
+      <li><b>Fresh batteries</b> in the turret and the wand. Turret on the 5 foot mark, room lights on.</li>
+      <li><b>Teach the camera</b> the mosquito if it has forgotten.</li>
+      <li>On the wand: <b>A</b> until it says speed 10, <b>B</b> to run 1.</li>
+      <li><span class="grownup">grown-up</span> <b>Arm switch on.</b> Pull the mosquito to the 10 degree mark.</li>
+      <li><b>Let go, then press A+B.</b> Hands off. Wait for the beep.</li>
+      <li><b>Write the hits</b> on the paper data sheet. Press B for the next run. Do five.</li>
+      <li><b>Arm switch off.</b> Plug in the wand, open MY_DATA, and check the five rows match the paper.</li>
+      <li><b>Take a photo</b> of the setup for the board.</li>
+    </ol>
+    <div class="explain">
+      <h4>Why practice runs do not count</h4>
+      <p>Practice is for finding problems: a loose wire, a camera that forgot, a threshold that is too tight. Fix them now. Once the real tests start on December 12, <b>every run counts</b>, even the bad ones, and you only redo a run if something broke.</p>
+    </div>
+    <div class="checkpoint"><span class="tick"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8 l4 4 l8 -9" fill="none" stroke="#0F1420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><h4>You are done when</h4><p>Five runs are saved, the file matches the paper, and nothing broke. <b>The MS-2000 is built.</b> Next: the hypothesis is due December 9, and the experiments start December 12.</p></div></div>
+    <p class="journal"><b>Journal:</b> the five practice numbers, what went wrong, and how you fixed it.</p>
+    <div class="linkrow"><a class="primary" href="/projects/addie/mosquito-turret/fair#experiments" target="_top">How to run the real experiments</a></div>
+  </div>
+
+  <div class="card" id="fix">
+    <p class="eyebrow">When it misbehaves</p>
+    <h2>Fixing it</h2>
+    <p class="lead">Find what you see, try the fix. Write down every problem in the journal; judges like hearing how you solved them.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>What you see</th><th>Most likely cause</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr><td>Nothing happens at all</td><td>Power</td><td>Pack switch on? Batteries the right way round? Xia mi power switch on? Try fresh batteries.</td></tr>
+          <tr><td>micro:bit will not take the code</td><td>Cable</td><td>Many micro-USB cables only charge. Use one you know moves data.</td></tr>
+          <tr><td>Camera screen works, turret does not move</td><td>No data from the camera</td><td>Check the camera cable is in the HuskyLens port and Protocol Type is I2C or Auto. Is ID1 learned?</td></tr>
+          <tr><td>Head turns away from the mosquito</td><td>Sign is backwards</td><td>Swap minus and plus in that servo's line in Program 5.</td></tr>
+          <tr><td>Head shakes back and forth</td><td>Turning too much each time</td><td>Divide by a bigger number: 30 instead of 20.</td></tr>
+          <tr><td>Head chases other things</td><td>Camera learned the room</td><td>Forget and re-learn in front of the black backdrop. Clear the table behind the mosquito.</td></tr>
+          <tr><td>Servo buzzes at one end</td><td>Pushing against a stop</td><td>Tighten the constrain numbers by a few degrees.</td></tr>
+          <tr><td>Relay does not click</td><td>Wrong board version</td><td>Change V2 to V1 in the relay blocks, or the other way.</td></tr>
+          <tr><td>Relay clicks, no laser</td><td>Arm switch off, or a wire</td><td>Grown-up checks: arm switch on, 5V to the switch, COM and NO on the right terminals, laser minus to G.</td></tr>
+          <tr><td>Laser hits, eyes do not flash</td><td>Threshold too high</td><td>Change + 100 to + 60. Check the dot is on the white face.</td></tr>
+          <tr><td>Eyes flash with no laser</td><td>Threshold too low, or room changed</td><td>Start a new run (A+B) so the wand measures the room again. Try + 150.</td></tr>
+          <tr><td>Eyes never light</td><td>LED in backwards</td><td>Long leg must go to the resistor side. Grown-up re-solders.</td></tr>
+          <tr><td>Turret never hears the wand</td><td>Radio group</td><td>Both programs must say radio set group 7. Keep them within a few meters.</td></tr>
+          <tr><td>One hit counts twice</td><td>Missing the wait loop</td><td>Check the "while ... pause 20" loop is in the wand's forever.</td></tr>
+          <tr><td>A screw spins and will not tighten</td><td>Stripped plastic</td><td>Use the next longer screw, or a grown-up adds a drop of glue and waits.</td></tr>
+          <tr><td>Hits drop during a test day</td><td>Batteries draining</td><td>Normal. Fresh batteries at the start of every test, so the test is fair.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" id="words">
+    <p class="eyebrow">Words to know</p>
+    <h2>Say these like a scientist</h2>
+    <p class="lead">Judges ask what words mean. Here they are in one place.</p>
+    <div class="gloss">
+      <div class="gterm"><b>Microcontroller</b><span>A tiny computer that runs one program over and over. The micro:bit is one.</span></div>
+      <div class="gterm"><b>Machine learning</b><span>A computer finding a pattern from examples instead of written rules.</span></div>
+      <div class="gterm"><b>Pixel</b><span>One tiny dot in a camera picture. The HuskyLens sees 320 across and 240 down.</span></div>
+      <div class="gterm"><b>Coordinates</b><span>Two numbers that say where something is: x across, y down.</span></div>
+      <div class="gterm"><b>Servo</b><span>A motor that turns to an exact angle and holds it.</span></div>
+      <div class="gterm"><b>Pan and tilt</b><span>Turning left and right, and tipping up and down.</span></div>
+      <div class="gterm"><b>Feedback loop</b><span>Look, adjust, look again, over and over.</span></div>
+      <div class="gterm"><b>Proportional control</b><span>A bigger miss gets a bigger correction.</span></div>
+      <div class="gterm"><b>Tuning</b><span>Trying numbers until a machine behaves just right.</span></div>
+      <div class="gterm"><b>Hard stop</b><span>A physical block that works even if the code is wrong.</span></div>
+      <div class="gterm"><b>Relay</b><span>A switch flipped by an electromagnet. The click fires the laser.</span></div>
+      <div class="gterm"><b>Circuit</b><span>A complete loop that electricity flows around.</span></div>
+      <div class="gterm"><b>Resistor</b><span>A part that slows electricity down to protect an LED.</span></div>
+      <div class="gterm"><b>Analog</b><span>A measurement with a whole range of answers, like 0 to 1023.</span></div>
+      <div class="gterm"><b>Threshold</b><span>The line in a measurement between yes and no.</span></div>
+      <div class="gterm"><b>Calibration</b><span>Measuring your surroundings before you start, instead of guessing.</span></div>
+      <div class="gterm"><b>Light collector</b><span>The white cup that turns a dot anywhere on its face into a glow.</span></div>
+      <div class="gterm"><b>Cooldown</b><span>A wait after each shot so one hit is never counted twice.</span></div>
+      <div class="gterm"><b>Frequency</b><span>How many times a sound shakes each second, in hertz.</span></div>
+      <div class="gterm"><b>Radio group</b><span>A channel number. Only micro:bits on the same group hear each other.</span></div>
+      <div class="gterm"><b>Data logging</b><span>A machine writing down its own measurements.</span></div>
+      <div class="gterm"><b>Tolerance</b><span>How far a real part can be from its drawing and still fit.</span></div>
+      <div class="gterm"><b>Infill</b><span>The honeycomb pattern inside a 3D print.</span></div>
+      <div class="gterm"><b>Class 2 laser</b><span>A visible laser under 1 milliwatt. Your blink protects you, but never stare.</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Everything else</p>
+    <h2>The other pages</h2>
+    <div class="linkrow">
+      <a class="primary" href="/projects/addie/ms2000-cad/ms2000-turret-3d.html" target="_blank" rel="noopener">Turret in 3D</a>
+      <a class="secondary" href="/projects/addie/mosquito-turret/build" target="_top">Shopping list and print files</a>
+      <a class="secondary" href="/projects/addie/mosquito-turret/build/batches" target="_top">Print plan</a>
+      <a class="secondary" href="/projects/addie/mosquito-turret/learn" target="_top">Learn the science</a>
+      <a class="secondary" href="/projects/addie/mosquito-turret/fair" target="_top">Fair guide</a>
+      <a class="secondary" href="/projects/addie/mosquito-turret" target="_top">MS-2000 project page</a>
+    </div>
+  </div>
+  <footer>MS-2000 &middot; BUILD GUIDE &middot; ADDIE PINNEY &middot; ST. ROSE SCIENCE FAIR &middot; DUE MON FEB 1, 2027</footer>
+</div>
+</body>
+</html>

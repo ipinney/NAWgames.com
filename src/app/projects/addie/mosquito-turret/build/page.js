@@ -1,4 +1,4 @@
-import { BASE, CAD, PARTS_PDF, meta, Nav, Back, Btn, Section, Title, Placeholder } from '../ui';
+import { BASE, CAD, PARTS_PDF, GUIDE, meta, Nav, Back, Btn, Section, Title } from '../ui';
 import { BUY, LOCAL } from '../parts';
 
 export const metadata = meta(
@@ -16,12 +16,12 @@ const STEPS = [
   {
     title: 'Print in five batches',
     text: '12 printed parts on five plates. About 10 hours and 320 g of PLA. One plate must be white.',
-    action: { href: `${BASE}/build/batches`, label: 'Print plan', primary: true },
+    action: { href: `${BASE}/build/batches`, label: 'Print plan' },
   },
   {
     title: 'Put it together',
     text: 'The mosquito and wand, then the turret head, then the backdrop and pendulum, then the code and sounds.',
-    action: { href: '#steps', label: 'Build steps' },
+    action: { href: GUIDE, label: 'Build guide', primary: true },
   },
   {
     title: 'Teach it and test it',
@@ -73,17 +73,13 @@ const TOOLS = [
   ['Laptop with MakeCode', 'makecode.microbit.org, free in the browser, plus a micro-USB cable'],
 ];
 
-const PLANNED = [
-  ['Check the parts', 'Unbox, check the list, measure the board and servos, and fix the print files if anything is off.'],
-  ['Make the mosquito', 'Sensor pod, red eyes, and the cable down the fishing line.'],
-  ['Make the wand', 'micro:bit and batteries on the handle. Code it to feel a hit and save it.'],
-  ['Build the base', 'Board, battery pack, speaker, and the laser arm switch.'],
-  ['Build the pan and tilt head', 'Servos, turntable, camera, and laser.'],
-  ['Teach the camera', 'Show HuskyLens the mosquito from different sides until it knows it.'],
-  ['Set up the backdrop and pendulum', 'Poster board, feet, dowel, and the pivot with its angle marks.'],
-  ['Code the turret', 'Follow the mosquito, fire when centered, and talk to the wand by radio.'],
-  ['Add the sounds', 'Pew or boom, lock-on beep, splat, and the victory song.'],
-  ['First full test', 'Five practice runs. Check the data file opens as a table.'],
+// build guide chapters, anchors in GUIDE
+const GUIDE_PARTS = [
+  { part: 'A', title: 'Check and print', steps: [[1, 'Unbox and measure'], [2, 'Print in five batches']] },
+  { part: 'B', title: 'The mosquito and the wand', steps: [[3, 'Wire the mosquito pod'], [4, 'Build the wand'], [5, 'Code the wand: prove a hit']] },
+  { part: 'C', title: 'The turret', steps: [[6, 'Fill the base'], [7, 'Center the servos first'], [8, 'Build the pan and tilt head'], [9, 'Wire the turret and close it up']] },
+  { part: 'D', title: 'Teach it and code it', steps: [[10, 'Teach the camera the mosquito'], [11, 'Code the turret: follow'], [12, 'Lock on, fire, and make the sounds'], [13, 'Line up the laser']] },
+  { part: 'E', title: 'The test rig and the data', steps: [[14, 'Set up the backdrop and pendulum'], [15, 'Code the wand: the run recorder'], [16, 'The first full test']] },
 ];
 
 function money(n) {
@@ -112,7 +108,8 @@ export default function BuildPage() {
                 Class 2 laser. A second micro:bit in the wand feels each hit through a light sensor and saves it as data.
               </p>
               <div className="flex flex-wrap gap-2 mt-5">
-                <Btn href={`${BASE}/build/batches`} primary>Print plan</Btn>
+                <Btn href={GUIDE} primary>Build guide</Btn>
+                <Btn href={`${BASE}/build/batches`}>Print plan</Btn>
                 <Btn href={PARTS_PDF}>Parts list (PDF)</Btn>
                 <Btn href={`${CAD}/ms2000-turret-3d.html`}>Explore in 3D</Btn>
               </div>
@@ -282,21 +279,37 @@ export default function BuildPage() {
           </p>
         </Section>
 
-        <Section id="steps" title="Build steps" sub="Addie writes these as she builds, with photos. Here is the plan for October and November.">
-          <Placeholder title="Addie's build instructions">
-            Step-by-step instructions with photos go here once the parts arrive and the build starts.
-          </Placeholder>
-          <ol className="mt-4 grid sm:grid-cols-2 gap-3">
-            {PLANNED.map(([t, d], i) => (
-              <li key={t} className="bg-naw-card rounded-2xl border border-white/10 p-4 flex gap-3 opacity-80">
-                <span className="flex-none w-8 h-8 rounded-lg bg-white/10 text-white font-bold flex items-center justify-center">{i + 1}</span>
-                <span>
-                  <span className="block text-white font-semibold">{t}</span>
-                  <span className="block text-white/50 text-sm mt-0.5">{d}</span>
-                </span>
-              </li>
+        <Section id="steps" title="Build steps" sub="Sixteen steps in five parts, with diagrams, wiring maps, and the MakeCode programs. Built October to mid-November, practice until December 11.">
+          <a
+            href={GUIDE}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group block rounded-2xl border border-naw-pink/40 bg-naw-pink/10 hover:border-naw-pink/70 p-5 transition-colors"
+          >
+            <div className="text-naw-pink text-xs font-semibold">Open the full guide</div>
+            <div className="text-white font-bold text-lg mt-0.5 group-hover:text-naw-pink transition-colors">How to build the MS-2000</div>
+            <div className="text-white/60 text-sm mt-1">Safety, tools, every part explained, two wiring maps, a screw table, 16 steps, 7 programs, fixes, and the words to know.</div>
+          </a>
+          <div className="grid md:grid-cols-2 gap-3 mt-4">
+            {GUIDE_PARTS.map((g) => (
+              <div key={g.part} className="bg-naw-card rounded-2xl border border-white/10 p-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-7 h-7 rounded-lg bg-lime-300 text-naw-dark font-bold text-sm flex items-center justify-center">{g.part}</span>
+                  <span className="text-white font-bold">{g.title}</span>
+                </div>
+                <ol className="mt-3 space-y-1">
+                  {g.steps.map(([n, t]) => (
+                    <li key={n}>
+                      <a href={`${GUIDE}#step-${n}`} target="_blank" rel="noopener noreferrer" className="flex gap-2 text-sm text-white/70 hover:text-white">
+                        <span className="flex-none w-6 text-naw-pink font-bold tabular-nums">{n}</span>
+                        <span>{t}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
             ))}
-          </ol>
+          </div>
         </Section>
       </div>
     </div>
