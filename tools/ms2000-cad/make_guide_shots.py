@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright
 OUT = sys.argv[1]
 HERE = os.path.dirname(os.path.abspath(__file__))
 PUB = os.path.join(HERE, '../../public/projects/addie/ms2000-cad')
-HIDE = "header,footer,#labels,#legend,#pick,#hint{visibility:hidden!important}"
+HIDE = "header,footer,#labels,#chips,#tools{visibility:hidden!important}"
 SHOTS = [
     # name, viewer, focus, explode, highlight keys
     ('turret', 'ms2000-turret-3d.html', 'turret', False, None),
@@ -30,7 +30,7 @@ with sync_playwright() as p:
         if ex:
             pg.click('#explode'); pg.wait_for_timeout(2500)
         pg.add_style_tag(content=HIDE)
-        pg.evaluate("() => { const s=document.querySelector('.specs'); if(s){s.style.position='fixed'; s.style.top='540px';} window.dispatchEvent(new Event('resize')); }")
+        pg.evaluate("() => { const s=document.getElementById('card'); if(s){s.style.position='fixed'; s.style.top='540px';} window.dispatchEvent(new Event('resize')); }")
         pg.wait_for_timeout(1800)
         pg.screenshot(path=os.path.join(OUT, name + '.png'))
         print('shot', name)

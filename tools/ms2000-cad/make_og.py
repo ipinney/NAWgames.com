@@ -7,7 +7,7 @@ from playwright.sync_api import sync_playwright
 viewer, out = sys.argv[1], sys.argv[2]
 tmp_render = '/tmp/ms2000-og-render.png'
 HIDE = """
-header,footer,#labels,#legend,#hint{visibility:hidden!important}
+header,footer,#labels,#chips,#tools{visibility:hidden!important}
 """
 CARD = """<!doctype html><html><head><meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -49,7 +49,7 @@ with sync_playwright() as p:
     if pg.query_selector('#dims.on'):
         pg.click('#dims'); pg.wait_for_timeout(300)
     pg.add_style_tag(content=HIDE)
-    pg.evaluate("() => { const s=document.querySelector('.specs'); if(s){s.style.position='fixed'; s.style.top='630px';} "
+    pg.evaluate("() => { const s=document.getElementById('card'); if(s){s.style.position='fixed'; s.style.top='630px';} "
                 "document.body.style.background='transparent'; window.dispatchEvent(new Event('resize')); }")
     pg.wait_for_timeout(1500)
     pg.screenshot(path=tmp_render)

@@ -14,7 +14,7 @@ with sync_playwright() as p:
         pg.click('#dims'); pg.wait_for_timeout(300)
     pg.add_style_tag(content=HIDE)
     # the footer no longer reserves space once hidden: refit to the whole window
-    pg.evaluate("() => { document.querySelector('.specs').style.position='fixed'; document.querySelector('.specs').style.top='630px'; window.dispatchEvent(new Event('resize')); }")
+    pg.evaluate("() => { document.getElementById('card').style.position='fixed'; document.getElementById('card').style.top='630px'; window.dispatchEvent(new Event('resize')); }")
     pg.wait_for_timeout(1500)
     pg.screenshot(path=out)
     b.close()

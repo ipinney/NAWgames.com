@@ -149,7 +149,7 @@ dims = [
 ]
 COL = [('turret base', '#ff5fa2'), ('turntable + backdrop parts', '#9be15d'), ('camera + laser head', '#4ad0e8'),
        ('pivots', '#f0b43c'), ('wand', '#b48cff'), ('mosquito pod', '#f4f4f4'), ('ribbon cable', '#ff9f43'), ('laser beam', '#ff2020')]
-legend = ''.join(f'<span><i style="background:{c}"></i>{html.escape(n)}</span>' for n, c in COL)
+legend = '<span class="sep">Colors</span>' + ''.join(f'<span class="key"><i style="background:{c}"></i>{html.escape(n)}</span>' for n, c in COL)
 specs = [('Distance', '3 ft (demo 2 to 3 ft)'), ('Turret', '142 × 133 × 143 mm'),
          ('Backdrop', '30 × 20 in foam board'), ('Printing', '5 plates, ~10 h, ~320 g')]
 focus_btns = ''.join(f'<button data-f="{k}"{" class=on" if k == "turret" else ""}>{t}</button>'
@@ -164,7 +164,9 @@ page = (tpl.replace('__TITLE_TEXT__', 'MS-2000 Mosquito Shooter in 3D')
         .replace('__FOCUS__', focus_btns)
         .replace('__FRONT__', 'Turret view')
         .replace('__FILES__', 'index.html')
-        .replace('__HINT__', 'Opens on the turret. Tap Mosquito and wand or Whole setup to fly over. Bought hides the bought parts and the backdrop; Laser shows the beam. <a href="/projects/addie/mosquito-turret">Back to MS-2000</a>')
+        .replace('__HINT__', 'Opens on the turret. Tap Mosquito and wand or Whole setup to fly over. Bought hides the bought parts and the backdrop; Laser shows the beam.')
+        .replace('__LINKS__', '<a href="ms2000-turret-3d.html">Turret parts</a> · <a href="/projects/addie/mosquito-turret">Back</a>')
+        .replace('__WHOLE__', 'MS-2000 setup').replace('__WHOLE_C__', '#9be15d')
         .replace('--part:#f0b43c', '--part:#ff5fa2')
         .replace('__DATA__', json.dumps(data, separators=(',', ':'))))
 open(os.path.join(OUT, 'ms2000-3d.html'), 'w').write(page)

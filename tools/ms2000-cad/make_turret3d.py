@@ -83,8 +83,14 @@ dims = [
     {'a': [-71, 133, 0], 'b': [-71, 133, hi[2]], 'off': [-22, 10, 0], 'text': f'{hi[2]:.0f}', 'note': 'tall'},
     {'a': [71, 133, 0], 'b': [71, 133, tilt_z], 'off': [22, 10, 0], 'text': f'{tilt_z:.0f}', 'note': 'to tilt axis'},
 ]
-legend = ''.join(f'<span data-k="{k}" data-note="{html.escape(note)}"><i style="background:{c}"></i>{html.escape(n)}</span>'
-                 for k, n, c, off, note in SPEC)
+def _chip(k, n, c, note):
+    return (f'<button data-k="{k}" data-n="{html.escape(n)}" data-c="{c}" data-note="{html.escape(note)}">'
+            f'<i style="background:{c}"></i>{html.escape(n)}</button>')
+legend = '<button data-all class="on">Whole turret</button>'
+for grp, lab in (('Printed', 'Printed'), ('Bought', 'Bought')):
+    legend += f'<span class="sep">{lab}</span>'
+    legend += ''.join(_chip(k, n, c, note) for k, n, c, off, note in SPEC
+                      if note.startswith('Printed') == (grp == 'Printed'))
 specs = [('Size', f'{hi[0] - lo[0]:.0f} × 133 × {hi[2]:.0f} mm'), ('Pan / tilt', '±90° / 30° down to 35° up'),
          ('Printed', '5 pieces, ~225 g'), ('Bought', '10 parts')]
 focus_btns = ''.join(f'<button data-f="{k}"{" class=on" if k == "turret" else ""}>{t}</button>'
@@ -100,7 +106,9 @@ page = (tpl.replace('__TITLE_TEXT__', 'MS-2000 Mosquito Shooter turret in 3D')
         .replace('__FOCUS__', focus_btns)
         .replace('__FRONT__', 'Front')
         .replace('__FILES__', 'index.html')
-        .replace('__HINT__', 'Explode pulls every part apart. Bought hides the bought parts, so only the prints show. <a href="ms2000-3d.html">Whole setup</a> · <a href="/projects/addie/mosquito-turret">Back to MS-2000</a>')
+        .replace('__HINT__', 'Tap a part below to light it up. Explode pulls the turret apart; Bought hides the bought parts so only the prints show.')
+        .replace('__LINKS__', '<a href="ms2000-3d.html">Whole setup</a> · <a href="/projects/addie/mosquito-turret">Back</a>')
+        .replace('__WHOLE__', 'Whole turret').replace('__WHOLE_C__', '#ff5fa2')
         .replace('--part:#f0b43c', '--part:#ff5fa2')
         .replace('__DATA__', json.dumps(data, separators=(',', ':'))))
 open(os.path.join(OUT, 'ms2000-turret-3d.html'), 'w').write(page)
