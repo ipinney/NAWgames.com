@@ -195,9 +195,9 @@
     <li><b>It fits a 3 foot fair table.</b><span class="why">The laser is lined up for 3 feet, every test runs at 3 feet, and at the fair the mosquito hangs 2 to 3 feet from the camera.</span></li>
     <li><b>The test can be repeated the same way every time.</b><span class="why">For the experiment, the wand clips onto a hook so the mosquito swings like a pendulum from a marked starting angle.</span></li>
     <li class="safety"><b>Class 2 laser, under 1 milliwatt, with the maker's label on it.</b><span class="why">No stronger laser, even though a stronger one is what it would take to kill a real mosquito. See the next section for the math.</span></li>
-    <li class="safety"><b>Mounted, never handheld, and the beam cannot leave the flight zone.</b><span class="why">The mosquito flies inside a black box with a top and a back. The turret's tilt has a printed stop so it cannot aim above the box. The person holding the wand stands to the side, behind the turret line.</span></li>
+    <li class="safety"><b>Mounted, never handheld, and the beam always ends on the black backdrop.</b><span class="why">The mosquito swings in front of a black foam board backdrop. The turret's tilt has a printed stop, and the code limits how far it can turn left, right, and up, so it cannot aim past the backdrop. The person holding the wand stands to the side, behind the turret line.</span></li>
     <li class="safety"><b>The laser only turns on when it is locked on the mosquito, for a short flash, and only with the arm switch on.</b></li>
-    <li><b>Everything sits in 3D printed housings.</b><span class="why">Turret base, pan and tilt head, laser and camera mount, mosquito body, wand handle, and the flight zone corners.</span></li>
+    <li><b>Everything sits in 3D printed housings.</b><span class="why">Turret base, pan and tilt head, laser and camera mount, the mosquito's sensor pod, wand handle, backdrop feet and clip, pendulum pivot, and cable clips.</span></li>
     <li><b>The best moment happens in the first 30 seconds of the demo.</b></li>
     <li><b>Addie does the training, coding, mosquitoes, and testing.</b><span class="why">MakeCode blocks. Dad does the printing and wiring.</span></li>
     <li><b>Budget is flexible.</b><span class="why">Final parts list: $192 from two suppliers, about $227 with batteries and craft supplies.</span></li>
@@ -271,7 +271,7 @@
     <div class="opt">
       <div class="letter">DESIGN B</div>
       <h3>Pan-Only Camera Turret</h3>
-      <p class="small muted">Only turns left and right. The mosquito wand has to keep the mosquito at one height, marked by a line on the flight zone.</p>
+      <p class="small muted">Only turns left and right. The mosquito wand has to keep the mosquito at one height, marked by a line on the backdrop.</p>
       <dl>
         <dt>At the fair</dt><dd>Simpler and very reliable, but judges must keep the mosquito at the line.</dd>
         <dt>The science</dt><dd>Same speed test.</dd>
@@ -298,7 +298,7 @@
 <!-- DESIGN -->
 <div class="card" id="design">
   <h2>How Design A works</h2>
-  <p class="sub">Side view. The mosquito flies inside the flight zone, a black box open toward the turret. The beam can only end on the black back wall.</p>
+  <p class="sub">Side view. The mosquito swings in front of a black foam board backdrop. The beam can only end on the backdrop.</p>
   <div class="diagram">
   <svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" font-family="Nunito, sans-serif" font-size="13" font-weight="700">
     <!-- table -->
@@ -323,15 +323,16 @@
     <path d="M100 232 l-14 -10" stroke="#F0605E" stroke-width="4"/>
     <!-- beam -->
     <line x1="173" y1="243" x2="560" y2="202" stroke="#F0605E" stroke-width="3"/>
-    <!-- flight zone box -->
-    <rect x="420" y="90" width="300" height="280" fill="none" stroke="#74839B" stroke-width="3" stroke-dasharray="0"/>
-    <rect x="705" y="90" width="15" height="280" fill="#05070C" stroke="#74839B" stroke-width="2"/>
-    <rect x="420" y="80" width="300" height="12" fill="#05070C" stroke="#74839B" stroke-width="2"/>
+    <!-- black foam board backdrop on printed feet -->
+    <rect x="705" y="70" width="12" height="290" fill="#05070C" stroke="#74839B" stroke-width="2"/>
+    <rect x="684" y="356" width="54" height="14" rx="3" fill="#243152" stroke="#5DB7F0" stroke-width="2"/>
+    <!-- dowel and pendulum pivot on the backdrop clip -->
+    <rect x="699" y="62" width="24" height="14" rx="3" fill="#243152" stroke="#5DB7F0" stroke-width="2"/>
+    <line x1="705" y1="69" x2="590" y2="69" stroke="#C9A36B" stroke-width="5"/>
     <!-- rod and line -->
     <line x1="722" y1="42" x2="590" y2="60" stroke="#A9B6CA" stroke-width="5"/>
     <rect x="718" y="30" width="30" height="22" rx="4" fill="#1F2940" stroke="#9BE15D" stroke-width="2"/>
-    <line x1="590" y1="60" x2="590" y2="80" stroke="#EEF2F8" stroke-width="1.5"/>
-    <line x1="590" y1="92" x2="572" y2="196" stroke="#EEF2F8" stroke-width="1.5"/>
+    <line x1="590" y1="60" x2="572" y2="196" stroke="#EEF2F8" stroke-width="1.5"/>
     <!-- mosquito glowing -->
     <circle cx="570" cy="204" r="26" fill="#F0605E" opacity=".25"/>
     <ellipse cx="570" cy="204" rx="20" ry="9" fill="#FCE7F1"/>
@@ -349,15 +350,15 @@
     <text x="90" y="297" text-anchor="end" fill="#F0609E">the camera)</text>
     <text x="210" y="300" fill="#F5B642">Pan and tilt servos</text>
     <text x="30" y="160" fill="#F0605E">Printed tilt stop:</text>
-    <text x="30" y="176" fill="#F0605E">can't aim above the box</text>
+    <text x="30" y="176" fill="#F0605E">can't aim above the backdrop</text>
     <text x="300" y="212" text-anchor="middle" fill="#F0605E">Short laser flash</text>
     <text x="570" y="260" text-anchor="middle" fill="#F0609E">Eyes flash when hit</text>
     <text x="600" y="120" text-anchor="start" fill="#EEF2F8" font-size="12">Thin line with wires</text>
     <text x="600" y="135" text-anchor="start" fill="#EEF2F8" font-size="12">to the sensor</text>
     <text x="745" y="20" text-anchor="end" fill="#9BE15D">Wand handle: 2nd micro:bit</text>
-    <text x="425" y="72" text-anchor="start" fill="#A9B6CA" font-size="12">Black top (slot for the line)</text>
-    <text x="690" y="395" text-anchor="end" fill="#A9B6CA">Black back wall stops the beam</text>
-    <text x="570" y="345" text-anchor="middle" fill="#74839B">Flight zone box</text>
+    <text x="420" y="92" text-anchor="start" fill="#A9B6CA" font-size="12">Dowel and pendulum pivot</text>
+    <text x="690" y="395" text-anchor="end" fill="#A9B6CA">Black foam backdrop stops the beam</text>
+    <text x="570" y="345" text-anchor="middle" fill="#74839B">Backdrop on printed feet</text>
   </svg>
   </div>
 
@@ -365,20 +366,20 @@
     <li><b>Train.</b> Addie points the camera at the mosquito, holds the learn button, and slowly turns the mosquito so the camera learns it from every side and distance. Then she saves it.</li>
     <li><b>Track.</b> The camera reports where the mosquito is on its screen (320 by 240 dots). Too far left, the pan servo turns left. Too high, the tilt servo tips up, but never past the printed stop.</li>
     <li><b>Lock on.</b> When the mosquito is inside a small box in the middle of the screen, the micro:bit shows a target and beeps.</li>
-    <li><b>Fire.</b> If the arm switch is on, the laser flashes for a quarter of a second and the speaker plays the firing sound: laser "pew" or cannon "boom", whichever is picked with button A.</li>
-    <li><b>Prove it.</b> The laser dot lands on the mosquito's white body and it glows. The light sensor inside jumps. The wand micro:bit flashes the mosquito's red eyes, plays a splat, shows an X, and radios "HIT". The turret adds a point and plays a victory sound.</li>
+    <li><b>Fire.</b> If the arm switch is on, the laser flashes for a quarter of a second and the speaker plays the firing sound: laser "pew" or cannon "boom", whichever is picked by touching the gold logo on the wand.</li>
+    <li><b>Prove it.</b> The laser dot lands on the white pod sewn to the mosquito, and the whole pod glows. The light sensor inside jumps. The wand micro:bit flashes the mosquito's red eyes, plays a splat, shows an X, and radios "HIT". The turret adds a point and plays a victory sound.</li>
   </ol>
 
   <div class="two" style="margin-top:16px">
     <div class="box">
       <h3>Addie's jobs</h3>
       <ul>
-        <li>Decorate the mosquitoes (legs, wings, stripes)</li>
+        <li>Sew the sensor pod onto the stuffed mosquito</li>
         <li>Train the camera on the mosquito</li>
         <li>Code the turret: track, lock, fire, score</li>
         <li>Design the sound effects in MakeCode's sound editor: the laser pew, the cannon boom, the lock-on beep, the hit splat</li>
         <li>Code the wand: feel the hit, flash, buzz, send "HIT"</li>
-        <li>Name the turret and decorate the flight zone</li>
+        <li>Name the turret and decorate the backdrop</li>
         <li>Run every test, write down the numbers, make the graph</li>
       </ul>
     </div>
@@ -403,12 +404,13 @@
   <table>
     <tr><th>Print</th><th>What it holds</th><th>Notes</th></tr>
     <tr><td>Turret base</td><td>micro:bit on the Xia mi board, 4xAA pack, laser arm switch, speaker</td><td>Window so the micro:bit lights show, speaker grille on the front, hole for the volume knob. Heavy infill so it does not tip.</td></tr>
-    <tr><td>Pan and tilt head</td><td>Two servos, the tilt axle</td><td>Tilt stop built in: the head physically cannot point above the flight zone.</td></tr>
+    <tr><td>Pan and tilt head</td><td>Two servos, the tilt axle</td><td>Tilt stop built in: the head physically cannot point above the backdrop.</td></tr>
     <tr><td>Sensor mount</td><td>HuskyLens on top, laser underneath</td><td>Laser in an adjustable clamp so it can be lined up with the camera's center.</td></tr>
     <tr><td>Servo covers</td><td>Servo gears and horns</td><td>Covers pinch points (fair rule).</td></tr>
-    <tr><td>Mosquito body (x3)</td><td>Light sensor inside, two red LED eyes</td><td>White PLA, thin walls so it glows. Two halves that snap together. Line loop on top.</td></tr>
+    <tr><td>Sensor pod (P6)</td><td>Light sensor in the cap; two red LED eyes on the outside</td><td>White PLA cup with a 40 mm face that glows wherever the dot lands. Sewn onto the stuffed mosquito. Line tab on top.</td></tr>
     <tr><td>Wand handle</td><td>Second micro:bit and a 2xAAA pack</td><td>Rod socket on one end. The micro:bit's speaker does the buzz.</td></tr>
-    <tr><td>Flight zone corners and pendulum hook</td><td>Dowels and black foam board</td><td>Hook holds the wand for repeatable swings, with an angle scale printed on it.</td></tr>
+    <tr><td>Backdrop feet, clip, and pendulum pivot (P7)</td><td>Black foam board and a 1/4 inch dowel</td><td>Pivot holds the line for repeatable swings, with notches for 10, 20, and 30 degrees.</td></tr>
+    <tr><td>Cable clips (P8)</td><td>Fishing line and the sensor ribbon</td><td>Keeps the wires along the line and the rod.</td></tr>
   </table>
   </div>
 </div>
@@ -587,10 +589,10 @@
       <ul>
         <li>Class 2, the lowest visible class, under 1 mW, labeled</li>
         <li>Bolted into the printed head, never held</li>
-        <li>Printed tilt stop plus a code limit: it cannot aim above the flight zone</li>
-        <li>Flight zone has a black top and back; no mirrors or shiny parts inside</li>
+        <li>Printed tilt stop plus code limits: it cannot aim past the backdrop</li>
+        <li>Black foam backdrop behind the mosquito stops every shot; no mirrors or shiny parts near the beam</li>
         <li>Short flashes only when locked on, only with the arm switch on</li>
-        <li>The wand holder stands beside the turret, never inside the flight zone or in front of it</li>
+        <li>The wand holder stands beside the turret, never between the turret and the backdrop</li>
         <li>Servo gears covered</li>
       </ul>
     </div>
@@ -600,7 +602,7 @@
 <!-- PLAN -->
 <div class="card" id="plan">
   <h2>The plan</h2>
-  <p class="sub">St. Rose 3rd grade: final project due Monday, February 1, 2027. Exhibition Wednesday, February 3 at 2:00 PM in the Parish Hall; winners go to the Archdiocesan fair on February 25. School due dates and the rubric are on the <a href="/projects/addie/mosquito-turret/fair">fair guide</a>.</p>
+  <p class="sub">St. Rose 3rd grade: final project due Monday, February 1, 2027. Exhibition Wednesday, February 3 at 2:00 PM in the Parish Hall; winners go to the Archdiocesan fair on February 25. School due dates and the rubric are on the <a href="/projects/addie/mosquito-turret/fair">fair guide</a>. Changes since the design lock, the project history, and lessons learned are on the <a href="/projects/addie/mosquito-turret/changes">changes page</a>.</p>
   <ul class="phases">
     <li><span class="dot">1</span><div><h3>Brainstorm</h3><div class="when">Done Sep 15</div><div class="muted small">Air cannon, vacuum, and light beam ideas. The family picked lasers.</div></div></li>
     <li><span class="dot">2</span><div><h3>Requirements</h3><div class="when">Done Sep 15</div><div class="muted small">The list at the top, including the name: MS-2000.</div></div></li>
@@ -630,7 +632,7 @@
   </ul>
 </div>
 
-<div class="foot">NAW Games &middot; Addie's Projects &middot; MS-2000 plan v8 (engineering goal and science question), Sep 16, 2026</div>
+<div class="foot">NAW Games &middot; Addie's Projects &middot; MS-2000 plan v10 (changes page, MOC-001 to MOC-003), Sep 16, 2026</div>
 </div>
 </body>
 </html>

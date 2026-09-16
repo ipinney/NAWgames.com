@@ -32,6 +32,7 @@ const TABS = [
   ['print', 'Print plan', `${BASE}/build/batches`],
   ['learn', 'Learn the science', `${BASE}/learn`],
   ['make', 'Build your own', `${BASE}/make`],
+  ['changes', 'Changes', `${BASE}/changes`],
 ];
 
 export function Nav({ current }) {

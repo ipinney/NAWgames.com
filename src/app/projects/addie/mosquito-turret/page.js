@@ -72,6 +72,12 @@ const PAGES = [
     color: 'pink',
   },
   {
+    href: `${BASE}/changes`,
+    title: 'Changes and lessons',
+    text: 'How we change a locked design safely, every change order, the project history, and what we learned.',
+    color: 'pink',
+  },
+  {
     href: PLAN,
     title: 'The full plan',
     text: 'The design choices, the lethality math, the experiment rules, and the demo script.',

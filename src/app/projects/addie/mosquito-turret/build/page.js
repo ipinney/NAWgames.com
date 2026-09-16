@@ -107,6 +107,10 @@ export default function BuildPage() {
                 A micro:bit reads an AI camera and turns two servos to keep the mosquito centered, then switches on a safe
                 Class 2 laser. A second micro:bit in the wand feels each hit through a light sensor and saves it as data.
               </p>
+              <p className="text-white/45 text-xs mt-3 leading-relaxed">
+                The design is locked. Any change to parts, sizes, or aim goes through a{' '}
+                <a href={`${BASE}/changes`} className="text-naw-pink hover:underline">change order</a> first.
+              </p>
               <div className="flex flex-wrap gap-2 mt-5">
                 <Btn href={GUIDE} primary>Build guide</Btn>
                 <Btn href={`${BASE}/build/batches`}>Print plan</Btn>

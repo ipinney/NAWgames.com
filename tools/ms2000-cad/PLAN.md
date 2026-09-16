@@ -1,4 +1,4 @@
-# MS-2000 Mosquito Shooter: plan v9 (Sep 16, 2026)
+# MS-2000 Mosquito Shooter: plan v10 (Sep 16, 2026)
 
 Repo copy of the claude.ai Project file claude/mosquito-turret-plan.md. Keep both in sync.
 
@@ -17,6 +17,7 @@ Repo copy of the claude.ai Project file claude/mosquito-turret-plan.md. Keep bot
 - Print plan: /projects/addie/mosquito-turret/build/batches
 - Learn: /projects/addie/mosquito-turret/learn (11 lessons + glossary)
 - Build your own: /projects/addie/mosquito-turret/make (Level 1 micro:bit hit detector with code, Level 2 camera tracker no laser, Level 3 full MS-2000; fair question ideas; grown-up notes)
+- Changes: /projects/addie/mosquito-turret/changes (what MOC is, the five steps, MOC-001 to MOC-003, project history log, lessons learned, next-project checklist)
 - Board and table (static): /projects/addie/ms2000-board.html (2 trifold layouts, block contents, 3 ft table top view + fair changes, 12 print sheets)
 - Full plan (static): /projects/addie/mosquito-turret.html
 - Parts list PDF: /projects/addie/ms2000-parts-list.pdf
@@ -25,12 +26,13 @@ Repo copy of the claude.ai Project file claude/mosquito-turret-plan.md. Keep bot
 
 ## Repo map (Vultr /opt/nawgames, push to main deploys on Vercel in ~1 min)
 - src/app/projects/addie/mosquito-turret/
-  - ui.js: BASE, CAD, PLAN, PARTS_PDF, meta(), Nav (TABS: overview, fair, build, print, learn, make), Back, Btn, Section, Title, Steps, Placeholder
+  - ui.js: BASE, CAD, PLAN, PARTS_PDF, meta(), Nav (TABS: overview, fair, build, print, learn, make, changes), Back, Btn, Section, Title, Steps, Placeholder
   - fair.js: DUE (6 school parts with rubric ids), EVENTS (Feb 3, Feb 25), RUBRIC (9 rows), SCORES, daysUntil. Single source for school dates.
   - DueDates.js (client): timeline with days left, next highlighted; `compact` prop hides rubric line (used on hub)
   - RubricCheck.js (client): tap 0/1/3/5 per row, total /45, not saved
   - page.js: hub. PHASES array drives "Where we are" (status done/now/next). To advance a phase edit PHASES here AND the `now` class in the plan HTML "The plan" card.
   - fair/page.js, make/page.js, learn/page.js, build/page.js, build/batches/page.js
+  - changes/data.js: MOCS, LOG, LESSONS, NEXT, LOCKED. Append rows here; changes/page.js only renders them.
   - parts.js: generated from tools/ms2000-parts-list/build.py (export_parts.py). Do not hand-edit.
 - public/projects/addie/mosquito-turret.html: static full plan (ids: requirements, lethal, problem, pick, design, prints, experiment, demo, parts, safety, plan)
 - tools/ms2000-parts-list: edit build.py data, python3 build.py, node render.js, /opt/pdfenv/bin/python darken.py raw.pdf public/projects/addie/ms2000-parts-list.pdf
@@ -69,7 +71,16 @@ Rubric (0 not evident, 1 not clear, 3 somewhat clear, 5 very clear; 9 rows, 45 m
 Done: brainstorm, requirements, design pick (A), design lock, 3D print design (12 parts, 5 plates, ~10 h, ~320 g), parts list, website fair guide + build-your-own (commit 0c76d1e), build guide (commit b04f515).
 Now: order parts by Sep 30; start the cursive journal (catch-up entries for Sep 15 and Sep 16).
 Still by hand: Addie's written reason for A and labeled drawing (journal); ask Miss Taggart about laser rules (Parish Hall and Archdiocesan fair; no published Archdiocesan elementary laser rules found).
-Build guide written (Sep 16). Next on the site when it happens: photos and real-part corrections in the guide, advancing PHASES.
+Build guide written (Sep 16). Changes page with MOC-001 to 003 (Sep 16); static plan cleaned of flight zone / button A leftovers. Next on the site when it happens: photos and real-part corrections in the guide, advancing PHASES.
+
+## Management of Change (design locked Sep 16, 00:08, commit 1f7f4ee)
+Every change after the lock gets an MOC; every decision or change gets a LOG line the same day. Next MOC: MOC-004.
+1. Add the MOC to changes/data.js: id, date, title, was, now, why, options, found, touched, tests, commits, link, status (Draft / Approved / Done), approver (Dad).
+2. Check what it touches: CAD (tools/ms2000-cad, ./run.sh and ./plates.sh), parts list (tools/ms2000-parts-list: build.py, export_parts.py, PDF), build guide, fair guide, learn, static plan, board page, this file.
+3. Update everything in one commit whose message starts `Addie MS-2000 MOC-00N:`.
+4. Add a LOG line (tags: Change, Decision, Design, Fix, Plan); add a LESSONS card if checking found a surprise.
+5. Sync the claude.ai Project file claude/mosquito-turret-plan.md from this file.
+Done so far: MOC-001 stuffed mosquito + pod, foam board backdrop (15221fb); MOC-002 engineering goal + science question, size test replaces light (c6fa2d5); MOC-003 3 ft calibration, distance test dropped (8a683b7).
 
 ## Schedule (refit to Feb 1)
 - By Sep 30: order parts, start journal
