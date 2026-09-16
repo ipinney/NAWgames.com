@@ -1,38 +1,56 @@
 import Link from 'next/link';
+import { A, BASE, CAD, PLAN, PARTS_PDF, meta, Nav, Back, Btn, Section, Title } from './ui';
 
-const TITLE = "MS-2000 Mosquito Shooter: Addie's science fair project";
-const DESC =
-  'A trainable laser turret with sound effects that tracks a fake mosquito on a fishing line, proves every hit, and records its own data. Spring 2027 science fair.';
-
-export const metadata = {
-  title: `${TITLE} | NAW Games`,
-  description: DESC,
-  openGraph: {
-    title: TITLE,
-    description: DESC,
-    url: 'https://nawgames.com/projects/addie/mosquito-turret',
-    siteName: 'NAW Games',
-    type: 'website',
-  },
-  twitter: { card: 'summary', title: TITLE, description: DESC },
-};
-
-const PLAN = '/projects/addie/mosquito-turret.html';
-const CAD = '/projects/addie/ms2000-cad/index.html';
-const MODEL3D = '/projects/addie/ms2000-cad/ms2000-3d.html';
+export const metadata = meta(
+  "MS-2000 Mosquito Shooter: Addie's science fair project",
+  'A laser turret that learns a fake mosquito, follows it, and proves every hit with a sensor. Parts list, 3D print files, build plan, and the science behind it.',
+  BASE
+);
 
 // status: done | now | next
 const PHASES = [
-  { title: 'Brainstorm', when: 'Done Sep 15', status: 'done', text: 'Air cannon, vacuum, and light beam ideas. The family picked lasers.', link: `${PLAN}#brainstorm` },
-  { title: 'Requirements', when: 'Done Sep 15', status: 'done', text: 'Laser, sound effects, trainable fishing-line mosquito, proven hits, self-recorded data, and the name: MS-2000.', link: `${PLAN}#requirements` },
-  { title: 'Pick a design', when: 'Done Sep 15', status: 'done', text: 'Addie picked Design A, the Pan and Tilt Camera Turret.', link: `${PLAN}#pick` },
-  { title: 'Lock in the design', when: 'Done Sep 16', status: 'done', text: 'Design A locked. Still to do by hand: why Design A, a labeled drawing, and the teacher laser-rules question.', link: `${PLAN}#design` },
-  { title: 'Parts list and order', when: 'List done Sep 16; order next', status: 'now', text: 'Final list: primary and backup for every part, $192 from DFRobot and DigiKey. Order next.', link: '/projects/addie/ms2000-parts-list.pdf' },
-  { title: '3D print design', when: 'Designed Sep 16', status: 'now', text: 'Every printed part is designed and fit-checked: base, turntable with tilt yoke, camera and laser head, wand handle, the white mosquito pod that glows when the laser hits it, the pendulum pivot, backdrop clip and feet, and cable clips. Five print plates for the Adventurer 5M, about 10 hours and 320 g of PLA. Rechecked with calipers when the parts arrive, then print.', link: CAD },
-  { title: 'Build', when: 'October to November', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head and camera training, then the poster board backdrop and pendulum, then the code and sound effects.', link: `${PLAN}#prints` },
-  { title: 'Practice runs and fixes', when: 'December', status: 'next', text: 'Make sure the data saves correctly and the MS-2000 hits reliably.' },
-  { title: 'Experiments and data', when: 'January to February', status: 'next', text: 'Speed, distance, and light tests. 45 runs recorded by the MS-2000, averages, and graphs.', link: `${PLAN}#experiment` },
-  { title: 'Board and practice', when: 'March', status: 'next', text: 'The trifold board and the 30-second demo, ready for any spring fair date.', link: `${PLAN}#demo` },
+  { title: 'Brainstorm', when: 'Sep 15', status: 'done', text: 'Air cannon, vacuum, and light beam ideas. The family picked lasers.', link: `${PLAN}#requirements` },
+  { title: 'Requirements', when: 'Sep 15', status: 'done', text: 'Laser, sound effects, a trainable mosquito on a fishing line, proven hits, and data it saves by itself.', link: `${PLAN}#requirements` },
+  { title: 'Pick a design', when: 'Sep 15', status: 'done', text: 'Addie picked Design A, the Pan and Tilt Camera Turret.', link: `${PLAN}#pick` },
+  { title: 'Lock in the design', when: 'Sep 16', status: 'done', text: 'Design A locked. Still to do by hand: why Design A, a labeled drawing, and the teacher laser-rules question.', link: `${PLAN}#design` },
+  { title: '3D print design', when: 'Sep 16', status: 'done', text: '12 printed parts on five print plates, about 10 hours and 320 g of PLA. Checked with calipers when the parts arrive.', link: `${BASE}/build/batches` },
+  { title: 'Order the parts', when: 'Late September', status: 'now', text: 'About $192 from DFRobot and DigiKey, plus batteries and craft supplies.', link: `${BASE}/build#shopping` },
+  { title: 'Print and build', when: 'October to November', status: 'next', text: 'Mosquito and wand first, then the pan and tilt head and camera training, then the backdrop and pendulum, then the code and sounds.', link: `${BASE}/build` },
+  { title: 'Practice runs', when: 'December', status: 'next', text: 'Make sure the data saves and the MS-2000 hits every time.' },
+  { title: 'Experiments', when: 'January to February', status: 'next', text: 'Speed, distance, and light tests. 45 runs, averages, and graphs.', link: `${BASE}/learn#fair-test` },
+  { title: 'Board and demo', when: 'March', status: 'next', text: 'The trifold board and a 30-second demo, ready for any spring fair date.', link: `${PLAN}#demo` },
+];
+
+const RULES = [
+  ['Never look into the laser', 'Even a weak laser is not for eyes. Point it only at the backdrop and the mosquito.'],
+  ['The arm switch is off until go time', 'The laser cannot fire unless the red arm switch is on. A grown-up turns it on.'],
+  ['Every run counts', 'Five runs for every setting. Only redo a run if something broke, and write down why.'],
+  ['One test per day', 'Same room, same batteries, same person holding the line. Take a photo of each setup.'],
+];
+
+const PAGES = [
+  {
+    href: `${BASE}/learn`,
+    title: 'Learn the science',
+    text: 'Mosquitoes, lasers, how a camera learns, servos, sensors, pendulums, and how to run a fair test.',
+    color: 'pink',
+  },
+  {
+    href: `${BASE}/build`,
+    title: 'Build the MS-2000',
+    text: 'Everything to buy, the 3D printed parts, the 3D models, and the build steps.',
+    color: 'pink',
+  },
+  {
+    href: PLAN,
+    title: 'The full plan',
+    text: 'The design choices, the lethality math, the experiment rules, and the demo script.',
+  },
+  {
+    href: PARTS_PDF,
+    title: 'Parts list (PDF)',
+    text: 'Every part with a primary and a backup source, prices, and links. Print it for the order.',
+  },
 ];
 
 const DOT = {
@@ -44,113 +62,151 @@ const DOT = {
 export default function MosquitoTurretPage() {
   return (
     <div className="min-h-screen">
+      <Nav current="overview" />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-naw-pink/15 via-transparent to-transparent" />
-        <div className="relative max-w-5xl mx-auto px-4 pt-10">
-          <Link href="/projects/addie" className="text-white/40 hover:text-white/70 text-sm inline-flex items-center gap-1 transition-colors">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Addie&apos;s Projects
-          </Link>
-
-          <div className="mt-6 max-w-3xl">
-            <div className="flex flex-wrap gap-2">
-              <span className="bg-naw-pink/20 text-naw-pink text-xs font-semibold px-2 py-0.5 rounded-full">Science Fair</span>
-              <span className="bg-naw-orange/20 text-naw-orange text-xs font-semibold px-2 py-0.5 rounded-full">3rd grade</span>
-              <span className="bg-naw-cyan/20 text-naw-cyan text-xs font-semibold px-2 py-0.5 rounded-full">Spring 2027</span>
-            </div>
-            <h1 className="font-game text-3xl sm:text-4xl glow mt-4">
-              <span className="bg-gradient-to-r from-naw-pink to-naw-green bg-clip-text text-transparent">MS-2000</span>
-            </h1>
-            <p className="text-white text-lg sm:text-xl font-semibold mt-4 leading-snug">
-              The Mosquito Shooter. A laser turret that learns a fake mosquito, follows it on a fishing line, and tags it with a pew or a boom. The mosquito's eyes flash, and every hit is saved as data.
-            </p>
-            <div className="mt-5 rounded-2xl border border-naw-green/30 bg-naw-green/10 p-4">
-              <div className="text-naw-green text-xs font-semibold">The big idea</div>
-              <div className="text-white font-semibold mt-1">
-                Scientists built the Photonic Fence, a turret that shoots mosquitoes with lasers. Killing one takes about 14 watts. This safe version uses a 0.001 watt Class 2 laser, 14,000 times weaker, and proves every hit with a sensor inside the mosquito.
+        <div className="relative max-w-5xl mx-auto px-4 pt-8">
+          <Back href={A}>Addie&apos;s Projects</Back>
+          <div className="grid md:grid-cols-2 gap-6 items-center mt-6">
+            <div>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-naw-pink/20 text-naw-pink text-xs font-semibold px-2 py-0.5 rounded-full">Science Fair</span>
+                <span className="bg-naw-orange/20 text-naw-orange text-xs font-semibold px-2 py-0.5 rounded-full">3rd grade</span>
+                <span className="bg-naw-cyan/20 text-naw-cyan text-xs font-semibold px-2 py-0.5 rounded-full">Spring 2027</span>
+              </div>
+              <div className="mt-4">
+                <Title>MS-2000</Title>
+              </div>
+              <div className="text-lime-300 text-sm font-bold tracking-widest mt-2">MOSQUITO SHOOTER</div>
+              <p className="text-white text-lg sm:text-xl font-semibold mt-4 leading-snug">
+                My invention: a laser turret that learns what a mosquito looks like, follows it, and tags it with a pew. The
+                mosquito&apos;s eyes flash on every hit, and every hit is saved as data.
+              </p>
+              <div className="flex flex-wrap gap-2 mt-5">
+                <Btn href={`${BASE}/build`} primary>Build it</Btn>
+                <Btn href={`${BASE}/learn`}>Learn the science</Btn>
+                <Btn href={`${CAD}/ms2000-turret-3d.html`}>See it in 3D</Btn>
               </div>
             </div>
             <a
-              href={PLAN}
+              href={`${CAD}/ms2000-turret-3d.html`}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center bg-naw-pink text-naw-dark px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-naw-pink/90 transition-colors"
+              className="block rounded-2xl overflow-hidden border border-white/10 bg-[#0d1b2e]"
             >
-              Open the full plan
+              <img src="/projects/addie/ms2000-hero.png" alt="3D model of the MS-2000 turret" width={720} height={630} className="w-full h-auto" />
             </a>
-            <a
-              href="/projects/addie/ms2000-parts-list.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 ml-2 inline-flex items-center bg-naw-cyan/15 border border-naw-cyan/40 text-naw-cyan px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-naw-cyan/25 transition-colors"
-            >
-              Parts list (PDF)
-            </a>
-            <a
-              href={CAD}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 ml-2 inline-flex items-center bg-naw-green/15 border border-naw-green/40 text-naw-green px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-naw-green/25 transition-colors"
-            >
-              3D parts
-            </a>
-            <a
-              href={MODEL3D}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 ml-2 inline-flex items-center bg-naw-pink/15 border border-naw-pink/40 text-naw-pink px-4 py-2.5 rounded-lg text-sm font-bold hover:bg-naw-pink/25 transition-colors"
-            >
-              3D model
-            </a>
-            <a href={MODEL3D} target="_blank" rel="noopener noreferrer" className="mt-6 block rounded-2xl overflow-hidden border border-white/10 bg-[#0d1b2e] max-w-xl">
-              <img src="/projects/addie/ms2000-hero.png" alt="3D model of the MS-2000 turret with its laser beam" width={720} height={630} className="w-full h-auto" />
-              <div className="px-4 py-2 text-white/60 text-sm">Tap to explore in 3D: the turret, then the mosquito and wand, then the whole setup.</div>
-            </a>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4 mt-8">
+            <div className="rounded-2xl border border-naw-cyan/30 bg-naw-cyan/10 p-4">
+              <div className="text-naw-cyan text-xs font-semibold">The big question</div>
+              <div className="text-white font-semibold mt-1">Does a faster mosquito get hit less?</div>
+              <div className="text-white/55 text-sm mt-1">Also tested: how far away it is, and how bright the room is.</div>
+            </div>
+            <div className="rounded-2xl border border-naw-green/30 bg-naw-green/10 p-4">
+              <div className="text-naw-green text-xs font-semibold">The big idea</div>
+              <div className="text-white/85 text-sm mt-1">
+                Scientists built a real laser fence that zaps mosquitoes. Killing one takes about 14 watts. The MS-2000 uses a
+                safe 0.001 watt laser, 14,000 times weaker, and proves each hit with a light sensor inside the mosquito.
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <div className="max-w-5xl mx-auto px-4 pb-20">
-        <section className="mt-10">
-          <h2 className="text-white text-xl sm:text-2xl font-bold">The steps</h2>
-          <p className="text-white/50 text-sm mt-1">One at a time. The pink ones are where we are. The fair is in spring 2027.</p>
-          <ol className="relative border-l-2 border-white/10 ml-3 space-y-4 mt-5">
-            {PHASES.map((p, i) => (
-              <li key={p.title} className="pl-6 relative">
-                <span className={`absolute -left-[9px] top-5 w-4 h-4 rounded-full border-2 ${DOT[p.status]}`} />
-                <div
-                  className={`rounded-2xl border p-4 sm:p-5 ${
-                    p.status === 'now' ? 'bg-naw-pink/10 border-naw-pink/50' : 'bg-naw-card border-white/10'
-                  } ${p.status === 'done' ? 'opacity-60' : ''}`}
-                >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-white/60 text-sm font-semibold">Step {i + 1} · {p.when}</span>
-                    {p.status === 'now' && (
-                      <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-naw-pink text-naw-dark">Now</span>
-                    )}
-                    {p.status === 'done' && (
-                      <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-naw-green/20 text-naw-green">Done</span>
-                    )}
-                  </div>
-                  <h3 className="text-white font-bold text-lg mt-1">{p.title}</h3>
-                  <p className="text-white/60 text-sm mt-1">{p.text}</p>
-                  {p.link && (
-                    <a
-                      href={p.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block mt-3 bg-naw-cyan/15 border border-naw-cyan/40 text-naw-cyan px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-naw-cyan/25 transition-colors"
-                    >
-                      Open in the plan
-                    </a>
-                  )}
-                </div>
-              </li>
-            ))}
+        <Section title="Where we are" sub="Ten steps from idea to fair. Green is done, pink is now. The fair date is not set yet, so everything finishes by the end of March.">
+          <ol className="relative border-l-2 border-white/10 ml-3 space-y-3">
+            {PHASES.map((p, i) => {
+              const Wrap = p.link ? 'a' : 'div';
+              const ext = p.link && !p.link.startsWith(BASE);
+              return (
+                <li key={p.title} className="pl-6 relative">
+                  <span className={`absolute -left-[9px] top-4 w-4 h-4 rounded-full border-2 ${DOT[p.status]}`} />
+                  <Wrap
+                    {...(p.link ? { href: p.link } : {})}
+                    {...(ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className={`block rounded-2xl border px-4 py-3 transition-colors ${
+                      p.status === 'now' ? 'bg-naw-pink/10 border-naw-pink/50' : 'bg-naw-card border-white/10'
+                    } ${p.status === 'done' ? 'opacity-60' : ''} ${p.link ? 'hover:border-white/30' : ''}`}
+                  >
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-white/50 text-xs font-semibold">Step {i + 1} · {p.when}</span>
+                      {p.status === 'now' && <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-naw-pink text-naw-dark">Now</span>}
+                      {p.status === 'done' && <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-naw-green/20 text-naw-green">Done</span>}
+                    </div>
+                    <div className="text-white font-bold mt-0.5">{p.title}</div>
+                    <div className="text-white/55 text-sm">{p.text}</div>
+                  </Wrap>
+                </li>
+              );
+            })}
           </ol>
-        </section>
+        </Section>
+
+        <Section title="Rules to remember">
+          <div className="grid sm:grid-cols-2 gap-3">
+            {RULES.map(([t, d]) => (
+              <div key={t} className="bg-naw-card rounded-2xl border border-white/10 p-4">
+                <div className="text-white font-bold">{t}</div>
+                <div className="text-white/55 text-sm mt-1">{d}</div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section title="Project pages">
+          <div className="grid sm:grid-cols-2 gap-4">
+            {PAGES.map((s) => {
+              const internal = s.href.startsWith(BASE);
+              const cls = `group bg-naw-card rounded-2xl border p-5 transition-colors ${
+                s.color ? 'border-naw-pink/30 hover:border-naw-pink/60' : 'border-naw-cyan/20 hover:border-naw-cyan/40'
+              }`;
+              const inner = (
+                <>
+                  <h3 className={`text-white font-bold text-lg transition-colors ${s.color ? 'group-hover:text-naw-pink' : 'group-hover:text-naw-cyan'}`}>{s.title}</h3>
+                  <p className="text-white/55 text-sm mt-1">{s.text}</p>
+                </>
+              );
+              return internal ? (
+                <Link key={s.href} href={s.href} className={cls}>{inner}</Link>
+              ) : (
+                <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
+              );
+            })}
+          </div>
+        </Section>
+
+        <Section title="The turret">
+          <div className="grid md:grid-cols-2 gap-4">
+            <Link
+              href={`${BASE}/build`}
+              className="group bg-naw-card rounded-2xl border border-naw-pink/30 overflow-hidden hover:border-naw-pink/60 transition-colors"
+            >
+              <img src="/projects/addie/ms2000-cad/plates/ms2000-plate-3-turret-and-wand.png" alt="Print plate with the turret head, turntable, and wand" className="w-full h-44 object-cover bg-[#0d1b2e]" />
+              <div className="p-5">
+                <h3 className="text-white font-bold text-lg group-hover:text-naw-pink transition-colors">Build the MS-2000</h3>
+                <p className="text-white/55 text-sm mt-1">
+                  The parts to buy, the 12 printed parts, the print plan, and the build steps. Built in October and November.
+                </p>
+              </div>
+            </Link>
+            <a
+              href={`${CAD}/ms2000-3d.html`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group bg-naw-card rounded-2xl border border-naw-cyan/20 p-5 hover:border-naw-cyan/40 transition-colors flex flex-col justify-center"
+            >
+              <h3 className="text-white font-bold text-lg group-hover:text-naw-cyan transition-colors">See the whole setup in 3D</h3>
+              <p className="text-white/55 text-sm mt-1">
+                The turret, the mosquito on its fishing line, the wand, the pendulum, and the backdrop. Spin it and use it to
+                draw the labeled sketch for the board.
+              </p>
+              <span className="mt-4 text-naw-cyan text-sm font-semibold">Open the 3D model</span>
+            </a>
+          </div>
+        </Section>
       </div>
     </div>
   );

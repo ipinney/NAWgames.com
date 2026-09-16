@@ -75,3 +75,10 @@ Read this first every session. Update it and commit after every finished step.
 - Sep 16: P2 + P3 done. Old P3 (tilt yoke) merged into P2; P3 is now the pivot pin.
 - Sep 16: P4 done. Sensor pod (P6) note: the laser dot lands +-15 mm off the camera aim at 3 and 7 ft, and the ALS-PT19 is only 7.8 x 10.6. Pod needs a light collector about 30 mm wide, or code must offset the aim by distance (HuskyLens box size).
 - Sep 16: P7, P8, plates done. Design complete except caliper pass. Filament: ~320 g sliced (buy a spool; 11 g must be white).
+
+## Site rework (Sep 16, Dusty layout)
+- Pages: /projects/addie/mosquito-turret (overview), /build (steps, how it works, shopping list from parts.js, tools, 3D models, print files, build steps placeholder), /build/batches (5 print batches in print order 4,3,1,2,5 with learn-while-it-prints), /learn (11 science topics + glossary). Shared nav/buttons in mosquito-turret/ui.js.
+- parts.js is generated: `cd tools/ms2000-parts-list && python3 export_parts.py`.
+- Plate thumbnails: render_plates.py (dump with cad-venv, render with batchzero venv) -> public/.../ms2000-cad/plates/*.png.
+- OG card: `/opt/batchzero/venv/bin/python make_og.py ../../public/projects/addie/ms2000-cad/ms2000-turret-3d.html ../../public/projects/addie/ms2000-og.png`.
+- Build steps are a placeholder until Addie writes them (PLANNED list in build/page.js).
