@@ -14,7 +14,7 @@ Read this first every session. Update it and commit after every finished step.
 - [x] 0. Workspace, skill, checkpoint file (Sep 16)
 - [x] 1. Component library: components.py, make_components.py, DIMENSIONS.md, ms2000-components.html (Sep 16)
 - [ ] 2. Printed parts, one at a time (script in parts/, viewer + STL + check PNG each)
-  - [ ] P1 base: carrier plate for Xia mi (drill on arrival), 4xAA bay, speaker grille, arm switch, pan servo pocket
+  - [x] P1 base (Sep 16): parts/p1_base.py -> base shell (142x133x67, ~160 g) + floor plate (~63 g). Fit check and swept paths (pack slide-in, micro:bit lift-out, DC plug) all clear.
   - [ ] P2 pan turntable
   - [ ] P3 tilt yoke
   - [ ] P4 camera + laser head (boresight, tilt stop, all-plastic laser clamp)
@@ -30,6 +30,16 @@ Read this first every session. Update it and commit after every finished step.
 - Xia mi: mounting holes, height, micro:bit slot direction, power jack side
 - 2xAAA pack size; arm switch size; servo horn; stuffed mosquito size
 
+## P1 layout (model frame: x right, y back from front face, z up)
+- Xia mi flat on 5 mm posts, left side x -60..-3, y 4..91, socket end at front; micro:bit stands at y 17.7, top z 56.6.
+- Board holes from photo: 80.2 x 50.2 pitch, 3.4 inset. Board power switch stays ON; pack switch is master.
+- 4xAA pack x 1..65.5, y 11.5..81.5, slides in through right-wall bay (z < 24).
+- Pan servo hangs from deck underside (z 64), shaft at (0, 66), deck top z 67. Turntable max radius 38 (slot at y 24 is the limit).
+- Cable hole (0,112) d14 behind the turntable. Speaker on back wall at x 36 z 40, arm switch at x -36 z 40.
+- Corner posts at (+-65.5, 5.5 / 127.5), M2 up through the floor plate.
+
 ## Log
 - Sep 16: phases 0-1 done. HuskyLens from DFRobot STEP (decimated 8k faces). Laser case is electrically positive: plastic-only holder.
 - vendor/ keeps huskylens_lo.npz and the PDFs in git. Full STEP (not committed): curl -L -o vendor/sen0305_step.zip https://dfimg.dfrobot.com/wiki/22598/SEN0305_huskylens-ai-vision-sensor_stpfile_V1.0.zip
+- Sep 16: P1 base done. Xia mi photo showed a vertical micro:bit socket at one end and 4 corner holes, so the carrier-plate idea was dropped; floor plate is quick to reprint if holes are off.
+- index page: make_index.py (PARTS list holds status per part).

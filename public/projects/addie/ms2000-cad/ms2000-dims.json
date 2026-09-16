@@ -71,20 +71,60 @@
      "basis": "est",
      "note": ""
     },
+    "hole_inset": {
+     "v": 3.4,
+     "basis": "photo",
+     "note": "4 corner holes, scaled from the ruler photo"
+    },
+    "hole_d": {
+     "v": 3.0,
+     "basis": "photo",
+     "note": "plated rings look like M3; M2 screws fit"
+    },
+    "socket_from_end": {
+     "v": 73.3,
+     "basis": "photo",
+     "note": "micro:bit edge socket, from the DC-jack end"
+    },
+    "socket_h": {
+     "v": 11.0,
+     "basis": "est",
+     "note": "socket above board"
+    },
+    "bit_insert": {
+     "v": 6.0,
+     "basis": "est",
+     "note": "how far the micro:bit sinks into the socket"
+    },
     "height": {
-     "v": 22.0,
-     "basis": "tbd",
-     "note": "tallest part incl. micro:bit socket; base bay leaves room"
+     "v": 48.6,
+     "basis": "est",
+     "note": "board bottom to top of the standing micro:bit"
     },
-    "holes": {
+    "parts_h": {
+     "v": 13.0,
+     "basis": "est",
+     "note": "terminal blocks and relay"
+    },
+    "dc_jack_x": {
+     "v": 29.0,
+     "basis": "photo",
+     "note": "DC 2.1 jack on the far end, from the terminal-block edge"
+    },
+    "switch_x": {
+     "v": 15.0,
+     "basis": "photo",
+     "note": "board power switch on the far end; stays ON, pack switch is the master"
+    },
+    "usb_x": {
+     "v": 42.0,
+     "basis": "photo",
+     "note": "USB 5 V input on the far end"
+    },
+    "bit_face": {
      "v": null,
      "basis": "tbd",
-     "note": "mounting holes not published; base uses a drill-on-arrival carrier plate"
-    },
-    "bit_orientation": {
-     "v": null,
-     "basis": "tbd",
-     "note": "micro:bit slot direction not shown"
+     "note": "which way the micro:bit LEDs face in the socket"
     }
    }
   },

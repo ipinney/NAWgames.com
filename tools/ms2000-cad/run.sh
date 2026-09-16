@@ -11,4 +11,5 @@ mkdir -p $PUB/stl
 cp $OUT/ms2000-components.html $OUT/ms2000-dims.json $PUB/
 [ -d $OUT/parts ] && cp $OUT/parts/*.html $PUB/ 2>/dev/null || true
 [ -d $OUT/parts ] && cp $OUT/parts/*.stl $PUB/stl/ 2>/dev/null || true
+$PY make_index.py $PUB/index.html
 echo published to $PUB

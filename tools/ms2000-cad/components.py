@@ -4,6 +4,7 @@ Each entry in COMPONENTS carries the dimensions the printed parts are designed a
 Every number has a basis tag:
   ds   = maker datasheet or drawing (checked Sep 16, 2026)
   step = measured from the maker's STEP model
+  photo= scaled from a product photo with a ruler
   est  = estimate, measure with calipers when the part arrives
   tbd  = unknown until the part arrives; printed parts leave room for it
 When a part arrives, measure it, change the number, set the tag to 'cal', rebuild.
@@ -45,9 +46,17 @@ COMPONENTS = {
             'pcb_w': d(57.0, 'ds', 'DFRobot page: 57 x 87 mm'),
             'pcb_l': d(87.0, 'ds'),
             'pcb_t': d(1.6, 'est'),
-            'height': d(22.0, 'tbd', 'tallest part incl. micro:bit socket; base bay leaves room'),
-            'holes': d(None, 'tbd', 'mounting holes not published; base uses a drill-on-arrival carrier plate'),
-            'bit_orientation': d(None, 'tbd', 'micro:bit slot direction not shown'),
+            'hole_inset': d(3.4, 'photo', '4 corner holes, scaled from the ruler photo'),
+            'hole_d': d(3.0, 'photo', 'plated rings look like M3; M2 screws fit'),
+            'socket_from_end': d(73.3, 'photo', 'micro:bit edge socket, from the DC-jack end'),
+            'socket_h': d(11.0, 'est', 'socket above board'),
+            'bit_insert': d(6.0, 'est', 'how far the micro:bit sinks into the socket'),
+            'height': d(48.6, 'est', 'board bottom to top of the standing micro:bit'),
+            'parts_h': d(13.0, 'est', 'terminal blocks and relay'),
+            'dc_jack_x': d(29.0, 'photo', 'DC 2.1 jack on the far end, from the terminal-block edge'),
+            'switch_x': d(15.0, 'photo', 'board power switch on the far end; stays ON, pack switch is the master'),
+            'usb_x': d(42.0, 'photo', 'USB 5 V input on the far end'),
+            'bit_face': d(None, 'tbd', 'which way the micro:bit LEDs face in the socket'),
         }),
     'huskylens': dict(
         label='HuskyLens AI camera', qty=1, sku='DFRobot SEN0305', color='#e8e8e8',
@@ -197,12 +206,24 @@ def ghost_microbit():
 
 
 def ghost_xiami():
+    """Board lying flat, long side along y, socket end at y = 0, terminal blocks on the -x edge."""
     g = lambda k: V('xiami', k)
-    w, l, t, h = g('pcb_w'), g('pcb_l'), g('pcb_t'), g('height')
-    s = union([box(-w/2, w/2, 0, l, 0, t),
-               box(-w/2 + 4, w/2 - 4, 6, l - 6, t, t + 6),        # parts envelope
-               box(-26, 26, l/2 - 4, l/2 + 4, t, h)])             # micro:bit socket, direction tbd
-    return s, {'top_z': h}
+    w, l, t = g('pcb_w'), g('pcb_l'), g('pcb_t')
+    sy = l - g('socket_from_end')
+    parts = [box(-w/2, w/2, 0, l, 0, t),
+             box(-w/2, -w/2 + 8, 8, l - 8, t, t + g('parts_h')),           # terminal blocks
+             box(-w/2 + 10, w/2 - 6, sy + 8, l - 6, t, t + 6),              # everything else
+             box(-26, 26, sy - 4, sy + 4, t, t + g('socket_h')),            # micro:bit socket
+             box(-25.8, 25.8, sy - 0.8, sy + 0.8, t + g('socket_h') - g('bit_insert'), t + g('height') - 1.6 + 1.6),
+             box(-25.8 + 20, -25.8 + 26, sy - 4.3, sy + 4.3, t + g('height') - 12, t + g('height') - 4)]  # bit parts
+    parts.append(box(-w/2 + g('dc_jack_x') - 4.5, -w/2 + g('dc_jack_x') + 4.5, l - 14, l, t, t + 11))  # DC jack
+    s = union(parts)
+    for x in (-w/2 + g('hole_inset'), w/2 - g('hole_inset')):
+        for y in (g('hole_inset'), l - g('hole_inset')):
+            s = s - cyl(x, y, -1, t + 1, g('hole_d'))
+    return s, {'socket_y': sy, 'top_z': g('height'),
+               'holes': [(x, y) for x in (-w/2 + g('hole_inset'), w/2 - g('hole_inset')) for y in (g('hole_inset'), l - g('hole_inset'))],
+               'dc_jack': (-w/2 + g('dc_jack_x'), l)}
 
 
 HUSKY_REF = {'lens': (-0.4, 12.1, 5.1), 'tab_holes': [(-7.5, 40.2), (7.5, 40.2)],
