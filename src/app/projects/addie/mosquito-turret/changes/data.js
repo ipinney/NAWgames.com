@@ -144,14 +144,14 @@ export const MOCS = [
       'It charges through the side port until all 4 lights stay on.',
       'Still 10 out of 10 hits at 3 feet.',
     ],
-    commits: [],
+    commits: ['7971e58'],
     link: { href: '/projects/addie/ms2000-cad/ms2000-turret-3d.html', label: 'See the new base in 3D' },
   },
 ];
 
 // Newest first: [date, tag, text, commit]. Tags: Change, Decision, Design, Fix, Plan.
 export const LOG = [
-  ['Sep 16', 'Change', 'MOC-004: USB-C power bank with a charge port and power switch in the right wall replaces the 4 AA pack. Speaker moved left. Parts now $224 from 4 stores. Print time about 10 hours 45 minutes.', ''],
+  ['Sep 16', 'Change', 'MOC-004: USB-C power bank with a charge port and power switch in the right wall replaces the 4 AA pack. Speaker moved left. Parts now $224 from 4 stores. Print time about 10 hours 45 minutes.', '7971e58'],
   ['Sep 16', 'Plan', 'Changes and lessons page started. From now on every change after the design lock gets a change order and a line here.', ''],
   ['Sep 16', 'Design', '3D viewers got a card at the bottom and chips you slide sideways, like Dusty\u2019s.', 'cf3345e'],
   ['Sep 16', 'Plan', 'Board and table page: two trifold layouts that fit a 3 foot table, and 12 sheets to print.', '8a683b7'],

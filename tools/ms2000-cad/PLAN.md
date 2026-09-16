@@ -80,7 +80,7 @@ Every change after the lock gets an MOC; every decision or change gets a LOG lin
 3. Update everything in one commit whose message starts `Addie MS-2000 MOC-00N:`.
 4. Add a LOG line (tags: Change, Decision, Design, Fix, Plan); add a LESSONS card if checking found a surprise.
 5. Sync the claude.ai Project file claude/mosquito-turret-plan.md from this file.
-Done so far: MOC-001 stuffed mosquito + pod, foam board backdrop (15221fb); MOC-002 engineering goal + science question, size test replaces light (c6fa2d5); MOC-003 3 ft calibration, distance test dropped (8a683b7); MOC-004 USB-C power bank + charge port + power switch (see changes/data.js).
+Done so far: MOC-001 stuffed mosquito + pod, foam board backdrop (15221fb); MOC-002 engineering goal + science question, size test replaces light (c6fa2d5); MOC-003 3 ft calibration, distance test dropped (8a683b7); MOC-004 USB-C power bank + charge port + power switch (7971e58).
 
 ## Schedule (refit to Feb 1)
 - By Sep 30: order parts, start journal
