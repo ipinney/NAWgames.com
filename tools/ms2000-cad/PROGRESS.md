@@ -17,7 +17,12 @@ Read this first every session. Update it and commit after every finished step.
   - [x] P1 base (Sep 16): parts/p1_base.py -> base shell (142x133x67, ~160 g) + floor plate (~63 g). Fit check and swept paths (pack slide-in, micro:bit lift-out, DC plug) all clear.
   - [x] P2 turntable + tilt yoke, one print (Sep 16): parts/p2_turntable.py, ~39 g. Also P3 pivot pin (same script).
     Checks: tilt servo vs yoke/head, head sweep -30..+35 vs yoke, stops engage at +40/-35 and not inside the range, whole turret pan sweep -90..+90 vs base shell and pan servo. All clear.
-  - [ ] P4 camera + laser head (boresight, tilt stop, all-plastic laser clamp)
+  - [x] P4 camera + laser head (Sep 16): parts/p4_head.py, ~11 g. HuskyLens via tab (2x M3, nut traps), screen back, top edge z 25.
+    Laser axis z -25, x 0.4 (lens x), 37.9 below lens, bore toed up 1.42 deg to cross the camera line at 1524 mm (+-15 mm at 3/7 ft).
+    Pinch clamp: slit on +x front 12 mm, M2 x 10 from below, screw 3 mm clear of the case.
+    Left boss: pin socket 6.1 x 3.5, M2 x 12 from the pin head into a nut trap open to the inside. Top bar z 29..31.5 (53 mm bridge).
+    Checks: HuskyLens envelope and laser vs head, beam path clear, head+camera+laser sweep -30..+35 vs yoke and tilt servo, stops hit at -35/+40.
+  - [x] Assembly viewer (make_assembly.py -> ms2000-turret.html), all turret parts in place.
   - [ ] P5 wand handle (micro:bit, 2xAAA)
   - [ ] P6 sensor pod for stuffed mosquito (ALS-PT19, 2 LEDs, line tie)
   - [ ] P7 pendulum pivot + 10/20/30 deg guide
@@ -41,7 +46,7 @@ Read this first every session. Update it and commit after every finished step.
 ## P2 numbers (turntable local frame: origin on pan axis at disc underside; world = local + (0, 66, 72.3))
 - Horn stack estimate: hub 1.3 above servo boss, plate flush with the printed face in a 2.0 pocket (layout.py).
 - Tilt axis local z 39 (world 111.3). Uprights 4 thick, inner faces +-34.9, y -13..24.
-- Head (P4) must fit: cheeks outer +-30.6, envelope y -14..8, z -30..26 about the axis; right cheek has the tilt horn pocket (arm points up); left cheek has a d10 boss out to x -34.4 with a 5.9 x 3.5 pin socket and M2 tap; stop finger r 6.5..10, +-8 deg, pointing straight down at tilt 0, x -34.4..-30.6.
+- Head (P4) must fit: cheeks outer +-30.6, envelope y -14..8, z -30..32 about the axis; right cheek has the tilt horn pocket (arm points up); left cheek has a d10 boss out to x -34.4 with a 5.9 x 3.5 pin socket and M2 tap; stop finger r 6.5..10, +-8 deg, pointing straight down at tilt 0, x -34.4..-30.6.
 - p2_parts.pkl carries Z0, TZ, XI, XO, C, BT for P4.
 - cadkit finish now builds the trimesh with process=False (merging made false open edges on manifold output).
 
@@ -51,3 +56,4 @@ Read this first every session. Update it and commit after every finished step.
 - Sep 16: P1 base done. Xia mi photo showed a vertical micro:bit socket at one end and 4 corner holes, so the carrier-plate idea was dropped; floor plate is quick to reprint if holes are off.
 - index page: make_index.py (PARTS list holds status per part).
 - Sep 16: P2 + P3 done. Old P3 (tilt yoke) merged into P2; P3 is now the pivot pin.
+- Sep 16: P4 done. Sensor pod (P6) note: the laser dot lands +-15 mm off the camera aim at 3 and 7 ft, and the ALS-PT19 is only 7.8 x 10.6. Pod needs a light collector about 30 mm wide, or code must offset the aim by distance (HuskyLens box size).

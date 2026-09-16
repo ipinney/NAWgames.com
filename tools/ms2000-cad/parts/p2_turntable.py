@@ -119,12 +119,12 @@ def vol(s):
 sg, _ = GHOSTS['servo']()
 # tilt servo: ghost z (shaft) -> -x, ghost x -> y, ghost y -> z
 tservo = xf(sg, [[0, 0, -1, XI + UT + EAR_TOP], [-1, 0, 0, SO], [0, 1, 0, TZ]])
-thorn = xf(horn(), [[0, 0, -1, BT], [0, 1, 0, 0], [1, 0, 0, TZ]])
+thorn = xf(horn(), [[0, 0, -1, C], [0, 1, 0, 0], [1, 0, 0, TZ]])
 phorn = horn().rotate([0, 0, 90]).translate([0, 0, 0])
 
 def head_env(t_deg, finger=True):
     """Head envelope in local frame at tilt t (nose up positive)."""
-    h = box(-C, C, -14.0, 8.0, -30.0, 26.0)
+    h = box(-C, C, -14.0, 8.0, -30.0, 32.0)
     h = h - M.cylinder(L.POCKET + 1, 4.0, 4.0, 24).rotate([0, 90, 0]).translate([C - L.POCKET, 0, 0])   # horn pocket
     boss = M.cylinder(XI - 0.5 - C, 5.0, 5.0, 32).rotate([0, -90, 0]).translate([-C, 0, 0])
     h = h + boss

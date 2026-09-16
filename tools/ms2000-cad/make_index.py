@@ -4,6 +4,8 @@ import sys, os, json, html
 
 PARTS = [
     # (id, name, status, files [(label, href)], note)
+    ('A', 'Turret so far, assembled', 'done', [('3D viewer', 'ms2000-turret.html')],
+     'Every printed and bought part in place. Tap a part to see it alone or highlighted. Pan and tilt sweeps are checked in the build scripts.'),
     ('C', 'Bought parts, measured', 'done', [('3D viewer', 'ms2000-components.html'), ('Numbers (JSON)', 'ms2000-dims.json')],
      'Every bought part as a stand-in model. Numbers marked estimate or photo get checked with calipers when the parts arrive.'),
     ('P1', 'Base shell', 'done', [('3D viewer', 'ms2000-p1-base-shell.html'), ('STL', 'stl/ms2000-p1-base-shell.stl')],
@@ -14,8 +16,9 @@ PARTS = [
      'One print: 74 mm disc on the pan servo horn, two uprights 39 mm to the tilt axis. Tilt servo on the right upright, pivot pin bushing and printed tilt stops (35 up, 30 down) on the left. Cable arch at the back. About 39 g.'),
     ('P3', 'Pivot pin', 'done', [('3D viewer', 'ms2000-p3-pivot-pin.html'), ('STL', 'stl/ms2000-p3-pivot-pin.stl')],
      'Left-side tilt axle. An M2 screw clamps it to the head; it turns in the upright.'),
-    ('P4', 'Camera and laser head', 'now', [], 'HuskyLens on top, laser under it aimed the same way, printed tilt stop, plastic-only laser clamp.'),
-    ('P5', 'Wand handle', 'next', [], 'micro:bit and 2xAAA pack on the fishing rod.'),
+    ('P4', 'Camera and laser head', 'done', [('3D viewer', 'ms2000-p4-head.html'), ('STL', 'stl/ms2000-p4-head.stl')],
+     'Closed frame 61 mm wide. HuskyLens on two M3 screws, lens forward, screen readable from behind. Laser 38 mm under the lens in a plastic pinch clamp, toed up 1.4 degrees so the dot meets the camera line at 5 ft (15 mm off at 3 and 7 ft). Horn pocket right, pivot socket and stop finger left. About 11 g. The top bar is a 53 mm bridge: if it sags, print the head on its back.'),
+    ('P5', 'Wand handle', 'now', [], 'micro:bit and 2xAAA pack on the fishing rod.'),
     ('P6', 'Mosquito sensor pod', 'next', [], 'Clips onto the stuffed mosquito: light sensor, two LED eyes, line tie.'),
     ('P7', 'Pendulum pivot and angle guide', 'next', [], '10, 20, and 30 degree release marks for the speed test.'),
     ('P8', 'Cable clips', 'next', [], ''),
