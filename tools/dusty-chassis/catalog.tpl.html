@@ -47,7 +47,7 @@ button.on{border-color:var(--line);color:var(--line)}
 <div class="pad">
 <div id="card"><h2><i id="sw"></i><span id="nm"></span><em id="qty"></em></h2>
 <dl id="meta"></dl><p id="note"></p></div>
-<div class="row"><button id="alone" class="on">Alone</button><button id="inrobot">In robot</button><button id="dims" class="on">Dimensions</button></div>
+<div class="row"><button id="alone" class="on">Alone</button><button id="inrobot">In robot</button><button id="explode">Explode</button><button id="dims" class="on">Dimensions</button></div>
 </div>
 <div id="chips"></div>
 </footer>
@@ -76,14 +76,28 @@ function build(v,f){
   return [ng,new THREE.EdgesGeometry(g,30)];
 }
 const edgeMat=()=>new THREE.LineBasicMaterial({color:0x000000,transparent:true,opacity:.35});
+// split a mirrored pair into its right (+x) and left (-x) pieces so they can fly apart
+function half(v,f,side){const o=[];for(let i=0;i<f.length;i+=3){const cx=v[f[i]*3]+v[f[i+1]*3]+v[f[i+2]*3];if((cx>0)===(side>0))o.push(f[i],f[i+1],f[i+2]);}return o;}
 items.forEach(it=>{
   it.mat=new THREE.MeshStandardMaterial({color:it.c,roughness:.55,metalness:.05,transparent:true,opacity:1});
-  const [g,e]=build(it.v,it.f);
-  it.mesh=new THREE.Mesh(g,it.mat); it.edges=new THREE.LineSegments(e,edgeMat());
+  it.mesh=new THREE.Group(); it.edges=new THREE.Group(); it.sides=[];
+  const o=it.x||[0,0,0];
+  (it.xs?[1,-1]:[1]).forEach(sd=>{
+    const [g,e]=build(it.v,it.xs?half(it.v,it.f,sd):it.f);
+    const m=new THREE.Mesh(g,it.mat), l=new THREE.LineSegments(e,edgeMat());
+    it.mesh.add(m); it.edges.add(l); it.sides.push({m,l,off:V(o[0]*sd,o[1],o[2])});
+  });
   scene.add(it.mesh); scene.add(it.edges);
   if(it.v1){const [g1,e1]=build(it.v1,it.f1);it.mesh1=new THREE.Mesh(g1,it.mat);it.edges1=new THREE.LineSegments(e1,edgeMat());scene.add(it.mesh1);scene.add(it.edges1);}
   it.base=new THREE.Color(it.c);
 });
+
+// exploded view
+function setEx(t){items.forEach(it=>it.sides.forEach(s=>{s.m.position.copy(s.off).multiplyScalar(t);s.l.position.copy(s.m.position);}));}
+setEx(1); scene.updateMatrixWorld(true);
+const XB=new THREE.Box3(); items.forEach(it=>XB.expandByObject(it.mesh));
+setEx(0); scene.updateMatrixWorld(true);
+let exOn=false, EX=0;
 
 // dimension lines
 const dimMat=new THREE.LineBasicMaterial({color:0x8fd3ea});
@@ -116,6 +130,7 @@ let sel=null, alone=true, showDims=true;
 const tgt=new THREE.Vector3(), tgtTo=new THREE.Vector3();
 let fitR=80, fitRTo=80, fitDist=300;
 let theta=.8, phi=1.0, zoom=1;
+function frameBox(b,pad){b.getCenter(tgtTo);fitRTo=b.getSize(new THREE.Vector3()).length()*.5*pad;zoom=1;}
 function frame(b,pad){
   const c=V((b[0][0]+b[1][0])/2,(b[0][1]+b[1][1])/2,(b[0][2]+b[1][2])/2);
   const r=Math.hypot(b[1][0]-b[0][0],b[1][1]-b[0][1],b[1][2]-b[0][2])*.5*pad;
@@ -139,7 +154,7 @@ function apply(){
   const card=document.getElementById('card');
   if(on){
     const it=items[sel];
-    frame(alone?it.sb:BB, alone?1.35:1.1);
+    if(alone) frame(it.sb,1.35); else if(exOn) frameBox(XB,.9); else frame(BB,1.1);
     if(showDims){ if(alone) boxDims(it.sb,['wide','deep','tall']); }
     document.getElementById('sw').style.background=it.c;
     document.getElementById('nm').textContent=it.n;
@@ -150,8 +165,8 @@ function apply(){
     document.getElementById('meta').innerHTML=rows.map(r=>`<div><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('');
     document.getElementById('note').textContent=it.note;
   }else{
-    frame(BB,1.2);
-    if(showDims) boxDims(BB,['wide','long','tall']);
+    if(exOn) frameBox(XB,.9); else frame(BB,1.2);
+    if(showDims&&!exOn) boxDims(BB,['wide','long','tall']);
     const np=items.filter(i=>i.g==='printed'), nb=items.filter(i=>i.g==='bought');
     const pcs=np.reduce((a,i)=>a+i.q,0), g=np.reduce((a,i)=>a+i.gr,0);
     document.getElementById('sw').style.background='#f0b43c';
@@ -159,8 +174,9 @@ function apply(){
     document.getElementById('qty').textContent='';
     document.getElementById('meta').innerHTML=[['Printed',`${np.length} designs, ${pcs} pieces`],['PLA total',`~${Math.round(g)} g`],['Bought',`${nb.length} parts`]]
       .map(r=>`<div><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('');
-    document.getElementById('note').textContent='Tap a part below to see it alone with its measurements, or in place on the robot. Grey parts are bought.';
+    document.getElementById('note').textContent=exOn?'Exploded: every part pulled out from where it sits. Tap a part to light it up, or Explode again to put Dusty back together.':'Tap a part below to see it alone with its measurements, or in place on the robot. Explode pulls Dusty apart. Grey parts are bought.';
   }
+  document.getElementById('explode').classList.toggle('on',exOn);
   document.getElementById('alone').classList.toggle('on',alone);
   document.getElementById('inrobot').classList.toggle('on',!alone);
   document.getElementById('alone').disabled=!on; document.getElementById('inrobot').disabled=!on;
@@ -174,7 +190,7 @@ function apply(){
 const chips=document.getElementById('chips');
 function chip(label,i,color){const b=document.createElement('button');b.dataset.i=i;
   b.innerHTML=(color?`<i style="background:${color}"></i>`:'')+label;
-  b.onclick=()=>{sel=i==='all'?null:+i;apply();b.scrollIntoView({block:'nearest',inline:'center',behavior:reduce?'auto':'smooth'});};
+  b.onclick=()=>{sel=i==='all'?null:+i;if(exOn&&sel!==null)alone=false;apply();b.scrollIntoView({block:'nearest',inline:'center',behavior:reduce?'auto':'smooth'});};
   chips.appendChild(b);}
 chip('Whole robot','all');
 [['printed','Printed'],['bought','Bought']].forEach(([g,lab])=>{
@@ -184,6 +200,7 @@ chip('Whole robot','all');
 document.getElementById('sub').textContent=`${items.length} components. Drag to rotate, pinch to zoom. All sizes in mm.`;
 document.getElementById('alone').onclick=()=>{alone=true;apply();};
 document.getElementById('inrobot').onclick=()=>{alone=false;apply();};
+document.getElementById('explode').onclick=()=>{exOn=!exOn;if(exOn)alone=false;apply();};
 document.getElementById('dims').onclick=e=>{showDims=!showDims;e.currentTarget.classList.toggle('on',showDims);apply();};
 
 // orbit
@@ -216,6 +233,8 @@ if(document.fonts)document.fonts.ready.then(resize);
 const tmp=new THREE.Vector3();
 function loop(){
   const k=reduce?1:.14;
+  const et=exOn&&!(sel!==null&&alone)?1:0;
+  if(EX!==et){EX+=(et-EX)*(reduce?1:.1);if(Math.abs(EX-et)<.002)EX=et;setEx(EX);}
   tgt.lerp(tgtTo,k); fitR+=(fitRTo-fitR)*k;
   const r=fitR*fitDist*zoom;
   camera.position.set(tgt.x+r*Math.sin(phi)*Math.sin(theta),tgt.y+r*Math.cos(phi),tgt.z+r*Math.sin(phi)*Math.cos(theta));

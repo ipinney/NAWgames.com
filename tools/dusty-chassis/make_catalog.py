@@ -44,6 +44,19 @@ COL = {'base':'#f0b43c','deck':'#f0b43c','post':'#f0b43c','dowel':'#f0b43c','cra
        'roller':'#b48cff','axle':'#b48cff','collar':'#b48cff','pinion':'#4aa8ff','compound':'#4aa8ff',
        'roller_gear':'#4aa8ff','washer':'#4aa8ff','carrier_R':'#ff6f9a','carrier_L':'#ff6f9a','sleeve':'#e0e0e0','keeper':'#e0e0e0'}
 GCOL = '#9fb3c8'
+# exploded view: how far each part moves (mm, model x right, y back, z up; front is -y).
+# Parts in SPLIT are mirrored pairs in one mesh; the x offset flips for the left-hand piece.
+EXPL = {
+ 'base':[0,0,0], 'tray':[0,0,-55], 'caster':[0,15,-40],
+ 'n20':[30,0,0], 'wheels':[65,0,0],
+ 'sleeve':[0,0,45], 'battery':[-110,0,45], 'keeper':[-60,0,20], 'foam':[0,75,45], 'usbcable':[-40,-30,0],
+ 'post':[0,-8,70], 'deck':[0,0,95], 'motobit':[0,0,120], 'microbit':[0,-45,135],
+ 'cradle':[0,-45,40], 'dowel':[0,-45,20], 'm130':[0,-45,65], 'rocker':[-30,-45,45], 'pinion':[30,-45,65],
+ 'compound':[45,-20,0], 'washer':[60,-20,0],
+ 'roller':[0,-80,-25], 'bristles':[0,-80,-25], 'axle':[0,-120,-25], 'collar':[-25,-120,-25], 'roller_gear':[35,-120,-25],
+ 'carrier_R':[30,-50,-45], 'carrier_L':[-30,-50,-45], 'qtr':[30,-50,-65], 'whisker':[-50,-50,-45],
+}
+SPLIT = {'n20', 'wheels', 'qtr'}
 items = []
 allv = []
 for spec, src in ((P, PR), (G, GH)):
@@ -66,7 +79,7 @@ for spec, src in ((P, PR), (G, GH)):
         if grp == 'printed':
             grams = round(sum(m.volume for m in ms) / 1000 * 1.24 * 0.62, 1)
         items.append({'k': key, 'n': label, 'g': grp, 'q': qty, 's': source, 'note': note,
-                      'c': COL.get(key, GCOL), 'size': size, 'sb': sb.tolist(), 'b': b.tolist(), 'gr': grams,
+                      'c': COL.get(key, GCOL), 'x': EXPL.get(key, [0, 0, 0]), 'xs': key in SPLIT, 'size': size, 'sb': sb.tolist(), 'b': b.tolist(), 'gr': grams,
                       'v': np.round(t.vertices, 2).flatten().tolist(), 'f': t.faces.flatten().tolist(),
                       **({'v1': np.round(one.vertices, 2).flatten().tolist(), 'f1': one.faces.flatten().tolist()} if one is not None else {})})
         allv.append(t.vertices)
