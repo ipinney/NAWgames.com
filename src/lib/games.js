@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'ninja-hop',
+    title: 'Ninja Hop: Number Line Quest',
+    creator: 'Nolan',
+    description: 'Hopper the ninja frog solves word problems by leaping along a giant number line. Read the problem, take a quick guess where you will land, then hop with +1, +10 and +100 (or backwards to subtract) and tap LAND when you are standing on the answer. Six dojo worlds cover adding, subtracting, two-step problems, big numbers and missing parts, with a bar diagram and equation that fill in as you go. Fewer hops earn more stars, every fifth problem is a Sensei Challenge, and a hint flag appears if you get stuck.',
+    createdAt: '2026-09-17',
+    thumbnail: '/images/ninja-hop-preview.png',
+    color: 'from-green-400 to-pink-600',
+  },
+  {
     slug: 'geometry-jump',
     title: 'Geometry Jump',
     creator: 'Nolan',
