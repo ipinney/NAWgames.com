@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { A, BASE, MS, CAD, meta, Nav, Back, Btn, Section, Title, Cards } from './ui';
+import { A, BASE, MS, CAD, GUIDE, meta, Nav, Back, Btn, Section, Title, Cards } from './ui';
 import { PHASES } from './data';
 
 export const metadata = meta(
@@ -17,6 +17,7 @@ const DOT = {
 const PAGES = [
   [`${BASE}/design`, 'Design', 'How it works, the requirements, the four designs, the weight budget, the radio plan, and the risks.'],
   [`${BASE}/experiment`, 'Can it fly?', 'Our own math on push, the maker\u2019s safety margin and battery time, a prediction, and the experiment that tests it.'],
+  [GUIDE, 'Build guide', '18 steps from a box of parts to a flying target: safety, wiring maps, the code, and fixing it.'],
   [`${BASE}/build`, 'Build', 'Everything to buy, the 7 print plates, the 3D models, the build plan week by week, and the programs.'],
   [`${BASE}/learn`, 'Learn the science', 'How a drone flies: lift, thrust, spinning props, balance, the floor camera, batteries, radio, and real mosquitoes.'],
   [`${BASE}/changes`, 'Changes and lessons', 'The project history, the lessons from Dusty and the MS-2000, and how changes get made after the design is locked.'],
@@ -57,7 +58,7 @@ export default function FlyingMosquitoPage() {
               <div className="flex flex-wrap gap-2 mt-5">
                 <Btn href={`${BASE}/design`} primary>The design</Btn>
                 <Btn href={`${BASE}/experiment`}>Can it fly?</Btn>
-                <Btn href={`${BASE}/build`}>Build it</Btn>
+                <Btn href={GUIDE}>Build guide</Btn>
                 <Btn href={`${BASE}/learn`}>How drones fly</Btn>
                 <Btn href={`${CAD}/flymo-drone-3d.html`}>See it in 3D</Btn>
               </div>

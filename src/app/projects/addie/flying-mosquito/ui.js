@@ -4,6 +4,7 @@ export const A = '/projects/addie';
 export const BASE = '/projects/addie/flying-mosquito';
 export const MS = '/projects/addie/mosquito-turret';
 export const CAD = '/projects/addie/flymo-cad';
+export const GUIDE = '/projects/addie/flymo-build-guide.html';
 export const OG = 'https://nawgames.com/projects/addie/flymo-og.jpg';
 
 export function meta(title, desc, path) {

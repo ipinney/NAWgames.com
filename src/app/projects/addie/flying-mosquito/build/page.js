@@ -1,4 +1,4 @@
-import { BASE, CAD, meta, Nav, Back, Btn, Section, Title, Steps, Cards } from '../ui';
+import { BASE, CAD, GUIDE, meta, Nav, Back, Btn, Section, Title, Steps, Cards } from '../ui';
 import { PARTS, LOCAL, PLATES, MODELS, PLAN, PROGRAMS } from '../data';
 
 export const metadata = meta(
@@ -26,7 +26,8 @@ export default function BuildPage() {
             Order by November 13, build December 1 to January 24. Every step happens on a day with no MS-2000 test.
           </p>
           <div className="flex flex-wrap gap-2 mt-4">
-            <Btn href="#shopping" primary>Shopping list</Btn>
+            <Btn href={GUIDE} primary>Step-by-step build guide</Btn>
+            <Btn href="#shopping">Shopping list</Btn>
             <Btn href="#prints">Print plates</Btn>
             <Btn href="#plan">Build plan</Btn>
             <Btn href="#programs">Programs</Btn>
@@ -90,6 +91,16 @@ export default function BuildPage() {
               </a>
             ))}
           </div>
+        </Section>
+
+        <Section id="guide" title="The build guide" sub="18 steps in six parts, with safety rules, wiring maps, the code, and a fixing-it table. Same style as the MS-2000 and Dusty guides.">
+          <a href={GUIDE} target="_blank" rel="noopener noreferrer" className="block group bg-naw-card rounded-2xl border border-lime-300/30 hover:border-lime-300/70 overflow-hidden transition-colors">
+            <img src="/projects/addie/flymo-guide/explode.jpg" alt="The Flying Mosquito pulled apart" className="w-full h-48 object-contain bg-[#0d1b2e]" />
+            <div className="p-5">
+              <h3 className="text-white font-bold text-lg group-hover:text-lime-300 transition-colors">How to build the Flying Mosquito</h3>
+              <p className="text-white/55 text-sm mt-1">A. Check and print · B. Can it fly? · C. Fly by itself · D. The hit sensor · E. The control box · F. Test it</p>
+            </div>
+          </a>
         </Section>
 
         <Section id="plan" title="Build plan" sub="Week by week. Each week ends with something that works.">

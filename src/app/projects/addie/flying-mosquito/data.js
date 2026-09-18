@@ -159,6 +159,7 @@ export const RISKS = [
 
 // Newest first: [date, tag, text]
 export const LOG = [
+  ['Sep 18, 2026', 'Plan', 'Build guide: 18 steps in six parts (check and print, Can it fly?, fly by itself, hit sensor, control box, test), wiring maps, the Python, Arduino and MakeCode programs, and a fixing-it table.'],
   ['Sep 18, 2026', 'Plan', 'Can it fly? experiment: our own thrust, safety-margin and battery math (about 120 g of push, a 1.4 push-to-weight ratio at the rated 25 g, 5.5 minutes predicted with our 26 g), a prediction, and two tests for Dec 7 to 13.'],
   ['Sep 18, 2026', 'Design', 'Rev A 3D design: prop guard with legs (6.9 g), mosquito body with a 40 mm white hit window (8.1 g), launch pad, control box, fit check. 7 print plates, about 5 hours 45 minutes and 205 g.'],
   ['Sep 18, 2026', 'Plan', 'Schedule: order by Nov 13, build Dec 1 to Jan 24, freeze Jan 25. MS-2000 work always comes first.'],
