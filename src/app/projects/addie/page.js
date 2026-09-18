@@ -23,10 +23,11 @@ const PROJECTS = [
     emoji: '🚁',
     description:
       'The smallest mosquito we can build that really flies: it takes off from its base, flies around a test zone by itself, and radios back every time the MS-2000 laser tags it.',
-    badge: 'After the fair',
+    badge: 'Build starts December',
     color: 'from-lime-500 to-fuchsia-700',
+    image: '/projects/addie/flymo-hero.jpg',
     href: '/projects/addie/flying-mosquito',
-    tags: ['Designs', 'Requirements', 'Lessons learned', 'Drone'],
+    tags: ['Design', 'Shopping list', 'Print files', 'How drones fly', '3D model'],
   },
   {
     slug: 'herbert-hoover',

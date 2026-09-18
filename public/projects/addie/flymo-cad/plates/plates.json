@@ -1,0 +1,128 @@
+[
+ {
+  "n": 1,
+  "slug": "fit-check",
+  "title": "Fit check: motor collars, button hole, sensor pocket",
+  "color": "any color",
+  "pieces": 1,
+  "parts": [
+   "fitcheck"
+  ],
+  "height": 8.0,
+  "footprint": [
+   64.9,
+   32.0
+  ],
+  "time": "9m 49s",
+  "grams": "3.36",
+  "file": "flymo-plate-1-fit-check.3mf"
+ },
+ {
+  "n": 2,
+  "slug": "guard",
+  "title": "Prop guard and legs",
+  "color": "dark gray or black",
+  "pieces": 1,
+  "parts": [
+   "guard"
+  ],
+  "height": 31.5,
+  "footprint": [
+   146.8,
+   146.8
+  ],
+  "time": "32m 56s",
+  "grams": "7.16",
+  "file": "flymo-plate-2-guard.3mf"
+ },
+ {
+  "n": 3,
+  "slug": "window",
+  "title": "Hit window",
+  "color": "WHITE PLA",
+  "pieces": 1,
+  "parts": [
+   "cup"
+  ],
+  "height": 12.0,
+  "footprint": [
+   41.6,
+   34.2
+  ],
+  "time": "8m 44s",
+  "grams": "2.67",
+  "file": "flymo-plate-3-window.3mf"
+ },
+ {
+  "n": 4,
+  "slug": "body",
+  "title": "Mosquito body",
+  "color": "dark gray or black",
+  "pieces": 1,
+  "parts": [
+   "body"
+  ],
+  "height": 42.5,
+  "footprint": [
+   41.6,
+   34.2
+  ],
+  "time": "26m 2s",
+  "grams": "5.40",
+  "file": "flymo-plate-4-body.3mf"
+ },
+ {
+  "n": 5,
+  "slug": "pad",
+  "title": "Launch pad",
+  "color": "any color",
+  "pieces": 1,
+  "parts": [
+   "pad"
+  ],
+  "height": 5.4,
+  "footprint": [
+   150.0,
+   150.0
+  ],
+  "time": "1h 16m 27s",
+  "grams": "56.43",
+  "file": "flymo-plate-5-pad.3mf"
+ },
+ {
+  "n": 6,
+  "slug": "box",
+  "title": "Control box",
+  "color": "any color (lime on the site)",
+  "pieces": 1,
+  "parts": [
+   "box"
+  ],
+  "height": 45.6,
+  "footprint": [
+   150.0,
+   100.0
+  ],
+  "time": "2h 15m 43s",
+  "grams": "89.97",
+  "file": "flymo-plate-6-box.3mf"
+ },
+ {
+  "n": 7,
+  "slug": "box-floor",
+  "title": "Control box floor",
+  "color": "any color",
+  "pieces": 1,
+  "parts": [
+   "floor"
+  ],
+  "height": 10.4,
+  "footprint": [
+   145.2,
+   96.8
+  ],
+  "time": "53m 52s",
+  "grams": "39.96",
+  "file": "flymo-plate-7-box-floor.3mf"
+ }
+]

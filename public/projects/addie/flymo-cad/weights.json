@@ -1,0 +1,14 @@
+{
+ "LiteWing (no battery)": 45.0,
+ "Battery": 16.0,
+ "Positioning module": 8.0,
+ "Prop guard (F1)": 6.9,
+ "Hit window (F2)": 2.6,
+ "Body (F2)": 5.5,
+ "XIAO ESP32-C3": 1.5,
+ "Light sensor + wires": 1.0,
+ "Wings (clear plastic)": 0.4,
+ "_payload_g": 25.9,
+ "_rated_payload_g": 25.0,
+ "_total_g": 86.9
+}

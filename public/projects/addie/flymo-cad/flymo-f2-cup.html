@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Flying Mosquito hit window, Rev A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0d1b2e;--grid:#1c3150;--line:#8fd3ea;--part:#f0b43c;--text:#dbe5f1;--dim:#7d93ad}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--ink);color:var(--text);font-family:"Barlow Semi Condensed",system-ui,sans-serif;overflow:hidden}
+#stage{position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;display:block;touch-action:none}
+#labels{position:fixed;inset:0;pointer-events:none}
+.dl{position:absolute;transform:translate(-50%,-50%);background:var(--ink);color:var(--line);border:1px solid var(--line);border-radius:3px;padding:1px 6px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dl small{color:var(--dim);font-weight:500;margin-left:4px}
+.hidden .dl{display:none}
+header{position:fixed;top:14px;left:16px;right:16px;pointer-events:none}
+h1{font-size:26px;font-weight:700;letter-spacing:.01em;line-height:1.1}
+h1 span{color:var(--part)}
+header p{color:var(--dim);font-size:15px;margin-top:2px}
+footer{position:fixed;left:0;right:0;bottom:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--ink) 30%)}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+button{font:inherit;font-size:15px;font-weight:600;color:var(--text);background:#152a45;border:1px solid var(--grid);border-radius:6px;padding:7px 12px;cursor:pointer}
+button:focus-visible{outline:2px solid var(--line);outline-offset:2px}
+button.on{border-color:var(--line);color:var(--line)}
+button.go{background:var(--part);color:var(--ink);border-color:var(--part);margin-left:auto}
+dl.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:4px 14px;margin:0 0 10px;font-size:15px}
+dl.specs div{border-left:2px solid var(--grid);padding-left:8px}
+dt{color:var(--dim);font-size:13px}
+dd{font-weight:600;font-variant-numeric:tabular-nums}
+@media (max-height:520px){dl.specs{grid-template-columns:repeat(4,auto)}#hint{display:none}h1{font-size:20px}header p{display:none}}
+#hint{color:var(--dim);font-size:13px;margin-top:8px}
+#hint a{color:var(--line)}
+</style></head><body>
+<canvas id="stage"></canvas>
+<div id="labels"></div>
+<header><h1>Flying Mosquito <span>hit window</span>, Rev A</h1><p>Drag to rotate, pinch or scroll to zoom. All dimensions in mm.</p></header>
+<footer>
+<dl class="specs"><div><dt>Window</dt><dd>40 mm wide, 0.8 mm face</dd></div><div><dt>Material</dt><dd>WHITE PLA</dd></div><div><dt>Job</dt><dd>glows when the laser hits</dd></div><div><dt>Print</dt><dd>face down, no supports</dd></div></dl>
+<div class="row">
+<button data-v="iso" class="on">3D</button><button data-v="front">Front</button><button data-v="side">Side</button><button data-v="top">Top</button>
+<button id="dims" class="on">Dimensions</button>
+<button id="dl" class="go">Download STL</button>
+</div>
+<p id="hint">Print in white. The back body plugs in from behind; glue it once the sensor works.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const DATA = {"v":[-18.65,8.0,14.8,-17.29,8.0,12.44,-16.5,8.0,11.34,-15.9,8.0,10.6,-15.88,8.0,11.4,-15.91,8.24,10.61,-15.87,8.0,11.82,-18.01,8.0,13.6,-17.32,8.0,14.0,-16.63,8.0,12.89,-19.22,8.0,16.04,-18.48,8.0,16.35,-19.7,8.0,17.31,-20.09,8.0,18.62,-18.94,8.0,17.57,-19.32,8.0,18.82,-17.94,8.0,15.15,-15.52,8.0,11.4,-20.4,8.0,19.94,-19.62,8.0,20.1,-20.62,8.0,21.29,-19.83,8.0,21.39,-20.76,8.0,22.64,-19.96,8.0,22.69,-20.8,8.0,24.0,-20.0,8.0,24.0,-20.76,8.0,25.36,-19.96,8.0,25.31,-19.83,8.0,26.61,-20.62,8.0,26.71,-20.4,8.0,28.06,-19.62,8.0,27.9,-20.09,8.0,29.38,-19.32,8.0,29.18,-19.7,8.0,30.69,-18.94,8.0,30.43,-19.22,8.0,31.96,-18.48,8.0,31.65,-18.65,8.0,33.2,-17.94,8.0,32.85,-17.32,8.0,34.0,-18.01,8.0,34.4,-17.29,8.0,35.56,-16.63,8.0,35.11,-15.87,8.0,36.18,-16.5,8.0,36.66,-15.64,8.0,37.71,-15.04,8.0,37.19,-14.14,8.0,38.14,-14.71,8.0,38.71,-13.19,8.0,39.04,-13.71,8.0,39.64,-12.66,8.0,40.5,-12.18,8.0,39.87,-11.11,8.0,40.63,-11.56,8.0,41.29,-10.0,8.0,41.32,-10.4,8.0,42.01,-9.2,8.0,42.65,-8.85,8.0,41.94,-7.96,8.0,43.22,-7.65,8.0,42.48,-6.69,8.0,43.7,-6.43,8.0,42.94,-5.38,8.0,44.09,-5.18,8.0,43.32,-3.9,8.0,43.62,-4.06,8.0,44.4,-2.61,8.0,43.83,-2.71,8.0,44.62,-1.31,8.0,43.96,-1.36,8.0,44.76,-18.65,20.0,14.8,-15.87,19.2,11.82,-17.32,19.2,14.0,-16.63,19.2,12.89,-17.29,20.0,12.44,-16.5,20.0,11.34,-15.9,20.0,10.6,-15.89,20.0,11.4,-18.01,20.0,13.6,-18.48,19.2,16.35,-18.94,19.2,17.57,-19.32,19.2,18.82,-19.22,20.0,16.04,-19.7,20.0,17.31,-20.09,20.0,18.62,-17.94,19.2,15.15,-15.52,19.2,11.4,-19.62,19.2,20.1,-19.83,19.2,21.39,-19.96,19.2,22.69,-20.4,20.0,19.94,-20.62,20.0,21.29,-20.76,20.0,22.64,-20.0,19.2,24.0,-19.96,19.2,25.31,-19.83,19.2,26.61,-20.8,20.0,24.0,-20.76,20.0,25.36,-20.62,20.0,26.71,-19.62,19.2,27.9,-19.32,19.2,29.18,-18.94,19.2,30.43,-18.48,19.2,31.65,-20.4,20.0,28.06,-20.09,20.0,29.38,-19.7,20.0,30.69,-19.22,20.0,31.96,-18.65,20.0,33.2,-17.94,19.2,32.85,-17.32,19.2,34.0,-16.63,19.2,35.11,-15.87,19.2,36.18,-18.01,20.0,34.4,-17.29,20.0,35.56,-16.5,20.0,36.66,-15.64,20.0,37.71,-15.04,19.2,37.19,-14.14,19.2,38.14,-13.19,19.2,39.04,-14.71,20.0,38.71,-13.71,20.0,39.64,-12.18,19.2,39.87,-12.66,20.0,40.5,-11.11,19.2,40.63,-11.56,20.0,41.29,-10.0,19.2,41.32,-8.85,19.2,41.94,-10.4,20.0,42.01,-9.2,20.0,42.65,-7.96,20.0,43.22,-7.65,19.2,42.48,-6.43,19.2,42.94,-6.69,20.0,43.7,-5.38,20.0,44.09,-5.18,19.2,43.32,-3.9,19.2,43.62,-2.61,19.2,43.83,-4.06,20.0,44.4,-2.71,20.0,44.62,-1.31,19.2,43.96,-1.36,20.0,44.76,14.86,8.0,10.63,14.84,8.0,10.6,15.04,8.0,10.81,15.52,8.0,11.4,15.9,8.0,10.6,16.5,8.0,11.34,15.87,8.0,11.82,17.29,8.0,12.44,16.63,8.0,12.89,18.01,8.0,13.6,17.32,8.0,14.0,18.65,8.0,14.8,17.94,8.0,15.15,18.48,8.0,16.35,19.22,8.0,16.04,18.94,8.0,17.57,19.32,8.0,18.82,19.7,8.0,17.31,20.09,8.0,18.62,19.62,8.0,20.1,20.4,8.0,19.94,20.62,8.0,21.29,19.83,8.0,21.39,19.96,8.0,22.69,20.76,8.0,22.64,20.0,8.0,24.0,20.8,8.0,24.0,19.96,8.0,25.31,20.76,8.0,25.36,19.83,8.0,26.61,20.62,8.0,26.71,0.0,8.0,44.0,0.0,8.0,44.8,1.31,8.0,43.96,1.36,8.0,44.76,2.61,8.0,43.83,2.71,8.0,44.62,3.9,8.0,43.62,5.18,8.0,43.32,4.06,8.0,44.4,7.65,8.0,42.48,6.43,8.0,42.94,5.38,8.0,44.09,6.69,8.0,43.7,8.85,8.0,41.94,10.0,8.0,41.32,9.2,8.0,42.65,7.96,8.0,43.22,19.32,8.0,29.18,19.62,8.0,27.9,20.4,8.0,28.06,20.09,8.0,29.38,18.94,8.0,30.43,18.48,8.0,31.65,19.22,8.0,31.96,19.7,8.0,30.69,17.94,8.0,32.85,17.32,8.0,34.0,16.63,8.0,35.11,15.87,8.0,36.18,18.01,8.0,34.4,17.29,8.0,35.56,18.65,8.0,33.2,12.18,8.0,39.87,12.66,8.0,40.5,14.14,8.0,38.14,15.04,8.0,37.19,13.19,8.0,39.04,13.71,8.0,39.64,14.71,8.0,38.71,11.11,8.0,40.63,11.56,8.0,41.29,10.4,8.0,42.01,16.5,8.0,36.66,15.64,8.0,37.71,15.52,19.2,11.4,15.87,19.2,11.82,16.63,19.2,12.89,17.32,19.2,14.0,15.91,19.76,10.61,15.9,20.0,10.6,15.89,20.0,11.4,15.89,20.0,11.4,16.5,20.0,11.34,17.29,20.0,12.44,18.01,20.0,13.6,18.65,20.0,14.8,17.94,19.2,15.15,18.48,19.2,16.35,18.94,19.2,17.57,19.32,19.2,18.82,19.22,20.0,16.04,19.7,20.0,17.31,20.09,20.0,18.62,19.62,19.2,20.1,19.83,19.2,21.39,19.96,19.2,22.69,20.4,20.0,19.94,20.62,20.0,21.29,20.76,20.0,22.64,20.0,19.2,24.0,19.96,19.2,25.31,19.83,19.2,26.61,20.8,20.0,24.0,20.76,20.0,25.36,20.62,20.0,26.71,0.0,19.2,44.0,1.31,19.2,43.96,0.0,20.0,44.8,1.36,20.0,44.76,2.61,19.2,43.83,3.9,19.2,43.62,5.18,19.2,43.32,2.71,20.0,44.62,4.06,20.0,44.4,7.65,19.2,42.48,6.43,19.2,42.94,5.38,20.0,44.09,6.69,20.0,43.7,8.85,19.2,41.94,10.0,19.2,41.32,9.2,20.0,42.65,7.96,20.0,43.22,19.32,19.2,29.18,19.62,19.2,27.9,18.94,19.2,30.43,18.48,19.2,31.65,20.4,20.0,28.06,20.09,20.0,29.38,19.22,20.0,31.96,19.7,20.0,30.69,17.94,19.2,32.85,17.32,19.2,34.0,16.63,19.2,35.11,15.87,19.2,36.18,18.01,20.0,34.4,17.29,20.0,35.56,18.65,20.0,33.2,12.18,19.2,39.87,12.66,20.0,40.5,14.14,19.2,38.14,15.04,19.2,37.19,13.19,19.2,39.04,13.71,20.0,39.64,14.71,20.0,38.71,11.11,19.2,40.63,11.56,20.0,41.29,10.4,20.0,42.01,16.5,20.0,36.66,15.64,20.0,37.71],"f":[2,5,3,2,3,4,2,4,6,6,4,17,2,6,9,1,2,9,1,16,7,1,9,8,1,8,16,0,7,11,0,14,10,0,11,14,12,15,19,10,15,12,10,14,15,7,16,11,12,23,13,12,19,21,12,21,23,13,30,18,13,23,25,18,29,20,20,26,22,22,26,24,20,29,26,13,25,32,18,30,29,13,32,30,25,27,32,27,28,32,0,80,7,2,77,5,1,77,2,1,7,76,0,10,72,10,12,84,12,13,85,13,18,86,18,20,92,20,22,93,22,24,94,24,26,98,26,29,99,29,30,100,28,31,32,31,33,34,31,34,32,33,35,34,34,35,36,35,37,36,36,37,38,37,39,38,38,39,41,39,40,41,40,43,41,41,43,42,42,43,44,42,44,45,44,47,45,45,47,46,46,47,48,46,48,49,48,50,49,49,50,51,50,53,51,51,53,52,52,53,54,52,54,55,54,56,55,55,56,57,30,32,105,32,34,106,34,36,107,36,38,108,38,41,109,41,42,114,42,45,115,45,46,116,46,49,117,49,51,121,51,52,122,52,55,124,55,57,126,56,59,57,57,59,58,58,59,61,58,61,60,60,61,63,60,63,62,62,63,65,62,65,64,64,65,66,64,66,67,66,68,67,67,68,69,68,70,69,69,70,71,70,174,71,71,174,175,57,58,129,58,60,130,60,62,131,62,64,134,64,67,135,67,69,139,69,71,140,71,175,142,0,72,80,1,76,77,77,78,5,7,80,76,12,85,84,10,84,72,13,86,85,18,92,86,20,93,92,22,94,93,24,98,94,26,99,98,29,100,99,30,105,100,72,84,108,72,109,80,86,92,105,85,86,106,84,85,107,92,93,100,93,94,99,76,80,114,76,115,77,77,116,78,116,79,78,94,98,99,93,99,100,92,100,105,86,105,106,85,106,107,84,107,108,72,108,109,80,109,114,76,114,115,32,106,105,34,107,106,36,108,107,38,109,108,41,114,109,42,115,114,45,116,115,46,117,116,49,121,117,51,122,121,52,124,122,55,126,124,57,129,126,77,115,116,116,117,79,117,121,79,121,122,79,122,124,79,124,126,79,126,129,79,129,130,79,130,131,79,58,130,129,60,131,130,62,134,131,64,135,134,67,139,135,69,140,139,71,142,140,142,175,251,131,134,79,134,135,79,135,139,79,139,140,79,140,142,79,142,251,79,251,252,79,252,256,79,256,257,79,257,260,79,261,265,79,260,261,79,143,144,147,148,145,147,148,146,145,148,149,146,148,150,149,149,150,151,150,152,151,151,152,153,152,155,153,152,154,155,154,156,155,154,157,156,156,157,158,157,160,158,158,160,159,159,160,162,160,161,162,161,165,162,161,166,165,161,168,166,161,163,194,163,164,193,161,194,168,164,167,173,167,169,171,167,171,173,164,173,193,168,194,170,163,193,194,170,198,172,148,147,222,148,227,150,150,228,152,152,229,154,154,234,157,157,235,160,160,236,161,161,240,163,163,241,164,164,242,167,167,246,169,169,247,171,171,248,173,173,270,193,174,176,175,175,176,177,176,178,177,177,178,179,178,180,179,179,180,182,180,181,182,181,185,182,181,184,185,184,186,185,183,186,184,183,190,186,183,187,190,187,189,190,187,188,189,188,215,189,175,177,251,177,179,252,179,182,256,182,185,257,185,186,260,186,190,261,189,215,264,189,265,190,172,198,192,170,194,198,191,192,198,191,197,195,191,198,197,195,205,196,195,197,205,196,203,199,201,216,202,201,204,216,199,204,200,200,204,201,199,203,204,196,205,203,206,210,207,202,217,209,208,209,212,209,217,212,208,212,211,208,211,210,207,210,211,188,213,215,213,214,215,206,214,213,206,207,214,202,216,217,193,271,194,197,198,272,194,273,198,203,279,204,197,280,205,203,205,278,212,217,287,211,212,286,207,211,282,214,290,215,207,289,214,204,291,216,216,292,217,226,223,78,226,78,225,292,224,79,148,222,226,148,226,227,150,227,228,152,228,229,154,229,234,157,234,235,160,235,236,161,236,240,163,240,241,164,241,242,167,242,246,169,246,247,171,247,248,173,248,270,226,222,223,226,225,224,226,224,292,226,291,227,227,279,228,228,278,229,229,280,234,234,272,235,235,273,236,236,271,240,240,270,241,241,248,242,242,247,246,242,248,247,241,270,248,229,278,280,234,280,272,236,273,271,240,271,270,235,272,273,177,252,251,179,256,252,182,257,256,185,260,257,186,261,260,190,265,261,215,290,264,189,264,265,289,79,290,287,292,79,282,286,79,282,79,289,286,287,79,264,79,265,264,290,79,193,270,271,194,271,273,198,273,272,203,278,279,204,279,291,197,272,280,205,280,278,217,292,287,211,286,282,212,287,286,214,289,290,207,282,289,216,291,292,226,292,291,227,291,279,228,279,278,6,73,9,6,17,73,8,74,16,8,9,75,11,81,14,14,82,15,11,16,87,19,89,21,15,83,19,21,90,23,23,91,25,25,95,27,27,96,28,28,97,31,31,101,33,33,102,35,35,103,37,37,104,39,39,110,40,40,111,43,43,112,44,44,113,47,47,118,48,48,119,50,50,120,53,53,123,54,54,125,56,56,127,59,59,128,61,61,132,63,63,133,65,65,136,66,66,137,68,68,138,70,70,141,174,73,17,88,9,73,75,8,75,74,16,74,87,11,87,81,14,81,82,15,82,83,19,83,89,21,89,90,23,90,91,25,91,95,27,95,96,28,96,97,31,97,101,81,87,104,83,101,89,89,97,90,90,96,91,82,102,83,81,103,82,74,110,87,74,75,111,73,112,75,73,88,113,91,96,95,90,97,96,89,101,97,83,102,101,82,103,102,81,104,103,87,110,104,74,111,110,75,112,111,33,101,102,35,102,103,37,103,104,39,104,110,40,110,111,43,111,112,44,112,113,47,113,118,48,118,119,50,119,120,53,120,123,54,123,125,73,113,112,113,88,118,118,88,119,119,88,120,120,88,123,123,88,125,125,88,127,127,88,128,128,88,132,56,125,127,59,127,128,61,128,132,63,132,133,65,133,136,66,136,137,68,137,138,70,138,141,141,249,174,132,88,133,133,88,136,136,88,137,137,88,138,138,88,141,141,88,249,249,88,250,253,88,254,250,88,253,254,88,255,255,88,259,258,259,88,149,218,146,149,151,220,151,153,221,153,155,230,155,156,231,156,158,232,158,159,233,159,162,237,162,165,238,165,166,239,166,168,243,168,170,244,170,172,245,172,192,267,174,249,176,176,250,178,178,253,180,180,254,181,181,255,184,183,184,259,183,258,187,188,263,213,187,262,188,191,266,192,191,195,268,195,196,269,196,199,274,199,200,275,200,201,276,201,202,277,206,213,288,206,281,210,202,209,284,208,283,209,208,210,285,219,88,218,219,284,88,149,219,218,149,220,219,151,221,220,153,230,221,155,231,230,156,232,231,158,233,232,159,237,233,162,238,237,165,239,238,166,243,239,168,244,243,170,245,244,172,267,245,219,220,277,220,221,276,221,230,275,230,231,274,231,232,269,232,233,268,233,237,266,237,238,267,230,274,275,238,239,245,239,243,244,239,244,245,238,245,267,232,268,269,233,266,268,231,269,274,237,267,266,176,249,250,178,250,253,180,253,254,181,254,255,183,259,258,184,255,259,187,258,262,188,262,263,258,88,262,262,88,263,281,288,88,263,88,288,283,285,88,283,88,284,281,88,285,191,268,266,192,266,267,195,269,268,199,275,274,201,277,276,200,276,275,196,274,269,210,281,285,206,288,281,202,284,277,209,283,284,208,285,283,213,263,288,219,277,284,220,276,277,221,275,276,3,143,4,4,145,17,3,78,144,88,17,218,79,225,78,3,144,143,143,145,4,145,146,17,218,17,146,78,147,144,143,147,145,78,223,147,225,79,224,78,3,5,147,223,222],"bounds":[[-20.799999237060547,8.0,10.600000381469727],[20.799999237060547,20.0,44.79999923706055]],"dims":[{"a":[-20.8,20.0,24.0],"b":[20.8,20.0,24.0],"off":[0,0,26.8],"text":"41.6","note":"outside"},{"a":[20.8,8.0,10.6],"b":[20.8,20.0,10.6],"off":[8,0,0],"text":"12","note":"deep"}],"stlName":"flymo-f2-cup.stl","fitPad":1.3};
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d1b2e);
+const camera = new THREE.PerspectiveCamera(35,1,1,5000);
+
+// model (x,y,z) with y = depth from front lip, z = up  ->  three (x, z, -y)
+const v = DATA.v, pos = new Float32Array(v.length);
+for (let i=0;i<v.length;i+=3){pos[i]=v[i];pos[i+1]=v[i+2];pos[i+2]=-v[i+1];}
+const g = new THREE.BufferGeometry();
+g.setAttribute('position', new THREE.BufferAttribute(pos,3));
+g.setIndex(DATA.f);
+const ng = g.toNonIndexed(); ng.computeVertexNormals();
+const part = new THREE.Mesh(ng, new THREE.MeshStandardMaterial({color:0xf0b43c, roughness:.55, metalness:.05}));
+scene.add(part);
+const edges = new THREE.LineSegments(new THREE.EdgesGeometry(g, 25), new THREE.LineBasicMaterial({color:0x5a3b06}));
+scene.add(edges);
+scene.add(new THREE.HemisphereLight(0xcfe3ff, 0x1a2436, .75));
+const sun = new THREE.DirectionalLight(0xffffff,.85); sun.position.set(80,160,120); scene.add(sun);
+const fill = new THREE.DirectionalLight(0x8fd3ea,.25); fill.position.set(-120,40,-80); scene.add(fill);
+const BB=DATA.bounds; // model coords [[minx,miny,minz],[maxx,maxy,maxz]]
+const CX=(BB[0][0]+BB[1][0])/2, CY=(BB[0][1]+BB[1][1])/2, CZ=(BB[0][2]+BB[1][2])/2;
+const DIAG=Math.hypot(BB[1][0]-BB[0][0],BB[1][1]-BB[0][1],BB[1][2]-BB[0][2]);
+const grid = new THREE.GridHelper(Math.ceil(DIAG*2.5/10)*10,30,0x2a4a73,0x1c3150); grid.position.set(CX,BB[0][2]-.05,-CY); scene.add(grid);
+
+// dimension lines (DATA.dims, model coords)
+const dimMat = new THREE.LineBasicMaterial({color:0x8fd3ea});
+const dimGroup = new THREE.Group(); scene.add(dimGroup);
+const labelsEl = document.getElementById('labels');
+const labels = [];
+const V = (x,y,z)=>new THREE.Vector3(x,z,-y); // model coords -> three
+function dim(a,b,off,text,note){
+  const A=V(...a),B=V(...b),o=V(...off);
+  const A2=A.clone().add(o),B2=B.clone().add(o);
+  const ext=o.clone().setLength(3);
+  const pts=[A,A2.clone().add(ext),B,B2.clone().add(ext),A2,B2];
+  const dir=B2.clone().sub(A2).normalize(), t=Math.max(1.5,DIAG*.02);
+  const perp=o.clone().normalize().multiplyScalar(t);
+  const tk=[A2.clone().add(dir.clone().multiplyScalar(t)).add(perp),A2.clone().sub(dir.clone().multiplyScalar(t)).sub(perp),
+            B2.clone().add(dir.clone().multiplyScalar(t)).add(perp),B2.clone().sub(dir.clone().multiplyScalar(t)).sub(perp)];
+  dimGroup.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([...pts,...tk]),dimMat));
+  const el=document.createElement('div'); el.className='dl';
+  el.textContent=text; if(note){const s=document.createElement('small');s.textContent=note;el.appendChild(s);}
+  labelsEl.appendChild(el);
+  labels.push({el,p:A2.clone().add(B2).multiplyScalar(.5)});
+}
+(DATA.dims||[]).forEach(d=>dim(d.a,d.b,d.off,d.text,d.note));
+
+// orbit controls
+const target=V(CX,CY,CZ);                    // orbit around the part's center
+const FIT_R=DIAG*.5*(DATA.fitPad||1.3);      // bounding sphere of part + dimension labels
+let theta=-.75, phi=1.0, zoom=1, fitDist=300, anim=null, shiftNdc=0;
+const views={iso:[-.75,1.0],front:[0,1.45],side:[Math.PI/2,1.45],top:[0,.02]};
+function place(){const radius=fitDist*zoom;camera.position.set(target.x+radius*Math.sin(phi)*Math.sin(theta),target.y+radius*Math.cos(phi),target.z+radius*Math.sin(phi)*Math.cos(theta));camera.lookAt(target);}
+const ptrs=new Map(); let pinch0=0, z0=1;
+canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});anim=null;
+  if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch0=Math.hypot(a.x-b.x,a.y-b.y);z0=zoom;}});
+canvas.addEventListener('pointermove',e=>{if(!ptrs.has(e.pointerId))return;const p=ptrs.get(e.pointerId);
+  if(ptrs.size===1){theta-=(e.clientX-p.x)*.008;phi=Math.min(Math.PI-.02,Math.max(.02,phi-(e.clientY-p.y)*.008));}
+  p.x=e.clientX;p.y=e.clientY;
+  if(ptrs.size===2){const [a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);zoom=Math.min(3,Math.max(.35,z0*pinch0/d));}
+  setActive(null);});
+['pointerup','pointercancel'].forEach(t=>canvas.addEventListener(t,e=>ptrs.delete(e.pointerId)));
+canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.min(3,Math.max(.35,zoom*Math.exp(e.deltaY*.001)));},{passive:false});
+
+function setActive(k){document.querySelectorAll('[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===k));}
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const [t,p]=views[b.dataset.v];const r=1;setActive(b.dataset.v);
+  if(reduce){theta=t;phi=p;zoom=r;return;}
+  let dt=((t-theta)%(2*Math.PI)+3*Math.PI)%(2*Math.PI)-Math.PI;
+  anim={f:{t:theta,p:phi,r:zoom},to:{t:theta+dt,p,r},s:performance.now()};});
+const dimsBtn=document.getElementById('dims');
+dimsBtn.onclick=()=>{const on=!dimsBtn.classList.contains('on');dimsBtn.classList.toggle('on',on);dimGroup.visible=on;labelsEl.classList.toggle('hidden',!on);};
+
+// STL download, built from the same mesh
+document.getElementById('dl').onclick=()=>{
+  const f=DATA.f, n=f.length/3, buf=new ArrayBuffer(84+n*50), dv=new DataView(buf);
+  dv.setUint32(80,n,true);
+  for(let i=0;i<n;i++){const o=84+i*50;
+    const a=f[i*3]*3,b=f[i*3+1]*3,c=f[i*3+2]*3;
+    const ux=v[b]-v[a],uy=v[b+1]-v[a+1],uz=v[b+2]-v[a+2],wx=v[c]-v[a],wy=v[c+1]-v[a+1],wz=v[c+2]-v[a+2];
+    let nx=uy*wz-uz*wy,ny=uz*wx-ux*wz,nz=ux*wy-uy*wx;const l=Math.hypot(nx,ny,nz)||1;
+    [nx/l,ny/l,nz/l,v[a],v[a+1],v[a+2],v[b],v[b+1],v[b+2],v[c],v[c+1],v[c+2]].forEach((x,j)=>dv.setFloat32(o+j*4,x,true));}
+  const url=URL.createObjectURL(new Blob([buf],{type:'model/stl'}));
+  const l=document.createElement('a');l.href=url;l.download=DATA.stlName;l.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+
+function resize(){
+  const w=innerWidth,h=innerHeight;
+  renderer.setSize(w,h,true);camera.aspect=w/h;camera.updateProjectionMatrix();
+  const top=document.querySelector('header').getBoundingClientRect().bottom+8;
+  const bot=document.querySelector('.specs').getBoundingClientRect().top-8;
+  const availH=Math.max(120,bot-top), half=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
+  const vHalf=Math.atan(half*availH/h), hHalf=Math.atan(half*w/h);
+  fitDist=FIT_R/Math.sin(Math.min(vHalf,hHalf*.94));
+  shiftNdc=1-2*((top+bot)/2)/h;          // move the image center into the open area
+  camera.projectionMatrix.elements[9]=-shiftNdc;
+  camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+}
+addEventListener('resize',resize);
+new ResizeObserver(resize).observe(document.querySelector('footer'));
+if(document.fonts)document.fonts.ready.then(resize);
+resize();
+canvas.addEventListener('dblclick',()=>document.querySelector('[data-v="iso"]').click());
+const tmp=new THREE.Vector3();
+function loop(now){
+  if(anim){const k=Math.min(1,(now-anim.s)/600),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    theta=anim.f.t+(anim.to.t-anim.f.t)*e;phi=anim.f.p+(anim.to.p-anim.f.p)*e;zoom=anim.f.r+(anim.to.r-anim.f.r)*e;if(k===1)anim=null;}
+  place();renderer.render(scene,camera);
+  const w=innerWidth,h=innerHeight;
+  labels.forEach(L=>{tmp.copy(L.p).project(camera);L.el.style.left=(tmp.x*.5+.5)*w+'px';L.el.style.top=(-tmp.y*.5+.5)*h+'px';L.el.style.visibility=tmp.z<1?'visible':'hidden';});
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script></body></html>
