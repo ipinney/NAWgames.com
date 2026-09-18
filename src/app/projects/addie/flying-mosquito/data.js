@@ -7,7 +7,8 @@ export const PHASES = [
   { title: 'Lock the design', when: 'Before ordering', status: 'now', text: 'Dad approves the requirements and the budget (about $250). After this, every change gets a change order.', link: '/projects/addie/flying-mosquito/design#requirements' },
   { title: 'MS-2000 comes first', when: 'Until Feb 3, 2027', status: 'now', text: 'The science fair project always wins. Flyer work happens on days with no MS-2000 test.', link: '/projects/addie/mosquito-turret' },
   { title: 'Order the parts', when: 'By Nov 13', status: 'next', text: 'Six stores. The drone ships from India, so it goes first and gets 3 weeks.', link: '/projects/addie/flying-mosquito/build#shopping' },
-  { title: 'Check in, hover, print', when: 'Dec 1 to Dec 13', status: 'next', text: 'Check every part, measure with calipers, fly the plain drone with the phone app, print the fit check first, then the flying parts. The big test: can it lift everything?', link: '/projects/addie/flying-mosquito/build#plan' },
+  { title: 'Check in, hover, print', when: 'Dec 1 to Dec 6', status: 'next', text: 'Check every part, measure with calipers, fly the plain drone with the phone app, print the fit check first.', link: '/projects/addie/flying-mosquito/build#plan' },
+  { title: 'Experiment: Can it fly?', when: 'Dec 7 to Dec 13', status: 'next', text: 'Push test on a kitchen scale, then 18 hover flights with 0 to 35 g of nickels. Our math predicts 120 g of push and 5.5 minutes with everything on.', link: '/projects/addie/flying-mosquito/experiment' },
   { title: 'Teach it to fly by itself', when: 'Dec 14 to Jan 15', status: 'next', text: 'Hold still over the flight mat, fly a pattern from a Python script, then the control box, hit sensor, and radio. Only on days with no MS-2000 experiment.', link: '/projects/addie/flying-mosquito/build#plan' },
   { title: 'MS-2000 vs the Flying Mosquito', when: 'Jan 16 to Jan 24', status: 'next', text: 'Teach the turret camera the flyer, then count hits. Teach the stuffed mosquito back afterward.', link: '/projects/addie/flying-mosquito/build#plan' },
   { title: 'Freeze', when: 'Jan 25 to Feb 1', status: 'next', text: 'No new changes. The MS-2000 board and demo come first. The flyer only goes to the fair if Miss Taggart says drones are OK.' },
@@ -22,7 +23,7 @@ export const REQS = [
   ['Guards on all props, flies inside a net', 'Spinning props and kids do not mix, and the net stops crashes and the beam.', 'Fence guard; pop-up bug habitat with the front open'],
   ['At least 5 minutes of flying per charge', 'Five 30 second runs plus takeoffs and landings.', 'Three batteries, swap between runs'],
   ['Slow enough for the turret to follow', 'The turret fires at most once a second.', 'Starts at 0.2 m/s; the first test sets the top speed'],
-  ['Added weight 25 g or less', 'That is what the drone can lift with 55 mm props.', 'Rev A estimate 26 g: the lift test in December decides'],
+  ['Added weight 25 g or less', 'That is what the drone can lift with 55 mm props, keeping about 40% extra push in reserve (our math).', 'Rev A estimate 26 g: the Can it fly? experiment decides'],
 ];
 
 // grams from the 3D model (PLA 1.24 g/cm3) and the sellers
@@ -73,6 +74,7 @@ export const LOCAL = [
   'Clear report-cover plastic for the wings',
   'Poster board and a printed high-contrast pattern for the flight mat',
   'PLA: white (about 3 g) and dark gray or black (about 13 g) for the flying parts; any color for the pad and box',
+  'Kitchen scale (1 g) and 7 US nickels (5.000 g each) for the Can it fly? experiment',
   'Female 1x6 pin headers (4) only if the drone does not come with them for the positioning module',
 ];
 
@@ -107,11 +109,12 @@ export const PLAN = [
     ['Flash the positioning module firmware and plug the module in, arrow toward the USB-C port', 'LiteWing web flasher, Chrome only.'],
     ['Print plate 1, the fit check. Pick the collar that grips a motor without splitting', 'That number goes into the guard before it is printed.'],
   ]],
-  ['Dec 7 to 13', 'Print, weigh, lift test', [
+  ['Dec 7 to 13', 'Print, weigh, and the Can it fly? experiment', [
     ['Update the 3D model with the real numbers and re-slice', 'Only the parts that changed.'],
     ['Print plates 2, 3, 4: guard, window, body', 'About 1 hour 10 minutes total.'],
     ['Weigh every part on a kitchen scale and fill in the weight table', 'Real grams replace the estimates.'],
-    ['Lift test: hover 30 seconds with everything on', 'If it will not climb, or the battery lasts under 5 minutes, write a change order: 65 mm props and a bigger guard.'],
+    ['Can it fly? Test A: push test on the kitchen scale at 25, 50, 75 and 100% power', 'Our math predicts about 120 g at full power. See the Can it fly? page.'],
+    ['Can it fly? Test B: hover until the low-battery light with 0 to 35 g of nickels, 3 flights each', 'Prediction: about 9 minutes empty, 5.5 minutes with our 26 g. The answer decides keep, go lighter, or bigger props.'],
   ]],
   ['Dec 14 to 20', 'Hold still by itself', [
     ['Make the flight mat: poster board with a printed high-contrast pattern', 'The floor camera needs texture to see movement. A plain floor makes it drift.'],
@@ -146,7 +149,7 @@ export const PROGRAMS = [
 ];
 
 export const RISKS = [
-  ['Too heavy', 'The added load is about 26 g against 25 g rated.', 'Lift test in December. Fix: 65 mm props (the LiteWing supports them) and a bigger guard, as a change order.'],
+  ['Too heavy', 'The added load is about 26 g against 25 g rated. Our math says that still leaves a 1.38 push-to-weight ratio.', 'The Can it fly? experiment in December. Fix if needed: go lighter or 65 mm props, as a change order.'],
   ['Drifting', 'Position hold uses a floor camera. A shiny or plain floor makes it slide.', 'The flight mat, and the script lands if it leaves the zone.'],
   ['WiFi', 'The Pi and the XIAO both join the drone WiFi.', 'Test both connected at once in week 1.'],
   ['The turret camera', 'The turret learns one target at a time.', 'Flyer tests only after the MS-2000 experiments; teach the stuffed mosquito back after.'],
@@ -156,6 +159,7 @@ export const RISKS = [
 
 // Newest first: [date, tag, text]
 export const LOG = [
+  ['Sep 18, 2026', 'Plan', 'Can it fly? experiment: our own thrust, safety-margin and battery math (about 120 g of push, a 1.4 push-to-weight ratio at the rated 25 g, 5.5 minutes predicted with our 26 g), a prediction, and two tests for Dec 7 to 13.'],
   ['Sep 18, 2026', 'Design', 'Rev A 3D design: prop guard with legs (6.9 g), mosquito body with a 40 mm white hit window (8.1 g), launch pad, control box, fit check. 7 print plates, about 5 hours 45 minutes and 205 g.'],
   ['Sep 18, 2026', 'Plan', 'Schedule: order by Nov 13, build Dec 1 to Jan 24, freeze Jan 25. MS-2000 work always comes first.'],
   ['Sep 18, 2026', 'Decision', 'Radio plan: the control box micro:bit sends GO, HIT and STOP on group 7, the same messages the MS-2000 wand sends, so the turret needs no changes.'],

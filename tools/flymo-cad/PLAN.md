@@ -35,4 +35,5 @@ Order by Nov 13 (Tindie ships from India). Dec 1-6 check-in, calipers, stock hov
 - Order by Nov 13; re-open every link first.
 
 ## Log
+- Sep 18: Can it fly? experiment page (/experiment): momentum-theory thrust, T/W, maker margin, hover power, flight time vs added weight, prediction, Test A push on scale, Test B hover vs nickels, Dec 7-13.
 - Sep 18: project page + portal card (3cd0fda). Rev A CAD, 7 sliced plates, colored drone viewer, hero/OG. Site pages design/build/learn/changes from data.js.

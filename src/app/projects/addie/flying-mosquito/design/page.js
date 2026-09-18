@@ -138,7 +138,7 @@ export default function DesignPage() {
             </table>
           </div>
           <p className="text-white/55 text-sm mt-3">
-            Rev A is about 1 g over. The December lift test decides: if the drone climbs well and flies 5 minutes, it stays.
+            Rev A is about 1 g over. Our own math says the rating keeps about 40% extra push in reserve, so 1 g over still leaves plenty (see Can it fly?). The December experiment decides: if the drone climbs well and flies 5 minutes, it stays.
             If not, the fix is 65 mm props, which the LiteWing supports, and a bigger guard. That would be the first change order.
           </p>
         </Section>

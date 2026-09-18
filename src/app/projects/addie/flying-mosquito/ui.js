@@ -25,6 +25,7 @@ export function meta(title, desc, path) {
 const TABS = [
   ['overview', 'Overview', BASE],
   ['design', 'Design', `${BASE}/design`],
+  ['experiment', 'Can it fly?', `${BASE}/experiment`],
   ['build', 'Build', `${BASE}/build`],
   ['learn', 'Learn the science', `${BASE}/learn`],
   ['changes', 'Changes', `${BASE}/changes`],
