@@ -172,11 +172,11 @@ S.append(f'''<!DOCTYPE html>
 <meta name="description" content="Step-by-step build guide for Addie's Flying Mosquito: a tiny 3D printed drone that flies by itself, carries a glowing hit window, and radios every laser hit to the MS-2000 turret.">
 <meta property="og:title" content="How to build the Flying Mosquito">
 <meta property="og:description" content="A self-flying drone mosquito for the MS-2000 laser turret, step by step: parts, wiring, prints, the lift experiment, and the code.">
-<meta property="og:image" content="https://nawgames.com/projects/addie/flymo-og.jpg">
+<meta property="og:image" content="https://nawgames.com/projects/addie/flymo-og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:type" content="website"><meta property="og:site_name" content="NAW Games">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://nawgames.com/projects/addie/flymo-og.jpg">
+<meta name="twitter:image" content="https://nawgames.com/projects/addie/flymo-og.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 {css}
 </head>

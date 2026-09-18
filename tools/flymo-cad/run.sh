@@ -16,7 +16,7 @@ cp $OUT/parts/*.stl $OUT/flymo-drone.stl $PUB/stl/
 from PIL import Image
 im = Image.open('out/flymo-hero.png').convert('RGB')
 w, h = im.size; ch = int(w * 630 / 1200)          # the drone sits in the lower part of the render
-im.crop((0, h - ch, w, h)).resize((1200, 630)).save('../../public/projects/addie/flymo-og.jpg', quality=88)
 im.crop((0, h - ch - 60, w, h)).resize((720, int(720 * (ch + 60) / w))).save('../../public/projects/addie/flymo-hero.jpg', quality=88)
 PY
+/opt/batchzero/venv/bin/python make_og.py $OUT/flymo-drone-3d.html ../../public/projects/addie/flymo-og.png
 echo published to $PUB
