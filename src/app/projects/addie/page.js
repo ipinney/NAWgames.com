@@ -17,6 +17,18 @@ const PROJECTS = [
     tags: ['Fair guide', 'Build guide', 'Print files', 'Learn the science', 'Build your own', '3D models'],
   },
   {
+    slug: 'flying-mosquito',
+    title: 'Flying Mosquito',
+    subject: 'Bonus Project',
+    emoji: '🚁',
+    description:
+      'The smallest mosquito we can build that really flies: it takes off from its base, flies around a test zone by itself, and radios back every time the MS-2000 laser tags it.',
+    badge: 'After the fair',
+    color: 'from-lime-500 to-fuchsia-700',
+    href: '/projects/addie/flying-mosquito',
+    tags: ['Designs', 'Requirements', 'Lessons learned', 'Drone'],
+  },
+  {
     slug: 'herbert-hoover',
     title: 'Herbert Hoover',
     subject: 'Presidents Report',
@@ -155,7 +167,7 @@ export default function AddieProjectsPage() {
                     {project.subject}
                   </span>
                   <span className="bg-naw-orange/20 text-naw-orange text-xs font-semibold px-2 py-0.5 rounded-full">
-                    {project.dueLabel === 'TBD' ? 'Fair date TBD' : `Due ${project.dueLabel}`}
+                    {project.badge || (project.dueLabel === 'TBD' ? 'Fair date TBD' : `Due ${project.dueLabel}`)}
                   </span>
                 </div>
                 <h3 className="text-white font-bold text-lg mb-1 group-hover:text-naw-pink transition-colors">
