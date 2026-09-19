@@ -57,6 +57,11 @@ const PAGES = [
     text: 'Check in every part as the boxes arrive, what to do when a part is wrong, and how to keep it all organized.',
   },
   {
+    href: '/projects/nolan/dusty/photos',
+    title: 'Photos',
+    text: 'The build log in pictures: boxes opened, parts printed, tests run, and what to photograph next.',
+  },
+  {
     href: '/projects/nolan/dusty/changes',
     title: 'Changes and lessons',
     text: 'How engineers change a plan safely, the power bank change, the project history, and lessons for next time.',
