@@ -92,6 +92,15 @@ export const PHASES = [
 ];
 
 export const PHOTOS = [
+  {
+    file: '2026-09-20-rocker-switches.jpg',
+    phase: 'parts',
+    date: '2026-09-20',
+    title: 'Rocker switches',
+    caption: 'Five KCD11 on/off switches. Dusty needs two: one for main power and one for the brush motor. Three are spares.',
+    alt: 'A small cardboard box with a barcode label, and below it a clear bag holding five black mini rocker switches',
+    tall: true,
+  },
   // Example of a finished entry, kept here as a template. Delete when the
   // first real photo goes in, or leave it, it does not render.
   // {
