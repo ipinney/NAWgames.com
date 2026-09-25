@@ -93,6 +93,15 @@ export const PHASES = [
 
 export const PHOTOS = [
   {
+    file: '2026-09-24-adafruit-order.jpg',
+    phase: 'parts',
+    date: '2026-09-24',
+    title: 'Adafruit box',
+    caption: 'Checked against the packing slip: the micro:bit v2, two N20 gear motors, the roller lever whisker switch, and the 130 motor for the brush. All there. The 4 x AA battery pack came too. It was ordered before we switched to the power bank, so it goes in the Spares bag.',
+    alt: 'An Adafruit packing slip on a wooden table with a boxed micro:bit v2, two bagged N20 gear motors, a bagged microswitch, a bagged small hobby motor, and a black 4 AA battery holder',
+    tall: true,
+  },
+  {
     file: '2026-09-20-rocker-switches.jpg',
     phase: 'parts',
     date: '2026-09-20',

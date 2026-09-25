@@ -16,12 +16,16 @@ export default function Receiving({ groups }) {
   const [st, setSt] = useState({});
 
   useEffect(() => {
+    // Parts already checked in (the "in" date on the list) start as Got it.
+    // Anything marked on this device wins over that.
+    const base = {};
+    groups.forEach((g) => g.items.forEach((it) => { if (it.in) base[it.id] = 'ok'; }));
+    let saved = {};
     try {
-      setSt(JSON.parse(localStorage.getItem(KEY) || '{}') || {});
-    } catch (e) {
-      setSt({});
-    }
-  }, []);
+      saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {};
+    } catch (e) {}
+    setSt({ ...base, ...saved });
+  }, [groups]);
 
   function save(next) {
     setSt(next);
@@ -78,7 +82,10 @@ export default function Receiving({ groups }) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className={`text-sm font-semibold ${s === 'ok' ? 'text-white/45 line-through' : 'text-white'}`}>{it.name}</div>
-                      <div className="text-white/40 text-xs mt-0.5">From: {it.from}</div>
+                      <div className="text-white/40 text-xs mt-0.5">
+                        From: {it.from}
+                        {it.in ? <span className="text-green-300/80 font-semibold"> · Checked in {new Date(it.in + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span> : null}
+                      </div>
                     </div>
                     <span className="flex-none text-naw-orange text-sm font-bold tabular-nums">× {it.qty}</span>
                   </div>

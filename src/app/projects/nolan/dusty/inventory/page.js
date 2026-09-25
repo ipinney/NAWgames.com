@@ -80,7 +80,7 @@ const GROUPS = [
     title: 'Brain',
     bin: 'Brain',
     items: [
-      { id: 'mb', name: 'micro:bit v2', qty: 1, from: 'Adafruit', check: 'Says "v2" on the back. The gold edge along the bottom is clean and not bent.' },
+      { id: 'mb', in: '2026-09-24', name: 'micro:bit v2', qty: 1, from: 'Adafruit', check: 'Says "v2" on the back. The gold edge along the bottom is clean and not bent.' },
       { id: 'moto', name: 'SparkFun moto:bit motor board', qty: 1, from: 'SparkFun', check: 'Has a long slot the micro:bit slides into and a round barrel jack for power.' },
       { id: 'musb', name: 'Micro-USB cable', qty: 1, from: 'Our drawer', check: 'The small flat plug, not USB-C. Plug it into the micro:bit to be sure it fits.' },
     ],
@@ -89,7 +89,7 @@ const GROUPS = [
     title: 'Drive',
     bin: 'Drive',
     items: [
-      { id: 'n20', name: 'N20 gear motors', qty: 2, from: 'Adafruit', check: 'Both look the same. The metal shaft has one flat side, shaped like a D.' },
+      { id: 'n20', in: '2026-09-24', name: 'N20 gear motors', qty: 2, from: 'Adafruit', check: 'Both look the same. The metal shaft has one flat side, shaped like a D.' },
       { id: 'wheel', name: 'Wheels, 32 mm (one pair)', qty: 2, from: 'Pololu', check: 'Measure across: 32 mm, about 1 1/4 inches. If they are 60 mm, that is the wrong wheel.' },
       { id: 'brk', name: 'Motor brackets (one pair)', qty: 2, from: 'Pololu', check: 'A tiny bag of screws and nuts comes with them. Keep that bag.' },
       { id: 'cast', name: 'Ball caster', qty: 1, from: 'Pololu', check: 'Metal ball plus a bag of thin spacers. Dusty needs every spacer.' },
@@ -100,15 +100,15 @@ const GROUPS = [
     bin: 'Sensors',
     items: [
       { id: 'qtr', name: 'QTR-1A infrared sensors (2-pack)', qty: 2, from: 'Pololu', check: 'Two tiny boards in the bag. Smaller than a stamp. Count them twice.' },
-      { id: 'sw', name: 'Roller lever microswitch (whisker)', qty: 1, from: 'Adafruit', check: 'Three metal legs on the bottom and a little wheel on the end of the lever. It clicks when pressed.' },
+      { id: 'sw', in: '2026-09-24', name: 'Roller lever microswitch (whisker)', qty: 1, from: 'Adafruit', check: 'Three metal legs on the bottom and a little wheel on the end of the lever. It clicks when pressed.' },
     ],
   },
   {
     title: 'Sweeper',
     bin: 'Sweeper',
     items: [
-      { id: 'm130', name: '130 hobby motor', qty: 1, from: 'Adafruit', check: 'Silver can about the size of a thumb, with a round shaft.' },
-      { id: 'rock', name: 'Brush on/off switch', qty: 1, from: 'Our order', check: 'Clicks on and off. Two or three metal legs.' },
+      { id: 'm130', in: '2026-09-24', name: '130 hobby motor', qty: 1, from: 'Adafruit', check: 'Silver can about the size of a thumb, with a round shaft.' },
+      { id: 'rock', in: '2026-09-20', name: 'Brush on/off switch', qty: 1, from: 'Our order', check: 'Clicks on and off. Two or three metal legs.' },
       { id: 'pipe', name: 'Pipe cleaners', qty: 1, from: 'Amazon', check: 'One pack. Plenty for three brush tries.' },
       { id: 'brush', name: 'Brushes to test', qty: 1, from: 'Amazon', check: 'The brush material to test against the pipe cleaners.' },
     ],
