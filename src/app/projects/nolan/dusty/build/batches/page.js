@@ -466,6 +466,34 @@ export default function DustyBatchesPage() {
               <After items={b.after} />
             </div>
 
+            {b.n === 1 && (
+              <div className="mt-4 bg-naw-card rounded-2xl border border-yellow-300/40 p-5">
+                <div className="text-yellow-200 text-xs font-semibold">If both fits were too tight</div>
+                <h3 className="text-white font-bold">Fit check 2: five sizes of each</h3>
+                <p className="text-white/65 text-sm mt-1">
+                  Five deck posts and five motor gears, each a little bigger than the last. Print it with the same settings
+                  (about 35 minutes, 6 g). Try every one and pick the smallest that works.
+                </p>
+                <img src={`${F}/dusty-fit-check-2.png`} alt="Fit check 2 plate: five posts and five motor gears, numbered 1 to 5" width={1100} height={650} loading="lazy" className="w-full h-auto rounded-xl border border-white/10 bg-[#0d1b2e] mt-3" />
+                <div className="grid sm:grid-cols-2 gap-2 mt-3 text-sm">
+                  <div className="rounded-xl bg-white/5 border border-white/10 p-3">
+                    <div className="text-white font-bold">Posts: count the grooves</div>
+                    <div className="text-white/65 mt-0.5">1 groove = #1 (hole 1.9 mm) up to 5 grooves = #5 (2.3 mm). The first plate was 1.8 mm. Pick the one where the screw starts and then bites.</div>
+                  </div>
+                  <div className="rounded-xl bg-white/5 border border-white/10 p-3">
+                    <div className="text-white font-bold">Gears: count the dimples</div>
+                    <div className="text-white/65 mt-0.5">1 dimple = #1 (hole 1.95 mm) up to 5 dimples = #5 (2.15 mm). The first plate was 1.85 mm. Pick the one that pushes on with your thumb and does not slip.</div>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-4">
+                  <Btn href={`${F}/dusty-fit-check-2.gcode`} primary download>Ready to print (.gcode)</Btn>
+                  <Btn href={`${F}/dusty-fit-check-2.3mf`} download>Plate file (.3mf)</Btn>
+                  <Btn href={`${F}/dusty-fit-check-2.stl`} download>Plate (.stl)</Btn>
+                </div>
+                <p className="text-white/45 text-xs mt-3">Tell us the two winning numbers and the design gets updated to match before Batch 2 prints again.</p>
+              </div>
+            )}
+
             <div className="mt-4 rounded-2xl border border-naw-green/40 bg-naw-green/10 p-4">
               <div className="text-naw-green text-xs font-semibold">Ready for the next batch when</div>
               <div className="text-white text-sm mt-0.5">{b.gate}</div>
