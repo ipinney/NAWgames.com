@@ -46,6 +46,10 @@ const TOUCHED = ['3D model and all 19 print files', 'Parts list', 'Build guide s
 
 // Newest first. Add a line every time something about the plan changes.
 const LOG = [
+  ['Sep 26', 'Change', 'MOC-003: holes made bigger to match our printer. Screw holes 1.8 to 2.2 mm, motor gear hole 1.85 to 2.1 mm, and every other hole gets the same extra room. All print files re-sliced.'],
+  ['Sep 26', 'Plan', 'Fit check 2 printed: five posts and five motor gears, each a little bigger. Number 4 won both tests.'],
+  ['Sep 26', 'Fix', 'Batch 1 fit check failed: the screw would not start in the deck post and the motor gear would not go on the shaft. Both holes printed too small.'],
+  ['Sep 26', 'Plan', 'Print plan got pictures: every part next to a penny, labeled print plates, and a 3D picture for every step.'],
   ['Sep 16', 'Plan', 'Parts ordered and arriving in separate boxes. Added the Inventory page: a check-in list for every part, what to do if one is wrong, and how to keep them organized.'],
   ['Sep 15', 'Change', 'MOC-002: Button B changes from an expanding spiral to Spot Clean, which sweeps a 1 foot square in front of Dusty in rows. Experiment B becomes a spill race: Spot Clean against random bounce on the same 5 g spill. Code and plan only, no parts.'],
   ['Sep 15', 'Change', 'Weight limit raised from 300 g to 400 g (change order MOC-001, Rev D.1).'],
@@ -62,13 +66,30 @@ const LOG = [
   ['Sep 14', 'Decision', 'Picked the crumb-sweeping robot with cliff detection from a list of cleaning robot ideas.'],
 ];
 
+const MOC3 = [
+  ['M2 screw pilot (screw threads in)', 'Deck posts, base, battery sleeve, deck, motor mount', '1.8 mm', '2.2 mm', 'Tested: fit check 2 #4'],
+  ['Motor gear on the motor shaft', 'Motor gear', '1.85 mm', '2.1 mm', 'Tested: fit check 2 #4'],
+  ['M2 pass-through', 'Base, deck, sensor arm slots, washer', '2.4 mm', '2.8 mm', '+0.4, same as the pilot'],
+  ['Deck screw head pocket', 'Deck', '4.4 mm', '4.8 mm', '+0.4, same as the pilot'],
+  ['Whisker switch screws', 'Left sensor arm', '2.3 mm', '2.7 mm', '+0.4, same as the pilot'],
+  ['Big gear on its peg', 'Big gear', '5.2 mm', '5.45 mm', '+0.25, same as the gear'],
+  ['Axle holes (D shape)', 'Roller, roller gear, collar', 'axle +0.1 to +0.3', '0.25 mm more', '+0.25, same as the gear'],
+  ['Axle holes in the side walls', 'Base', '4.6 mm', '4.85 mm', '+0.25, same as the gear'],
+  ['Post pegs', 'Base', '4.05 mm', '4.3 mm', '+0.25, same as the gear'],
+  ['Dowel holes', 'Base, motor mount', '3.1 mm', '3.35 mm', '+0.25, same as the gear'],
+  ['Motor pocket and boss', 'Motor mount', '0.25 mm gap', '0.375 mm gap', '+0.25 across, same as the gear'],
+];
+
+const MOC3_TOUCHED = ['3D model (Rev A.2)', '13 of 17 part files', 'All 5 plates re-sliced', '3D viewers', 'Print plan pictures', 'Source zip'];
+
 const LESSONS = [
   ['Measure the space before picking a part', 'We picked a power bank before checking the room it had. A two-minute check with the 3D model would have shown it could not go lengthwise.'],
   ['Every number needs a reason', 'The 300 gram limit was a guess. When we needed to change it, there was nothing behind it. Write down why each limit exists.'],
   ['Check sizes from two places', 'Anker says the bank is 22 mm thick. The store says 0.9 inches, which is almost 23 mm. When two sources disagree, design for the bigger one.'],
   ['Think about using it, not just building it', 'Where will you plug in the charger? Can you reach the button? Can you see the lights? Those questions found real problems.'],
   ['Check the real part against the model', 'The micro:bit was drawn standing up. Looking at a photo of the real part caught it before anything was printed.'],
-  ['Print a small test first', 'A 10 minute fit-check print tells you if the holes come out the right size before a 90 minute print.'],
+  ['Print a small test first', 'A 10 minute fit-check print tells you if the holes come out the right size before a 90 minute print. Ours failed, which is exactly what it is for: it cost 10 minutes instead of a ruined base.'],
+  ['Test several sizes at once', 'Instead of guessing one new size, we printed five in a row and picked the winner. One print answered the question.'],
   ['Check links before ordering', 'Two stores on the first parts list could not take orders. Opening every link first saved a wasted order.'],
   ['Decide what the experiment needs early', 'The speed test needs steady power. That turned out to be a good reason for the power bank, not just an easier way to charge.'],
 ];
@@ -224,6 +245,75 @@ export default function DustyChangesPage() {
               See the new design
             </Link>
           </div>
+        </Section>
+
+        <Section title="Change order MOC-003: bigger holes" sub="Sep 26, 2026. Approved by Dad after fit check 2.">
+          <div className="bg-naw-card rounded-2xl border border-naw-orange/40 p-5">
+            <div className="text-naw-orange text-xs font-semibold">The short version</div>
+            <p className="text-white leading-relaxed mt-1">
+              Our printer makes holes a little smaller than the drawing. The screw would not go into the deck post, and the
+              motor gear would not go onto the motor. We printed five sizes of each, and size number 4 worked for both. Now
+              every hole in Dusty is drawn a little bigger so the real parts fit.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-3 mt-3">
+            <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
+              <div className="text-white/45 text-xs font-semibold">Why we need it</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">If the holes stay this small, no screw goes in and the brush gear cannot go on. Dusty cannot be built.</div>
+            </div>
+            <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
+              <div className="text-white/45 text-xs font-semibold">How we picked the size</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">Fit check 2: five posts and five gears, each 0.05 to 0.1 mm bigger. Number 4 of each was the smallest that worked.</div>
+            </div>
+            <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
+              <div className="text-white/45 text-xs font-semibold">Why not the printer setting?</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">Hole compensation would also work, but anyone printing Dusty would have to remember it. Drawing the holes right keeps the files ready to print.</div>
+            </div>
+          </div>
+          <h3 className="text-white font-bold mt-6">Technical record</h3>
+          <div className="mt-2 bg-naw-card rounded-2xl border border-white/10 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-white/45 text-xs text-left">
+                  <th className="px-4 py-2 font-semibold">Hole</th>
+                  <th className="px-4 py-2 font-semibold">Parts</th>
+                  <th className="px-4 py-2 font-semibold">Was</th>
+                  <th className="px-4 py-2 font-semibold">Now</th>
+                  <th className="px-4 py-2 font-semibold">Basis</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5 text-white/80">
+                {MOC3.map(([h, pts, was, now, basis]) => (
+                  <tr key={h}>
+                    <td className="px-4 py-2 text-white">{h}</td>
+                    <td className="px-4 py-2">{pts}</td>
+                    <td className="px-4 py-2 tabular-nums">{was}</td>
+                    <td className="px-4 py-2 tabular-nums text-naw-orange font-semibold">{now}</td>
+                    <td className="px-4 py-2 text-white/60">{basis}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-white/60 text-sm mt-3 leading-relaxed">
+            Two holes were tested directly. The rest get the same allowance: +0.4 mm for holes an M2 screw passes through
+            (same as the pilot), +0.25 mm for parts that slide on a pin or the axle (same as the gear bore). Outside sizes,
+            weights and print times do not change. X-Y hole compensation in the slicer stays at 0.
+          </p>
+          <h3 className="text-white font-bold mt-6">What had to be updated</h3>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {MOC3_TOUCHED.map((t) => (
+              <span key={t} className="bg-white/10 text-white/80 text-xs font-semibold px-2.5 py-1 rounded-full">{t}</span>
+            ))}
+          </div>
+          <h3 className="text-white font-bold mt-6">Tests that prove it works</h3>
+          <ul className="mt-2 space-y-1 text-sm text-white/75 list-disc pl-5">
+            <li>An M2 × 8 screw starts and bites in the deck post (passed on fit check 2, #4).</li>
+            <li>The motor gear pushes on by thumb and does not slip (passed on fit check 2, #4).</li>
+            <li>Batch 2: a screw threads into every pilot hole on the base, and both posts push into the base.</li>
+            <li>Batch 3: M2 screws pass freely through the sensor arm slots and the deck holes.</li>
+            <li>Batch 4: the big gear spins freely on its peg, and the axle slides through the roller, collar and roller gear.</li>
+          </ul>
         </Section>
 
         <Section title="Project history" sub="Every decision and change, newest first. Add a line whenever the plan changes.">

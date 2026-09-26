@@ -31,7 +31,7 @@ const SETTINGS = [
   ['Brim', '5 mm, except none on the three gears and 8 mm on the tall roller'],
   ['Speed', 'Normal, except plates 1 and 4 run slower for the small gears and the roller'],
   ['Supports', 'Off. Nothing needs them.'],
-  ['Hole size', 'X-Y hole compensation 0. Batch 1 tells you if it needs to change.'],
+  ['Hole size', 'X-Y hole compensation 0. The holes are already drawn bigger for this printer (change order MOC-003, Sep 26).'],
 ];
 
 const BEFORE = [
@@ -100,11 +100,11 @@ const BATCHES = [
     stem: 'dusty-plate-2-base',
     title: 'Base plate',
     when: 'Wed Sep 16 or Thu Sep 17',
-    time: 'About 1.5 hours',
+    time: 'About 1 hour 20 minutes',
     pieces: 'Base plate (upside down), 1 deck post, and a loose support block',
     why: 'The part everything else bolts to. It prints upside down so the top comes out perfectly flat.',
     need: [],
-    grams: 36.7,
+    grams: 36.6,
     learn: {
       title: 'Meet the micro:bit',
       items: [
@@ -139,7 +139,7 @@ const BATCHES = [
     pieces: 'Deck, battery sleeve (standing on its end), keeper bar, right sensor arm, left sensor arm (the one with the switch pad)',
     why: 'The deck and the battery sleeve are needed for the first drive on Saturday. The arms print now too, so the sensor weekend has nothing left to print.',
     need: [],
-    grams: 42.5,
+    grams: 42.4,
     learn: {
       title: 'How a power bank works',
       items: [
@@ -178,7 +178,7 @@ const BATCHES = [
     pieces: 'Brush motor mount, big gear, roller gear, brush roller (standing up), axle (lying flat)',
     why: 'Everything for the brush except the small pieces from Batch 1. Printed a week early so there is time to fix a gear before Oct 3.',
     need: [],
-    grams: 13.6,
+    grams: 13.5,
     learn: {
       title: 'Gears trade speed for strength',
       items: [
@@ -398,6 +398,16 @@ export default function DustyBatchesPage() {
           </p>
         </section>
 
+        <section className="mt-6 rounded-2xl border border-yellow-300/40 bg-yellow-300/10 p-5">
+          <h2 className="text-white font-bold text-lg">New files, Sep 26 (Rev A.2)</h2>
+          <p className="text-white/75 text-sm mt-1 leading-relaxed">
+            Our printer made holes too small, so every hole is now drawn bigger (
+            <Link href="/projects/nolan/dusty/changes" className="text-naw-cyan underline">change order MOC-003</Link>).
+            Parts printed before Sep 26 have the old holes. Print Batch 1 again (13 minutes) for a new washer and collar, and
+            print Batch 2 again if you already printed the base. Download fresh files: the old ones will not fit.
+          </p>
+        </section>
+
         <section className="mt-6 rounded-2xl border border-naw-orange/40 bg-naw-orange/10 p-5">
           <h2 className="text-white font-bold text-lg">Before the first print</h2>
           <List items={BEFORE} />
@@ -490,7 +500,10 @@ export default function DustyBatchesPage() {
                   <Btn href={`${F}/dusty-fit-check-2.3mf`} download>Plate file (.3mf)</Btn>
                   <Btn href={`${F}/dusty-fit-check-2.stl`} download>Plate (.stl)</Btn>
                 </div>
-                <p className="text-white/45 text-xs mt-3">Tell us the two winning numbers and the design gets updated to match before Batch 2 prints again.</p>
+                <div className="mt-3 rounded-xl border border-naw-green/40 bg-naw-green/10 p-3 text-sm">
+                  <span className="text-naw-green font-bold">Result, Sep 26: #4 won both.</span>{' '}
+                  <span className="text-white/80">Every Dusty file now uses those sizes (change order MOC-003), so you do not need this plate again. The #4 post and #4 gear are the same as the new ones: keep them.</span>
+                </div>
               </div>
             )}
 

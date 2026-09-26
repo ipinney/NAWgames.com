@@ -3,7 +3,7 @@ Usage: /opt/batchzero/venv/bin/python render.py scenes.json OUT_DIR [name ...]""
 import os, sys, json
 from playwright.sync_api import sync_playwright
 
-SC, OUT = sys.argv[1], sys.argv[2]
+SC, OUT = sys.argv[1], os.path.abspath(sys.argv[2])
 only = set(sys.argv[3:])
 os.makedirs(OUT, exist_ok=True)
 scenes = json.load(open(SC))

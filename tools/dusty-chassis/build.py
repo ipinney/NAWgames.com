@@ -40,8 +40,8 @@ MOT_Y = C_Y - math.sqrt(D1**2 - (MOT_Z-C_Z)**2)   # motor ahead of compound gear
 P1 = (33.3, 36.3)                          # stage-1 gear plane (x)
 P2 = (36.8, 41.0)                          # stage-2 gear plane (x)
 MOT_FACE_X = 31.5; MOT_LEN = 25.2
-PIN_D = 4.8; PIN_HOLE = 5.2
-AXLE_R = 2.0; AXLE_FLAT = 1.5; AXLE_HOLE = 4.6
+PIN_D = 4.8; PIN_HOLE = 5.45                # MOC-003: was 5.2
+AXLE_R = 2.0; AXLE_FLAT = 1.5; AXLE_HOLE = 4.85   # MOC-003: was 4.6
 P.update(C_Y=round(C_Y,2), MOT_Y=round(MOT_Y,2), MOT_Z=MOT_Z, D1=D1, D2=D2)
 
 # --- tray ---
@@ -89,7 +89,11 @@ POSTS = [(sx*36.5, 53.0) for sx in (-1, 1)]         # front posts; the sleeve ca
 POST_D = 5.6; PEG_D = 4.0
 WIDE_Y0 = 47.0; FRONT_HALF = SP_X1; WIDE_HALF = 39.5
 EAR_Y = (-8.0, 2.0); EAR_X = (40.0, 42.5)
-SCREW_HOLE = 2.4; PILOT = 1.8
+# MOC-003 (Sep 26 2026): this printer prints holes small. Fit check 2 winners (#4):
+# M2 self-tap pilot 1.8 -> 2.2, motor gear bore 1.85 -> 2.1. Every other hole gets the same
+# allowance: M2 pass-through holes +0.4 like the pilot, sliding fits on pins and the axle +0.25 like the gear bore.
+FIT_ADD = 0.25
+SCREW_HOLE = 2.8; PILOT = 2.2; PINION_BORE = 2.1   # were 2.4, 1.8, 1.85
 
 def mirror_x(s):
     return s.mirror([1, 0, 0])
@@ -147,7 +151,7 @@ def base(print_fin=False):
         holes.append(cyl(dx, CASTER_Y, CASTER_H - 1, CASTER_H + 9.0, PILOT))
     # post pegs
     for (x, y) in POSTS:
-        holes.append(cyl(x, y, PL_Z0 - 3, PL_Z1 + 1, PEG_D + 0.05))
+        holes.append(cyl(x, y, PL_Z0 - 3, PL_Z1 + 1, PEG_D + 0.05 + FIT_ADD))
     # battery sleeve screws (M2 x 8 up from underneath)
     for (x, y) in SL_TABS + SL_REAR:
         holes.append(cyl(x, y, PL_Z0 - 1, PL_Z1 + 1, SCREW_HOLE))
@@ -165,7 +169,7 @@ def base(print_fin=False):
     for (x, y) in CRADLE_SCREWS:
         holes.append(cyl(x, y, PL_Z0 - 1, PL_Z1 + 1, SCREW_HOLE))
     for (x, y) in CRADLE_PEGS:
-        holes.append(cyl(x, y, PL_Z1 - 2.0, PL_Z1 + 1, 3.1))
+        holes.append(cyl(x, y, PL_Z1 - 2.0, PL_Z1 + 1, 3.1 + FIT_ADD))
     # lightening windows under the battery (strap slots too)
     for sx in (-1, 1):
         holes.append(box(min(sx*36.5, sx*33.5), max(sx*36.5, sx*33.5), 72.0, 84.0, PL_Z0 - 1, PL_Z1 + 1))
@@ -191,7 +195,7 @@ CRADLE_Y = (MOT_Y - 12.0, MOT_Y + 12.0)
 CRADLE_SCREWS = [(8.0, CRADLE_Y[0] + 3.0), (8.0, CRADLE_Y[1] - 3.0)]
 CRADLE_PEGS = [(26.0, CRADLE_Y[0] + 3.0), (26.0, CRADLE_Y[1] - 3.0)]
 
-def motor_profile(clear=0.25):
+def motor_profile(clear=0.25 + FIT_ADD / 2):
     """130 motor cross-section in (y,z) around its axis: 20 dia round, 15 across flats (z)."""
     R = 10.0 + clear; H = 7.5 + clear
     pts = []
@@ -217,7 +221,7 @@ def cradle():
     parts.append(box(9.0, 25.0, CRADLE_Y[1] - 1, sp_y + 2.0, z0, z0 + CRADLE_T))
     s = union(parts)
     for (x, y) in CRADLE_PEGS:
-        s = s - cyl(x, y, z0 - 1, z0 + 1.6, 3.1)
+        s = s - cyl(x, y, z0 - 1, z0 + 1.6, 3.1 + FIT_ADD)
     # motor channel
     prof = motor_profile()
     from cadkit import _remap
@@ -225,7 +229,7 @@ def cradle():
     ch = _remap(ch, (2, 0, 1), False, [2.0, MOT_Y, MOT_Z])
     s = s - ch
     # boss hole + shaft clearance through face plate
-    s = s - M.cylinder(4, 3.4, 3.4, 32).rotate([0, 90, 0]).translate([MOT_FACE_X - 1, MOT_Y, MOT_Z])
+    s = s - M.cylinder(4, 3.4 + FIT_ADD / 2, 3.4 + FIT_ADD / 2, 32).rotate([0, 90, 0]).translate([MOT_FACE_X - 1, MOT_Y, MOT_Z])
     # zip tie slots beside the motor
     s = s - box(14.0, 17.5, MOT_Y - 13.0, MOT_Y - 11.0, z0 - 1, z0 + 5) - box(14.0, 17.5, MOT_Y + 11.0, MOT_Y + 13.0, z0 - 1, z0 + 5)
     # screw holes
@@ -249,7 +253,7 @@ def deck():
     parts.append(box(-hx, hx, MB_Y1, MB_Y1 + 2.0, z1, z1 + 3.0))              # rear stop
     s = union(parts)
     for (x, y) in POSTS + SL_REAR:
-        s = s - cyl(x, y, z0 - 1, z1 + 1, SCREW_HOLE) - cyl(x, y, z1 - 1.2, z1 + 5, 4.4)
+        s = s - cyl(x, y, z0 - 1, z1 + 1, SCREW_HOLE) - cyl(x, y, z1 - 1.2, z1 + 5, 4.8)
     # zip-tie slots just outside the side guides; the ties go over the board
     for sx in (-1, 1):
         xa, xb = sorted([sx * (hx + 2.5), sx * (hx + 5.0)])
@@ -392,7 +396,7 @@ def d_profile(r, flat, n=40):
 
 def roller():
     core = M.cylinder(ROLL_L, CORE_D/2, CORE_D/2, 48)
-    bore = M.extrude(CS([d_profile(AXLE_R + 0.15, AXLE_FLAT + 0.15)]), ROLL_L + 2).translate([0, 0, -1])
+    bore = M.extrude(CS([d_profile(AXLE_R + 0.15 + FIT_ADD / 2, AXLE_FLAT + 0.15 + FIT_ADD / 2)]), ROLL_L + 2).translate([0, 0, -1])
     s = core - bore
     # pipe-cleaner holes: 7 stations, alternating 0/60/120 deg
     n = 7
@@ -409,7 +413,7 @@ def axle():
     return s, L  # local axis z
 
 def collar():
-    s = M.cylinder(3.0, 4.0, 4.0, 32) - M.extrude(CS([d_profile(AXLE_R + 0.1, AXLE_FLAT + 0.1)]), 5).translate([0, 0, -1])
+    s = M.cylinder(3.0, 4.0, 4.0, 32) - M.extrude(CS([d_profile(AXLE_R + 0.1 + FIT_ADD / 2, AXLE_FLAT + 0.1 + FIT_ADD / 2)]), 5).translate([0, 0, -1])
     return s
 
 def gear_solid(z, mod, thick, bore='round', bore_d=2.0):
@@ -418,11 +422,11 @@ def gear_solid(z, mod, thick, bore='round', bore_d=2.0):
     if bore == 'round':
         g = g - M.cylinder(thick + 2, bore_d/2, bore_d/2, 24).translate([0, 0, -1])
     elif bore == 'D':
-        g = g - M.extrude(CS([d_profile(AXLE_R + 0.05, AXLE_FLAT + 0.05)]), thick + 2).translate([0, 0, -1])
+        g = g - M.extrude(CS([d_profile(AXLE_R + 0.05 + FIT_ADD / 2, AXLE_FLAT + 0.05 + FIT_ADD / 2)]), thick + 2).translate([0, 0, -1])
     return g
 
 def pinion():
-    return gear_solid(Z_PIN, M1, P1[1] - P1[0], 'round', 1.85)
+    return gear_solid(Z_PIN, M1, P1[1] - P1[0], 'round', PINION_BORE)
 
 def compound():
     big = gear_solid(Z_BIG, M1, P1[1] - P1[0], 'none')
@@ -440,7 +444,7 @@ def roller_gear():
     return gear_solid(Z_ROL, M2, P2[1] - P2[0], 'D')
 
 def washer():
-    return M.cylinder(1.0, 4.0, 4.0, 32) - M.cylinder(3, 1.3, 1.3, 16).translate([0, 0, -1])
+    return M.cylinder(1.0, 4.0, 4.0, 32) - M.cylinder(3, SCREW_HOLE/2, SCREW_HOLE/2, 16).translate([0, 0, -1])
 
 # ================= SENSOR CARRIERS =================
 # Carrier: vertical plate against the ear's outer face with a height slot,
@@ -473,7 +477,7 @@ def carrier(side, whisker=False):
     s = s - box(fx1 - 5.5, fx1 - 3.5, fy0 + 3.0, fy1 - 3.0, SENSOR_Z - 1, SENSOR_Z + 2)
     if whisker:
         for dy in (-4.75, 4.75):
-            s = s - M.cylinder(6, 1.15, 1.15, 16).rotate([0, 90, 0]).translate([x1 - 1, (y0 + y1 + 2.0)/2 + dy, 20.0])
+            s = s - M.cylinder(6, 1.35, 1.35, 16).rotate([0, 90, 0]).translate([x1 - 1, (y0 + y1 + 2.0)/2 + dy, 20.0])
     if side < 0:
         s = mirror_x(s)
     return s

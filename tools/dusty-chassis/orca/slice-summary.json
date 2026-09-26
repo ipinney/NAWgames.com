@@ -4,8 +4,8 @@
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "13m 46s",
-  "grams": "1.64",
+  "time": "13m 27s",
+  "grams": "1.61",
   "brim": 8
  },
  "2": {
@@ -13,8 +13,8 @@
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "1h 21m 22s",
-  "grams": "36.69",
+  "time": "1h 21m 27s",
+  "grams": "36.62",
   "brim": 8
  },
  "3": {
@@ -22,8 +22,8 @@
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "1h 46m 28s",
-  "grams": "42.48",
+  "time": "1h 46m 17s",
+  "grams": "42.39",
   "brim": 8
  },
  "4": {
@@ -31,8 +31,8 @@
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "59m 17s",
-  "grams": "13.60",
+  "time": "58m 54s",
+  "grams": "13.46",
   "brim": 8
  },
  "5": {
