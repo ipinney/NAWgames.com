@@ -58,10 +58,39 @@ const BATCHES = [
         ['Each layer is 0.2 mm thick. The deck post is 35 mm tall. How many layers is that?', 'Answer: 35 divided by 0.2 is 175 layers.'],
       ],
     },
+    parts: [
+      { k: 'pinion', name: 'Motor gear', looks: 'Small gear, 11 mm across and 3 mm thick. 12 teeth and a tiny round hole in the middle.', job: 'Pushes onto the metal shaft of the brush motor and turns the big gear.', goes: 'BATCH 4 cup, after the test in step 2' },
+      { k: 'washer', name: 'Washer', looks: 'Thin flat ring, 8 mm across and 1 mm thick. Round hole. The thinnest part on the plate.', job: 'Sits on the end of the gear peg under a screw so the big gear cannot slide off.', goes: 'BATCH 4 cup' },
+      { k: 'collar', name: 'Axle collar', looks: 'Thick ring, 8 mm across and 3 mm thick. The hole has one flat side, like a letter D.', job: 'Slides onto the left end of the brush axle so the axle cannot slide out.', goes: 'BATCH 4 cup', tip: 'Washer or collar? The collar is three times thicker and its hole has a flat side.' },
+      { k: 'dowel', name: 'Dowels (2)', looks: 'Two tiny pins, 3 mm across and 3.4 mm tall, about the size of a grain of rice.', job: 'Hold the brush motor mount in exactly the right spot on the base.', goes: 'BATCH 4 cup', tip: 'The easiest parts to lose. Put them in the cup first.' },
+      { k: 'post', name: 'Deck post', looks: 'Round stick, 35 mm long. One end has a skinny peg. The other end has a tiny hole for a screw.', job: 'Holds up the front of the deck. The peg goes down into the base, and a screw goes into the top.', goes: 'Keep it with the deck parts. Batch 2 prints the second post.', tip: 'It prints standing peg up, so it comes off the printer upside down.' },
+    ],
+    boxParts: [
+      ['M2 × 8 screw', 'M2 means the screw is 2 mm thick. 8 means it is 8 mm long, measured from under the head to the tip. It is in the 8 mm cup.'],
+      ['130 brush motor', 'The silver motor with two metal tabs on the back and a thin metal shaft sticking out the front.'],
+    ],
     after: [
-      ['Twist an M2 × 8 screw into the small hole in the top of the deck post.', 'It should bite and hold. If it spins loose, the holes print too big. If it will not start, too small. Either way, a grown-up changes X-Y hole compensation in the printer software (Quality tab): -0.05 if loose, +0.05 if tight. Print this plate again, and use the same number for every plate after.'],
-      ['Push the motor gear onto the 130 motor shaft.', 'Snug, and it should not turn on the shaft when you hold the gear. A little loose is OK; a drop of superglue fixes it in Batch 4.'],
-      ['Put the washer, collar, dowels and motor gear in a cup labeled BATCH 4. Keep the post with the deck parts.', ''],
+      {
+        t: 'Find the deck post. The end with the tiny hole is the top. Twist an M2 × 8 screw into that hole, turning clockwise, about three turns.',
+        tip: 'Use a small Phillips screwdriver. Push down gently while you turn. Then check the result in the table below.',
+        img: ['b1-s1'],
+        check: [
+          ['It bites and holds', 'The screw gets harder to turn and stays put when you let go.', 'Perfect. Change nothing.', 'ok'],
+          ['It spins loose', 'The screw turns but never grips, or drops right in.', 'Holes print too big. A grown-up sets X-Y hole compensation to -0.05 in the printer software (Quality tab) and prints this plate again.', 'bad'],
+          ['It will not start', 'Even pushing down, the screw will not go in.', 'Holes print too small. A grown-up sets X-Y hole compensation to +0.05 and prints this plate again.', 'bad'],
+        ],
+        tip2: 'Whatever number works, use it for every plate after this one.',
+      },
+      {
+        t: 'Push the motor gear onto the metal shaft of the 130 motor.',
+        tip: 'Set the back of the motor on the table and press the gear straight down with your thumb. Stop when the tip of the shaft just peeks through the gear, leaving a small gap between the gear and the motor. Then hold the gear and try to turn the shaft: the gear should not slip. A little loose is OK; a drop of superglue fixes it in Batch 4.',
+        img: ['b1-s2', 'b1-s2b'],
+      },
+      {
+        t: 'Put the motor gear, washer, collar and both dowels in a cup labeled BATCH 4. Keep the deck post with the deck parts.',
+        tip: 'Wiggle the gear back off the shaft first. It goes on for good in Batch 4.',
+        img: ['b1-s3'],
+      },
     ],
     gate: 'The screw bites and the gear is snug. Print Batch 2 with the same settings.',
     build: [],
@@ -84,11 +113,16 @@ const BATCHES = [
         ['Solder practice: a grown-up warms up the iron on a spare header pin.', 'The sensors get soldered later, so practice now while nothing is at stake.'],
       ],
     },
+    parts: [
+      { k: 'base', name: 'Base plate', looks: 'The biggest part, 85 × 122 mm, with walls and posts sticking up. It prints upside down, so the flat side on the bed is the top of the robot.', job: 'Everything bolts to it: the wheel motors, the caster, the brush, the sensors and the battery sleeve.', goes: 'Build Steps 2 and 3' },
+      { k: 'post', name: 'Deck post (second one)', looks: 'Same as the post from Batch 1: skinny peg on one end, tiny screw hole on the other.', job: 'Holds up the front of the deck.', goes: 'Keep both posts with the deck parts' },
+      { k: 'support', name: 'Support block', looks: 'Small loose block, about 9 × 4 × 6 mm, standing just under the gear peg on the base.', job: 'Only holds the peg up while it prints. It is not part of Dusty.', goes: 'Trash' },
+    ],
     after: [
-      ['Wait for the bed to cool, then pop the base off and peel away the brim.', ''],
-      ['Lift off the small loose block that was standing under the gear peg.', 'It was only there to hold the peg up while it printed. Check the peg is round and smooth.'],
-      ['Run an M2 screw into each small pilot hole once, then back it out.', 'Four under the motor pads, two in the caster posts, one in the end of the gear peg. The four holes for the battery sleeve are plain through-holes.'],
-      ['Push the two posts into their holes near the front to check they fit, then take them out again.', ''],
+      { t: 'Wait for the bed to cool, then lift the base off and peel away the brim.', tip: 'The brim is the thin one-layer sheet around the bottom edge. It peels off like tape. Cool plastic pops off by itself; warm plastic bends.', img: ['b2-s1'] },
+      { t: 'Lift off the small loose block that was standing under the gear peg, and throw it away.', tip: 'It was only there to hold the peg up while it printed. Check the peg is round and smooth.', img: ['b2-s2'] },
+      { t: 'Run an M2 × 8 screw into each small pilot hole once, then back it out.', tip: 'Four holes on the motor pads, two in the caster posts, one in the end of the gear peg. This cuts the threads now, so the real screws go in easily later. The four bigger holes for the battery sleeve are plain through-holes: skip them.', img: ['b2-s3'] },
+      { t: 'Push both deck posts, peg end down, into their holes near the front to check they fit. Then take them out again.', tip: '', img: ['b2-s4'] },
     ],
     gate: 'The base is clean and the posts fit. Print Batch 3.',
     build: [
@@ -114,10 +148,17 @@ const BATCHES = [
         ['Put the motors and caster on the base (Steps 2 and 3) if those parts have arrived.', ''],
       ],
     },
+    parts: [
+      { k: 'deck', name: 'Deck', looks: 'Flat shelf, 79 × 77 mm, with a square window in the middle and raised guides along both sides.', job: 'Holds the moto:bit board on top of the robot.', goes: 'Build Step 4' },
+      { k: 'sleeve', name: 'Battery sleeve', looks: 'Long box, 106 mm, open at one end and closed at the other, with windows in the sides. It prints standing on its closed end.', job: 'The power bank slides inside. The back of the deck rests on top of it.', goes: 'Build Step 4' },
+      { k: 'keeper', name: 'Keeper bar', looks: 'Thin bar, 54 mm long, with a flat head on one end.', job: 'Slides through the back wall of the sleeve so the power bank cannot slide out.', goes: 'Build Step 4' },
+      { k: 'carrier_R', name: 'Right sensor arm', looks: 'L shape, 27 mm tall, with a slot in the tall side and a small frame at the foot.', job: 'Holds a cliff sensor face down just above the table.', goes: 'SENSORS cup, Build Step 6' },
+      { k: 'carrier_L', name: 'Left sensor arm', looks: 'Same as the right arm, plus an extra pad with two holes on the outside.', job: 'Holds the other cliff sensor. The pad holds the whisker switch.', goes: 'SENSORS cup, Build Steps 6 and 8', tip: 'Right or left? Only the left arm has the pad with two holes.' },
+    ],
     after: [
-      ['Clean up the deck and slide the moto:bit between the guides to check the fit.', 'It should slide in with light pressure and touch the stop at the back.'],
-      ['Slide the power bank into the sleeve from the open end, ports facing out, all the way to the closed end.', 'Then push the keeper bar in through the slot in the back wall until its head sits flat. If the bank rattles, a grown-up adds a strip of foam tape to the floor rib.'],
-      ['Hold each sensor arm against its ear on the base and push an M2 × 8 through the slot.', 'Just a test. Take them off again and put them in a cup labeled SENSORS.'],
+      { t: 'Clean up the deck and slide the moto:bit between the guides to check the fit.', tip: 'It should slide in with light pressure and touch the stop at the back.', img: ['b3-s1'] },
+      { t: 'Slide the power bank into the sleeve from the open end, USB ports facing out, all the way to the closed end. Then push the keeper bar in through the slot in the back wall until its head sits flat.', tip: 'If the bank rattles, a grown-up adds a strip of foam tape to the floor rib.', img: ['b3-s2'] },
+      { t: 'Hold each sensor arm against its ear on the base and push an M2 × 8 screw through the slot.', tip: 'Just a test fit. Take them off again and put both arms in a cup labeled SENSORS.', img: ['b3-s3'] },
     ],
     gate: 'The moto:bit fits the deck and the bank fits the sleeve. That is everything for the first drive.',
     build: [
@@ -146,11 +187,18 @@ const BATCHES = [
         ['Cut about 20 pipe cleaner pieces, each 30 mm long.', 'Watch the first layers of the roller while you cut. It is tall and thin, and it must stick well.'],
       ],
     },
+    parts: [
+      { k: 'cradle', name: 'Motor mount', looks: 'Open box, 29 × 26 × 17 mm, with a round opening shaped to fit the motor.', job: 'Holds the 130 brush motor and the brush on/off switch. The two dowels from Batch 1 line it up on the base.', goes: 'BATCH 4 cup, Build Step 9' },
+      { k: 'compound', name: 'Big gear', looks: 'Two gears joined together: a big one with 36 teeth and a small one with 10 teeth, and five round holes.', job: 'Spins on the gear peg. It slows the motor down and makes it stronger.', goes: 'BATCH 4 cup, Build Step 9' },
+      { k: 'roller_gear', name: 'Roller gear', looks: 'Gear with 18 teeth, 25 mm across. Its hole has a flat side, like a D.', job: 'Sits on the end of the axle and turns the brush roller.', goes: 'BATCH 4 cup, Build Step 9' },
+      { k: 'roller', name: 'Brush roller', looks: 'Tube, 52 mm long and 14 mm thick, with 7 small holes going across it.', job: 'Pipe cleaner pieces go through the holes to make the brush.', goes: 'BATCH 4 cup, Build Step 9' },
+      { k: 'axle', name: 'Axle', looks: 'Long thin rod, 75 mm, with one flat side.', job: 'Goes through the roller and the roller gear so they turn together.', goes: 'BATCH 4 cup, Build Step 9' },
+    ],
     after: [
-      ['Check the gear teeth are clean.', 'The gears print with no brim, so there is nothing to trim. If a tooth has a stray string, a grown-up cleans it with a hobby knife.'],
-      ['Slide the axle through the roller and the roller gear.', 'The flat side of the axle matches the flat inside each one. They should slide on, not wobble.'],
-      ['Slide the big gear onto the peg on the base and spin it.', 'It should spin freely. If it drags, sand the inside of the hole a little.'],
-      ['Hold the motor gear from Batch 1 against the big gear and turn it.', 'The teeth should roll together without jamming.'],
+      { t: 'Check the gear teeth are clean.', tip: 'The gears print with no brim, so there is nothing to trim. If a tooth has a stray string, a grown-up cleans it with a hobby knife.', img: ['b4-s1'] },
+      { t: 'Slide the axle through the roller, then put the roller gear on the end.', tip: 'Line up the flat side of the axle with the flat inside each part. They should slide on, not wobble.', img: ['b4-s2'] },
+      { t: 'Slide the big gear onto the gear peg on the base and spin it.', tip: 'It should spin freely. If it drags, sand the inside of the hole a little.', img: ['b4-s3'] },
+      { t: 'Hold the motor gear from Batch 1 against the big gear and turn it.', tip: 'The teeth should roll together without jamming.', img: ['b4-s4'] },
     ],
     gate: 'The axle fits and the big gear spins freely. Everything waits in the BATCH 4 cup for Oct 3.',
     build: [
@@ -174,9 +222,12 @@ const BATCHES = [
         ['Crush some cereal and weigh out exactly 5 grams for the sweep test.', 'Saying "Dusty picked up 3.8 of 5 grams" is a measurement. "It cleans pretty well" is an opinion.'],
       ],
     },
+    parts: [
+      { k: 'tray', name: 'Crumb tray', looks: 'Shallow tray, 57 × 42 mm, with a thin front edge, a taller back wall and a tab on each side.', job: 'Catches the crumbs the brush flicks back.', goes: 'Build Step 10' },
+    ],
     after: [
-      ['Check the bottom of the tray is flat and the front edge is thin and clean.', 'The tray prints tipped back a little so its sloped bottom lies flat on the bed. Trim any brim off the front edge, because that edge rides on the table.'],
-      ['Turn Dusty upside down on a towel and press the tray on until the back clicks.', 'The two side bumps click too. Push the back wall forward a little to take it off.'],
+      { t: 'Check the bottom of the tray is flat and the front edge is thin and clean.', tip: 'The tray prints tipped back a little so its sloped bottom lies flat on the bed. Trim any brim off the front edge, because that edge rides on the table.', img: ['b5-s1'] },
+      { t: 'Turn Dusty upside down on a towel and press the tray on until the back clicks.', tip: 'The two side bumps click too. To take it off, push the back wall forward a little.', img: ['b5-s2'] },
     ],
     gate: 'All 19 pieces printed. Dusty is complete.',
     build: [
@@ -208,6 +259,62 @@ function Btn({ href, children, primary, download }) {
     >
       {children}
     </a>
+  );
+}
+
+const HT = `${F}/howto`;
+
+function Parts({ parts }) {
+  return (
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">
+      {parts.map((p) => (
+        <div key={p.k + p.name} className="rounded-xl bg-white/5 border border-white/10 overflow-hidden">
+          <img src={`${HT}/part-${p.k}.png`} alt={`${p.name} next to a penny for size`} width={600} height={420} loading="lazy" className="w-full h-auto bg-[#0d1b2e]" />
+          <div className="p-3">
+            <div className="text-white font-bold">{p.name}</div>
+            <p className="text-white/75 text-sm mt-1">{p.looks}</p>
+            <p className="text-white/55 text-sm mt-1"><span className="text-white/40">Job: </span>{p.job}</p>
+            <p className="text-sm mt-1"><span className="text-naw-orange font-semibold">Goes to: </span><span className="text-white/75">{p.goes}</span></p>
+            {p.tip && <p className="text-yellow-200/80 text-xs mt-2">{p.tip}</p>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function After({ items }) {
+  return (
+    <ol className="space-y-6 mt-3">
+      {items.map((s, i) => (
+        <li key={i}>
+          <div className="flex gap-3">
+            <span className="flex-none w-7 h-7 rounded-md bg-naw-cyan text-naw-dark text-sm font-bold flex items-center justify-center mt-0.5">{i + 1}</span>
+            <div className="min-w-0">
+              <div className="text-white font-semibold">{s.t}</div>
+              {s.tip && <p className="text-white/60 text-sm mt-1">{s.tip}</p>}
+            </div>
+          </div>
+          <div className={`mt-3 grid gap-3 ${s.img.length > 1 ? 'sm:grid-cols-2' : ''}`}>
+            {s.img.map((im) => (
+              <img key={im} src={`${HT}/${im}.png`} alt={s.t} width={900} height={600} loading="lazy" className="w-full h-auto rounded-xl border border-white/10 bg-[#0d1b2e]" />
+            ))}
+          </div>
+          {s.check && (
+            <div className="mt-3 grid sm:grid-cols-3 gap-2">
+              {s.check.map(([head, see, fix, kind]) => (
+                <div key={head} className={`rounded-xl p-3 border ${kind === 'ok' ? 'border-naw-green/50 bg-naw-green/10' : 'border-red-400/40 bg-red-500/10'}`}>
+                  <div className={`font-bold text-sm ${kind === 'ok' ? 'text-naw-green' : 'text-red-300'}`}>{head}</div>
+                  <div className="text-white/70 text-xs mt-1">{see}</div>
+                  <div className="text-white text-xs mt-2">{fix}</div>
+                </div>
+              ))}
+            </div>
+          )}
+          {s.tip2 && <p className="text-white/60 text-sm mt-2">{s.tip2}</p>}
+        </li>
+      ))}
+    </ol>
   );
 }
 
@@ -309,7 +416,7 @@ export default function DustyBatchesPage() {
             </div>
 
             <div className="mt-4 bg-naw-card rounded-2xl border border-naw-cyan/20 overflow-hidden">
-              <img src={`${F}/${b.stem}.png`} alt={`Print plate for batch ${b.n}: ${b.pieces}`} width={900} height={600} className="w-full h-auto bg-[#0d1b2e]" />
+              <img src={`${F}/howto/plate-${b.n}.png`} alt={`Print plate for batch ${b.n}: ${b.pieces}`} width={900} height={600} className="w-full h-auto bg-[#0d1b2e]" />
               <div className="p-5">
                 <div className="text-white/45 text-xs">On the plate</div>
                 <div className="text-white text-sm font-semibold">{b.pieces}</div>
@@ -326,16 +433,37 @@ export default function DustyBatchesPage() {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4 mt-4">
-              <div className="bg-naw-card rounded-2xl border border-lime-300/25 p-5">
-                <div className="text-lime-300 text-xs font-semibold">Learn while it prints</div>
-                <h3 className="text-white font-bold">{b.learn.title}</h3>
-                <List items={b.learn.items} />
-              </div>
-              <div className="bg-naw-card rounded-2xl border border-white/10 p-5">
-                <h3 className="text-naw-cyan font-bold">When it is done</h3>
-                <List items={b.after} />
-              </div>
+            <div className="mt-4 bg-naw-card rounded-2xl border border-lime-300/25 p-5">
+              <div className="text-lime-300 text-xs font-semibold">Learn while it prints</div>
+              <h3 className="text-white font-bold">{b.learn.title}</h3>
+              <List items={b.learn.items} />
+            </div>
+
+            <div className="mt-4 bg-naw-card rounded-2xl border border-white/10 p-5">
+              <h3 className="text-naw-cyan font-bold">Know your parts</h3>
+              <p className="text-white/55 text-sm mt-1">
+                Every piece from this plate, next to a penny for size. The colors in the pictures are only there to tell the parts apart.
+                Your parts all come out the color of your filament.
+              </p>
+              <Parts parts={b.parts} />
+              {b.boxParts && (
+                <div className="mt-4">
+                  <div className="text-white/45 text-xs">Also from the parts box for this batch</div>
+                  <div className="grid sm:grid-cols-2 gap-2 mt-1">
+                    {b.boxParts.map(([n, d]) => (
+                      <div key={n} className="rounded-xl bg-white/5 border border-white/10 p-3 text-sm">
+                        <div className="text-white font-bold">{n}</div>
+                        <div className="text-white/65 mt-0.5">{d}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 bg-naw-card rounded-2xl border border-naw-cyan/30 p-5">
+              <h3 className="text-naw-cyan font-bold">When it is done</h3>
+              <After items={b.after} />
             </div>
 
             <div className="mt-4 rounded-2xl border border-naw-green/40 bg-naw-green/10 p-4">
