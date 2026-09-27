@@ -108,6 +108,30 @@ export default function DustyPage() {
 
       <div className="max-w-5xl mx-auto px-4 pb-20">
         <section className="mt-10">
+          <a
+            href={`${P}/dusty-film.html`}
+            className="group block bg-naw-card rounded-2xl border border-naw-orange/40 overflow-hidden hover:border-naw-orange/70 transition-colors md:flex"
+          >
+            <div className="relative md:w-3/5 shrink-0">
+              <img src={`${P}/dusty-film/dusty-poster.jpg`} alt="Dusty sweeping crumbs on a kitchen counter" className="w-full aspect-video object-cover" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="w-16 h-16 rounded-full bg-black/60 border-2 border-white/80 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <svg className="w-7 h-7 ml-1 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                </span>
+              </div>
+            </div>
+            <div className="p-5 md:p-6 flex flex-col justify-center">
+              <span className="text-naw-orange text-xs font-semibold">NEW</span>
+              <h2 className="text-white text-xl sm:text-2xl font-bold mt-1 group-hover:text-naw-orange transition-colors">Watch Dusty: the movie</h2>
+              <p className="text-white/60 text-sm mt-2">
+                Two minutes: Dusty wakes up, eats a pile of chip crumbs, stops at the counter edge, then comes apart piece by piece to show how every system works. Made from the real 3D model.
+              </p>
+              <span className="mt-4 text-naw-orange text-sm font-semibold">Play the movie</span>
+            </div>
+          </a>
+        </section>
+
+        <section className="mt-12">
           <h2 className="text-white text-xl sm:text-2xl font-bold">Due dates</h2>
           <p className="text-white/50 text-sm mt-1">Five parts, five grades. The orange one is next.</p>
           <div className="mt-5">

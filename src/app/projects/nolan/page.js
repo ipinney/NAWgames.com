@@ -16,7 +16,7 @@ const PROJECTS = [
     color: 'from-slate-700 to-orange-500',
     href: '/projects/nolan/dusty',
     image: '/projects/nolan/dusty-hero.png',
-    tags: ['Due dates', 'Packet', 'Research', 'Board', 'Build', '3D model'],
+    tags: ['Movie', 'Due dates', 'Packet', 'Research', 'Board', 'Build', '3D model'],
   },
 ];
 
