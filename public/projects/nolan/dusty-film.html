@@ -82,7 +82,7 @@ main h2 span{color:var(--part)}
 .status h4{font-size:15px;letter-spacing:.12em;color:var(--dim)}
 .status ul{margin:8px 0 0 18px;font-size:16px;line-height:1.5;color:#b9c7d8}
 .back{display:inline-block;margin-top:34px;color:var(--line);font-size:16px;text-decoration:none}
-@media (max-width:640px){.hud h1{font-size:28px}.status{grid-template-columns:1fr}#cap .t{font-size:18px}#cap .b{font-size:15px}}
+@media (max-width:640px){#hero .hud{display:none}#ui button{font-size:13px;padding:4px 8px}.hud h1{font-size:28px}.status{grid-template-columns:1fr}#cap .t{font-size:18px}#cap .b{font-size:15px}}
 </style>
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
@@ -629,7 +629,7 @@ function frame(t) {
   } else {
     crumbIM.visible = chipIM.visible = true;
     st = filmState(t); applyScene(t); applyDusty(t, st); applyCrumbs(t);
-    const s = shotAt(t); camera.position.copy(s.pos); camera.lookAt(s.tgt); if (camera.fov !== s.fov) { camera.fov = s.fov; camera.updateProjectionMatrix(); }
+    const s = shotAt(t); camera.position.copy(s.pos); camera.lookAt(s.tgt); let fv = s.fov; if (camera.aspect < 1.5) fv = Math.min(80, 2 * Math.atan(Math.tan(s.fov * Math.PI / 360) * (16 / 9) / camera.aspect) * 180 / Math.PI * 0.8); if (camera.fov !== fv) { camera.fov = fv; camera.updateProjectionMatrix(); }
   }
   applyCaption(t);
   composer.render();
