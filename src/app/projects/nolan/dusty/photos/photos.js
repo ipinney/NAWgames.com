@@ -93,6 +93,15 @@ export const PHASES = [
 
 export const PHOTOS = [
   {
+    file: '2026-09-26-motors-wheels-caster.jpg',
+    phase: 'drive',
+    date: '2026-09-26',
+    title: 'Motors, wheels and caster on',
+    caption: 'The base upside down, with both N20 motors, the wheels and the ball caster screwed on. The plugs on the back of the motors point down at the table, so the wires could drag. That has to be fixed before it drives.',
+    alt: 'A black 3D printed robot base upside down on a wooden table, with two small gear motors in white brackets, a black rubber wheel on each side, a metal ball caster on a post, and a box of black screws behind it',
+    tall: true,
+  },
+  {
     file: '2026-09-24-adafruit-order.jpg',
     phase: 'parts',
     date: '2026-09-24',
