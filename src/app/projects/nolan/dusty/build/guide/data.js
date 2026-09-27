@@ -79,7 +79,7 @@ export const BATCHES = [
       },
       {
         t: 'Put the motor gear, washer, collar and both dowels in a cup labeled BATCH 4. Keep the deck post with the deck parts.',
-        tip: 'Wiggle the gear back off the shaft first. It goes on for good in Batch 4.',
+        tip: 'Wiggle the gear back off the shaft first. It goes on for good in Build Step 9, after the motor is in its mount: with the gear on, the motor will not fit through the mount.',
         img: ['b1-s3'],
       },
     ],
@@ -193,7 +193,7 @@ export const BATCHES = [
     ],
     gate: 'The axle fits and the big gear spins freely. Everything waits in the BATCH 4 cup for Step 9.',
     build: [
-      [9, 'Build the brush and the gears (Sat Oct 3)', '130 motor, rocker switch, pipe cleaners, two zip ties, screw-terminal jack, 2 × M2 × 8, 1 × M2 × 6, and the Batch 1 cup'],
+      [9, 'Build the brush and the gears (Sat Oct 3)', '130 motor, rocker switch, pipe cleaners, one small zip tie, screw-terminal jack, 2 × M2 × 8, 1 × M2 × 6, and the Batch 1 cup'],
     ],
   },
   {

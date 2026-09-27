@@ -215,7 +215,7 @@ ms = [P('base'), P('dowel1'), P('dowel2'), P('cradle', (0, 0, cr)), G('130 brush
 for (x, y) in CRADLE_SCREWS:
     ms.append(mesh(screw(8, [x, y, PL_Z0 - 2], [0, 0, 1]), STEEL))
 scene('g9-mount', ms, [A([18, MOT_Y, MOT_Z + cr + 30], [18, MOT_Y, MOT_Z + cr + 16]), A([30, 22, PL_Z1 + cr + 10], [30, 22, PL_Z1 + 4])],
-      [L([18, MOT_Y, MOT_Z + cr + 22], '130 motor snaps in, 2 zip ties', -150, -80),
+      [L([18, MOT_Y, MOT_Z + cr + 22], '130 motor clicks in, 1 zip tie over it', -150, -80),
        L([26, 12.3, PL_Z1 + 1], 'dowels locate it', 140, 60),
        L([8, CRADLE_SCREWS[0][1], PL_Z0 - 6], '2 × M2 × 8 up from under the base', -170, 90),
        L([22, 30, PL_Z1 + cr + 8], 'motor mount', 150, -60)],
