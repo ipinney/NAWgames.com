@@ -93,6 +93,42 @@ export const PHASES = [
 
 export const PHOTOS = [
   {
+    file: '2026-09-26-motor-test-fit.jpg',
+    phase: 'drive',
+    date: '2026-09-26',
+    title: 'Test fit with the plug turned in',
+    caption: 'Trying a motor with its plug turned toward the base. The little encoder board on the back sticks out past the motor, so it hits the plate and the motor cannot sit down in its bracket. That is why the base got a window for each motor (MOC-005).',
+    alt: 'A hand holding an N20 gear motor with a wheel over a black 3D printed robot base, the small green encoder board and white plug on the back of the motor sitting against the base plate, a second motor with colored wires already in a white bracket on the far side',
+    tall: true,
+  },
+  {
+    file: '2026-09-26-encoder-plug.jpg',
+    phase: 'drive',
+    date: '2026-09-26',
+    title: 'The plug sticks out sideways',
+    caption: 'Wheel on, looking at the back of the motor. The encoder board and its white plug stick out to one side. Our 3D model had the motor the right length but left this part out.',
+    alt: 'A hand holding an N20 gear motor by its black wheel, with a small circuit board on the back end and a white plug hanging off one side, six colored wires running away across a wooden table',
+    tall: true,
+  },
+  {
+    file: '2026-09-26-motor-plug-overhang.jpg',
+    phase: 'drive',
+    date: '2026-09-26',
+    title: 'Measuring the plug',
+    caption: 'Ruler across the back of the motor to see how far the board and plug reach out to the side. About 16 mm from the middle of the motor. The base plate is only 14 mm away, so it does not fit.',
+    alt: 'An N20 gear motor standing on paper with a clear centimeter ruler across its back end, the encoder board and white plug reaching past the motor body to the left',
+    tall: false,
+  },
+  {
+    file: '2026-09-26-motor-length.jpg',
+    phase: 'drive',
+    date: '2026-09-26',
+    title: 'Measuring the motor length',
+    caption: 'From the front of the gearbox to the back of the plug is about 33 mm. The model said 37 mm. The new base uses the number we measured.',
+    alt: 'An N20 gear motor lying on its side on paper next to a clear centimeter ruler, the plug end at 0 and the front of the gearbox at about 3.3 cm, with the shaft sticking out past it',
+    tall: false,
+  },
+  {
     file: '2026-09-26-motors-wheels-caster.jpg',
     phase: 'drive',
     date: '2026-09-26',
