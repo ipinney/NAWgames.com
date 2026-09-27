@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 230" role="img" aria-label="Two panels showing the whisker wire held up by the table and then dropping when the table ends">
+        <rect x="24" y="24" width="288" height="182" rx="10" fill="#fff" stroke="#2B3650" stroke-width="2"/>
+        <text x="168" y="48" font-family="Fredoka, sans-serif" font-size="15" fill="#9BE15D" text-anchor="middle">TABLE IS THERE</text>
+        <rect x="70" y="72" width="130" height="14" rx="3" fill="#2B3650" stroke="#8A99B0" stroke-width="2"/>
+        <rect x="186" y="66" width="34" height="18" rx="3" fill="#2B2F3A"/>
+        <path d="M204 84 L250 128" stroke="#8E9CAC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="252" cy="130" r="5" fill="#8E9CAC"/>
+        <path d="M56 132 h230" stroke="#8A99B0" stroke-width="3"/>
+        <text x="168" y="164" font-family="IBM Plex Mono, monospace" font-size="11" fill="#9BE15D" text-anchor="middle">ARM PUSHED UP = CLICKED</text>
+        <text x="168" y="184" font-family="IBM Plex Mono, monospace" font-size="11" fill="#A9B6CA" text-anchor="middle">KEEP DRIVING</text>
+
+        <rect x="328" y="24" width="288" height="182" rx="10" fill="#fff" stroke="#2B3650" stroke-width="2"/>
+        <text x="472" y="48" font-family="Fredoka, sans-serif" font-size="15" fill="#F0605E" text-anchor="middle">TABLE IS GONE</text>
+        <rect x="374" y="72" width="130" height="14" rx="3" fill="#2B3650" stroke="#8A99B0" stroke-width="2"/>
+        <rect x="490" y="66" width="34" height="18" rx="3" fill="#2B2F3A"/>
+        <path d="M508 84 L536 150" stroke="#8E9CAC" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="538" cy="152" r="5" fill="#8E9CAC"/>
+        <path d="M360 132 h168" stroke="#8A99B0" stroke-width="3"/>
+        <path d="M528 132 v30" stroke="#8A99B0" stroke-width="3"/>
+        <text x="472" y="180" font-family="IBM Plex Mono, monospace" font-size="11" fill="#F0605E" text-anchor="middle">ARM DROPS = STOP EVERYTHING</text>
+      </svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-label="Ball caster, a small plastic housing holding a metal ball that rolls in any direction">
+            <path d="M74 40 h72 v30 a36 36 0 0 1 -72 0 Z" fill="#2B3650" stroke="#8E9CAC" stroke-width="2.5" stroke-linejoin="round"/>
+            <rect x="62" y="30" width="96" height="12" rx="3" fill="#B9C4D1" stroke="#8E9CAC" stroke-width="2"/>
+            <circle cx="72" cy="36" r="3" fill="#8A99B0"/><circle cx="148" cy="36" r="3" fill="#8A99B0"/>
+            <circle cx="110" cy="84" r="30" fill="#8E9CAC"/>
+            <circle cx="110" cy="84" r="30" fill="none" stroke="#6F7E90" stroke-width="2"/>
+            <ellipse cx="100" cy="74" rx="9" ry="7" fill="#C8D2DD" opacity="0.8"/>
+            <path d="M40 116 h140" stroke="#8A99B0" stroke-width="2.5" stroke-dasharray="6 5"/>
+            <text x="110" y="136" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A9B6CA" text-anchor="middle">ROLLS ANY DIRECTION</text>
+          </svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-label="Fuzzy pipe cleaners threaded through a roller">
+  <rect x="40" y="62" width="140" height="26" rx="13" fill="#B48CFF" stroke="#6A45B8" stroke-width="2"/>
+  <g stroke="#F0609E" stroke-width="7" stroke-linecap="round">
+    <path d="M58 40 v70"/><path d="M82 34 v82"/><path d="M106 40 v70"/><path d="M130 34 v82"/><path d="M154 40 v70"/>
+  </g>
+</svg>

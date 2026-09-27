@@ -30,14 +30,9 @@ const STEPS = [
     action: { href: `${P}/dusty-parts-list.pdf`, label: 'Parts list (PDF)' },
   },
   {
-    title: 'Print in five batches',
-    text: '21 pieces, about 104 g of PLA. Each batch is one plate file, and each one unlocks the next build steps.',
-    action: { href: '/projects/nolan/dusty/build/batches', label: 'Print and build plan', internal: true },
-  },
-  {
-    title: 'Put it together',
-    text: 'Eleven steps with drawings: print order, where every M2 screw goes, how the brush gears slow the motor down, and teaching Dusty where the table ends.',
-    action: { href: `${P}/dusty-build-guide.html`, label: 'Build guide' },
+    title: 'Print it and put it together',
+    text: 'One Build Guide: five print batches (21 pieces, about 104 g of PLA), how to clean up and check each one, then every build step it unlocks, with 3D pictures, where every M2 screw goes, how the brush gears work, and teaching Dusty where the table ends.',
+    action: { href: '/projects/nolan/dusty/build/guide', label: 'Build guide', internal: true },
   },
 ];
 
@@ -136,8 +131,8 @@ export default function DustyBuildPage() {
                 pop-out tray. The chassis is printed in PLA on a home 3D printer.
               </p>
               <div className="flex flex-wrap gap-2 mt-5">
-                <Link href="/projects/nolan/dusty/build/batches" className="bg-naw-orange text-naw-dark hover:bg-naw-orange/90 inline-flex items-center px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors">
-                  Print and build plan
+                <Link href="/projects/nolan/dusty/build/guide" className="bg-naw-orange text-naw-dark hover:bg-naw-orange/90 inline-flex items-center px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors">
+                  Build guide
                 </Link>
                 <Btn href={`${F}/dusty-components-3d.html`}>Explore in 3D</Btn>
               </div>

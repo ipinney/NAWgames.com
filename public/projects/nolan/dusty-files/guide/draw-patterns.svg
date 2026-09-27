@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 250" role="img" aria-label="Two cleaning patterns: random bounce over the whole table on the left, Spot Clean rows inside a one foot square on the right">
+        <rect x="24" y="30" width="278" height="182" rx="8" fill="#0F1420" stroke="#2B3650" stroke-width="2.5"/>
+        <rect x="118" y="80" width="90" height="90" fill="none" stroke="#F5B642" stroke-width="2" stroke-dasharray="6 4"/>
+        <path d="M60 70 L250 140 L70 180 L240 60 L90 195 L260 110" stroke="#F0609E" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+        <circle cx="60" cy="70" r="5" fill="#9BE15D"/>
+        <text x="163" y="22" font-family="Fredoka, sans-serif" font-size="15" fill="#EEF2F8" text-anchor="middle">BUTTON A: RANDOM BOUNCE</text>
+        <text x="163" y="234" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A9B6CA" text-anchor="middle">WHOLE TABLE, ONLY SOMETIMES CROSSES THE SPILL</text>
+
+        <rect x="338" y="30" width="278" height="182" rx="8" fill="#0F1420" stroke="#2B3650" stroke-width="2.5"/>
+        <rect x="388" y="40" width="180" height="160" fill="none" stroke="#F5B642" stroke-width="2" stroke-dasharray="6 4"/>
+        <path d="M399.0 192 L399.0 48 L421.8 48 L421.8 192 L444.6 192 L444.6 48 L467.4 48 L467.4 192 L490.2 192 L490.2 48 L513.0 48 L513.0 192 L535.8 192 L535.8 48 L558.6 48 L558.6 192" stroke="#5DB7F0" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+        <circle cx="399.0" cy="192" r="5" fill="#9BE15D"/>
+        <text x="477" y="22" font-family="Fredoka, sans-serif" font-size="15" fill="#EEF2F8" text-anchor="middle">BUTTON B: SPOT CLEAN</text>
+        <text x="477" y="234" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A9B6CA" text-anchor="middle">8 ROWS INSIDE A 1 FT SQUARE, NOTHING MISSED</text>
+      </svg>

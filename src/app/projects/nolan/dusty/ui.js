@@ -3,7 +3,7 @@ import Link from 'next/link';
 export const BASE = '/projects/nolan/dusty';
 export const P = '/projects/nolan';
 export const OG = 'https://nawgames.com/projects/nolan/dusty-og.png';
-export const GUIDE = `${P}/dusty-build-guide.html`;
+export const GUIDE = `${BASE}/build/guide`;
 export const BOARD = `${P}/board-prints.html`;
 
 export function meta(title, desc, path) {
@@ -23,7 +23,7 @@ export function meta(title, desc, path) {
 }
 
 // [key, label, href, static html page?]
-// Keep in sync with the copy of this bar in public/projects/nolan/dusty-build-guide.html and board-prints.html
+// Keep in sync with the copy of this bar in public/projects/nolan/board-prints.html
 const TABS = [
   ['overview', 'Overview', BASE],
   ['packet', 'Packet guide', `${BASE}/packet`],
@@ -33,8 +33,7 @@ const TABS = [
   ['inventory', 'Inventory', `${BASE}/inventory`],
   ['photos', 'Photos', `${BASE}/photos`],
   ['build', 'Build', `${BASE}/build`],
-  ['print', 'Print plan', `${BASE}/build/batches`],
-  ['guide', 'Build guide', GUIDE, true],
+  ['guide', 'Build guide', GUIDE],
   ['changes', 'Changes', `${BASE}/changes`],
 ];
 

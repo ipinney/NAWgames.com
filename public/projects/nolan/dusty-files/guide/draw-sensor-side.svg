@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="fit" viewBox="0 0 420 235" role="img" aria-label="Side view: the sensor arm holds the sensor 62 millimeters ahead of the wheel and 3 millimeters above the table">
+  <text x="10" y="24" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">FRONT</text>
+  <rect x="96" y="46" width="314" height="9" rx="3" fill="#F0B43C" stroke="#9A6A12" stroke-width="1.5"/>
+  <rect x="88" y="46" width="10" height="120" fill="#FF6F9A" stroke="#B23A62" stroke-width="1.5"/>
+  <rect x="94" y="80" width="0" height="0"/>
+  <rect x="62" y="160" width="36" height="7" fill="#FF6F9A" stroke="#B23A62" stroke-width="1.5"/>
+  <rect x="68" y="167" width="24" height="4" fill="#2E8B57"/>
+  <circle cx="300" cy="140" r="34" fill="#2B2F3A"/><circle cx="300" cy="140" r="6" fill="#8E9CAC"/>
+  <circle cx="392" cy="166" r="8" fill="#8E9CAC" stroke="#8A99B0" stroke-width="1.5"/>
+  <path d="M10 174 H414" stroke="#8A99B0" stroke-width="2"/>
+  <text x="108" y="100" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">slot: slide up or down,</text>
+  <text x="108" y="116" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">then tighten</text>
+  <text x="56" y="160" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="end">3 mm</text>
+  <path d="M80 194 H300 M80 188 v12 M300 188 v12" stroke="#9BE15D" stroke-width="2"/>
+  <text x="190" y="222" font-family="Fredoka, sans-serif" font-size="17" fill="#9BE15D" text-anchor="middle">62 mm head start</text>
+</svg>

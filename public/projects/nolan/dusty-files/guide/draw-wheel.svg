@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-label="Rubber wheel, 32 millimeters across, with tread around the outside and a D shaped hole in the hub">
+            <circle cx="110" cy="70" r="54" fill="#2B2F3A"/>
+            <g stroke="#3A4757" stroke-width="3">
+              <path d="M110 16 v10 M110 114 v10 M56 70 h10 M154 70 h10"/>
+              <path d="M71 31 l7 7 M142 102 l7 7 M149 31 l-7 7 M78 102 l-7 7"/>
+            </g>
+            <circle cx="110" cy="70" r="37" fill="#2A3746"/>
+            <circle cx="110" cy="70" r="19" fill="#2B3650"/>
+            <rect x="97" y="62" width="26" height="15" rx="2" fill="#8A99B0"/>
+            <path d="M97 66 h26" stroke="#2B3650" stroke-width="2.5"/>
+            <text x="110" y="143" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A9B6CA" text-anchor="middle">32 mm ACROSS</text>
+          </svg>

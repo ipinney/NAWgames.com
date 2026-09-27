@@ -1,29 +1,8 @@
-import Link from 'next/link';
-import { Nav } from '../../ui';
+// Print-plan data for the Dusty Build Guide (was build/batches/page.js).
+export const F = '/projects/nolan/dusty-files';
+export const V3D = `${F}/dusty-components-3d.html`;
 
-const OG = 'https://nawgames.com/projects/nolan/dusty-og.png';
-const TITLE = 'Dusty: print and build plan';
-const DESC = 'Five print batches, each followed by the build steps it unlocks. Plate files set up for the FlashForge Adventurer 5M.';
-
-export const metadata = {
-  title: `${TITLE} | NAW Games`,
-  description: DESC,
-  openGraph: {
-    title: TITLE,
-    description: DESC,
-    url: 'https://nawgames.com/projects/nolan/dusty/build/batches',
-    siteName: 'NAW Games',
-    images: [{ url: OG, width: 1200, height: 630, alt: 'Dusty, a 3D printed table-sweeping robot' }],
-    type: 'website',
-  },
-  twitter: { card: 'summary_large_image', title: TITLE, description: DESC, images: [OG] },
-};
-
-const F = '/projects/nolan/dusty-files';
-const G = '/projects/nolan/dusty-build-guide.html';
-const V3D = `${F}/dusty-components-3d.html`;
-
-const SETTINGS = [
+export const SETTINGS = [
   ['Printer', 'FlashForge Adventurer 5M, 0.4 mm nozzle, textured PEI plate'],
   ['Software', 'Easiest: the .gcode is already sliced for the Adventurer 5M with every setting below. Put it on a USB stick or send it from FlashPrint. The .3mf opens in Flash Studio or OrcaSlicer to change settings.'],
   ['Material', 'Flashforge Generic PLA profile: nozzle 220°C, bed 60°C'],
@@ -34,18 +13,18 @@ const SETTINGS = [
   ['Hole size', 'X-Y hole compensation 0. The holes are already drawn to fit this printer (change orders MOC-003 and MOC-004).'],
 ];
 
-const BEFORE = [
+export const BEFORE = [
   ['Unbox everything that has arrived and check it against the parts list.', ''],
   ['Sort the M2 screws into three cups: 6 mm, 8 mm and 10 mm. Put the nuts in a fourth.', ''],
   ['Before Batch 3, measure the power bank and the 90 degree USB adapter with a ruler or calipers.', 'The bank must fit inside 104 x 48 x 29 mm, and the adapter must stick out less than 28 mm. If anything is off, the sleeve gets fixed before it prints.'],
 ];
 
-const BATCHES = [
+export const BATCHES = [
   {
     n: 1,
     stem: 'dusty-plate-1-fit-check',
     title: 'Fit check',
-    when: 'Wed Sep 16, after the M2 screws arrive',
+    when: 'First, before anything else',
     time: 'About 20 minutes',
     pieces: 'Motor gear, washer, axle collar, 2 dowels, 1 deck post, deck test piece, base test piece',
     why: 'Small parts, plus two test pieces cut from the real deck and base, that check whether this printer makes holes the right size. Finding out now takes 20 minutes. Finding out after the base or the deck takes hours.',
@@ -111,7 +90,7 @@ const BATCHES = [
     n: 2,
     stem: 'dusty-plate-2-base',
     title: 'Base plate',
-    when: 'Wed Sep 16 or Thu Sep 17',
+    when: 'After Batch 1 passes',
     time: 'About 1 hour 20 minutes',
     pieces: 'Base plate (upside down), 1 deck post, and a loose support block',
     why: 'The part everything else bolts to. It prints upside down so the top comes out perfectly flat.',
@@ -146,10 +125,10 @@ const BATCHES = [
     n: 3,
     stem: 'dusty-plate-3-deck-and-arms',
     title: 'Deck, battery sleeve and sensor arms',
-    when: 'Thu Sep 17 or Fri Sep 18',
+    when: 'After Batch 2',
     time: 'About 1 hour 45 minutes',
     pieces: 'Deck, battery sleeve (standing on its end), keeper bar, right sensor arm, left sensor arm (the one with the switch pad)',
-    why: 'The deck and the battery sleeve are needed for the first drive on Saturday. The arms print now too, so the sensor weekend has nothing left to print.',
+    why: 'The deck and the battery sleeve are needed for the first drive. The arms print now too, so the sensor weekend has nothing left to print.',
     need: [],
     grams: 42.4,
     learn: {
@@ -185,10 +164,10 @@ const BATCHES = [
     n: 4,
     stem: 'dusty-plate-4-brush-drive',
     title: 'Brush drive',
-    when: 'Any evening the week of Sep 21',
+    when: 'During the week before weekend 3',
     time: 'About 1 hour',
     pieces: 'Brush motor mount, big gear, roller gear, brush roller (standing up), axle (lying flat)',
-    why: 'Everything for the brush except the small pieces from Batch 1. Printed a week early so there is time to fix a gear before Oct 3.',
+    why: 'Everything for the brush except the small pieces from Batch 1. Printed ahead so there is time to fix a gear before the brush weekend.',
     need: [],
     grams: 13.5,
     learn: {
@@ -212,7 +191,7 @@ const BATCHES = [
       { t: 'Slide the big gear onto the gear peg on the base and spin it.', tip: 'It should spin freely. If it drags, sand the inside of the hole a little.', img: ['b4-s3'] },
       { t: 'Hold the motor gear from Batch 1 against the big gear and turn it.', tip: 'The teeth should roll together without jamming.', img: ['b4-s4'] },
     ],
-    gate: 'The axle fits and the big gear spins freely. Everything waits in the BATCH 4 cup for Oct 3.',
+    gate: 'The axle fits and the big gear spins freely. Everything waits in the BATCH 4 cup for Step 9.',
     build: [
       [9, 'Build the brush and the gears (Sat Oct 3)', '130 motor, rocker switch, pipe cleaners, two zip ties, screw-terminal jack, 2 × M2 × 8, 1 × M2 × 6, and the Batch 1 cup'],
     ],
@@ -221,7 +200,7 @@ const BATCHES = [
     n: 5,
     stem: 'dusty-plate-5-tray',
     title: 'Crumb tray',
-    when: 'After Batch 4, any day before Oct 4',
+    when: 'After Batch 4',
     time: 'About 15 minutes',
     pieces: 'Crumb tray',
     why: 'Last, because it sits right behind the brush. If the brush needed changes, the tray can change too.',
@@ -249,7 +228,7 @@ const BATCHES = [
   },
 ];
 
-const TIMELINE = [
+export const TIMELINE = [
   ['Wed Sep 16', 'Print 1, then 2', 'Fit check, then the base'],
   ['Thu Sep 17', 'Print 3', 'Deck, battery sleeve and sensor arms'],
   ['Sat Sep 19', 'Build', 'Steps 2 to 5: first drive'],
@@ -259,294 +238,3 @@ const TIMELINE = [
   ['Oct 10 and 11', 'Test', 'Step 11: the experiment'],
 ];
 
-function Btn({ href, children, primary, download }) {
-  const cls = primary
-    ? 'bg-naw-orange text-naw-dark hover:bg-naw-orange/90'
-    : 'bg-naw-cyan/15 border border-naw-cyan/40 text-naw-cyan hover:bg-naw-cyan/25';
-  return (
-    <a
-      href={href}
-      {...(download ? { download: '' } : { target: '_blank', rel: 'noopener noreferrer' })}
-      className={`${cls} inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors`}
-    >
-      {children}
-    </a>
-  );
-}
-
-const HT = `${F}/howto`;
-
-function Parts({ parts }) {
-  return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-3">
-      {parts.map((p) => (
-        <div key={p.k + p.name} className="rounded-xl bg-white/5 border border-white/10 overflow-hidden">
-          <img src={`${HT}/part-${p.k}.png`} alt={`${p.name} next to a penny for size`} width={600} height={420} loading="lazy" className="w-full h-auto bg-[#0d1b2e]" />
-          <div className="p-3">
-            <div className="text-white font-bold">{p.name}</div>
-            <p className="text-white/75 text-sm mt-1">{p.looks}</p>
-            <p className="text-white/55 text-sm mt-1"><span className="text-white/40">Job: </span>{p.job}</p>
-            <p className="text-sm mt-1"><span className="text-naw-orange font-semibold">Goes to: </span><span className="text-white/75">{p.goes}</span></p>
-            {p.tip && <p className="text-yellow-200/80 text-xs mt-2">{p.tip}</p>}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function After({ items }) {
-  return (
-    <ol className="space-y-6 mt-3">
-      {items.map((s, i) => (
-        <li key={i}>
-          <div className="flex gap-3">
-            <span className="flex-none w-7 h-7 rounded-md bg-naw-cyan text-naw-dark text-sm font-bold flex items-center justify-center mt-0.5">{i + 1}</span>
-            <div className="min-w-0">
-              <div className="text-white font-semibold">{s.t}</div>
-              {s.tip && <p className="text-white/60 text-sm mt-1">{s.tip}</p>}
-            </div>
-          </div>
-          <div className={`mt-3 grid gap-3 ${s.img.length > 1 ? 'sm:grid-cols-2' : ''}`}>
-            {s.img.map((im) => (
-              <img key={im} src={`${HT}/${im}.png`} alt={s.t} width={900} height={600} loading="lazy" className="w-full h-auto rounded-xl border border-white/10 bg-[#0d1b2e]" />
-            ))}
-          </div>
-          {s.check && (
-            <div className="mt-3 grid sm:grid-cols-3 gap-2">
-              {s.check.map(([head, see, fix, kind]) => (
-                <div key={head} className={`rounded-xl p-3 border ${kind === 'ok' ? 'border-naw-green/50 bg-naw-green/10' : 'border-red-400/40 bg-red-500/10'}`}>
-                  <div className={`font-bold text-sm ${kind === 'ok' ? 'text-naw-green' : 'text-red-300'}`}>{head}</div>
-                  <div className="text-white/70 text-xs mt-1">{see}</div>
-                  <div className="text-white text-xs mt-2">{fix}</div>
-                </div>
-              ))}
-            </div>
-          )}
-          {s.tip2 && <p className="text-white/60 text-sm mt-2">{s.tip2}</p>}
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-function List({ items }) {
-  return (
-    <ol className="space-y-2 mt-2">
-      {items.map(([main, tip], i) => (
-        <li key={i} className="flex gap-3">
-          <span className="flex-none w-6 h-6 rounded-md bg-white/10 text-white text-xs font-bold flex items-center justify-center mt-0.5">
-            {i + 1}
-          </span>
-          <span>
-            <span className="text-white text-sm">{main}</span>
-            {tip && <span className="block text-white/45 text-xs mt-0.5">{tip}</span>}
-          </span>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-export default function DustyBatchesPage() {
-  return (
-    <div className="min-h-screen">
-      <Nav current="print" />
-      <div className="max-w-4xl mx-auto px-4 pt-8 pb-20">
-        <Link href="/projects/nolan/dusty/build" className="text-white/40 hover:text-white/70 text-sm inline-flex items-center gap-1 transition-colors">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Build Dusty
-        </Link>
-
-        <h1 className="font-game text-xl sm:text-2xl glow mt-6">
-          <span className="bg-gradient-to-r from-naw-orange to-yellow-300 bg-clip-text text-transparent">PRINT AND BUILD PLAN</span>
-        </h1>
-        <p className="text-white text-lg font-semibold mt-4 leading-snug">
-          Five print batches. Each one comes with something to learn while it prints, and unlocks the next build steps.
-        </p>
-        <p className="text-white/55 text-sm mt-2 leading-relaxed">
-          Print a batch, check it, build what it unlocks, then print the next. Small test parts go first, the big base
-          second, and the tray last. All 21 pieces use about 104 g of PLA.
-        </p>
-
-        <nav className="mt-6 flex flex-wrap gap-2">
-          {BATCHES.map((b) => (
-            <a key={b.n} href={`#batch-${b.n}`} className="bg-naw-card border border-white/10 hover:border-naw-orange/50 rounded-lg px-3 py-1.5 text-sm text-white/80 transition-colors">
-              <span className="text-naw-orange font-bold">{b.n}</span> {b.title}
-            </a>
-          ))}
-        </nav>
-
-        <section className="mt-6 bg-naw-card rounded-2xl border border-white/10 p-5">
-          <h2 className="text-white font-bold text-lg">The calendar</h2>
-          <div className="mt-3 divide-y divide-white/5">
-            {TIMELINE.map(([d, what, detail]) => (
-              <div key={d} className="grid grid-cols-[7.5rem_1fr] gap-3 py-2 text-sm">
-                <span className="text-white/60 tabular-nums">{d}</span>
-                <span>
-                  <span className={what === 'Build' || what === 'Test' ? 'text-naw-orange font-semibold' : 'text-naw-cyan font-semibold'}>{what}</span>
-                  <span className="text-white/70"> · {detail}</span>
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-6 bg-naw-card rounded-2xl border border-white/10 p-5">
-          <h2 className="text-white font-bold text-lg">Printer settings for every batch</h2>
-          <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2 mt-3">
-            {SETTINGS.map(([k, v]) => (
-              <div key={k} className="text-sm border-l-2 border-white/10 pl-3">
-                <div className="text-white/45 text-xs">{k}</div>
-                <div className="text-white">{v}</div>
-              </div>
-            ))}
-          </div>
-          <p className="text-white/45 text-xs mt-3">
-            Each plate leaves at least 15 mm between parts and 10 mm from the bed edge, so every brim fits. The times below are the slicer's
-            estimates for the Adventurer 5M, about 4.5 hours in all.
-          </p>
-        </section>
-
-        <section className="mt-6 rounded-2xl border border-yellow-300/40 bg-yellow-300/10 p-5">
-          <h2 className="text-white font-bold text-lg">New files, Sep 27 (Rev A.3)</h2>
-          <p className="text-white/75 text-sm mt-1 leading-relaxed">
-            Our printer made small holes too small, so the holes were redrawn (
-            <Link href="/projects/nolan/dusty/changes" className="text-naw-cyan underline">change orders MOC-003 and MOC-004</Link>):
-            bigger screw holes with a little funnel at the top, and snug post holes in the base. Parts printed before Sep 27
-            have the old holes. Print Batch 1 again (about 20 minutes) for a new washer, collar and the two hole test pieces, and
-            print Batch 2 again if you already printed the base. Download fresh files: the old ones will not fit.
-          </p>
-        </section>
-
-        <section className="mt-6 rounded-2xl border border-naw-orange/40 bg-naw-orange/10 p-5">
-          <h2 className="text-white font-bold text-lg">Before the first print</h2>
-          <List items={BEFORE} />
-        </section>
-
-        {BATCHES.map((b) => (
-          <section key={b.n} id={`batch-${b.n}`} className="mt-10 scroll-mt-4">
-            <div className="flex items-baseline gap-3">
-              <span className="flex-none w-10 h-10 rounded-xl bg-naw-orange text-naw-dark font-bold text-lg flex items-center justify-center">
-                {b.n}
-              </span>
-              <div>
-                <h2 className="text-white text-xl sm:text-2xl font-bold">Batch {b.n}: {b.title}</h2>
-                <p className="text-white/50 text-sm">{b.when} · {b.time} · {b.grams} g</p>
-              </div>
-            </div>
-
-            <div className="mt-4 bg-naw-card rounded-2xl border border-naw-cyan/20 overflow-hidden">
-              <img src={`${F}/howto/plate-${b.n}.png`} alt={`Print plate for batch ${b.n}: ${b.pieces}`} width={900} height={600} className="w-full h-auto bg-[#0d1b2e]" />
-              <div className="p-5">
-                <div className="text-white/45 text-xs">On the plate</div>
-                <div className="text-white text-sm font-semibold">{b.pieces}</div>
-                <p className="text-white/60 text-sm mt-2">{b.why}</p>
-                <div className="flex flex-wrap gap-2 mt-4">
-                  <Btn href={`${F}/${b.stem}.gcode`} primary download>Ready to print (.gcode)</Btn>
-                  <Btn href={`${F}/${b.stem}.3mf`} download>Plate file (.3mf)</Btn>
-                  <Btn href={`${F}/${b.stem}.stl`} download>Plate (.stl)</Btn>
-                  <Btn href={V3D}>See the parts in 3D</Btn>
-                </div>
-                {b.need.length > 0 && (
-                  <p className="text-white/50 text-xs mt-3">Have ready: {b.need.join(', ')}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-4 bg-naw-card rounded-2xl border border-lime-300/25 p-5">
-              <div className="text-lime-300 text-xs font-semibold">Learn while it prints</div>
-              <h3 className="text-white font-bold">{b.learn.title}</h3>
-              <List items={b.learn.items} />
-            </div>
-
-            <div className="mt-4 bg-naw-card rounded-2xl border border-white/10 p-5">
-              <h3 className="text-naw-cyan font-bold">Know your parts</h3>
-              <p className="text-white/55 text-sm mt-1">
-                Every piece from this plate, next to a penny for size. The colors in the pictures are only there to tell the parts apart.
-                Your parts all come out the color of your filament.
-              </p>
-              <Parts parts={b.parts} />
-              {b.boxParts && (
-                <div className="mt-4">
-                  <div className="text-white/45 text-xs">Also from the parts box for this batch</div>
-                  <div className="grid sm:grid-cols-2 gap-2 mt-1">
-                    {b.boxParts.map(([n, d]) => (
-                      <div key={n} className="rounded-xl bg-white/5 border border-white/10 p-3 text-sm">
-                        <div className="text-white font-bold">{n}</div>
-                        <div className="text-white/65 mt-0.5">{d}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="mt-4 bg-naw-card rounded-2xl border border-naw-cyan/30 p-5">
-              <h3 className="text-naw-cyan font-bold">When it is done</h3>
-              <After items={b.after} />
-            </div>
-
-            {b.n === 1 && (
-              <div className="mt-4 bg-naw-card rounded-2xl border border-yellow-300/40 p-5">
-                <div className="text-yellow-200 text-xs font-semibold">If both fits were too tight</div>
-                <h3 className="text-white font-bold">Fit check 2: five sizes of each</h3>
-                <p className="text-white/65 text-sm mt-1">
-                  Five deck posts and five motor gears, each a little bigger than the last. Print it with the same settings
-                  (about 35 minutes, 6 g). Try every one and pick the smallest that works.
-                </p>
-                <img src={`${F}/dusty-fit-check-2.png`} alt="Fit check 2 plate: five posts and five motor gears, numbered 1 to 5" width={1100} height={650} loading="lazy" className="w-full h-auto rounded-xl border border-white/10 bg-[#0d1b2e] mt-3" />
-                <div className="grid sm:grid-cols-2 gap-2 mt-3 text-sm">
-                  <div className="rounded-xl bg-white/5 border border-white/10 p-3">
-                    <div className="text-white font-bold">Posts: count the grooves</div>
-                    <div className="text-white/65 mt-0.5">1 groove = #1 (hole 1.9 mm) up to 5 grooves = #5 (2.3 mm). The first plate was 1.8 mm. Pick the one where the screw starts and then bites.</div>
-                  </div>
-                  <div className="rounded-xl bg-white/5 border border-white/10 p-3">
-                    <div className="text-white font-bold">Gears: count the dimples</div>
-                    <div className="text-white/65 mt-0.5">1 dimple = #1 (hole 1.95 mm) up to 5 dimples = #5 (2.15 mm). The first plate was 1.85 mm. Pick the one that pushes on with your thumb and does not slip.</div>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-4">
-                  <Btn href={`${F}/dusty-fit-check-2.gcode`} primary download>Ready to print (.gcode)</Btn>
-                  <Btn href={`${F}/dusty-fit-check-2.3mf`} download>Plate file (.3mf)</Btn>
-                  <Btn href={`${F}/dusty-fit-check-2.stl`} download>Plate (.stl)</Btn>
-                </div>
-                <div className="mt-3 rounded-xl border border-naw-green/40 bg-naw-green/10 p-3 text-sm">
-                  <span className="text-naw-green font-bold">Result, Sep 26: #4 won both.</span>{' '}
-                  <span className="text-white/80">Every Dusty file now uses those sizes (change order MOC-003), so you do not need this plate again. Keep the #4 gear: it matches the new design. The #4 post works too, but the new posts also have a funnel at the top (MOC-004).</span>
-                </div>
-              </div>
-            )}
-
-            <div className="mt-4 rounded-2xl border border-naw-green/40 bg-naw-green/10 p-4">
-              <div className="text-naw-green text-xs font-semibold">Ready for the next batch when</div>
-              <div className="text-white text-sm mt-0.5">{b.gate}</div>
-            </div>
-
-            {b.build.length > 0 && (
-              <div className="mt-4 bg-naw-card rounded-2xl border border-naw-orange/30 p-5">
-                <h3 className="text-naw-orange font-bold">Now you can build</h3>
-                <div className="mt-2 space-y-2">
-                  {b.build.map(([step, title, parts]) => (
-                    <a
-                      key={step}
-                      href={`${G}#step-${step}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block rounded-xl bg-white/5 hover:bg-white/10 transition-colors px-4 py-3"
-                    >
-                      <span className="text-white font-semibold text-sm">Step {step}: {title}</span>
-                      {parts && <span className="block text-white/45 text-xs mt-0.5">{parts}</span>}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-          </section>
-        ))}
-      </div>
-    </div>
-  );
-}

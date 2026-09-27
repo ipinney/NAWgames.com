@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-label="Motor driver board with a slot for the micro:bit, a barrel jack for power, and two motor connectors">
+            <rect x="14" y="30" width="192" height="92" rx="9" fill="#1F6FB2"/>
+            <rect x="14" y="30" width="192" height="92" rx="9" fill="none" stroke="#155489" stroke-width="2"/>
+            <rect x="46" y="22" width="128" height="18" rx="4" fill="#0F2F4D"/>
+            <g fill="#D8A34A">
+              <rect x="56" y="26" width="6" height="10"/><rect x="72" y="26" width="6" height="10"/><rect x="88" y="26" width="6" height="10"/><rect x="104" y="26" width="6" height="10"/><rect x="120" y="26" width="6" height="10"/><rect x="136" y="26" width="6" height="10"/><rect x="152" y="26" width="6" height="10"/>
+            </g>
+            <text x="110" y="58" font-family="IBM Plex Mono, monospace" font-size="9" fill="#CFE8FF" text-anchor="middle" letter-spacing="1">MICRO:BIT SLOTS IN HERE</text>
+            <rect x="22" y="78" width="30" height="26" rx="4" fill="#2B2F3A"/>
+            <circle cx="37" cy="91" r="6" fill="#4A5A6D"/><circle cx="37" cy="91" r="2.5" fill="#2B2F3A"/>
+            <text x="37" y="115" font-family="IBM Plex Mono, monospace" font-size="8" fill="#CFE8FF" text-anchor="middle">POWER</text>
+            <rect x="106" y="78" width="34" height="18" rx="3" fill="#2B2F3A"/>
+            <text x="123" y="91" font-family="IBM Plex Mono, monospace" font-size="9" fill="#F0A878" text-anchor="middle">M A</text>
+            <rect x="152" y="78" width="34" height="18" rx="3" fill="#2B2F3A"/>
+            <text x="169" y="91" font-family="IBM Plex Mono, monospace" font-size="9" fill="#F0A878" text-anchor="middle">M B</text>
+            <text x="146" y="112" font-family="IBM Plex Mono, monospace" font-size="8" fill="#CFE8FF" text-anchor="middle">MOTORS</text>
+          </svg>

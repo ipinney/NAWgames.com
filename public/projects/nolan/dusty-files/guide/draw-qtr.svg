@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-label="Infrared reflectance sensor, a small green board with an emitter and a detector that point downward">
+            <rect x="60" y="40" width="100" height="34" rx="4" fill="#2E8B57" stroke="#1E6B41" stroke-width="2"/>
+            <circle cx="88" cy="57" r="9" fill="#3A3A6B"/><circle cx="88" cy="57" r="4" fill="#5C5CA8"/>
+            <circle cx="132" cy="57" r="9" fill="#1A1A2E"/><circle cx="132" cy="57" r="4" fill="#33334D"/>
+            <g fill="#D8A34A">
+              <rect x="66" y="34" width="5" height="8"/><rect x="82" y="34" width="5" height="8"/><rect x="98" y="34" width="5" height="8"/>
+            </g>
+            <path d="M88 66 L76 112" stroke="#F0609E" stroke-width="2" stroke-dasharray="4 4"/>
+            <path d="M76 112 L132 66" stroke="#F0609E" stroke-width="2" stroke-dasharray="4 4"/>
+            <path d="M30 112 h160" stroke="#8A99B0" stroke-width="3"/>
+            <text x="86" y="92" font-family="IBM Plex Mono, monospace" font-size="8" fill="#F0609E" text-anchor="middle">OUT</text>
+            <text x="142" y="92" font-family="IBM Plex Mono, monospace" font-size="8" fill="#F0609E" text-anchor="middle">BACK</text>
+            <text x="110" y="132" font-family="IBM Plex Mono, monospace" font-size="10" fill="#A9B6CA" text-anchor="middle">TABLE SURFACE</text>
+          </svg>

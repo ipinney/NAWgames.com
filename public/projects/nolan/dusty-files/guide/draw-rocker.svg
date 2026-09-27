@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-label="A small rocker switch">
+  <rect x="70" y="38" width="80" height="56" rx="6" fill="#2B2F3A"/>
+  <path d="M80 50 L140 44 L140 88 L80 82 Z" fill="#2E3B4E" stroke="#74839B" stroke-width="1.5"/>
+  <text x="95" y="72" font-family="IBM Plex Mono, monospace" font-size="14" fill="#fff">I</text>
+  <circle cx="127" cy="67" r="6" fill="none" stroke="#fff" stroke-width="2"/>
+  <rect x="88" y="94" width="8" height="22" fill="#D8A34A"/><rect x="124" y="94" width="8" height="22" fill="#D8A34A"/>
+</svg>

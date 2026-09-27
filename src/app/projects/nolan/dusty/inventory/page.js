@@ -285,7 +285,6 @@ export default function InventoryPage() {
           </Box>
           <div className="flex flex-wrap gap-2">
             <Btn href={GUIDE}>Step by step build guide</Btn>
-            <Btn href={`${BASE}/build/batches`}>Print plan</Btn>
           </div>
         </Section>
 

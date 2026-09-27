@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-label="Printed parts: a flat base plate, a shelf, gears and a tray">
+  <rect x="18" y="70" width="120" height="62" rx="6" fill="#F0B43C" stroke="#9A6A12" stroke-width="2"/>
+  <rect x="34" y="84" width="22" height="12" rx="2" fill="#0F1420"/><rect x="100" y="84" width="22" height="12" rx="2" fill="#0F1420"/>
+  <rect x="30" y="22" width="98" height="40" rx="5" fill="#F0B43C" stroke="#9A6A12" stroke-width="2"/>
+  <rect x="60" y="32" width="38" height="20" rx="2" fill="#0F1420"/>
+  <g transform="translate(174 48)"><circle r="26" fill="#4AA8FF" stroke="#1F5E9C" stroke-width="2"/><circle r="10" fill="#0F1420"/></g>
+  <g transform="translate(176 110)"><rect x="-28" y="-16" width="56" height="30" rx="4" fill="#5CC98A" stroke="#237A4C" stroke-width="2"/><rect x="-22" y="-10" width="44" height="18" fill="#0F1420"/></g>
+</svg>

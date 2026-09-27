@@ -46,6 +46,7 @@ const TOUCHED = ['3D model and all 19 print files', 'Parts list', 'Build guide s
 
 // Newest first. Add a line every time something about the plan changes.
 const LOG = [
+  ['Sep 27', 'Plan', 'Print plan and build guide merged into one Build Guide: each batch is a chapter (print, know your parts, clean up and check, then the build steps it unlocks), with 3D pictures from the Rev A.3 design and the original drawings.'],
   ['Sep 27', 'Change', 'MOC-004: screw lead-in (45 degree chamfer, 4.2 mm wide, 1 mm deep) on the deck post tops, motor pad and caster screw holes, and the post holes in the base made smaller, 4.30 to 3.95 mm. All print files re-sliced (Rev A.3).'],
   ['Sep 27', 'Plan', 'Fit check 4: three more base pieces at 4.05, 4.00 and 3.95 mm. Number 6 (3.95) was snug.'],
   ['Sep 27', 'Plan', 'Fit check 3: base pieces at 4.20, 4.15 and 4.10 mm were all still loose. Of three screw lead-ins, number 2 (big 45 degree chamfer) started the screw best.'],

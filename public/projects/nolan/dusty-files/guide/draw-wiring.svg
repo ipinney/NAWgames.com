@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" role="img" aria-label="Wiring diagram showing the left motor going to socket A and the right motor going to socket B on the driver board">
+        <rect x="220" y="26" width="200" height="86" rx="8" fill="#1F6FB2"/>
+        <text x="320" y="50" font-family="IBM Plex Mono, monospace" font-size="11" fill="#CFE8FF" text-anchor="middle">DRIVER BOARD</text>
+        <rect x="240" y="62" width="60" height="30" rx="4" fill="#2B2F3A"/>
+        <text x="270" y="82" font-family="IBM Plex Mono, monospace" font-size="13" fill="#F0A878" text-anchor="middle">A</text>
+        <rect x="340" y="62" width="60" height="30" rx="4" fill="#2B2F3A"/>
+        <text x="370" y="82" font-family="IBM Plex Mono, monospace" font-size="13" fill="#F0A878" text-anchor="middle">B</text>
+
+        <rect x="64" y="146" width="90" height="42" rx="5" fill="#B9C4D1" stroke="#8E9CAC" stroke-width="2"/>
+        <text x="109" y="172" font-family="IBM Plex Mono, monospace" font-size="11" fill="#EEF2F8" text-anchor="middle">LEFT</text>
+        <rect x="486" y="146" width="90" height="42" rx="5" fill="#B9C4D1" stroke="#8E9CAC" stroke-width="2"/>
+        <text x="531" y="172" font-family="IBM Plex Mono, monospace" font-size="11" fill="#EEF2F8" text-anchor="middle">RIGHT</text>
+
+        <path d="M154 158 q80 -10 96 -66" stroke="#F0605E" stroke-width="3.5" fill="none"/>
+        <path d="M154 176 q90 0 106 -84" stroke="#A9B6CA" stroke-width="3.5" fill="none"/>
+        <path d="M486 158 q-80 -10 -96 -66" stroke="#F0605E" stroke-width="3.5" fill="none"/>
+        <path d="M486 176 q-90 0 -106 -84" stroke="#A9B6CA" stroke-width="3.5" fill="none"/>
+
+        <text x="320" y="210" font-family="IBM Plex Mono, monospace" font-size="11" fill="#74839B" text-anchor="middle">RED AND BLACK &middot; IF A WHEEL SPINS BACKWARD, FIX IT IN THE CODE</text>
+      </svg>

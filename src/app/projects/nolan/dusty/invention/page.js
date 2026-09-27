@@ -194,7 +194,7 @@ export default function InventionPage() {
               );
             })}
           </div>
-          <Btn href={`${BASE}/build/batches`}>Print and build plan, batch by batch</Btn>
+          <Btn href={`${BASE}/build/guide`}>Build guide, batch by batch</Btn>
         </Section>
 
         <Section id="watch-out" n={6} title="Things that will probably go wrong" big="Written down now, so when they happen, they were planned for.">

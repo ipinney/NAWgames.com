@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-label="A rounded black power bank with two ports on one end and four small lights">
+  <rect x="30" y="44" width="150" height="62" rx="18" fill="#2A3340" stroke="#0E141B" stroke-width="2"/>
+  <circle cx="120" cy="66" r="3" fill="#4AA8FF"/><circle cx="130" cy="70" r="3" fill="#4AA8FF"/><circle cx="140" cy="74" r="3" fill="#4AA8FF"/><circle cx="150" cy="78" r="3" fill="#4AA8FF"/>
+  <rect x="180" y="58" width="10" height="12" rx="2" fill="#0F1420" stroke="#8A99B0"/><rect x="180" y="80" width="10" height="16" rx="1" fill="#0F1420" stroke="#8A99B0"/>
+  <rect x="96" y="104" width="18" height="5" rx="2" fill="#8A99B0"/>
+  <text x="110" y="136" font-family="IBM Plex Mono, monospace" font-size="11" fill="#A9B6CA" text-anchor="middle">USB-C to charge, USB-A to power Dusty</text>
+</svg>

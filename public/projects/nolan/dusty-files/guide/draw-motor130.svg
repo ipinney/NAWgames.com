@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-label="Small hobby motor with a brush attached to its shaft">
+            <rect x="54" y="48" width="70" height="54" rx="8" fill="#B9C4D1" stroke="#8E9CAC" stroke-width="2"/>
+            <path d="M64 48 v54 M84 48 v54 M104 48 v54" stroke="#A3B0BF" stroke-width="1.5"/>
+            <rect x="124" y="68" width="16" height="14" rx="2" fill="#8E9CAC"/>
+            <rect x="140" y="70" width="10" height="10" fill="#6F7E90"/>
+            <g stroke="#D8A34A" stroke-width="3" stroke-linecap="round">
+              <path d="M152 75 l26 -22 M152 75 l30 -8 M152 75 l30 8 M152 75 l26 22 M152 75 l18 -28 M152 75 l18 28"/>
+            </g>
+            <path d="M40 60 h14" stroke="#F0605E" stroke-width="4" stroke-linecap="round"/>
+            <path d="M40 90 h14" stroke="#A9B6CA" stroke-width="4" stroke-linecap="round"/>
+            <text x="172" y="122" font-family="IBM Plex Mono, monospace" font-size="9" fill="#A9B6CA" text-anchor="middle">BRUSH</text>
+          </svg>

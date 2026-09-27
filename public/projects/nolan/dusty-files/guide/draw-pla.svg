@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-label="A spool of plastic filament">
+  <circle cx="110" cy="75" r="62" fill="#2B3650" stroke="#8A99B0" stroke-width="2.5"/>
+  <circle cx="110" cy="75" r="50" fill="#F0B43C"/>
+  <g stroke="#C98E1E" stroke-width="1.5" fill="none"><circle cx="110" cy="75" r="44"/><circle cx="110" cy="75" r="38"/><circle cx="110" cy="75" r="32"/></g>
+  <circle cx="110" cy="75" r="24" fill="#0F1420" stroke="#8A99B0" stroke-width="2.5"/>
+  <circle cx="110" cy="75" r="9" fill="#fff" stroke="#8A99B0" stroke-width="2"/>
+  <path d="M160 75 C 185 75, 190 100, 205 118" stroke="#F0B43C" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>
