@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Nav } from '../../ui';
 import { F, V3D, SETTINGS, BEFORE, BATCHES } from './data';
+import { WiringMap } from './Wiring';
 import { FACTS, SAFETY, TOOLS, BOUGHT, SCREWS, WEEKENDS, STEPS, FIXES, WORDS } from './steps';
 
 const OG = 'https://nawgames.com/projects/nolan/dusty-og.png';
@@ -253,7 +254,7 @@ export default function DustyBuildGuidePage() {
         <nav className="mt-6 bg-naw-card rounded-2xl border border-white/10 p-4">
           <div className="text-white/45 text-xs font-semibold">Jump to</div>
           <div className="flex flex-wrap gap-2 mt-2 text-sm">
-            {[['#start', 'Start here'], ['#parts', 'Meet the parts'], ['#screws', 'Screws'], ['#settings', 'Printer settings']].map(([h2, t]) => (
+            {[['#start', 'Start here'], ['#parts', 'Meet the parts'], ['#screws', 'Screws'], ['#wiring', 'Wiring map'], ['#settings', 'Printer settings']].map(([h2, t]) => (
               <a key={h2} href={h2} className="bg-white/5 hover:bg-white/10 rounded-lg px-3 py-1.5 text-white/80">{t}</a>
             ))}
             {BATCHES.map((b) => (
@@ -366,6 +367,9 @@ export default function DustyBuildGuidePage() {
             </tbody>
           </table>
         </div>
+
+        <H2 id="wiring" kicker="Every wire">Wiring map</H2>
+        <WiringMap />
 
         <H2 id="settings" kicker="For the grown-up at the printer">Printer settings for every batch</H2>
         <section className="mt-3 bg-naw-card rounded-2xl border border-white/10 p-5">
