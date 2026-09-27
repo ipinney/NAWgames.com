@@ -94,6 +94,7 @@ EAR_Y = (-8.0, 2.0); EAR_X = (40.0, 42.5)
 # allowance: M2 pass-through holes +0.4 like the pilot, sliding fits on pins and the axle +0.25 like the gear bore.
 FIT_ADD = 0.25
 SCREW_HOLE = 2.8; PILOT = 2.2; PINION_BORE = 2.1   # were 2.4, 1.8, 1.85
+LEAD_D, LEAD_DEPTH = 4.2, 1.0   # fit check 3 #2 (Sep 27): 45 deg chamfer at the screw end of the deck posts
 
 def mirror_x(s):
     return s.mirror([1, 0, 0])
@@ -267,6 +268,7 @@ def post():
     s = M.cylinder(h, POST_D/2, POST_D/2, 32)
     s = s + M.cylinder(PL_T - 0.3, PEG_D/2, PEG_D/2, 32).translate([0, 0, -(PL_T - 0.3)])
     s = s - M.cylinder(8, PILOT/2, PILOT/2, 16).translate([0, 0, h - 7.5])
+    s = s - M.cylinder(LEAD_DEPTH + 0.01, PILOT/2, LEAD_D/2, 48).translate([0, 0, h - LEAD_DEPTH])   # MOC-003: screw lead-in
     return s   # local: z=0 at plate top
 
 # ================= BATTERY SLEEVE =================
