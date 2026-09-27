@@ -5,7 +5,8 @@ Usage: /opt/cad-venv/bin/python make_scenes.py ASSEMBLY_PKL FILES_DIR OUT_JSON
   FILES_DIR     public/projects/nolan/dusty-files (single-part and plate STLs)
 Model axes: x right, y back (front is -y), z up. Units mm."""
 import sys, json, math, pickle
-import numpy as np, trimesh
+import numpy as np, trimesh, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dusty-chassis'))
 
 PKL, FILES, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
 d = pickle.load(open(PKL, 'rb'))
@@ -17,7 +18,7 @@ COL = {'base': '#f0b43c', 'deck': '#f0b43c', 'post': '#f0b43c', 'post1': '#f0b43
        'tray': '#5cc98a', 'roller': '#b48cff', 'axle': '#b48cff', 'collar': '#b48cff',
        'pinion': '#4aa8ff', 'compound': '#4aa8ff', 'compound_gear': '#4aa8ff', 'roller_gear': '#4aa8ff', 'washer': '#4aa8ff',
        'carrier_R': '#ff6f9a', 'carrier_L': '#ff6f9a', 'sensor_carrier_R': '#ff6f9a', 'sensor_carrier_L': '#ff6f9a',
-       'sleeve': '#e0e0e0', 'keeper': '#e0e0e0', 'support': '#ff4d4d'}
+       'sleeve': '#e0e0e0', 'keeper': '#e0e0e0', 'support': '#ff4d4d', 'deck_coupon': '#f0b43c', 'base_coupon': '#f0b43c'}
 STEEL = '#cfd8e3'; MOTOR = '#aab6c3'; BOARD = '#d8373f'; GHOST = '#8fa3b8'; ORANGE = '#ff9f1c'
 PENNY = '#c9794a'
 
@@ -107,6 +108,7 @@ CARD = [  # key, stl name, flip for the picture, labels as (point fn on the cent
     ('dowel', 'dowel', False), ('post', 'post', True), ('base', 'base', False),
     ('support', None, False), ('deck', 'deck', False), ('sleeve', 'sleeve', False), ('keeper', 'keeper', False),
     ('carrier_R', 'sensor_carrier_R', False), ('carrier_L', 'sensor_carrier_L', False),
+    ('deck_coupon', 'deck_coupon', False), ('base_coupon', 'base_coupon', False),
     ('cradle', 'cradle', False), ('compound', 'compound_gear', False), ('roller_gear', 'roller_gear', False),
     ('roller', 'roller', False), ('axle', 'axle', False), ('tray', 'tray', False),
 ]
@@ -146,8 +148,9 @@ for key, stl, fl in CARD:
 NAMES = {'pinion': 'motor gear', 'washer': 'washer', 'collar': 'axle collar', 'dowel': 'dowel', 'post': 'deck post',
          'base': 'base plate', 'support': 'support block', 'deck': 'deck', 'sleeve': 'battery sleeve', 'keeper': 'keeper bar',
          'sensor_carrier_R': 'right sensor arm', 'sensor_carrier_L': 'left sensor arm', 'cradle': 'motor mount',
-         'compound_gear': 'big gear', 'roller_gear': 'roller gear', 'roller': 'brush roller', 'axle': 'axle', 'tray': 'crumb tray'}
-PLATES = {1: ['pinion', 'washer', 'collar', 'dowel', 'post'], 2: ['base', 'post', 'support'],
+         'compound_gear': 'big gear', 'roller_gear': 'roller gear', 'roller': 'brush roller', 'axle': 'axle', 'tray': 'crumb tray',
+         'deck_coupon': 'deck test', 'base_coupon': 'base test'}
+PLATES = {1: ['pinion', 'washer', 'collar', 'dowel', 'post', 'deck_coupon', 'base_coupon'], 2: ['base', 'post', 'support'],
           3: ['deck', 'sleeve', 'keeper', 'sensor_carrier_R', 'sensor_carrier_L'],
           4: ['cradle', 'compound_gear', 'roller_gear', 'roller', 'axle'], 5: ['tray']}
 STEMS = {1: 'dusty-plate-1-fit-check', 2: 'dusty-plate-2-base', 3: 'dusty-plate-3-deck-and-arms',
@@ -368,6 +371,36 @@ scene('b5-s2', ms, arrows=[A([0, 55, 75], [0, 55, 45])],
       labels=[L([0, 55, 60], 'press down until it clicks', 80, -80, ORANGE), L([0, 55, 36], 'crumb tray', -160, -80),
               L([0, 20, 20], 'brush', -140, 90)],
       az=-35, el=35, zoom=1.0)
+
+# Batch 1 step 4: hole test coupons (real deck corner and base patch, in their places on the robot)
+import manifold3d as _m
+from build import deck_coupon, base_coupon, POSTS, DECK_Z0, PL_Z1
+
+
+def _tm(sol):
+    mm = sol.to_mesh()
+    return trimesh.Trimesh(np.array(mm.vert_properties)[:, :3], np.array(mm.tri_verts), process=False)
+
+
+dc = _tm(deck_coupon()); bc = _tm(base_coupon())
+hx, hy = POSTS[0]
+p1 = PR['post1']
+lift = 10
+scr = screw(8, [hx, hy, DECK_Z0 + 2.5 + lift + 12], [0, 0, -1])
+scene('b1-s4', [mesh(p1, COL['post']), mesh(moved(dc, [0, 0, lift]), COL['deck']), mesh(moved(scr, [0, 0, 4]), STEEL)],
+      arrows=[A([hx + 9, hy, DECK_Z0 + lift + 34], [hx + 9, hy, DECK_Z0 + lift + 16])],
+      labels=[L([hx, hy, DECK_Z0 + lift + 20], 'M2 × 8 screw', -200, -50),
+              L([-28, 60, DECK_Z0 + lift + 2.5], 'deck test piece', 150, -80),
+              L([hx, hy - 2.8, DECK_Z0 - 8], '#4 post from fit check 2', -170, 60),
+              L([hx + 9, hy, DECK_Z0 + lift + 26], 'slides through, head sits in the pocket', 110, -110, ORANGE)],
+      az=-30, el=20, zoom=1.0, focus=[-32, 55, DECK_Z0 + 2])
+bl = 16
+scene('b1-s5', [mesh(bc, COL['base']), mesh(moved(p1, [0, 0, bl]), COL['post'])],
+      arrows=[A([hx + 9, hy, PL_Z1 + bl + 20], [hx + 9, hy, PL_Z1 + bl + 2])],
+      labels=[L([-30, 58, PL_Z1], 'base test piece (flat side up)', 130, 90),
+              L([hx, hy, PL_Z1 + bl - 1], 'skinny peg', -180, 20),
+              L([hx + 9, hy, PL_Z1 + bl + 12], 'push in: snug by hand', 120, -60, ORANGE)],
+      az=-25, el=28, zoom=0.95, focus=[-33, 54, PL_Z1 + 22])
 
 json.dump(scenes, open(OUT, 'w'), separators=(',', ':'))
 print(len(scenes), 'scenes')

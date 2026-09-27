@@ -46,6 +46,7 @@ const TOUCHED = ['3D model and all 19 print files', 'Parts list', 'Build guide s
 
 // Newest first. Add a line every time something about the plan changes.
 const LOG = [
+  ['Sep 26', 'Plan', 'Two hole test pieces added to Batch 1: a corner of the real deck and a patch of the real base. They check the screw and post holes before the big prints.'],
   ['Sep 26', 'Change', 'MOC-003: holes made bigger to match our printer. Screw holes 1.8 to 2.2 mm, motor gear hole 1.85 to 2.1 mm, and every other hole gets the same extra room. All print files re-sliced.'],
   ['Sep 26', 'Plan', 'Fit check 2 printed: five posts and five motor gears, each a little bigger. Number 4 won both tests.'],
   ['Sep 26', 'Fix', 'Batch 1 fit check failed: the screw would not start in the deck post and the motor gear would not go on the shaft. Both holes printed too small.'],

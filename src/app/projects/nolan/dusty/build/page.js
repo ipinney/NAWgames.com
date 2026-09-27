@@ -31,7 +31,7 @@ const STEPS = [
   },
   {
     title: 'Print in five batches',
-    text: '19 pieces, about 101 g of PLA. Each batch is one plate file, and each one unlocks the next build steps.',
+    text: '21 pieces, about 104 g of PLA. Each batch is one plate file, and each one unlocks the next build steps.',
     action: { href: '/projects/nolan/dusty/build/batches', label: 'Print and build plan', internal: true },
   },
   {

@@ -21,7 +21,7 @@ FILL = 0.62                   # rough solid fraction at 3 walls, 20% infill
 
 PLATES = [
     dict(n=1, slug='fit-check', title='Fit check',
-         parts=[('pinion', 1), ('washer', 1), ('collar', 1), ('dowel', 2), ('post', 1)]),
+         parts=[('pinion', 1), ('washer', 1), ('collar', 1), ('dowel', 2), ('post', 1), ('deck_coupon', 1), ('base_coupon', 1)]),
     dict(n=2, slug='base', title='Base plate',
          parts=[('base', 1), ('post', 1)]),
     dict(n=3, slug='deck-and-arms', title='Deck, battery sleeve and sensor arms',
@@ -34,7 +34,7 @@ PLATES = [
 COLOR = {'base': '#f0b43c', 'deck': '#f0b43c', 'post': '#f0b43c', 'dowel': '#f0b43c', 'cradle': '#e8793a',
          'tray': '#5cc98a', 'roller': '#b48cff', 'axle': '#b48cff', 'collar': '#b48cff',
          'pinion': '#4aa8ff', 'compound_gear': '#4aa8ff', 'roller_gear': '#4aa8ff', 'washer': '#4aa8ff',
-         'sensor_carrier_R': '#ff6f9a', 'sensor_carrier_L': '#ff6f9a', 'sleeve': '#e0e0e0', 'keeper': '#e0e0e0'}
+         'sensor_carrier_R': '#ff6f9a', 'sensor_carrier_L': '#ff6f9a', 'sleeve': '#e0e0e0', 'keeper': '#e0e0e0', 'deck_coupon': '#f0b43c', 'base_coupon': '#f0b43c'}
 
 
 def load(name):
@@ -116,6 +116,6 @@ for p in PLATES:
                      footprint=[round(float(hi[0] - lo[0]), 1), round(float(hi[1] - lo[1]), 1)]))
     print(stem, len(placed), 'pieces', round(grams, 1), 'g', 'footprint', meta[-1]['footprint'], 'tallest', meta[-1]['height'])
 total = sum(m['pieces'] for m in meta)
-assert total == 19, total
+assert total == 21, total
 json.dump(meta, open(os.path.join(OUT, 'plates.json'), 'w'), indent=1)
 print('pieces', total, 'grams', round(sum(m['grams'] for m in meta), 1))

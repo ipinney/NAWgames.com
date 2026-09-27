@@ -484,3 +484,14 @@ def carrier(side, whisker=False):
 
 def dowel():
     return M.cylinder(3.4, 1.45, 1.45, 24)
+
+# ================= HOLE TEST COUPONS (fit check plate) =================
+# Cut straight out of the real deck and base, so they print the exact holes.
+def deck_coupon():
+    """Front-left deck corner: post screw hole + head pocket, zip-tie slot, side guide."""
+    return deck() ^ box(-DECK_X - 1, -18.0, DECK_NOSE_Y - 1, 70.0, DECK_Z0 - 1, DECK_Z0 + 10)
+
+def base_coupon():
+    """Patch of base plate around the front-left post peg hole."""
+    px, py = POSTS[0]
+    return base(print_fin=False) ^ box(px - 7, px + 12, py - 7, py + 9, PL_Z0, PL_Z1)

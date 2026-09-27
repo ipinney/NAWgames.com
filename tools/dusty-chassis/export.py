@@ -30,6 +30,8 @@ parts = {  # name: (manifold in print orientation, qty, note)
  'sensor_carrier_R': (carrier(1), 1, ''),
  'sensor_carrier_L': (carrier(-1, whisker=True), 1, 'has whisker-switch pad'),
  'dowel':       (dowel(), 2, ''),
+ 'deck_coupon': (deck_coupon(), 1, 'hole test: deck corner'),
+ 'base_coupon': (base_coupon().rotate([0, 180, 0]), 1, 'hole test: base patch, top face down'),
 }
 meshes = {}
 for k, (s, q, note) in parts.items():

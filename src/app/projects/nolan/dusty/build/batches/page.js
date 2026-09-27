@@ -46,11 +46,11 @@ const BATCHES = [
     stem: 'dusty-plate-1-fit-check',
     title: 'Fit check',
     when: 'Wed Sep 16, after the M2 screws arrive',
-    time: 'About 15 minutes',
-    pieces: 'Motor gear, washer, axle collar, 2 dowels, 1 deck post',
-    why: 'Six tiny parts that test whether this printer makes holes the right size. Finding out now takes 10 minutes. Finding out after the base takes an hour and a half.',
+    time: 'About 20 minutes',
+    pieces: 'Motor gear, washer, axle collar, 2 dowels, 1 deck post, deck test piece, base test piece',
+    why: 'Small parts, plus two test pieces cut from the real deck and base, that check whether this printer makes holes the right size. Finding out now takes 20 minutes. Finding out after the base or the deck takes hours.',
     need: ['M2 screws', '130 brush motor'],
-    grams: 1.6,
+    grams: 4.3,
     learn: {
       title: 'How a 3D printer builds',
       items: [
@@ -63,6 +63,8 @@ const BATCHES = [
       { k: 'washer', name: 'Washer', looks: 'Thin flat ring, 8 mm across and 1 mm thick. Round hole. The thinnest part on the plate.', job: 'Sits on the end of the gear peg under a screw so the big gear cannot slide off.', goes: 'BATCH 4 cup' },
       { k: 'collar', name: 'Axle collar', looks: 'Thick ring, 8 mm across and 3 mm thick. The hole has one flat side, like a letter D.', job: 'Slides onto the left end of the brush axle so the axle cannot slide out.', goes: 'BATCH 4 cup', tip: 'Washer or collar? The collar is three times thicker and its hole has a flat side.' },
       { k: 'dowel', name: 'Dowels (2)', looks: 'Two tiny pins, 3 mm across and 3.4 mm tall, about the size of a grain of rice.', job: 'Hold the brush motor mount in exactly the right spot on the base.', goes: 'BATCH 4 cup', tip: 'The easiest parts to lose. Put them in the cup first.' },
+      { k: 'deck_coupon', name: 'Deck test piece', looks: 'Small flat corner, 21 × 33 mm, with one screw hole, a zip-tie slot and a raised rail. It is the front-left corner of the real deck.', job: 'Tests the deck holes before printing the whole deck. The screw must slide through and the head must sit in the pocket.', goes: 'Keep it with the deck parts after the test', tip: 'Only test pieces, not part of Dusty.' },
+      { k: 'base_coupon', name: 'Base test piece', looks: 'Small flat square, 15 × 16 mm, 3 mm thick, with one round hole. It is the patch of the real base where a deck post plugs in.', job: 'Tests the post hole before printing the whole base. The skinny peg of a deck post must push in snug.', goes: 'Keep it with the deck parts after the test' },
       { k: 'post', name: 'Deck post', looks: 'Round stick, 35 mm long. One end has a skinny peg. The other end has a tiny hole for a screw.', job: 'Holds up the front of the deck. The peg goes down into the base, and a screw goes into the top.', goes: 'Keep it with the deck parts. Batch 2 prints the second post.', tip: 'It prints standing peg up, so it comes off the printer upside down.' },
     ],
     boxParts: [
@@ -87,12 +89,22 @@ const BATCHES = [
         img: ['b1-s2', 'b1-s2b'],
       },
       {
+        t: 'Test the deck and base holes with the two test pieces.',
+        tip: 'Deck test piece: set it on top of a deck post, screw hole over the post. Push an M2 × 8 screw through the hole and twist it into the post. The screw should slide through the test piece without threading, and its head should sit down inside the pocket. Base test piece: turn it flat side up and push the skinny peg of a deck post into the hole. It should go in snug by hand, not loose and not stuck.',
+        img: ['b1-s4', 'b1-s5'],
+        check: [
+          ['Both fit', 'The screw slides through and sits in the pocket, and the peg pushes in snug.', 'The whole deck and base will fit. Print Batch 2.', 'ok'],
+          ['Too tight', 'The screw has to thread through the deck piece, or the peg will not go in.', 'Stop before Batch 2. The hole needs to be drawn bigger: tell Dad which piece.', 'bad'],
+          ['Too loose', 'The peg falls out, or the screw head drops through the pocket.', 'Stop before Batch 2. The hole needs to be drawn smaller: tell Dad which piece.', 'bad'],
+        ],
+      },
+      {
         t: 'Put the motor gear, washer, collar and both dowels in a cup labeled BATCH 4. Keep the deck post with the deck parts.',
         tip: 'Wiggle the gear back off the shaft first. It goes on for good in Batch 4.',
         img: ['b1-s3'],
       },
     ],
-    gate: 'The screw bites and the gear is snug. Print Batch 2 with the same settings.',
+    gate: 'The screw bites, the gear is snug, the deck screw slides through and the post pegs in. Print Batch 2 with the same settings.',
     build: [],
   },
   {
@@ -229,7 +241,7 @@ const BATCHES = [
       { t: 'Check the bottom of the tray is flat and the front edge is thin and clean.', tip: 'The tray prints tipped back a little so its sloped bottom lies flat on the bed. Trim any brim off the front edge, because that edge rides on the table.', img: ['b5-s1'] },
       { t: 'Turn Dusty upside down on a towel and press the tray on until the back clicks.', tip: 'The two side bumps click too. To take it off, push the back wall forward a little.', img: ['b5-s2'] },
     ],
-    gate: 'All 19 pieces printed. Dusty is complete.',
+    gate: 'All 21 pieces printed. Dusty is complete.',
     build: [
       [10, 'Slide in the tray and test the sweep (Sun Oct 4)', 'Kitchen scale, 5 g of crushed cereal'],
       [11, 'Two brains, then run the experiment (Oct 10 and 11)', 'Charged power bank, ruler, notebook, masking tape for a 1 foot square, 5 g of crushed cereal'],
@@ -356,7 +368,7 @@ export default function DustyBatchesPage() {
         </p>
         <p className="text-white/55 text-sm mt-2 leading-relaxed">
           Print a batch, check it, build what it unlocks, then print the next. Small test parts go first, the big base
-          second, and the tray last. All 19 pieces use about 101 g of PLA.
+          second, and the tray last. All 21 pieces use about 104 g of PLA.
         </p>
 
         <nav className="mt-6 flex flex-wrap gap-2">
@@ -403,7 +415,7 @@ export default function DustyBatchesPage() {
           <p className="text-white/75 text-sm mt-1 leading-relaxed">
             Our printer made holes too small, so every hole is now drawn bigger (
             <Link href="/projects/nolan/dusty/changes" className="text-naw-cyan underline">change order MOC-003</Link>).
-            Parts printed before Sep 26 have the old holes. Print Batch 1 again (13 minutes) for a new washer and collar, and
+            Parts printed before Sep 26 have the old holes. Print Batch 1 again (about 20 minutes) for a new washer, collar and the two hole test pieces, and
             print Batch 2 again if you already printed the base. Download fresh files: the old ones will not fit.
           </p>
         </section>
