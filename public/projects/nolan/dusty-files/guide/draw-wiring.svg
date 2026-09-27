@@ -16,5 +16,5 @@
         <path d="M486 158 q-80 -10 -96 -66" stroke="#F0605E" stroke-width="3.5" fill="none"/>
         <path d="M486 176 q-90 0 -106 -84" stroke="#A9B6CA" stroke-width="3.5" fill="none"/>
 
-        <text x="320" y="210" font-family="IBM Plex Mono, monospace" font-size="11" fill="#74839B" text-anchor="middle">RED AND BLACK &middot; IF A WHEEL SPINS BACKWARD, FIX IT IN THE CODE</text>
+        <text x="320" y="210" font-family="IBM Plex Mono, monospace" font-size="11" fill="#74839B" text-anchor="middle">RED AND BLACK &#183; IF A WHEEL SPINS BACKWARD, FIX IT IN THE CODE</text>
       </svg>

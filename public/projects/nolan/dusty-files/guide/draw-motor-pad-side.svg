@@ -9,7 +9,7 @@
   <rect x="310" y="91" width="16" height="6" fill="#8E9CAC"/>
   <rect x="324" y="44" width="20" height="100" rx="6" fill="#2B2F3A"/>
   <path d="M244 106 V56 M280 106 V56" stroke="#F0609E" stroke-width="3" stroke-dasharray="4 3"/>
-  <text x="210" y="96" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="end">M2 &times; 8 screws</text>
+  <text x="210" y="96" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="end">M2 &#215; 8 screws</text>
   <text x="210" y="114" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="end">go up into the pad</text>
   <path d="M10 144 H410" stroke="#8A99B0" stroke-width="2"/>
   <text x="20" y="164" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">table</text>
