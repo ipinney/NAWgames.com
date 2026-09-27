@@ -93,6 +93,24 @@ export const PHASES = [
 
 export const PHOTOS = [
   {
+    file: '2026-09-27-nolan-caster.jpg',
+    phase: 'drive',
+    date: '2026-09-27',
+    title: 'Nolan putting on the caster',
+    caption: 'Nolan holding the ball caster on its post while the screws go in. The caster is the third wheel at the back that lets Dusty turn in place.',
+    alt: 'A boy\'s hands on a black 3D printed robot base on a wooden table, one hand holding a metal ball caster on a black post while another hand turns a small hex key, with a wheel and white motor bracket on each side',
+    tall: true,
+  },
+  {
+    file: '2026-09-27-nolan-wheel.jpg',
+    phase: 'drive',
+    date: '2026-09-27',
+    title: 'Nolan putting on a wheel',
+    caption: 'Nolan pushing a wheel onto the motor shaft, with the motor in its white bracket on the base.',
+    alt: 'A boy\'s hands at a wooden desk pressing a black rubber wheel onto a small gear motor held in a white bracket on a black 3D printed robot base, a keyboard and a clear ruler nearby',
+    tall: true,
+  },
+  {
     file: '2026-09-27-motobit-closeup.jpg',
     phase: 'drive',
     date: '2026-09-27',
