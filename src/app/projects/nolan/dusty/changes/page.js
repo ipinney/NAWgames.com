@@ -46,6 +46,7 @@ const TOUCHED = ['3D model and all 19 print files', 'Parts list', 'Build guide s
 
 // Newest first. Add a line every time something about the plan changes.
 const LOG = [
+  ['Sep 27', 'Plan', 'Size limit (under 5 by 5 inches) is measured on the robot itself, not the power cord. The straight power plug on the moto:bit sticks out about 20 mm past the left wheel, which is fine under this rule. Dusty measures 121 by 126 mm.'],
   ['Sep 27', 'Change', 'MOC-006: the deck fits the real moto:bit. The left side guide stops at y 88 so the power socket has room, and both zip tie slots moved (the front tie could not get under the deck past the battery sleeve wall, and the back tie pressed on the power socket). Only the deck changed: the deck file and Plate 3 are revA6, every other file stays revA5. Build Guide step 4 updated.'],
   ['Sep 27', 'Change', 'MOC-005: a window in the base for the little board and plug on each wheel motor, the old motor wire slot removed, and a small pocket under the battery sleeve over each window. Motor measured at 33 mm long with its plug (the model said 37). All 5 plates re-sliced. Every download now has revA5 in its name, and the old files were deleted. Build Guide steps 2, 4 and 5 updated, with the motor wire colors.'],
   ['Sep 27', 'Plan', 'Print plan and build guide merged into one Build Guide: each batch is a chapter (print, know your parts, clean up and check, then the build steps it unlocks), with 3D pictures from the Rev A.3 design and the original drawings.'],
