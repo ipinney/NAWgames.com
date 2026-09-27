@@ -93,6 +93,42 @@ export const PHASES = [
 
 export const PHOTOS = [
   {
+    file: '2026-09-27-motobit-closeup.jpg',
+    phase: 'drive',
+    date: '2026-09-27',
+    title: 'The moto:bit up close',
+    caption: 'The motor board. The micro:bit plugs into the long black slot at the top. The two motor plugs are in the middle, the round power jack is on the left (3 to 11 volts), and the STOP / RUN switch at the bottom turns the motors on and off without unplugging anything.',
+    alt: 'Close up of a black SparkFun moto:bit circuit board held in two hands, showing the micro:bit edge connector slot, sensor and servo pin headers, left and right motor connectors, a barrel power jack, and a stop motors / run motors switch',
+    tall: true,
+  },
+  {
+    file: '2026-09-27-motobit-length.jpg',
+    phase: 'drive',
+    date: '2026-09-27',
+    title: 'moto:bit length',
+    caption: 'About 7.6 cm from the top edge to the bottom of the micro:bit slot. The 3D model uses 76 mm, so it matches.',
+    alt: 'A moto:bit board lying flat on paper next to a clear ruler running top to bottom, the board reaching from 0 to about 7.6 centimeters',
+    tall: true,
+  },
+  {
+    file: '2026-09-27-motobit-width.jpg',
+    phase: 'drive',
+    date: '2026-09-27',
+    title: 'moto:bit width',
+    caption: 'About 6 cm across the micro:bit slot. The model uses 62 mm, which is as close as we can read this ruler.',
+    alt: 'A moto:bit board lying flat on paper with a clear ruler along the bottom edge of its micro:bit connector, the connector spanning about 6 centimeters',
+    tall: true,
+  },
+  {
+    file: '2026-09-27-motobit-height.jpg',
+    phase: 'drive',
+    date: '2026-09-27',
+    title: 'moto:bit from the side',
+    caption: 'Side view to see how tall the parts on the board stand. The micro:bit slot and the power jack are the tallest, about 1.2 cm.',
+    alt: 'A hand holding a moto:bit board edge-on above a clear ruler on yellow paper, showing the barrel jack, pin headers and micro:bit slot sticking out from one side of the board',
+    tall: false,
+  },
+  {
     file: '2026-09-27-base-revA5-printing.jpg',
     phase: 'print',
     date: '2026-09-27',
