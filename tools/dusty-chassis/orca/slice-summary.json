@@ -1,15 +1,15 @@
 {
  "1": {
-  "file": "dusty-plate-1-fit-check-revA6.3mf",
+  "file": "dusty-plate-1-fit-check-revA5.3mf",
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "21m 9s",
-  "grams": "4.33",
+  "time": "21m 13s",
+  "grams": "4.34",
   "brim": 8
  },
  "2": {
-  "file": "dusty-plate-2-base-revA6.3mf",
+  "file": "dusty-plate-2-base-revA5.3mf",
   "gcode": [
    "plate_1.gcode"
   ],
@@ -27,7 +27,7 @@
   "brim": 8
  },
  "4": {
-  "file": "dusty-plate-4-brush-drive-revA6.3mf",
+  "file": "dusty-plate-4-brush-drive-revA5.3mf",
   "gcode": [
    "plate_1.gcode"
   ],
@@ -36,7 +36,7 @@
   "brim": 8
  },
  "5": {
-  "file": "dusty-plate-5-tray-revA6.3mf",
+  "file": "dusty-plate-5-tray-revA5.3mf",
   "gcode": [
    "plate_1.gcode"
   ],

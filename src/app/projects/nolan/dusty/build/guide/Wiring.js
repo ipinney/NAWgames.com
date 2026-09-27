@@ -94,7 +94,7 @@ function BoardMap() {
       {lead(200, 300, X(23.5), Y(43.1), C.white, 'c')}
       {label(10, 295, 'Left motor', 'red + white wires', C.white)}
       {lead(200, 400, X(-3.5), Y(59.7), C.pwr, 'd')}
-      {label(10, 395, 'Power in', 'L-shaped plug', C.pwr)}
+      {label(10, 395, 'Power in', 'Y splitter plug', C.pwr)}
       {/* callouts, right */}
       {lead(540, 145, X(6.8), Y(29.5), C.p1, 'e')}
       {label(548, 140, 'Right cliff sensor', 'P1 column, 3 wires', C.p1)}
@@ -165,8 +165,7 @@ export const WIRES = [
   ['Main power', 'Power bank USB-A', 'USB to barrel cable', 'Through the 90° adapter, cable pointing forward', 4],
   ['Main power', 'Barrel cable plug', 'In-line switch, in', 'Round plug into round socket', 4],
   ['Main power', 'In-line switch, out', 'Y splitter, in', 'Round plug into round socket', 4],
-  ['Board power', 'Y splitter, end A', 'L-shaped plug adapter', 'Round plug into round socket', 4],
-  ['Board power', 'L-shaped plug adapter', 'moto:bit barrel jack', 'Left side of the board, near the back. Cable turned forward along the deck edge', 4],
+  ['Board power', 'Y splitter, end A', 'moto:bit barrel jack', 'Left side of the board, near the back', 4],
   ['Brain', 'micro:bit', 'moto:bit edge connector', 'LEDs and buttons up, gold stripes in', 4],
   ['Left wheel', 'Left motor red', 'LEFT MOTOR, hole marked RED', 'Needs a metal pin on the wire end', 5],
   ['Left wheel', 'Left motor white', 'LEFT MOTOR, hole marked BLACK', 'White goes where the board says black', 5],
@@ -249,8 +248,8 @@ export function WiringMap() {
         <div className="grid sm:grid-cols-2 gap-3 mt-3 text-sm">
           <div className="rounded-xl bg-white/5 p-3">
             <div className="text-naw-orange font-bold text-xs uppercase tracking-wide">Splitter end A</div>
-            <div className="text-white mt-1">L-shaped plug adapter → moto:bit barrel jack</div>
-            <div className="text-white/55 text-xs mt-1">Powers the micro:bit, the sensors, the whisker and both wheel motors. The L turns the cable forward along the deck edge so it does not stick out past the wheels.</div>
+            <div className="text-white mt-1">moto:bit barrel jack</div>
+            <div className="text-white/55 text-xs mt-1">Powers the micro:bit, the sensors, the whisker and both wheel motors.</div>
           </div>
           <div className="rounded-xl bg-white/5 p-3">
             <div className="text-naw-orange font-bold text-xs uppercase tracking-wide">Splitter end B</div>

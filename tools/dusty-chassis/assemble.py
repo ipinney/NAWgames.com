@@ -110,9 +110,6 @@ ghosts['moto:bit'] = trimesh.util.concatenate([
     boxc(-MB[0]/2, MB[0]/2, MB_Y0, MB_Y1, DECK_Z0 + DECK_T, mb_z),
     boxc(-27, 27, MB_Y0, MB_Y0 + 6, mb_z, mb_z + 5),             # right-angle edge connector
     boxc(-MB[0]/2 - JACK_OUT, -MB[0]/2 + 14.0, JACK_Y[0], JACK_Y[1], mb_z, mb_z + 11.0)])   # MOC-006: barrel jack, overhangs the left edge
-# MOC-006: right-angle barrel adapter in the jack, cable turned forward along the deck edge (turned back it would stick out behind Dusty)
-_jy = (JACK_Y[0] + JACK_Y[1]) / 2
-ghosts['right-angle barrel plug'] = boxc(-MB[0]/2 - JACK_OUT - 15.0, -MB[0]/2 - JACK_OUT, _jy - 24.5, _jy + 5.5, mb_z + 0.5, mb_z + 11.5)
 # micro:bit v2 (52 x 42) lies flat, plugged 4 mm into the connector, overhanging the front
 ghosts['micro:bit'] = trimesh.util.concatenate([
     boxc(-26, 26, MB_Y0 + 4 - 42, MB_Y0 + 4, mb_z + 2.0, mb_z + 3.6),

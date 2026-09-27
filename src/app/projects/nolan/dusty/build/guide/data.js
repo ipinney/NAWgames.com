@@ -22,7 +22,7 @@ export const BEFORE = [
 export const BATCHES = [
   {
     n: 1,
-    stem: 'dusty-plate-1-fit-check-revA6',
+    stem: 'dusty-plate-1-fit-check-revA5',
     title: 'Fit check',
     when: 'First, before anything else',
     time: 'About 20 minutes',
@@ -88,7 +88,7 @@ export const BATCHES = [
   },
   {
     n: 2,
-    stem: 'dusty-plate-2-base-revA6',
+    stem: 'dusty-plate-2-base-revA5',
     title: 'Base plate',
     when: 'After Batch 1 passes',
     time: 'About 1 hour 20 minutes',
@@ -153,7 +153,7 @@ export const BATCHES = [
     ],
     gate: 'The moto:bit fits the deck and the bank fits the sleeve. That is everything for the first drive.',
     build: [
-      [4, 'Add the deck, the brain and the power', 'Two posts, battery sleeve, keeper bar, deck, power bank, 90° USB adapter, USB to barrel cable, in-line switch, Y splitter, right-angle barrel adapter, moto:bit, micro:bit, foam tape, two zip ties, eight M2 × 8'],
+      [4, 'Add the deck, the brain and the power', 'Two posts, battery sleeve, keeper bar, deck, power bank, 90° USB adapter, USB to barrel cable, in-line switch, Y splitter, moto:bit, micro:bit, foam tape, two zip ties, eight M2 × 8'],
       [5, 'Wire the motors and make it drive', 'Laptop, micro-USB cable'],
       [6, 'Mount the sensor arms (Sat Sep 26)', 'Both arms, two QTR-1A sensors, soldering, 2 × M2 × 8 and 2 × M2 × 6 with nuts, six jumper wires'],
       [7, 'Teach Dusty about edges (Sep 26 and 27)', ''],
@@ -162,7 +162,7 @@ export const BATCHES = [
   },
   {
     n: 4,
-    stem: 'dusty-plate-4-brush-drive-revA6',
+    stem: 'dusty-plate-4-brush-drive-revA5',
     title: 'Brush drive',
     when: 'During the week before weekend 3',
     time: 'About 1 hour',
@@ -198,7 +198,7 @@ export const BATCHES = [
   },
   {
     n: 5,
-    stem: 'dusty-plate-5-tray-revA6',
+    stem: 'dusty-plate-5-tray-revA5',
     title: 'Crumb tray',
     when: 'After Batch 4',
     time: 'About 15 minutes',

@@ -114,7 +114,7 @@ export const STEPS = {
     title: 'Add the deck, the brain and the power',
     time: 'About 1 hour',
     intro: 'The power bank rides in its own sleeve at the back, and the moto:bit and micro:bit sit on the deck above it. Keep the in-line switch OFF for this whole step.',
-    need: ['Battery sleeve, keeper bar, deck (Batch 3)', '2 deck posts', 'Power bank, charged', '90° USB adapter, USB to round-plug cable, in-line switch, Y splitter, L-shaped round-plug adapter', 'moto:bit and micro:bit', 'Foam tape, 2 zip ties', '8 × M2 × 8'],
+    need: ['Battery sleeve, keeper bar, deck (Batch 3)', '2 deck posts', 'Power bank, charged', '90° USB adapter, USB to round-plug cable, in-line switch, Y splitter', 'moto:bit and micro:bit', 'Foam tape, 2 zip ties', '8 × M2 × 8'],
     sub: [
       ['Check that both motor cables already come up through the windows in the base.', 'The front of the sleeve sits over the back of each window. Once it is screwed down, you cannot feed a cable through anymore.'],
       ['Set the battery sleeve on the back of the base, open end on the left, the two screw tabs toward the front.', 'The tabs and the back wall line up with four holes in the base. Keep the motor wires in front of the sleeve, not under it. The sleeve should sit flat without touching the little motor boards.', r('g4-sleeve')],
@@ -127,7 +127,7 @@ export const STEPS = {
       ['Slide the moto:bit onto the deck between the two side guides, connector edge toward the front, until it touches the stop at the back.', 'The round power socket sits on the left, where the left guide stops short so the socket has room (change order MOC-006).', h('b3-s1')],
       ['Zip tie the board down in two places. Front tie: push it down through the front slot on one side, slide it under the deck to the other side, and bring it up over the narrow neck of the board. Back tie: slide the power bank out first, then thread it the same way through the back slots, across the empty sleeve above where the bank sits.', 'The front tie goes over the neck, just behind the micro:bit connector. The back tie goes between the motor sockets and the power socket, not over them. Snug, not crushing. Slide the bank back in and push the keeper bar home.'],
       ['Slide the micro:bit into the connector on the front of the moto:bit, LEDs and buttons facing up.', 'It lies flat and sticks out over the brush like a little roof. The gold stripes go in. If it will not go, flip it over rather than pushing harder.', r('g4-brain')],
-      ['A grown-up connects the power: the 90° adapter into the bank’s USB-A port, turned so the cable runs toward the front. Then the USB to round-plug cable, the in-line switch, and the Y splitter. One splitter end goes into the L-shaped plug adapter, and the adapter goes into the moto:bit, turned so the cable runs forward along the edge of the deck.', 'A straight plug would stick out past the wheels. Stick the switch to the edge of the deck with mounting tape where you can reach it. The second splitter end is for the brush motor in Step 9.'],
+      ['A grown-up connects the power: the 90° adapter into the bank’s USB-A port, turned so the cable runs toward the front. Then the USB to round-plug cable, the in-line switch, and the Y splitter, with one end into the moto:bit.', 'Stick the switch to the edge of the deck with mounting tape where you can reach it. The second splitter end is for the brush motor in Step 9.'],
       ['Flip the switch ON, then tap the button on the power bank once. The micro:bit should light up.', 'Nothing? Check every plug. Then check the bank is charged: pull the keeper bar, slide the bank out and press its button to see the lights.'],
     ],
     why: [
@@ -247,7 +247,7 @@ export const STEPS = {
     draw: [[dr('gear-train'), 'The brush gear train, seen from the right side of the robot.']],
     sub: [
       ['Cut pipe cleaners into pieces about 30 mm long and push one through each hole in the roller.', 'Center each piece so the same length sticks out both sides.', r('g9-bristles')],
-      ['Check the motor has no gear on its shaft yet.', 'The gear will not fit through the hole in the right-hand wall of the mount, so it goes on after the motor is in. If the gear from the Batch 1 test is still on, wiggle it straight off. If it cracks, a grown-up prints a new one (dusty-pinion-revA6.stl, a few minutes).'],
+      ['Check the motor has no gear on its shaft yet.', 'The gear will not fit through the hole in the right-hand wall of the mount, so it goes on after the motor is in. If the gear from the Batch 1 test is still on, wiggle it straight off. If it cracks, a grown-up prints a new one (dusty-pinion-revA5.stl, a few minutes).'],
       ['Snap the rocker switch into the square hole in the back wall of the motor mount.', 'Easier now, before anything else is in the way.'],
       ['Thread the zip tie before the motor goes in. Push its tail down through one slot in the floor of the mount, along underneath the floor, and up through the slot on the other side of the curved motor cradles. Leave a big loose loop over the top.', 'The two slots are on either side of the motor cradles, about halfway along. The flat band runs under the floor and the square head stays on top, beside the motor, never underneath.'],
       ['Put the motor into the mount, through the loop, shaft pointing to the right side. Tip the shaft end in first so the shaft and the round collar around it go into the hole in the right-hand wall, then press the back end down until it clicks into the two curved cradles.', 'The flat sides of the motor face up and down. The collar sits in the hole, and the back of the motor rests in the rear cradle.'],
@@ -334,7 +334,7 @@ export const FIXES = [
   ['A wheel does not turn at all', 'Wrong wire', 'Only red and white go to the motor terminal. Black is a turn-counter wire on these motors.'],
   ['A motor will not sit flat on its pad', 'Old base file, or plug facing the wrong way', 'The plug must point into the square window. A base without windows is an old file: reprint Plate 2 from the current files.'],
   ['A print lifted off the bed', 'First layer did not stick', 'Clean the bed, let it heat fully, try again. A glue stick helps.'],
-  ['A screw will not start', 'Hole too small', 'Check you printed the Rev A.6 files (every file name ends in revA6). Push firmly and turn slowly: the funnel should guide it.'],
+  ['A screw will not start', 'Hole too small', 'Check you printed the current files: the deck ends in revA6, every other part in revA5. Push firmly and turn slowly: the funnel should guide it.'],
   ['A screw spins and will not tighten', 'Stripped plastic thread', 'Use the next longer screw, or a grown-up adds a drop of glue in the hole and waits.'],
   ['A deck post wiggles in the base', 'Old base file', 'Post holes since Rev A.5 are 3.95 mm and snug. Reprint the base from the new files.'],
   ['A part will not fit', 'Printed a little big', 'Sand or file the edge a little. Do not force it: PLA cracks.'],

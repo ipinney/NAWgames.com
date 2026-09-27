@@ -225,7 +225,7 @@ export default function DustyBuildPage() {
                     <td className="hidden sm:table-cell px-2 py-2.5 text-white/70 tabular-nums">{g}</td>
                     <td className="hidden sm:table-cell px-2 py-2.5 text-white/50">{note}</td>
                     <td className="px-4 py-2.5 text-right">
-                      <a href={`${F}/dusty-${file}-revA6.stl`} download className="text-naw-cyan font-semibold hover:underline whitespace-nowrap">
+                      <a href={`${F}/dusty-${file}-${file === 'deck' ? 'revA6' : 'revA5'}.stl`} download className="text-naw-cyan font-semibold hover:underline whitespace-nowrap">
                         STL
                       </a>
                     </td>
@@ -235,7 +235,7 @@ export default function DustyBuildPage() {
             </table>
           </div>
           <p className="text-white/40 text-xs mt-3">
-            Also needed and not printed: M2 screws and nuts, female jumper wires, pipe cleaners, a KCD11 mini rocker switch, a 5.5 × 2.1 mm Y splitter, right-angle adapter and screw-terminal jack, a USB-C power bank, a 90° USB-A adapter, a USB to barrel cable, an in-line power switch, foam tape, and small zip ties.
+            Also needed and not printed: M2 screws and nuts, female jumper wires, pipe cleaners, a KCD11 mini rocker switch, a 5.5 × 2.1 mm Y splitter and screw-terminal jack, a USB-C power bank, a 90° USB-A adapter, a USB to barrel cable, an in-line power switch, foam tape, and small zip ties.
           </p>
         </Section>
 

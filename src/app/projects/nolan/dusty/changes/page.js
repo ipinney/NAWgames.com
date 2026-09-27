@@ -46,7 +46,7 @@ const TOUCHED = ['3D model and all 19 print files', 'Parts list', 'Build guide s
 
 // Newest first. Add a line every time something about the plan changes.
 const LOG = [
-  ['Sep 27', 'Change', 'MOC-006: the deck fits the real moto:bit. The left side guide stops at y 88 so the power socket has room, and both zip tie slots moved (the front tie could not get under the deck past the battery sleeve wall, and the back tie pressed on the power socket). An L-shaped plug adapter keeps the power plug from sticking out past the wheels. Plate 3 re-sliced, every download renamed revA6, Build Guide step 4 and the Wiring map updated.'],
+  ['Sep 27', 'Change', 'MOC-006: the deck fits the real moto:bit. The left side guide stops at y 88 so the power socket has room, and both zip tie slots moved (the front tie could not get under the deck past the battery sleeve wall, and the back tie pressed on the power socket). Only the deck changed: the deck file and Plate 3 are revA6, every other file stays revA5. Build Guide step 4 updated.'],
   ['Sep 27', 'Change', 'MOC-005: a window in the base for the little board and plug on each wheel motor, the old motor wire slot removed, and a small pocket under the battery sleeve over each window. Motor measured at 33 mm long with its plug (the model said 37). All 5 plates re-sliced. Every download now has revA5 in its name, and the old files were deleted. Build Guide steps 2, 4 and 5 updated, with the motor wire colors.'],
   ['Sep 27', 'Plan', 'Print plan and build guide merged into one Build Guide: each batch is a chapter (print, know your parts, clean up and check, then the build steps it unlocks), with 3D pictures from the Rev A.3 design and the original drawings.'],
   ['Sep 27', 'Change', 'MOC-004: screw lead-in (45 degree chamfer, 4.2 mm wide, 1 mm deep) on the deck post tops, motor pad and caster screw holes, and the post holes in the base made smaller, 4.30 to 3.95 mm. All print files re-sliced (Rev A.3).'],
@@ -77,13 +77,12 @@ const MOC6 = [
   ['Left side guide', 'Deck', 'y 39 to 108 mm', 'y 39 to 88 mm', 'Barrel jack overhangs the left board edge 3.5 to 5.3 mm, 54.5 to 65 mm back from the connector, 1.6 mm up. It hit the 3 mm guide by 29 mm³'],
   ['Front zip tie slots', 'Deck', 'y 60 to 64 mm', 'y 56.8 to 60.2 mm', 'Old slots sat over the battery sleeve front wall (y 60.6 to 62.2): a tie could not pass under the deck (142 mm³ overlap). New tie crosses the board neck, clear of the posts and the wall'],
   ['Back zip tie slots', 'Deck', 'y 96 to 100 mm', 'y 84 to 88 mm', 'Old tie crossed the barrel jack. New tie runs between the motor sockets and the jack, over the bank inside the sleeve (7.1 mm gap)'],
-  ['Power plug at the moto:bit', 'Bought parts', 'straight plug, reaches x ≈ −70 mm', '5.5 × 2.1 mm right-angle adapter', 'The straight plug stuck out about 20 mm past the wheels and broke the 5 inch limit'],
   ['Part volume', 'Deck', '13.57 cm³', '13.46 cm³', '3D model'],
   ['Plate 3 (deck, sleeve, arms) print', 'Plate 3', '42.2 g, 1 h 46 min', '42.0 g, 1 h 46 min', 'Slicer'],
-  ['Download file names', 'Every print file, viewer and zip', 'dusty-deck-revA5.stl', 'dusty-deck-revA6.stl', 'Old files deleted'],
+  ['Download file names', 'Deck and Plate 3 only', 'dusty-deck-revA5.stl', 'dusty-deck-revA6.stl', 'Unchanged parts keep their revA5 files'],
 ];
 
-const MOC6_TOUCHED = ['3D model (Rev A.6)', 'Deck', 'Barrel jack and plug added to the model', 'Plate 3 re-sliced', 'Every file renamed revA6', 'Build Guide step 4', 'Wiring map', 'Parts list'];
+const MOC6_TOUCHED = ['3D model (Rev A.6)', 'Deck', 'Barrel jack added to the model', 'Plate 3 re-sliced', 'Build Guide step 4'];
 
 const MOC5 = [
   ['Motor length, gearbox face to back of plug', '3D model (N20 motor)', '37 mm (assumed)', '33 mm', 'Measured with a ruler, about ±1 mm'],
@@ -291,18 +290,17 @@ export default function DustyChangesPage() {
             <p className="text-white leading-relaxed mt-1">
               The real moto:bit has a round power socket that sticks out past the edge of the board. It bumped the little wall
               on the left side of the deck, so the board could not lie flat. One zip tie pressed on that socket, and the other
-              could not go in at all because the battery sleeve wall was in the way. We shortened the left wall, moved both zip
-              tie holes, and added an L-shaped plug so the power cord does not stick out past the wheels.
+              could not go in at all because the battery sleeve wall was in the way. We shortened the left wall and moved both zip tie holes. Only the deck changes.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-3 mt-3">
             <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
               <div className="text-white/45 text-xs font-semibold">Why we need it</div>
-              <div className="text-white text-sm mt-1 leading-relaxed">The board has to sit flat and stay put while Dusty drives, and the power plug has to stay inside the 5 inch limit. The deck was drawn from the board&apos;s size on paper, before we had the real board to measure.</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">The board has to sit flat and stay put while Dusty drives. The deck was drawn from the board&apos;s size on paper, before we had the real board to measure.</div>
             </div>
             <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
               <div className="text-white/45 text-xs font-semibold">How we picked</div>
-              <div className="text-white text-sm mt-1 leading-relaxed">Two choices: trim the wall by hand and glue the board down (no reprint, but the board could never come off and the plug still sticks out), or reprint the deck and add an L-shaped plug. We picked the reprint. Only the deck changes.</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">Two choices: trim the wall by hand and glue the board down (no reprint, but the board could never come off), or reprint the deck. We picked the reprint. Only the deck changes.</div>
             </div>
           </div>
           <h3 className="text-white font-bold mt-6">Technical record</h3>
@@ -331,11 +329,9 @@ export default function DustyChangesPage() {
             </table>
           </div>
           <p className="text-white/60 text-sm mt-3 leading-relaxed">
-            Measured from photos with a ruler (about ±2 mm): board 60 × 76 mm, power socket on the left edge. The socket and the
-            L-shaped plug were added to the 3D model: with the socket anywhere in a ±2 mm range, it clears the new deck.
+            Measured from photos with a ruler (about ±2 mm): board 60 × 76 mm, power socket on the left edge. The socket was added to the 3D model: with the socket anywhere in a ±2 mm range, it clears the new deck.
             Neither zip tie path touches the sleeve or the posts. Not changed: base, sleeve, posts, motors, sensor arms, the
-            cliff math, the balance point, and every other part. The right-angle adapter is a 5.5 × 2.1 mm male to female
-            (Walmart 379576222, 10 pack).
+            cliff math, the balance point, and every other part.
           </p>
           <h3 className="text-white font-bold mt-6">What had to be updated</h3>
           <div className="flex flex-wrap gap-2 mt-3">
@@ -352,7 +348,6 @@ export default function DustyChangesPage() {
           <ul className="mt-2 space-y-1 text-sm text-white/75 list-disc pl-5">
             <li>The moto:bit lies flat on the deck and touches the back stop.</li>
             <li>Both zip ties thread through and pull snug, and neither one presses on the power socket or the sensor pins.</li>
-            <li>With the L-shaped plug in, nothing sticks out past the wheels.</li>
             <li>The power bank still slides in and out with the back tie in place.</li>
           </ul>
         </Section>
