@@ -341,7 +341,7 @@ def blocks(*rows):
         out.append(f'      <div class="blk {kind}">{text}{small}</div>')
     return '    <div class="blocks">\n' + '\n'.join(out) + '\n    </div>'
 
-V3D = '/projects/nolan/dusty-files/dusty-components-3d-revA5.html'
+V3D = '/projects/nolan/dusty-files/dusty-components-3d-revA6.html'
 def see3d(part):
     return f'    <a class="link3d" href="{V3D}" target="_blank" rel="noopener">See it in 3D: tap &ldquo;{part}&rdquo; &rarr;</a>'
 
@@ -664,7 +664,7 @@ links = '''
     <p class="eyebrow">Everything else</p>
     <h2>The other pages</h2>
     <div class="linkrow">
-      <a class="primary" href="/projects/nolan/dusty-files/dusty-components-3d-revA5.html" target="_blank" rel="noopener">3D model of every part</a>
+      <a class="primary" href="/projects/nolan/dusty-files/dusty-components-3d-revA6.html" target="_blank" rel="noopener">3D model of every part</a>
       <a class="secondary" href="/projects/nolan/dusty/build" target="_top">Print files and downloads</a>
       <a class="secondary" href="/projects/nolan/dusty-parts-list.pdf" target="_blank" rel="noopener">Parts list PDF</a>
       <a class="secondary" href="/projects/nolan/dusty" target="_top">Dusty project page</a>

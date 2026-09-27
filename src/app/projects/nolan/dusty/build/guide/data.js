@@ -1,6 +1,6 @@
 // Print-plan data for the Dusty Build Guide (was build/batches/page.js).
 export const F = '/projects/nolan/dusty-files';
-export const V3D = `${F}/dusty-components-3d-revA5.html`;
+export const V3D = `${F}/dusty-components-3d-revA6.html`;
 
 export const SETTINGS = [
   ['Printer', 'FlashForge Adventurer 5M, 0.4 mm nozzle, textured PEI plate'],
@@ -22,7 +22,7 @@ export const BEFORE = [
 export const BATCHES = [
   {
     n: 1,
-    stem: 'dusty-plate-1-fit-check-revA5',
+    stem: 'dusty-plate-1-fit-check-revA6',
     title: 'Fit check',
     when: 'First, before anything else',
     time: 'About 20 minutes',
@@ -88,7 +88,7 @@ export const BATCHES = [
   },
   {
     n: 2,
-    stem: 'dusty-plate-2-base-revA5',
+    stem: 'dusty-plate-2-base-revA6',
     title: 'Base plate',
     when: 'After Batch 1 passes',
     time: 'About 1 hour 20 minutes',
@@ -123,14 +123,14 @@ export const BATCHES = [
   },
   {
     n: 3,
-    stem: 'dusty-plate-3-deck-and-arms-revA5',
+    stem: 'dusty-plate-3-deck-and-arms-revA6',
     title: 'Deck, battery sleeve and sensor arms',
     when: 'After Batch 2',
     time: 'About 1 hour 45 minutes',
     pieces: 'Deck, battery sleeve (standing on its end), keeper bar, right sensor arm, left sensor arm (the one with the switch pad)',
     why: 'The deck and the battery sleeve are needed for the first drive. The arms print now too, so the sensor weekend has nothing left to print.',
     need: [],
-    grams: 42.2,
+    grams: 42.0,
     learn: {
       title: 'How a power bank works',
       items: [
@@ -140,7 +140,7 @@ export const BATCHES = [
       ],
     },
     parts: [
-      { k: 'deck', name: 'Deck', looks: 'Flat shelf, 79 × 77 mm, with a square window in the middle and raised guides along both sides.', job: 'Holds the moto:bit board on top of the robot.', goes: 'Build Step 4' },
+      { k: 'deck', name: 'Deck', looks: 'Flat shelf, 79 × 77 mm, with a square window in the middle and a raised guide along each side. The left guide stops short so the moto:bit power socket fits.', job: 'Holds the moto:bit board on top of the robot.', goes: 'Build Step 4' },
       { k: 'sleeve', name: 'Battery sleeve', looks: 'Long box, 106 mm, open at one end and closed at the other, with windows in the sides. It prints standing on its closed end.', job: 'The power bank slides inside. The back of the deck rests on top of it.', goes: 'Build Step 4' },
       { k: 'keeper', name: 'Keeper bar', looks: 'Thin bar, 54 mm long, with a flat head on one end.', job: 'Slides through the back wall of the sleeve so the power bank cannot slide out.', goes: 'Build Step 4' },
       { k: 'carrier_R', name: 'Right sensor arm', looks: 'L shape, 27 mm tall, with a slot in the tall side and a small frame at the foot.', job: 'Holds a cliff sensor face down just above the table.', goes: 'SENSORS cup, Build Step 6' },
@@ -153,7 +153,7 @@ export const BATCHES = [
     ],
     gate: 'The moto:bit fits the deck and the bank fits the sleeve. That is everything for the first drive.',
     build: [
-      [4, 'Add the deck, the brain and the power', 'Two posts, battery sleeve, keeper bar, deck, power bank, 90° USB adapter, USB to barrel cable, in-line switch, Y splitter, moto:bit, micro:bit, foam tape, two zip ties, eight M2 × 8'],
+      [4, 'Add the deck, the brain and the power', 'Two posts, battery sleeve, keeper bar, deck, power bank, 90° USB adapter, USB to barrel cable, in-line switch, Y splitter, right-angle barrel adapter, moto:bit, micro:bit, foam tape, two zip ties, eight M2 × 8'],
       [5, 'Wire the motors and make it drive', 'Laptop, micro-USB cable'],
       [6, 'Mount the sensor arms (Sat Sep 26)', 'Both arms, two QTR-1A sensors, soldering, 2 × M2 × 8 and 2 × M2 × 6 with nuts, six jumper wires'],
       [7, 'Teach Dusty about edges (Sep 26 and 27)', ''],
@@ -162,7 +162,7 @@ export const BATCHES = [
   },
   {
     n: 4,
-    stem: 'dusty-plate-4-brush-drive-revA5',
+    stem: 'dusty-plate-4-brush-drive-revA6',
     title: 'Brush drive',
     when: 'During the week before weekend 3',
     time: 'About 1 hour',
@@ -198,7 +198,7 @@ export const BATCHES = [
   },
   {
     n: 5,
-    stem: 'dusty-plate-5-tray-revA5',
+    stem: 'dusty-plate-5-tray-revA6',
     title: 'Crumb tray',
     when: 'After Batch 4',
     time: 'About 15 minutes',

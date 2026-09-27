@@ -13,7 +13,7 @@ FlashForge binary. OrcaSlicer 2.4.2 opens these files fine.
 Flash Studio's CLI segfaults when a plate has a name, so plate names stay blank.
 
     python3 flatten.py      # resolve the system presets into m.json p.json f.json
-    python3 build3mf.py revA5   # plate{1..5}/*.stl -> out/dusty-plate-N-*-revA5.3mf + slice check
+    python3 build3mf.py revA6   # plate{1..5}/*.stl -> out/dusty-plate-N-*-revA5.3mf + slice check
 
 Settings applied (all plates): 3 walls, 5 top / 4 bottom, 20% gyroid, 5 mm outer
 brim, no supports, textured PEI plate, X-Y hole compensation 0.

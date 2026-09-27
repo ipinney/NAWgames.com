@@ -160,7 +160,7 @@ export default function DustyPage() {
               </div>
             </Link>
             <a
-              href={`${P}/dusty-files/dusty-components-3d-revA5.html`}
+              href={`${P}/dusty-files/dusty-components-3d-revA6.html`}
               target="_blank"
               rel="noopener noreferrer"
               className="group bg-naw-card rounded-2xl border border-naw-cyan/20 p-5 hover:border-naw-cyan/40 transition-colors flex flex-col justify-center"

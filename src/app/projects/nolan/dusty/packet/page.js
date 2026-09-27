@@ -248,7 +248,7 @@ export default function PacketPage() {
                 'USB-C power bank in its own sleeve, and the on/off switch',
               ]}
             />
-            <Btn href="/projects/nolan/dusty-files/dusty-components-3d-revA5.html" newTab>3D model to draw from</Btn>
+            <Btn href="/projects/nolan/dusty-files/dusty-components-3d-revA6.html" newTab>3D model to draw from</Btn>
           </Sheet>
           <Sheet tag="Box" title="What is the size and weight?">
             <Box><p>About 4 and 3/4 inches wide and 5 inches long (121 by 126 mm), and 3 inches tall, smaller than a sandwich. Under 400 grams, about the weight of a full can of soda.</p></Box>

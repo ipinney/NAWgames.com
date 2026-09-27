@@ -245,7 +245,7 @@ export default function DustyBuildGuidePage() {
           {FACTS.map((f) => (
             <span key={f} className="bg-white/5 border border-white/15 rounded-full px-3 py-1 text-xs text-white/70">{f}</span>
           ))}
-          <span className="bg-white/5 border border-white/15 rounded-full px-3 py-1 text-xs text-white/70">Rev A.5</span>
+          <span className="bg-white/5 border border-white/15 rounded-full px-3 py-1 text-xs text-white/70">Rev A.6</span>
         </div>
         <div className="mt-5 rounded-2xl overflow-hidden border border-white/10">
           <img src="/projects/nolan/dusty-files/guide/g-hero.png" alt="Dusty, finished, from the front left" className="w-full h-auto bg-[#0d1b2e]" />

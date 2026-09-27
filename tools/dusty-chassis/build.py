@@ -85,6 +85,15 @@ DECK_Y = (50.0, BAT_Y1); DECK_X = 39.5
 MB = (62.0, 76.0)                           # moto:bit v2 (DEV-15713): 62 wide (connector edge, front) x 76 deep
 MB_Y0 = 36.0; MB_Y1 = MB_Y0 + MB[1]         # board sits flush against the rear stop
 DECK_NOSE_Y = 37.0                          # deck extends forward under the board
+# MOC-006 (Sep 27 2026), measured moto:bit: the barrel jack sits on the left edge about 54.5 to 65 mm back from the
+# connector edge, overhangs the board 3.5 to 5.3 mm, and starts 1.6 mm above the deck. It hit the 3 mm left guide
+# (29 mm3), so the left guide now stops at y 88. Zip tie slots moved: front 60-64 -> 56.8-60.2 (the old slots sat over
+# the sleeve front wall at y 60.6-62.2, so a tie could not pass under the deck; the new tie crosses the board neck,
+# clear of the posts and the wall); rear 96-100 -> 84-88 (the old tie crossed the jack; the new one passes over the
+# bank inside the sleeve, 7.1 mm gap).
+JACK_Y = (MB_Y0 + 54.5, MB_Y0 + 65.0); JACK_OUT = 5.3
+JACK_GUIDE_END = 88.0
+TIE_Y = [(56.8, 60.2), (84.0, 88.0)]
 POSTS = [(sx*36.5, 53.0) for sx in (-1, 1)]         # front posts; the sleeve carries the rear of the deck
 POST_D = 5.6; PEG_D = 4.0
 WIDE_Y0 = 47.0; FRONT_HALF = SP_X1; WIDE_HALF = 39.5
@@ -269,7 +278,8 @@ def deck():
     parts = [s]
     for sx in (-1, 1):                                                        # side guides
         xa, xb = sorted([sx * hx, sx * (hx + 2.0)])
-        parts.append(box(xa, xb, DECK_NOSE_Y + 2.0, MB_Y1 - 4.0, z1, z1 + 3.0))
+        g_end = JACK_GUIDE_END if sx < 0 else MB_Y1 - 4.0                     # MOC-006: left guide stops short of the barrel jack
+        parts.append(box(xa, xb, DECK_NOSE_Y + 2.0, g_end, z1, z1 + 3.0))
     parts.append(box(-hx, hx, MB_Y1, MB_Y1 + 2.0, z1, z1 + 3.0))              # rear stop
     s = union(parts)
     for (x, y) in POSTS + SL_REAR:
@@ -277,8 +287,8 @@ def deck():
     # zip-tie slots just outside the side guides; the ties go over the board
     for sx in (-1, 1):
         xa, xb = sorted([sx * (hx + 2.5), sx * (hx + 5.0)])
-        s = s - box(xa, xb, 60, 64, z0 - 1, z1 + 1)
-        s = s - box(xa, xb, 96, 100, z0 - 1, z1 + 1)
+        for (ya, yb) in TIE_Y:                                                # MOC-006: moved, see TIE_Y
+            s = s - box(xa, xb, ya, yb, z0 - 1, z1 + 1)
     s = s - box(-20, 20, 72, 94, z0 - 1, z1 + 1)       # wire pass-through / weight
     return s
 
