@@ -93,6 +93,24 @@ export const PHASES = [
 
 export const PHOTOS = [
   {
+    file: '2026-09-27-base-revA5-printing.jpg',
+    phase: 'print',
+    date: '2026-09-27',
+    title: 'Reprinting the base (Rev A.5)',
+    caption: 'The new base after MOC-005, with a window for each motor plug. The screen says dusty-base-revA5, 4% done, 1 hour 13 minutes to go. Nozzle 220 C, bed 55 C.',
+    alt: 'A Flashforge Adventurer 5M 3D printer from above, printing a flat black robot base on a gold textured build plate, with the touch screen showing dusty-base-revA5 printing at 4 percent and 1 hour 13 minutes remaining',
+    tall: true,
+  },
+  {
+    file: '2026-09-27-base-revA5-first-layers.jpg',
+    phase: 'print',
+    date: '2026-09-27',
+    title: 'First layers of the new base',
+    caption: 'Close up of the first layers going down. Same base as before, plus the windows so the motors can sit flat.',
+    alt: 'Close up of a 3D printer nozzle over a thin black robot base outline on a textured Flashforge build plate, with holes and cutouts visible in the first layers',
+    tall: true,
+  },
+  {
     file: '2026-09-26-motor-test-fit.jpg',
     phase: 'drive',
     date: '2026-09-26',
