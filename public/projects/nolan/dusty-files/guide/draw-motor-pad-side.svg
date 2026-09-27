@@ -1,6 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="fit" viewBox="0 0 420 215" role="img" aria-label="Front view of the right side: the motor bracket screws up into a pad under the base plate, and the wheel sits outside">
-  <text x="200" y="28" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="middle">base plate (printed)</text>
-  <rect x="20" y="36" width="300" height="14" rx="3" fill="#F0B43C" stroke="#9A6A12" stroke-width="1.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" class="fit" viewBox="0 0 420 215" role="img" aria-label="Front view of the right side: the motor bracket screws up into a pad under the base plate, the little board and plug on the back of the motor sit inside a window in the base, and the wires come up through the window. The wheel sits outside">
+  <text x="90" y="28" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="middle">base plate (printed)</text>
+  <rect x="20" y="36" width="150" height="14" rx="3" fill="#F0B43C" stroke="#9A6A12" stroke-width="1.5"/>
+  <rect x="226" y="36" width="94" height="14" rx="3" fill="#F0B43C" stroke="#9A6A12" stroke-width="1.5"/>
+  <text x="214" y="28" font-family="IBM Plex Mono, monospace" font-size="12" fill="#5CC98A" text-anchor="middle">window</text>
   <rect x="236" y="50" width="52" height="26" fill="#F0B43C" stroke="#9A6A12" stroke-width="1.5"/>
   <text x="262" y="67" font-family="IBM Plex Mono, monospace" font-size="11" fill="#6B4A0C" text-anchor="middle">PAD</text>
   <rect x="228" y="76" width="68" height="5" fill="#8E9CAC"/>
@@ -8,9 +10,15 @@
   <rect x="290" y="84" width="20" height="20" fill="#D8A34A" stroke="#8C6A1E" stroke-width="1.5"/>
   <rect x="310" y="91" width="16" height="6" fill="#8E9CAC"/>
   <rect x="324" y="44" width="20" height="100" rx="6" fill="#2B2F3A"/>
+  <rect x="216" y="40" width="6" height="72" rx="1" fill="#1F8A4C" stroke="#14603A" stroke-width="1"/>
+  <rect x="202" y="42" width="14" height="16" rx="2" fill="#EEF2F8" stroke="#8A99B0" stroke-width="1"/>
+  <path d="M202 47 C188 47 182 42 182 30 V6" stroke="#F0605E" stroke-width="2.5" fill="none"/>
+  <path d="M202 53 C184 53 177 45 177 30 V6" stroke="#EEF2F8" stroke-width="2.5" fill="none"/>
   <path d="M244 106 V56 M280 106 V56" stroke="#F0609E" stroke-width="3" stroke-dasharray="4 3"/>
-  <text x="210" y="96" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="end">M2 &#215; 8 screws</text>
-  <text x="210" y="114" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="end">go up into the pad</text>
+  <text x="170" y="84" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="end">M2 &#215; 8 screws</text>
+  <text x="170" y="102" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="end">go up into the pad</text>
+  <text x="170" y="14" font-family="IBM Plex Mono, monospace" font-size="11" fill="#A9B6CA" text-anchor="end">wires come up here</text>
+  <text x="210" y="128" font-family="IBM Plex Mono, monospace" font-size="11" fill="#5CC98A" text-anchor="middle">board and plug sit in the window</text>
   <path d="M10 144 H410" stroke="#8A99B0" stroke-width="2"/>
   <text x="20" y="164" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA">table</text>
   <text x="334" y="164" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="middle">wheel</text>

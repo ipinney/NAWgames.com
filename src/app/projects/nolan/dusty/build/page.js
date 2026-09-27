@@ -31,7 +31,7 @@ const STEPS = [
   },
   {
     title: 'Print it and put it together',
-    text: 'One Build Guide: five print batches (21 pieces, about 104 g of PLA), how to clean up and check each one, then every build step it unlocks, with 3D pictures, where every M2 screw goes, how the brush gears work, and teaching Dusty where the table ends.',
+    text: 'One Build Guide: five print batches (21 pieces, about 103 g of PLA), how to clean up and check each one, then every build step it unlocks, with 3D pictures, where every M2 screw goes, how the brush gears work, and teaching Dusty where the table ends.',
     action: { href: '/projects/nolan/dusty/build/guide', label: 'Build guide', internal: true },
   },
 ];
@@ -40,14 +40,14 @@ const VIEWERS = [
   {
     title: 'Every part',
     text: 'All 30 parts, printed and bought. Tap one to see it by itself with its size, or in place on the robot.',
-    open: `${F}/dusty-components-3d.html`,
-    file: 'dusty-components-3d.html',
+    open: `${F}/dusty-components-3d-revA5.html`,
+    file: 'dusty-components-3d-revA5.html',
   },
   {
     title: 'Whole robot',
     text: 'The full assembly with measurements. Hide the bought parts to see just the printed ones.',
-    open: `${F}/dusty-chassis-3d.html`,
-    file: 'dusty-chassis-3d.html',
+    open: `${F}/dusty-chassis-3d-revA5.html`,
+    file: 'dusty-chassis-3d-revA5.html',
   },
   {
     title: 'Dustpan (foam board version)',
@@ -134,10 +134,10 @@ export default function DustyBuildPage() {
                 <Link href="/projects/nolan/dusty/build/guide" className="bg-naw-orange text-naw-dark hover:bg-naw-orange/90 inline-flex items-center px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors">
                   Build guide
                 </Link>
-                <Btn href={`${F}/dusty-components-3d.html`}>Explore in 3D</Btn>
+                <Btn href={`${F}/dusty-components-3d-revA5.html`}>Explore in 3D</Btn>
               </div>
             </div>
-            <a href={`${F}/dusty-chassis-3d.html`} target="_blank" rel="noopener noreferrer" className="block rounded-2xl overflow-hidden border border-white/10 bg-[#0d1b2e]">
+            <a href={`${F}/dusty-chassis-3d-revA5.html`} target="_blank" rel="noopener noreferrer" className="block rounded-2xl overflow-hidden border border-white/10 bg-[#0d1b2e]">
               <img src={`${P}/dusty-hero.png`} alt="3D model of the Dusty chassis" width={720} height={630} className="w-full h-auto" />
             </a>
           </div>
@@ -195,9 +195,9 @@ export default function DustyBuildPage() {
           sub="Set up for the FlashForge Adventurer 5M: PLA, 0.4 mm nozzle, 0.2 mm layers, no supports. Sizes are in millimeters as the part sits on the print bed."
         >
           <div className="flex flex-wrap gap-2 mb-4">
-            <Btn href={`${F}/dusty-chassis-revA-stl.zip`} download primary>All parts (ZIP)</Btn>
-            <Btn href={`${F}/dusty-chassis-all-parts-plate.stl`} download>Whole plate, one STL</Btn>
-            <Btn href={`${F}/dusty-3d-source.zip`} download>Design source (Python)</Btn>
+            <Btn href={`${F}/dusty-chassis-revA5-stl.zip`} download primary>All parts (ZIP)</Btn>
+            <Btn href={`${F}/dusty-chassis-all-parts-plate-revA5.stl`} download>Whole plate, one STL</Btn>
+            <Btn href={`${F}/dusty-3d-source-revA5.zip`} download>Design source (Python)</Btn>
           </div>
           <div className="bg-naw-card rounded-2xl border border-naw-cyan/20 overflow-x-auto">
             <table className="w-full text-sm">
@@ -225,7 +225,7 @@ export default function DustyBuildPage() {
                     <td className="hidden sm:table-cell px-2 py-2.5 text-white/70 tabular-nums">{g}</td>
                     <td className="hidden sm:table-cell px-2 py-2.5 text-white/50">{note}</td>
                     <td className="px-4 py-2.5 text-right">
-                      <a href={`${F}/dusty-${file}.stl`} download className="text-naw-cyan font-semibold hover:underline whitespace-nowrap">
+                      <a href={`${F}/dusty-${file}-revA5.stl`} download className="text-naw-cyan font-semibold hover:underline whitespace-nowrap">
                         STL
                       </a>
                     </td>

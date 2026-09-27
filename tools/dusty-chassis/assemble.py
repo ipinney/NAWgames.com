@@ -75,6 +75,17 @@ def boxc(x0, x1, y0, y1, z0, z1):
 
 ghosts = {}
 ghosts['N20 motors + brackets'] = trimesh.util.concatenate([ghost_motor(1), ghost_motor(-1)])
+# MOC-005: encoder board (x 15.4-16.6, reaches 16 mm from the motor centerline toward the plate)
+# and the harness plug in its back face (to GX - ML), both rising into the base window
+def ghost_encoder(side):
+    b0, b1 = GX - 25.6, GX - 24.4
+    parts = [boxc(b0, b1, A - 6.0, A + 6.0, AXLE_Z - 6.0, AXLE_Z + 16.0),
+             boxc(GX - ML, b0, A - 2.5, A + 2.5, AXLE_Z + 7.0, AXLE_Z + 16.0)]
+    t = trimesh.util.concatenate(parts)
+    if side < 0:
+        t.apply_transform(np.diag([-1.0, 1, 1, 1])); t.invert()
+    return t
+ghosts['N20 encoder boards + plugs'] = trimesh.util.concatenate([ghost_encoder(1), ghost_encoder(-1)])
 ghosts['wheels'] = trimesh.util.concatenate([cyl_x(WHEEL_R, s*WHEEL_X0, s*(WHEEL_X0 + WHEEL_W), A, AXLE_Z) if s > 0 else
                                            cyl_x(WHEEL_R, -(WHEEL_X0 + WHEEL_W), -WHEEL_X0, A, AXLE_Z) for s in (1, -1)])
 cz = CASTER_H

@@ -4,10 +4,11 @@ FlashForge Adventurer 5M bed (220 x 220), leaving room for a 5 mm brim
 around every part.
 
 Usage: python plates.py STL_DIR OUT_DIR
-Writes dusty-plate-N-<slug>.stl / .3mf / .png and plates.json
+Writes dusty-plate-N-<slug>-<REV>.stl / .3mf / .png and plates.json
 """
 import os, sys, json, math
 import numpy as np, trimesh
+from rev import REV
 
 STL, OUT = sys.argv[1], sys.argv[2]
 os.makedirs(OUT, exist_ok=True)
@@ -38,7 +39,7 @@ COLOR = {'base': '#f0b43c', 'deck': '#f0b43c', 'post': '#f0b43c', 'dowel': '#f0b
 
 
 def load(name):
-    t = trimesh.load(os.path.join(STL, f'dusty-{name}.stl'), process=False)
+    t = trimesh.load(os.path.join(STL, f'dusty-{name}-{REV}.stl'), process=False)
     b = t.bounds
     t.apply_translation([-(b[0][0] + b[1][0]) / 2, -(b[0][1] + b[1][1]) / 2, -b[0][2]])
     return t
@@ -94,7 +95,7 @@ for p in PLATES:
     placed = shelf_pack(items)
     check(placed)
     merged = trimesh.util.concatenate([t for _, t in placed])
-    stem = f"dusty-plate-{p['n']}-{p['slug']}"
+    stem = f"dusty-plate-{p['n']}-{p['slug']}-{REV}"
     merged.export(os.path.join(OUT, stem + '.stl'))
     scene = trimesh.Scene()
     for i, (name, t) in enumerate(placed):

@@ -1,6 +1,6 @@
 // Print-plan data for the Dusty Build Guide (was build/batches/page.js).
 export const F = '/projects/nolan/dusty-files';
-export const V3D = `${F}/dusty-components-3d.html`;
+export const V3D = `${F}/dusty-components-3d-revA5.html`;
 
 export const SETTINGS = [
   ['Printer', 'FlashForge Adventurer 5M, 0.4 mm nozzle, textured PEI plate'],
@@ -22,7 +22,7 @@ export const BEFORE = [
 export const BATCHES = [
   {
     n: 1,
-    stem: 'dusty-plate-1-fit-check',
+    stem: 'dusty-plate-1-fit-check-revA5',
     title: 'Fit check',
     when: 'First, before anything else',
     time: 'About 20 minutes',
@@ -88,14 +88,14 @@ export const BATCHES = [
   },
   {
     n: 2,
-    stem: 'dusty-plate-2-base',
+    stem: 'dusty-plate-2-base-revA5',
     title: 'Base plate',
     when: 'After Batch 1 passes',
     time: 'About 1 hour 20 minutes',
     pieces: 'Base plate (upside down), 1 deck post, and a loose support block',
     why: 'The part everything else bolts to. It prints upside down so the top comes out perfectly flat.',
     need: [],
-    grams: 36.6,
+    grams: 36.0,
     learn: {
       title: 'Meet the micro:bit',
       items: [
@@ -105,7 +105,7 @@ export const BATCHES = [
       ],
     },
     parts: [
-      { k: 'base', name: 'Base plate', looks: 'The biggest part, 85 × 122 mm, with walls and posts sticking up. It prints upside down, so the flat side on the bed is the top of the robot.', job: 'Everything bolts to it: the wheel motors, the caster, the brush, the sensors and the battery sleeve.', goes: 'Build Steps 2 and 3' },
+      { k: 'base', name: 'Base plate', looks: 'The biggest part, 85 × 122 mm, with walls and posts sticking up and two square windows near the middle for the motor plugs. It prints upside down, so the flat side on the bed is the top of the robot.', job: 'Everything bolts to it: the wheel motors, the caster, the brush, the sensors and the battery sleeve.', goes: 'Build Steps 2 and 3' },
       { k: 'post', name: 'Deck post (second one)', looks: 'Same as the post from Batch 1: skinny peg on one end, tiny screw hole on the other.', job: 'Holds up the front of the deck.', goes: 'Keep both posts with the deck parts' },
       { k: 'support', name: 'Support block', looks: 'Small loose block, about 9 × 4 × 6 mm, standing just under the gear peg on the base.', job: 'Only holds the peg up while it prints. It is not part of Dusty.', goes: 'Trash' },
     ],
@@ -117,20 +117,20 @@ export const BATCHES = [
     ],
     gate: 'The base is clean and the posts fit. Print Batch 3.',
     build: [
-      [2, 'Mount the motors and wheels', 'Two N20 motors and brackets, two wheels, four M2 × 8'],
+      [2, 'Mount the motors and wheels', 'Two N20 motors and brackets, two motor cables, two wheels, four M2 × 8'],
       [3, 'Add the ball caster', 'Ball caster, two M2 × 8'],
     ],
   },
   {
     n: 3,
-    stem: 'dusty-plate-3-deck-and-arms',
+    stem: 'dusty-plate-3-deck-and-arms-revA5',
     title: 'Deck, battery sleeve and sensor arms',
     when: 'After Batch 2',
     time: 'About 1 hour 45 minutes',
     pieces: 'Deck, battery sleeve (standing on its end), keeper bar, right sensor arm, left sensor arm (the one with the switch pad)',
     why: 'The deck and the battery sleeve are needed for the first drive. The arms print now too, so the sensor weekend has nothing left to print.',
     need: [],
-    grams: 42.4,
+    grams: 42.2,
     learn: {
       title: 'How a power bank works',
       items: [
@@ -162,7 +162,7 @@ export const BATCHES = [
   },
   {
     n: 4,
-    stem: 'dusty-plate-4-brush-drive',
+    stem: 'dusty-plate-4-brush-drive-revA5',
     title: 'Brush drive',
     when: 'During the week before weekend 3',
     time: 'About 1 hour',
@@ -198,7 +198,7 @@ export const BATCHES = [
   },
   {
     n: 5,
-    stem: 'dusty-plate-5-tray',
+    stem: 'dusty-plate-5-tray-revA5',
     title: 'Crumb tray',
     when: 'After Batch 4',
     time: 'About 15 minutes',

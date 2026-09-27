@@ -1,5 +1,5 @@
 // Build Guide content: safety, tools, bought parts, screws, the 10 build steps, fixes and words.
-// Rev A.3 (MOC-004, Sep 27 2026). Pictures: 3D renders in dusty-files/guide/*.png and dusty-files/howto/*.png,
+// Rev A.5 (MOC-005, Sep 27 2026). Pictures: 3D renders in dusty-files/guide/*.png and dusty-files/howto/*.png,
 // drawings in dusty-files/guide/draw-*.svg.
 
 const GD = '/projects/nolan/dusty-files/guide';
@@ -37,7 +37,7 @@ export const TOOLS = [
 export const BOUGHT = [
   ['microbit', 'micro:bit v2', 'A tiny computer the size of a credit card cut in half. The 25 red squares are little lights called LEDs. The gold stripes at the bottom plug into other boards.', "Dusty's brain. It reads the sensors, decides what to do, and tells the motors to go.", 'Plugs in flat · LEDs face up'],
   ['motobit', 'moto:bit motor board', 'A red board with a connector on its front edge for the micro:bit, a round hole for the power plug, connectors for two motors, a STOP/RUN motor switch, and rows of pins for sensors.', 'The middleman. The micro:bit is far too weak to run motors, so it whispers instructions to this board, and this board does the heavy lifting.', '3 to 11 volts · drives 2 motors'],
-  ['n20', 'N20 gear motor ×2', 'A small silver can with a gold gearbox and a flat-sided metal shaft, in a black bracket. A tiny circuit board on the back with six wires.', 'One drives the left wheel, one the right. Only two of the six wires power the motor. The other four are for a turn counter Dusty does not use yet.', '6 volts · 298:1 gearbox'],
+  ['n20', 'N20 gear motor ×2', 'A small silver can with a gold gearbox and a flat-sided metal shaft, in a black bracket. A tiny circuit board on the back, with a plug for a cable of six colored wires.', 'One drives the left wheel, one the right. Only red and white power the motor. Blue and black power a turn counter on the little board, and yellow and green carry its signals. Dusty does not use the turn counter yet.', '6 volts · 298:1 gearbox'],
   ['wheel', 'Wheels ×2', 'Black wheels with a soft rubber tire. The hole in the middle is a circle with one flat side, shaped to match the motor shaft.', 'Wheel size decides how fast Dusty drives, and speed is what the experiment measures. Do not swap for bigger ones.', '32 mm · press fit, no glue'],
   ['caster', 'Ball caster', 'A little cage holding a 3/8 inch metal ball.', 'The third foot at the back. The printed base already has the right height built in.', 'Two M2 × 8 screws'],
   ['qtr', 'Cliff sensors ×2 (QTR-1A)', 'Two tiny bumps on a small board. One shines invisible infrared light down, the other watches for it to bounce back.', 'The whole point of the robot. Light comes back means table. Nothing comes back means the table ended: stop now.', 'Mount exactly 3 mm above the table'],
@@ -48,7 +48,7 @@ export const BOUGHT = [
   ['rocker', 'Rocker switch', 'A small on/off switch that snaps into the square hole on the brush motor mount.', 'Turns the brush on and off without touching the code.', 'KCD11 size · 2 tabs'],
   ['pipe', 'Pipe cleaners', 'Fuzzy craft wire.', 'The bristles. Soft enough to bend, stiff enough to flick crumbs.', 'Cut to about 30 mm'],
   ['screws', 'M2 screws and nuts', 'Tiny machine screws. M2 means the thread is 2 mm across. Three lengths: 6, 8 and 10 mm.', 'They hold the motors, caster, deck, battery sleeve, gears and sensor arms. Most screw straight into holes in the plastic.', '23 screws · 6 nuts · Phillips #0'],
-  ['pla', 'PLA filament', 'A spool of plastic thread, 1.75 mm thick. The printer melts it and lays it down one thin line at a time.', 'It becomes every printed part. PLA is made from plants like corn and sugarcane.', 'Nozzle 220°C · bed 60°C · about 104 g'],
+  ['pla', 'PLA filament', 'A spool of plastic thread, 1.75 mm thick. The printer melts it and lays it down one thin line at a time.', 'It becomes every printed part. PLA is made from plants like corn and sugarcane.', 'Nozzle 220°C · bed 60°C · about 103 g'],
 ].map(([k, ...rest]) => [dr(k), ...rest]);
 
 export const SCREWS = [
@@ -77,23 +77,25 @@ export const STEPS = {
   2: {
     title: 'Mount the motors and wheels',
     time: 'About 45 minutes',
-    intro: 'The two motors hang under the base on small printed pads. The pads put the wheels at exactly the right height, so there is nothing to measure.',
-    need: ['Base plate (Batch 2)', '2 N20 motors in their brackets', '2 wheels', '4 × M2 × 8'],
-    draw: [[dr('motor-pad-side'), 'Front view of the right side: the bracket screws up into a pad under the base.']],
+    intro: 'The two motors hang under the base on small printed pads. The pads put the wheels at exactly the right height, so there is nothing to measure. The little board on the back of each motor tucks up into a window in the base.',
+    need: ['Base plate (Batch 2)', '2 N20 motors in their brackets', '2 motor cables (six wires each)', '2 wheels', '4 × M2 × 8'],
+    draw: [[dr('motor-pad-side'), 'Front view of the right side: the bracket screws up into a pad, and the little board and plug sit in the window.']],
     sub: [
-      ['Slide each motor into a bracket.', 'The gold gearbox goes into the bracket, the shaft sticks out the far side.'],
-      ['Turn the base upside down. Find the two rectangular pads near the middle.', 'Each pad has two small holes with a funnel around them. Those are pilot holes for the screws.'],
-      ['Hold a bracket on a pad with the shaft pointing outward, away from the middle. Drive in two M2 × 8 screws.', 'The funnel steers the screw in. Turn until snug, then stop: plastic threads strip if you keep going.', r('g2-motors')],
+      ['Plug a cable into the back of each motor first.', 'The plug goes into the little board on the back of the motor. Once the motor is on the base, the plug is inside the window and hard to reach.'],
+      ['Slide each motor into a bracket, with the plug facing the same way as the flat side of the bracket where the screws go.', 'The gold gearbox goes into the bracket, the shaft sticks out the far side. The plug has to face the base.'],
+      ['Turn the base upside down. Find the two rectangular pads near the middle, and the square window just inside each pad.', 'Each pad has two small holes with a funnel around them. Those are pilot holes for the screws. The window is where the little board and plug go.'],
+      ['Feed the cable through the window, then hold the bracket on the pad with the shaft pointing outward and the plug pointing down into the window. Drive in two M2 × 8 screws.', 'The board and plug sit inside the window, so the motor sits flat on its pad. The funnel steers the screw in. Turn until snug, then stop: plastic threads strip if you keep going.', r('g2-motors')],
       ['Do the other side the same way. Both shafts point out.', ''],
-      ['Tuck the six motor wires toward the middle of the robot.', 'Only two of the six wires run the motor. Fold and tape the other four for now.'],
+      ['Pull each cable gently through its window so the wires come out on the top side of the base.', 'The wires leave the plug toward the middle of the robot and bend up along the inside edge of the window. Nothing hangs under the motors to drag on the table or catch crumbs. Do not pinch a wire under a bracket.'],
       ['Push a wheel onto each shaft, flat side lined up with flat side.', 'Press straight on, thumb against the table. No glue.', r('g2-wheels')],
     ],
     why: [
       ['What does M2 mean?', ['Screws are named by how thick the thread is. M2 means 2 millimeters across, about as thick as a strand of spaghetti. M2 × 8 means 2 mm thick and 8 mm long.', 'The holes in the plastic are drawn 2.2 mm, but this printer makes small holes a little smaller, so they come out just under the screw size. As the screw turns, its thread cuts a matching groove in the plastic. That is called a self-tapping fit, and the small hole is a pilot hole. We found the right size with fit checks (change orders MOC-003 and MOC-004).']],
       ['Two kinds of gears in one robot', ['Inside the gold box on each drive motor is a stack of tiny metal gears. The motor spins very fast with almost no strength. The gears trade speed for strength: 298:1 means the motor turns 298 times for one turn of the wheel.', 'You will build a gear set like this yourself in Step 9, for the brush.']],
+      ['Why are there windows in the base?', ['The little board and plug on the back of each motor stick out farther than the 3D model said. Pointing up, they hit the base, so the motor could not sit flat. Pointing down, the wires would drag on the table. We measured the motor with a ruler and cut a window in the base for each one (change order MOC-005).']],
     ],
     warn: 'Do not over-tighten. If a screw suddenly spins freely, the plastic thread is stripped. Stop and tell a grown-up. A slightly longer screw or a drop of glue fixes it.',
-    done: 'Both wheels spin freely, both shafts point outward, and the wheels look parallel when you sight down the front.',
+    done: 'Both motors sit flat on their pads, both wheels spin freely, both shafts point outward, the wheels look parallel when you sight down the front, and each motor cable comes up through its window with nothing hanging underneath.',
   },
   3: {
     title: 'Add the ball caster',
@@ -114,7 +116,8 @@ export const STEPS = {
     intro: 'The power bank rides in its own sleeve at the back, and the moto:bit and micro:bit sit on the deck above it. Keep the in-line switch OFF for this whole step.',
     need: ['Battery sleeve, keeper bar, deck (Batch 3)', '2 deck posts', 'Power bank, charged', '90° USB adapter, USB to round-plug cable, in-line switch, Y splitter', 'moto:bit and micro:bit', 'Foam tape, 2 zip ties', '8 × M2 × 8'],
     sub: [
-      ['Set the battery sleeve on the back of the base, open end on the left, the two screw tabs toward the front.', 'The tabs and the back wall line up with four holes in the base.', r('g4-sleeve')],
+      ['Check that both motor cables already come up through the windows in the base.', 'The front of the sleeve sits over the back of each window. Once it is screwed down, you cannot feed a cable through anymore.'],
+      ['Set the battery sleeve on the back of the base, open end on the left, the two screw tabs toward the front.', 'The tabs and the back wall line up with four holes in the base. Keep the motor wires in front of the sleeve, not under it. The sleeve should sit flat without touching the little motor boards.', r('g4-sleeve')],
       ['Turn the base over and drive four M2 × 8 screws up through the base into the sleeve.', 'Two into the front tabs, two into the back wall. The tray has to be out for this.'],
       ['Stick a strip of foam tape along the rib in the middle of the sleeve floor.', 'Sticky side on the sleeve, never on the power bank.'],
       ['Slide the charged power bank into the sleeve, ports facing out the left side, all the way to the closed end. Then push the keeper bar in through the slot in the back wall until its head sits flat.', 'The keeper crosses under the USB ports so the bank cannot slide out. Pull it out by the head when you need the bank out.', h('b3-s2')],
@@ -139,11 +142,11 @@ export const STEPS = {
     time: 'About 1 hour',
     intro: 'First code of the project. Forward, backward, spin. No sensors yet.',
     need: ['Laptop with makecode.microbit.org', 'Micro-USB cable that moves data'],
-    draw: [[dr('wiring'), 'Left motor to the LEFT connector, right motor to the RIGHT. Write it down.']],
+    draw: [[dr('wiring'), 'Red and white from the left motor to the LEFT connector, from the right motor to the RIGHT. Write it down.']],
     sub: [
       ['Switch the power off.', ''],
-      ['Find the two motor wires on each motor.', 'Check the label on the motor’s little board. A grown-up helps with this one.'],
-      ['Connect the left motor to the moto:bit LEFT MOTOR pins, and the right motor to RIGHT MOTOR.', 'The board marks which pin is red and which is black.'],
+      ['Find the red and white wires on each motor cable. Those two run the motor.', 'Blue and black power the turn counter. Yellow and green carry its signals. Fold those four back and tape them. Dusty does not use them yet.'],
+      ['Connect the left motor’s red and white wires to the moto:bit LEFT MOTOR terminal, and the right motor’s to RIGHT MOTOR.', 'Red goes where the board says red. White goes where the board says black. A grown-up checks before you switch on.'],
       ['Slide the moto:bit switch to RUN MOTORS.', 'STOP MOTORS keeps the wheels still while you work, even with power on.'],
       ['Open MakeCode, start a new project, and add the moto:bit extension.', 'Extensions is at the bottom of the block list. Search for moto:bit.'],
       ['Build the test program below and download it to the micro:bit.', ''],
@@ -160,6 +163,7 @@ export const STEPS = {
       ['set RIGHT motor to FORWARD at 0', '', 1],
     ],
     why: [['What does 40% speed mean?', ['The board switches the power fully on and fully off hundreds of times every second. On 40% of the time, the motor acts like it is getting 40% of the power. This is called PWM, pulse width modulation. A dimmer switch works the same way.', 'At 40%, Dusty drives about 7 centimeters per second. Changing that number is the experiment.']]],
+    warn: 'On these motors black is not a motor wire. Only red and white go to the motor terminals.',
     tip: 'A wheel spins the wrong way? Do not rewire it. Add the invert LEFT motor block (or RIGHT) in on start. Fixed in code, it can never come loose.',
     done: 'On the floor, pressing A drives Dusty forward in a straight line for two seconds. That finishes the first weekend.',
   },
@@ -320,10 +324,12 @@ export const FIXES = [
   ['micro:bit lights up, motors do nothing', 'Motors not turned on', 'Check turn motors ON is in on start, and the moto:bit switch is on RUN.'],
   ['Drives in a curve', 'One motor slower', 'Check both wheels are fully on. Then lower the faster side by a few percent in code.'],
   ['One wheel goes backward', 'Wires swapped', 'Use the invert motor block. No rewiring.'],
+  ['A wheel does not turn at all', 'Wrong wire', 'Only red and white go to the motor terminal. Black is a turn-counter wire on these motors.'],
+  ['A motor will not sit flat on its pad', 'Old base file, or plug facing the wrong way', 'The plug must point into the square window. A base without windows is an old file: reprint Plate 2 from the revA5 files.'],
   ['A print lifted off the bed', 'First layer did not stick', 'Clean the bed, let it heat fully, try again. A glue stick helps.'],
-  ['A screw will not start', 'Hole too small', 'Check you printed the Rev A.3 files. Push firmly and turn slowly: the funnel should guide it.'],
+  ['A screw will not start', 'Hole too small', 'Check you printed the Rev A.5 files (every file name ends in revA5). Push firmly and turn slowly: the funnel should guide it.'],
   ['A screw spins and will not tighten', 'Stripped plastic thread', 'Use the next longer screw, or a grown-up adds a drop of glue in the hole and waits.'],
-  ['A deck post wiggles in the base', 'Old base file', 'Rev A.3 post holes are 3.95 mm and snug. Reprint the base from the new files.'],
+  ['A deck post wiggles in the base', 'Old base file', 'Rev A.5 post holes are 3.95 mm and snug. Reprint the base from the new files.'],
   ['A part will not fit', 'Printed a little big', 'Sand or file the edge a little. Do not force it: PLA cracks.'],
   ['Refuses to move, sensors fine', 'Dark surface', 'It thinks it is at a cliff. Recalibrate on that table with button A.'],
   ['Falls off despite the sensors', 'Arm moved or too fast', 'Re-check the 3 mm height, re-tighten the arms, lower the speed.'],

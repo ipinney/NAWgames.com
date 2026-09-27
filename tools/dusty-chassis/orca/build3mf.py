@@ -1,5 +1,6 @@
 import json, os, subprocess, zipfile, re, glob, shutil, sys
 W='/opt/ffstudio/work'
+REV=sys.argv[1] if len(sys.argv)>1 else ''   # e.g. revA5, appended to every plate file name
 PLATES={1:('fit-check','Fit check'),2:('base','Base plate'),3:('deck-and-arms','Deck, battery sleeve and sensor arms'),4:('brush-drive','Brush drive'),5:('tray','Crumb tray')}
 COMMON={'wall_loops':'3','top_shell_layers':'5','bottom_shell_layers':'4','sparse_infill_density':'20%',
         'sparse_infill_pattern':'gyroid','brim_type':'outer_only','brim_width':'5','enable_support':'0',
@@ -60,7 +61,7 @@ for n,(slug,title) in PLATES.items():
     stls=' '.join(sorted(glob.glob(f'plate{n}/*.stl')))
     raw=f'{W}/raw'; shutil.rmtree(raw,ignore_errors=True); os.makedirs(raw)
     run(f'--arrange 0 --orient 0 --load-settings "{m};{p}" --load-filaments "{f}" --outputdir {raw} --export-3mf p{n}.3mf {stls}', f'{W}/log_export_{n}.txt')
-    final=f'{W}/out/dusty-plate-{n}-{slug}.3mf'
+    final=f'{W}/out/dusty-plate-{n}-{slug}'+(f'-{REV}' if REV else '')+'.3mf'
     rewrite(f'{raw}/p{n}.3mf',final,n,n in (1,4))
     # validate: reload the finished project and slice it with its own settings
     sl=f'{W}/slice{n}'; shutil.rmtree(sl,ignore_errors=True); os.makedirs(sl)

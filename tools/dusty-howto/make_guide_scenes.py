@@ -1,4 +1,4 @@
-"""Assembly-step scenes for the Dusty Build Guide (Rev A.3 CAD).
+"""Assembly-step scenes for the Dusty Build Guide (Rev A.5 CAD, MOC-005).
 Usage: /opt/cad-venv/bin/python make_guide_scenes.py ASSEMBLY_PKL OUT_JSON
 Model axes: x right, y back (front is -y), z up. Units mm."""
 import sys, os, json, math, pickle
@@ -6,7 +6,7 @@ import numpy as np, trimesh
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dusty-chassis'))
 from build import (POSTS, SL_TABS, SL_REAR, DECK_Z0, DECK_T, PL_Z0, PL_Z1, BR_Z, GX, BR_HOLE_DX, BR_HOLE_DY, A as AY,
                    CASTER_Y, CASTER_DX, CASTER_H, EAR_X, EAR_Y, SENSOR_Z, QTR, P2, C_Y, C_Z, RY, RZ, ROLL_L, CORE_D,
-                   CRADLE_SCREWS, MOT_Y, MOT_Z)
+                   CRADLE_SCREWS, MOT_Y, MOT_Z, ML, AXLE_Z, ENC_WIN_X, ENC_WIN_Y)
 
 PKL, OUT = sys.argv[1], sys.argv[2]
 d = pickle.load(open(PKL, 'rb'))
@@ -17,7 +17,7 @@ Y = '#f0b43c'
 COL = {'base': Y, 'deck': Y, 'post1': Y, 'post2': Y, 'dowel1': Y, 'dowel2': Y, 'cradle': '#e8793a', 'tray': '#5cc98a',
        'roller': '#b48cff', 'axle': '#d9c2ff', 'collar': '#b48cff', 'pinion': '#4aa8ff', 'compound': '#4aa8ff',
        'roller_gear': '#4aa8ff', 'washer': '#4aa8ff', 'carrier_R': '#ff6f9a', 'carrier_L': '#ff6f9a', 'sleeve': '#e0e0e0', 'keeper': '#ffd166'}
-GC = {'N20 motors + brackets': '#aab6c3', 'wheels': '#3b4654', 'ball caster': '#aab6c3', 'power bank': '#8394a8',
+GC = {'N20 motors + brackets': '#aab6c3', 'N20 encoder boards + plugs': '#1f8a4c', 'wheels': '#3b4654', 'ball caster': '#aab6c3', 'power bank': '#8394a8',
       'USB adapter and cable': '#56657a', 'foam shims': '#6b7b8f', 'moto:bit': '#d8373f', 'micro:bit': '#2f3640',
       '130 brush motor': '#aab6c3', 'pipe-cleaner bristles': '#ffe08a', 'QTR-1A sensors': '#1f8a4c', 'whisker switch': '#2f3640',
       'rocker switch': '#2f3640'}
@@ -58,6 +58,17 @@ def screw(L, tip, direction, head_d=3.8):
     return trimesh.util.concatenate(parts)
 
 
+WIRE = '#f0605e'
+def motor_cables(top=PL_Z1 + 7):
+    # MOC-005: harness from the plug toward the middle, bent up along the inner edge of the window
+    out = []
+    for s in (-1, 1):
+        x0, x1 = s * (GX - ML + 1.0), s * (ENC_WIN_X[0] + 1.3)
+        z0 = AXLE_Z + 11.5
+        out += [cyl_axis(1.1, [x0, AY, z0], [x1, AY, z0 + 1.5], 12), cyl_axis(1.1, [x1, AY, z0 + 1.5], [x1, AY, top], 12)]
+    return trimesh.util.concatenate(out)
+
+
 def A(a, b, c=OR):
     return {'a': [float(x) for x in a], 'b': [float(x) for x in b], 'c': c}
 
@@ -91,7 +102,8 @@ def G(k, off=(0, 0, 0), f=False, t=None, op=1.0):
 # ---------------- Step 2: motors onto the pads (base upside down)
 pads = [(sx * (GX - BR_HOLE_DX), AY + dy) for sx in (-1, 1) for dy in (-BR_HOLE_DY, BR_HOLE_DY)]
 lift = 16
-ms = [P('base', f=True), G('N20 motors + brackets', (0, 0, -lift), f=True)]
+ms = [P('base', f=True), G('N20 motors + brackets', (0, 0, -lift), f=True), G('N20 encoder boards + plugs', (0, 0, -lift), f=True),
+      mesh(flip(mv(motor_cables(PL_Z1 + 7 + lift), (0, 0, -lift))), WIRE, 1.0, False)]
 arr = []
 for (x, y) in pads:
     p = fp([x, y, BR_Z - lift - 3])            # below the bracket in the flipped view = above it on screen
@@ -101,11 +113,12 @@ scene('g2-motors', ms, arr,
       [L(fp([-(GX - BR_HOLE_DX), AY, BR_Z - 1]), 'pad: 2 pilot holes, with a funnel', -40, 150),
        L(fp([GX - BR_HOLE_DX, AY - BR_HOLE_DY, BR_Z - lift - 14]), '2 × M2 × 8 per bracket', 120, -90),
        L(fp([-35, AY, BR_Z - lift - 5]), 'motor in its bracket, shaft points out', -60, -120),
-       L(fp([0, 20, PL_Z0]), 'base, upside down', 60, 120)],
+       L(fp([0, 20, PL_Z0]), 'base, upside down', 60, 120),
+       L(fp([(ENC_WIN_X[0] + ENC_WIN_X[1]) / 2, ENC_WIN_Y[1] - 2, PL_Z0]), 'board and plug go in the window', -230, -20)],
       az=-20, el=38, zoom=1.05)
 
 W = GH['wheels']
-ms = [P('base', f=True), G('N20 motors + brackets', f=True)]
+ms = [P('base', f=True), G('N20 motors + brackets', f=True), G('N20 encoder boards + plugs', f=True), mesh(flip(motor_cables()), WIRE, 1.0, False)]
 for right in (True, False):
     s = 1 if right else -1
     ms.append(G('wheels', (s * 18, 0, 0), f=True, t=half(W, right)))
@@ -117,7 +130,8 @@ scene('g2-wheels', ms,
 
 # ---------------- Step 3: ball caster (upside down)
 cl = 16
-ms = [P('base', f=True), G('N20 motors + brackets', f=True), G('wheels', f=True), G('ball caster', (0, 0, -cl), f=True)]
+ms = [P('base', f=True), G('N20 motors + brackets', f=True), G('N20 encoder boards + plugs', f=True), mesh(flip(motor_cables()), WIRE, 1.0, False),
+      G('wheels', f=True), G('ball caster', (0, 0, -cl), f=True)]
 for dx in (-CASTER_DX, CASTER_DX):
     p = fp([dx, CASTER_Y, -cl - 2])
     ms.append(mesh(screw(8, p, [0, 0, -1]), STEEL))
@@ -127,14 +141,15 @@ scene('g3-caster', ms, [A(fp([18, CASTER_Y, -cl - 14]), fp([18, CASTER_Y, -cl - 
       az=-150, el=40, zoom=1.15, focus=fp([0, 85, 5]))
 
 # ---------------- Step 4
-under = [G('N20 motors + brackets'), G('wheels'), G('ball caster')]
+under = [G('N20 motors + brackets'), G('N20 encoder boards + plugs'), mesh(motor_cables(), WIRE, 1.0, False), G('wheels'), G('ball caster')]
 sl = 22
 ms = [P('base')] + under + [P('sleeve', (0, 0, sl))]
 arr = [A([-45, 86, 33 + sl + 40], [-45, 86, 33 + sl + 24]), A([66, 86, 33 + sl + 40], [66, 86, 33 + sl + 24])]
 scene('g4-sleeve', ms, arr,
       [L([-43, 86, 33 + sl + 20], 'open end on the left', -120, -90),
        L([20, 58.4, 33 + sl + 3], 'front screw tab', 110, -110),
-       L([20, 58.4, PL_Z1], '4 screws go up from under the base', 150, 90)],
+       L([20, 58.4, PL_Z1], '4 screws go up from under the base', 150, 90),
+       L([-(ENC_WIN_X[0] + 1.0), AY, PL_Z1 + 6], 'motor wires come up here', -230, 80)],
       az=-30, el=32, zoom=1.0)
 
 dl = 22
@@ -235,6 +250,7 @@ for k in GC:
     if k in GH:
         ms.append(G(k))
 ms.append(mesh(pc, PIPE, 1.0, False))
+ms.append(mesh(motor_cables(), WIRE, 1.0, False))
 scene('g-hero', ms, [], [], az=-35, el=22, zoom=1.3)
 
 json.dump(S, open(OUT, 'w'), separators=(',', ':'))

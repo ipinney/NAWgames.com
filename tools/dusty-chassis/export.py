@@ -1,6 +1,7 @@
 import os, sys, json, math, pickle, zipfile
 import numpy as np, trimesh
 from build import *
+from rev import REV
 OUT = sys.argv[1]; os.makedirs(OUT, exist_ok=True)
 
 def tm(s):
@@ -37,7 +38,7 @@ meshes = {}
 for k, (s, q, note) in parts.items():
     t = on_bed(tm(s))
     meshes[k] = t
-    t.export(os.path.join(OUT, f'dusty-{k}.stl'))
+    t.export(os.path.join(OUT, f'dusty-{k}-{REV}.stl'))
     b = t.bounds; print(f'{k:18s} x{q}  {np.round(b[1]-b[0],1)}  {round(t.volume/1000*1.24,1)} g solid  {note}')
 
 az = meshes['axle'].vertices[:, 2]; print('axle bed contact verts', int((az < 0.01).sum()))
@@ -77,9 +78,9 @@ for i in range(len(boxes)):
         if (a0[0] < b1[0]+2 and b0[0] < a1[0]+2 and a0[1] < b1[1]+2 and b0[1] < a1[1]+2):
             bad.append((n1, n2))
 print('overlaps', bad)
-pl.export(os.path.join(OUT, 'dusty-chassis-all-parts-plate.stl'))
-with zipfile.ZipFile(os.path.join(OUT, 'dusty-chassis-revA-stl.zip'), 'w', zipfile.ZIP_DEFLATED) as z:
+pl.export(os.path.join(OUT, f'dusty-chassis-all-parts-plate-{REV}.stl'))
+with zipfile.ZipFile(os.path.join(OUT, f'dusty-chassis-{REV}-stl.zip'), 'w', zipfile.ZIP_DEFLATED) as z:
     for k in parts:
-        z.write(os.path.join(OUT, f'dusty-{k}.stl'), f'dusty-{k}.stl')
-    z.write(os.path.join(OUT, 'dusty-chassis-all-parts-plate.stl'), 'dusty-chassis-all-parts-plate.stl')
+        z.write(os.path.join(OUT, f'dusty-{k}-{REV}.stl'), f'dusty-{k}-{REV}.stl')
+    z.write(os.path.join(OUT, f'dusty-chassis-all-parts-plate-{REV}.stl'), f'dusty-chassis-all-parts-plate-{REV}.stl')
 pickle.dump((np.asarray(pl.vertices), np.asarray(pl.faces)), open(os.path.join(OUT, 'plate.pkl'), 'wb'))

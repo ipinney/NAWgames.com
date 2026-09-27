@@ -26,7 +26,7 @@ P = [
  ('carrier_L','Left sensor arm','printed',1,'Print','Same as right, plus the pad for the whisker switch.',['carrier_L']),
 ]
 G = [
- ('n20','N20 drive motors + brackets','bought',2,'Adafruit (motors), Pololu #1089 (brackets)','6 V, 298:1, magnetic encoders. Pololu STEP model for motor and bracket.',['N20 motors + brackets']),
+ ('n20','N20 drive motors + brackets','bought',2,'Adafruit (motors), Pololu #1089 (brackets)','6 V, 298:1, magnetic encoders. Pololu STEP model for motor and bracket.',['N20 motors + brackets', 'N20 encoder boards + plugs']),
  ('wheels','Wheels, 32 x 7 mm','bought',2,'Pololu','Axle 16 mm off the table.',['wheels']),
  ('caster','Ball caster, 3/8 in','bought',1,'Pololu','Rear support. Screws up into the base boss.',['ball caster']),
  ('battery','Anker 321 power bank','bought',1,'Walmart','5,200 mAh, charges through USB-C in place. Lies crosswise in the sleeve, ports to the left.',['power bank']),

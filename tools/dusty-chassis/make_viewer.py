@@ -1,5 +1,6 @@
 import sys, json, pickle, html, numpy as np, trimesh
 from build import *
+from rev import REV
 OUT = sys.argv[1]
 d = pickle.load(open(f'{OUT}/assembly.pkl', 'rb'))
 pv, pf = pickle.load(open(f'{OUT}/stl/plate.pkl', 'rb'))
@@ -45,7 +46,7 @@ legend = ''.join(f'<span><i style="background:{c}"></i>{html.escape(n)}</span>' 
 specs = [('Footprint', f'{round(SL_X1 - bounds[0][0])} × {round(bounds[1][1] - bounds[0][1])} mm'), ('Printed parts', '19 pieces, ~' + (sys.argv[4] if len(sys.argv) > 4 else '95') + ' g'),
          ('Brush gearing', f'{Z_BIG // Z_PIN * 1.0 * Z_ROL / Z_SM:.1f} : 1'), ('Print', 'one Adventurer 5M plate')]
 data = {'parts': parts, 'plate': {'v': np.round(pv, 2).flatten().tolist(), 'f': np.asarray(pf).flatten().tolist()},
-        'bounds': bounds, 'dims': dims, 'stlName': 'dusty-chassis-revA-plate.stl', 'fitPad': 1.05}
+        'bounds': bounds, 'dims': dims, 'stlName': f'dusty-chassis-all-parts-plate-{REV}.stl', 'fitPad': 1.05}
 tpl = open('assembly.tpl.html').read()
 page = (tpl.replace('__TITLE_TEXT__', 'Dusty chassis, Rev A.1')
         .replace('__TITLE_HTML__', 'Dusty <span>chassis</span>, Rev A.1')

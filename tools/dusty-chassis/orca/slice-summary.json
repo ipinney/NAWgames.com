@@ -1,6 +1,6 @@
 {
  "1": {
-  "file": "dusty-plate-1-fit-check.3mf",
+  "file": "dusty-plate-1-fit-check-revA5.3mf",
   "gcode": [
    "plate_1.gcode"
   ],
@@ -9,25 +9,25 @@
   "brim": 8
  },
  "2": {
-  "file": "dusty-plate-2-base.3mf",
+  "file": "dusty-plate-2-base-revA5.3mf",
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "1h 21m 14s",
-  "grams": "36.60",
+  "time": "1h 21m 1s",
+  "grams": "36.03",
   "brim": 8
  },
  "3": {
-  "file": "dusty-plate-3-deck-and-arms.3mf",
+  "file": "dusty-plate-3-deck-and-arms-revA5.3mf",
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "1h 46m 17s",
-  "grams": "42.39",
+  "time": "1h 46m 16s",
+  "grams": "42.17",
   "brim": 8
  },
  "4": {
-  "file": "dusty-plate-4-brush-drive.3mf",
+  "file": "dusty-plate-4-brush-drive-revA5.3mf",
   "gcode": [
    "plate_1.gcode"
   ],
@@ -36,7 +36,7 @@
   "brim": 8
  },
  "5": {
-  "file": "dusty-plate-5-tray.3mf",
+  "file": "dusty-plate-5-tray-revA5.3mf",
   "gcode": [
    "plate_1.gcode"
   ],

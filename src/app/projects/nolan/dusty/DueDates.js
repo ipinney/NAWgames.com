@@ -22,7 +22,7 @@ export const DUE = [
     text: 'Page 23: what Dusty is and who it is for. Page 24: a labeled drawing plus size, weight, materials, cost, and how it works.',
     links: [
       { href: `${PACKET}#design-plan`, label: 'How to fill it in' },
-      { href: '/projects/nolan/dusty-files/dusty-components-3d.html', label: '3D model to draw from' },
+      { href: '/projects/nolan/dusty-files/dusty-components-3d-revA5.html', label: '3D model to draw from' },
     ],
   },
   {

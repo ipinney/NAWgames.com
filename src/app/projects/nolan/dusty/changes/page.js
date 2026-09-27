@@ -46,6 +46,7 @@ const TOUCHED = ['3D model and all 19 print files', 'Parts list', 'Build guide s
 
 // Newest first. Add a line every time something about the plan changes.
 const LOG = [
+  ['Sep 27', 'Change', 'MOC-005: a window in the base for the little board and plug on each wheel motor, the old motor wire slot removed, and a small pocket under the battery sleeve over each window. Motor measured at 33 mm long with its plug (the model said 37). All 5 plates re-sliced. Every download now has revA5 in its name, and the old files were deleted. Build Guide steps 2, 4 and 5 updated, with the motor wire colors.'],
   ['Sep 27', 'Plan', 'Print plan and build guide merged into one Build Guide: each batch is a chapter (print, know your parts, clean up and check, then the build steps it unlocks), with 3D pictures from the Rev A.3 design and the original drawings.'],
   ['Sep 27', 'Change', 'MOC-004: screw lead-in (45 degree chamfer, 4.2 mm wide, 1 mm deep) on the deck post tops, motor pad and caster screw holes, and the post holes in the base made smaller, 4.30 to 3.95 mm. All print files re-sliced (Rev A.3).'],
   ['Sep 27', 'Plan', 'Fit check 4: three more base pieces at 4.05, 4.00 and 3.95 mm. Number 6 (3.95) was snug.'],
@@ -71,6 +72,19 @@ const LOG = [
   ['Sep 14', 'Decision', 'Picked the crumb-sweeping robot with cliff detection from a list of cleaning robot ideas.'],
 ];
 
+const MOC5 = [
+  ['Motor length, gearbox face to back of plug', '3D model (N20 motor)', '37 mm (assumed)', '33 mm', 'Measured with a ruler, about ±1 mm'],
+  ['Encoder window, one per motor, through', 'Base', 'none', '|x| 7 to 17.8 mm, y 52 to 66 mm', 'Board and plug reach 16 mm from the motor centerline; the plate underside is 14 mm'],
+  ['Wall to the sleeve tab screw hole', 'Base', 'solid', '0.8 mm', 'Tab screws stay at ±20 mm, so a sleeve already printed still fits'],
+  ['Motor wire slot', 'Base', 'x −13 to −5, y 44 to 49 mm', 'removed', 'Wires now come up through the windows'],
+  ['Pocket under the floor and front wall', 'Battery sleeve', 'floor 2.5 mm', '1.0 mm over |x| 7 to 17.8, y 59.6 to 66 mm', 'Board clears the sleeve by about 2.5 mm (1 mm without it)'],
+  ['Part volume', 'Base / battery sleeve', '37.0 / 21.0 cm³', '36.2 / 20.8 cm³', '3D model'],
+  ['Plate 2 (base) print', 'Plate 2', '36.6 g, 1 h 21 min', '36.0 g, 1 h 21 min', 'Slicer'],
+  ['Download file names', 'Every print file, viewer and zip', 'dusty-base.stl', 'dusty-base-revA5.stl', 'Old files deleted, so an old download cannot be mistaken for a current one'],
+];
+
+const MOC5_TOUCHED = ['3D model (Rev A.5)', 'Base and battery sleeve', 'All 5 plates re-sliced', 'Every file renamed revA5', 'Build Guide steps 2, 4 and 5', 'Motor and wiring drawings', '3D pictures', '3D viewers', 'Source zip'];
+
 const MOC4 = [
   ['Screw lead-in (45° funnel)', 'Deck posts (top), base motor pads and caster posts', 'none', '4.2 mm wide, 1.0 mm deep', 'Tested: fit check 3 #2'],
   ['Post peg holes', 'Base (and the base test piece)', '4.30 mm', '3.95 mm', 'Tested: fit check 4 #6'],
@@ -93,6 +107,7 @@ const MOC3 = [
 const MOC3_TOUCHED = ['3D model (Rev A.2)', '13 of 17 part files', 'All 5 plates re-sliced', '3D viewers', 'Print plan pictures', 'Source zip'];
 
 const LESSONS = [
+  ['Model the cable and plug, not just the part', 'The 3D model had the motor’s length with its connector, but not the little board and plug sticking out sideways. The plug hit the base. Draw the wires and plugs too, and where they have to go.'],
   ['Measure the space before picking a part', 'We picked a power bank before checking the room it had. A two-minute check with the 3D model would have shown it could not go lengthwise.'],
   ['Every number needs a reason', 'The 300 gram limit was a guess. When we needed to change it, there was nothing behind it. Write down why each limit exists.'],
   ['Check sizes from two places', 'Anker says the bank is 22 mm thick. The store says 0.9 inches, which is almost 23 mm. When two sources disagree, design for the bigger one.'],
@@ -255,6 +270,79 @@ export default function DustyChangesPage() {
               See the new design
             </Link>
           </div>
+        </Section>
+
+        <Section title="Change order MOC-005: windows for the motor plugs" sub="Sep 27, 2026. Approved by Dad.">
+          <div className="bg-naw-card rounded-2xl border border-naw-orange/40 p-5">
+            <div className="text-naw-orange text-xs font-semibold">The short version</div>
+            <p className="text-white leading-relaxed mt-1">
+              Each wheel motor has a little circuit board on its back with a plug for its wires. They stick out more than our
+              3D model showed. With the plug pointing up, it hit the base and the motor could not sit flat. Now the base has a
+              window for each motor: the board and plug tuck up inside it, and the wires come out on top.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3 mt-3">
+            <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
+              <div className="text-white/45 text-xs font-semibold">Why we need it</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">The motor plugs hit the base, so the motors could not sit flat. Turned the other way round, the wires would hang under Dusty, drag on the table and catch crumbs.</div>
+            </div>
+            <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
+              <div className="text-white/45 text-xs font-semibold">How we picked</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">Two choices: solder two wires straight onto each motor (no reprint), or change the base so the plugs fit. We picked the new base. First we measured the motor with a ruler, and the measurement showed the smallest change: windows in the base only, plus a free little pocket under the battery sleeve.</div>
+            </div>
+          </div>
+          <h3 className="text-white font-bold mt-6">Technical record</h3>
+          <div className="mt-2 bg-naw-card rounded-2xl border border-white/10 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-white/45 text-xs text-left">
+                  <th className="px-4 py-2 font-semibold">Feature</th>
+                  <th className="px-4 py-2 font-semibold">Parts</th>
+                  <th className="px-4 py-2 font-semibold">Was</th>
+                  <th className="px-4 py-2 font-semibold">Now</th>
+                  <th className="px-4 py-2 font-semibold">Basis</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5 text-white/80">
+                {MOC5.map(([h, pts, was, now, basis]) => (
+                  <tr key={h}>
+                    <td className="px-4 py-2 text-white">{h}</td>
+                    <td className="px-4 py-2">{pts}</td>
+                    <td className="px-4 py-2 tabular-nums">{was}</td>
+                    <td className="px-4 py-2 tabular-nums text-naw-orange font-semibold">{now}</td>
+                    <td className="px-4 py-2 text-white/60">{basis}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-white/60 text-sm mt-3 leading-relaxed">
+            Measured (about ±1 mm): gearbox 8.9 mm plus can 15.4 mm is 24.4 mm, board 1.2 mm, gearbox face to the back of the
+            plug about 33 mm. The plug goes straight into the back of the board, and the wires leave toward the middle of the
+            robot. The motors now mount with the board and plug toward the base. The board and plug were added to the 3D model:
+            against the old base they overlap by 24 mm³, against the new base and sleeve by nothing. Not changed: axle, wheels,
+            caster, sensor arms and their head start, the cliff math, the 122 mm footprint, the balance point, and every other
+            part. The 14 mm bridge between the two windows stays, so the base stays stiff.
+          </p>
+          <h3 className="text-white font-bold mt-6">What had to be updated</h3>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {MOC5_TOUCHED.map((t) => (
+              <span key={t} className="bg-white/10 text-white/80 text-xs font-semibold px-2.5 py-1 rounded-full">{t}</span>
+            ))}
+          </div>
+          <h3 className="text-white font-bold mt-6">What we learned</h3>
+          <p className="text-white/60 text-sm mt-1 leading-relaxed">
+            The 3D model had the motor’s length along its shaft, with its connector (37 mm), but not the little board and plug
+            sticking out sideways. Model the cable and plug, not just the part.
+          </p>
+          <h3 className="text-white font-bold mt-6">Tests that prove it works</h3>
+          <ul className="mt-2 space-y-1 text-sm text-white/75 list-disc pl-5">
+            <li>The board and plug sit in the window, and the motor sits flat on its pad.</li>
+            <li>Both wheels spin freely.</li>
+            <li>The wires come up through the window without pinching.</li>
+            <li>The battery sleeve slides on without touching the little board.</li>
+            <li>The lowest point of the motor, plug and wires is at least 5 mm above the table.</li>
+          </ul>
         </Section>
 
         <Section title="Change order MOC-004: a funnel for the screws, and tighter post holes" sub="Sep 27, 2026. Approved by Dad after fit checks 3 and 4.">

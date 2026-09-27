@@ -19,7 +19,7 @@ BR_Z = AXLE_Z + 5.0                        # bracket mounting face
 PL_Z0 = p('PL_Z0', BR_Z + PAD_H)
 PL_T = p('PL_T', 3.0); PL_Z1 = PL_Z0 + PL_T
 GX = p('GX', 41.0)                         # gearbox face x (motor shaft points outward)
-ML = p('ML', 37.0)                         # gearbox face to back of encoder + connector
+ML = p('ML', 33.0)                         # gearbox face to back of encoder plug. MOC-005: measured 33 (was 37 assumed)
 A = p('A', 59.0)                           # axle y
 BR_HOLE_DX = 12.5; BR_HOLE_DY = 9.0        # from Pololu STEP (#1089)
 WHEEL_X0 = GX + 1.5                        # wheel inner face
@@ -96,6 +96,12 @@ FIT_ADD = 0.25
 SCREW_HOLE = 2.8; PILOT = 2.2; PINION_BORE = 2.1   # were 2.4, 1.8, 1.85
 LEAD_D, LEAD_DEPTH = 4.2, 1.0   # MOC-004 (Sep 27): fit check 3 #2, 45 deg lead-in on every hole a screw starts in
 PEG_HOLE = 3.95                 # MOC-004: fit check 4 #6 (was PEG_D + 0.05 + FIT_ADD = 4.30, loose)
+# MOC-005 (Sep 27): the encoder board and plug stick out ~16 mm from the motor centerline on the plug side,
+# 2 mm past the plate underside (14 mm). Motors mount plug side up; one window per motor lets the board
+# and plug rise into the plate and the wires turn up through it. The center bridge stays for stiffness.
+# Board sits 15.4 to 16.6 mm in from the gearbox face at GX (measured 24.4 mm gearbox + can).
+ENC_WIN_X = (7.0, 17.8); ENC_WIN_Y = (52.0, 66.0)   # outer edge keeps 0.8 mm wall to the sleeve tab screw hole
+ENC_RELIEF = 1.5               # relief under the sleeve floor over the back of the window (floor 2.5 -> 1.0 there)
 # Lead-ins go on the deck post tops, motor pad and caster pilots. Not on the gear peg end: the washer needs that face.
 
 
@@ -172,8 +178,11 @@ def base(print_fin=False):
     # tray snap holes in skirts
     for sx in (-1, 1):
         holes.append(M.cylinder(10, 1.0, 1.0, 16).rotate([0, 90, 0]).translate([sx*SP_X0 - 5, 39.0, 20.0]))
-    # wire slots: motor wires (left of cradle), sensor wires (front corners), battery lead
-    holes.append(box(-13, -5, 44.0, 49.0, PL_Z0 - 1, PL_Z1 + 1))
+    # MOC-005: encoder windows (replace the old motor wire slot at y 44-49)
+    for sx in (-1, 1):
+        xa, xb = sorted([sx*ENC_WIN_X[0], sx*ENC_WIN_X[1]])
+        holes.append(box(xa, xb, ENC_WIN_Y[0], ENC_WIN_Y[1], PL_Z0 - 1, PL_Z1 + 1))
+    # wire slots: sensor wires (front corners)
     for sx in (-1, 1):
         holes.append(box(min(sx*24, sx*18), max(sx*24, sx*18), -6.0, -1.0, PL_Z0 - 1, PL_Z1 + 1))
     # cradle screws + alignment pegs
@@ -311,6 +320,10 @@ def sleeve():
     for sx in (-1, 1):
         xa, xb = sorted([sx*(WHEEL_X0 - 1.5), sx*(WHEEL_X0 + WHEEL_W + 1.5)])
         holes.append(box(xa, xb, SL_Y0 - 1, A + WHEEL_R + 3.0, z0 - 1, zf + 0.01))
+    # MOC-005: relief under the floor and front wall over the back of the encoder windows
+    for sx in (-1, 1):
+        xa, xb = sorted([sx*ENC_WIN_X[0], sx*ENC_WIN_X[1]])
+        holes.append(box(xa, xb, SL_Y0 - 1, ENC_WIN_Y[1], z0 - 1, z0 + ENC_RELIEF))
     # lightening: floor windows beside a centre rib, window in the cap
     for xa, xb in ((-30.0, -8.0), (8.0, 36.0)):
         for ya, yb in ((yi0 + 4.0, 81.0), (91.0, yi1 - 4.0)):

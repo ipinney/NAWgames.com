@@ -7,6 +7,7 @@ Model axes: x right, y back (front is -y), z up. Units mm."""
 import sys, json, math, pickle
 import numpy as np, trimesh, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dusty-chassis'))
+from rev import REV
 
 PKL, FILES, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
 d = pickle.load(open(PKL, 'rb'))
@@ -72,7 +73,7 @@ def cup(at, r=26, h=48):
 
 
 def load_stl(name):
-    t = trimesh.load(f'{FILES}/dusty-{name}.stl'); t.merge_vertices()
+    t = trimesh.load(f'{FILES}/dusty-{name}-{REV}.stl'); t.merge_vertices()
     b = t.bounds; t.apply_translation([-(b[0][0] + b[1][0]) / 2, -(b[0][1] + b[1][1]) / 2, -b[0][2]])
     return t
 
@@ -113,7 +114,7 @@ CARD = [  # key, stl name, flip for the picture, labels as (point fn on the cent
     ('roller', 'roller', False), ('axle', 'axle', False), ('tray', 'tray', False),
 ]
 
-plate2 = trimesh.load(f'{FILES}/dusty-plate-2-base.stl'); plate2.merge_vertices()
+plate2 = trimesh.load(f'{FILES}/dusty-plate-2-base-{REV}.stl'); plate2.merge_vertices()
 p2parts = plate2.split(only_watertight=False)
 support = [q for q in p2parts if 200 < q.volume < 300][0]
 
@@ -153,8 +154,8 @@ NAMES = {'pinion': 'motor gear', 'washer': 'washer', 'collar': 'axle collar', 'd
 PLATES = {1: ['pinion', 'washer', 'collar', 'dowel', 'post', 'deck_coupon', 'base_coupon'], 2: ['base', 'post', 'support'],
           3: ['deck', 'sleeve', 'keeper', 'sensor_carrier_R', 'sensor_carrier_L'],
           4: ['cradle', 'compound_gear', 'roller_gear', 'roller', 'axle'], 5: ['tray']}
-STEMS = {1: 'dusty-plate-1-fit-check', 2: 'dusty-plate-2-base', 3: 'dusty-plate-3-deck-and-arms',
-         4: 'dusty-plate-4-brush-drive', 5: 'dusty-plate-5-tray'}
+STEMS = {1: f'dusty-plate-1-fit-check-{REV}', 2: f'dusty-plate-2-base-{REV}', 3: f'dusty-plate-3-deck-and-arms-{REV}',
+         4: f'dusty-plate-4-brush-drive-{REV}', 5: f'dusty-plate-5-tray-{REV}'}
 POFF = {(4, 'cradle', 0): (-40, 120), (4, 'axle', 0): (60, 150), (4, 'compound_gear', 0): (0, -95),
         (4, 'roller_gear', 0): (40, 100), (4, 'roller', 0): (0, -110),
         (3, 'sleeve', 0): (-150, 80), (3, 'deck', 0): (0, -100), (3, 'keeper', 0): (40, 110),
