@@ -31,7 +31,7 @@ const SETTINGS = [
   ['Brim', '5 mm, except none on the three gears and 8 mm on the tall roller'],
   ['Speed', 'Normal, except plates 1 and 4 run slower for the small gears and the roller'],
   ['Supports', 'Off. Nothing needs them.'],
-  ['Hole size', 'X-Y hole compensation 0. The holes are already drawn bigger for this printer (change order MOC-003, Sep 26).'],
+  ['Hole size', 'X-Y hole compensation 0. The holes are already drawn to fit this printer (change orders MOC-003 and MOC-004).'],
 ];
 
 const BEFORE = [
@@ -65,7 +65,7 @@ const BATCHES = [
       { k: 'dowel', name: 'Dowels (2)', looks: 'Two tiny pins, 3 mm across and 3.4 mm tall, about the size of a grain of rice.', job: 'Hold the brush motor mount in exactly the right spot on the base.', goes: 'BATCH 4 cup', tip: 'The easiest parts to lose. Put them in the cup first.' },
       { k: 'deck_coupon', name: 'Deck test piece', looks: 'Small flat corner, 21 × 33 mm, with one screw hole, a zip-tie slot and a raised rail. It is the front-left corner of the real deck.', job: 'Tests the deck holes before printing the whole deck. The screw must slide through and the head must sit in the pocket.', goes: 'Keep it with the deck parts after the test', tip: 'Only test pieces, not part of Dusty.' },
       { k: 'base_coupon', name: 'Base test piece', looks: 'Small flat square, 15 × 16 mm, 3 mm thick, with one round hole. It is the patch of the real base where a deck post plugs in.', job: 'Tests the post hole before printing the whole base. The skinny peg of a deck post must push in snug.', goes: 'Keep it with the deck parts after the test' },
-      { k: 'post', name: 'Deck post', looks: 'Round stick, 35 mm long. One end has a skinny peg. The other end has a tiny hole for a screw.', job: 'Holds up the front of the deck. The peg goes down into the base, and a screw goes into the top.', goes: 'Keep it with the deck parts. Batch 2 prints the second post.', tip: 'It prints standing peg up, so it comes off the printer upside down.' },
+      { k: 'post', name: 'Deck post', looks: 'Round stick, 35 mm long. One end has a skinny peg. The other end has a small screw hole with a funnel around it.', job: 'Holds up the front of the deck. The peg goes down into the base, and a screw goes into the top.', goes: 'Keep it with the deck parts. Batch 2 prints the second post.', tip: 'It prints standing peg up, so it comes off the printer upside down.' },
     ],
     boxParts: [
       ['M2 × 8 screw', 'M2 means the screw is 2 mm thick. 8 means it is 8 mm long, measured from under the head to the tip. It is in the 8 mm cup.'],
@@ -73,7 +73,7 @@ const BATCHES = [
     ],
     after: [
       {
-        t: 'Find the deck post. The end with the tiny hole is the top. Twist an M2 × 8 screw into that hole, turning clockwise, about three turns.',
+        t: 'Find the deck post. The end with the funnel-shaped hole is the top. Twist an M2 × 8 screw into that hole, turning clockwise, about three turns.',
         tip: 'Use a small Phillips screwdriver. Push down gently while you turn. Then check the result in the table below.',
         img: ['b1-s1'],
         check: [
@@ -411,11 +411,12 @@ export default function DustyBatchesPage() {
         </section>
 
         <section className="mt-6 rounded-2xl border border-yellow-300/40 bg-yellow-300/10 p-5">
-          <h2 className="text-white font-bold text-lg">New files, Sep 26 (Rev A.2)</h2>
+          <h2 className="text-white font-bold text-lg">New files, Sep 27 (Rev A.3)</h2>
           <p className="text-white/75 text-sm mt-1 leading-relaxed">
-            Our printer made holes too small, so every hole is now drawn bigger (
-            <Link href="/projects/nolan/dusty/changes" className="text-naw-cyan underline">change order MOC-003</Link>).
-            Parts printed before Sep 26 have the old holes. Print Batch 1 again (about 20 minutes) for a new washer, collar and the two hole test pieces, and
+            Our printer made small holes too small, so the holes were redrawn (
+            <Link href="/projects/nolan/dusty/changes" className="text-naw-cyan underline">change orders MOC-003 and MOC-004</Link>):
+            bigger screw holes with a little funnel at the top, and snug post holes in the base. Parts printed before Sep 27
+            have the old holes. Print Batch 1 again (about 20 minutes) for a new washer, collar and the two hole test pieces, and
             print Batch 2 again if you already printed the base. Download fresh files: the old ones will not fit.
           </p>
         </section>
@@ -514,7 +515,7 @@ export default function DustyBatchesPage() {
                 </div>
                 <div className="mt-3 rounded-xl border border-naw-green/40 bg-naw-green/10 p-3 text-sm">
                   <span className="text-naw-green font-bold">Result, Sep 26: #4 won both.</span>{' '}
-                  <span className="text-white/80">Every Dusty file now uses those sizes (change order MOC-003), so you do not need this plate again. The #4 post and #4 gear are the same as the new ones: keep them.</span>
+                  <span className="text-white/80">Every Dusty file now uses those sizes (change order MOC-003), so you do not need this plate again. Keep the #4 gear: it matches the new design. The #4 post works too, but the new posts also have a funnel at the top (MOC-004).</span>
                 </div>
               </div>
             )}

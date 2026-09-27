@@ -46,6 +46,9 @@ const TOUCHED = ['3D model and all 19 print files', 'Parts list', 'Build guide s
 
 // Newest first. Add a line every time something about the plan changes.
 const LOG = [
+  ['Sep 27', 'Change', 'MOC-004: screw lead-in (45 degree chamfer, 4.2 mm wide, 1 mm deep) on the deck post tops, motor pad and caster screw holes, and the post holes in the base made smaller, 4.30 to 3.95 mm. All print files re-sliced (Rev A.3).'],
+  ['Sep 27', 'Plan', 'Fit check 4: three more base pieces at 4.05, 4.00 and 3.95 mm. Number 6 (3.95) was snug.'],
+  ['Sep 27', 'Plan', 'Fit check 3: base pieces at 4.20, 4.15 and 4.10 mm were all still loose. Of three screw lead-ins, number 2 (big 45 degree chamfer) started the screw best.'],
   ['Sep 26', 'Plan', 'Two hole test pieces added to Batch 1: a corner of the real deck and a patch of the real base. They check the screw and post holes before the big prints.'],
   ['Sep 26', 'Change', 'MOC-003: holes made bigger to match our printer. Screw holes 1.8 to 2.2 mm, motor gear hole 1.85 to 2.1 mm, and every other hole gets the same extra room. All print files re-sliced.'],
   ['Sep 26', 'Plan', 'Fit check 2 printed: five posts and five motor gears, each a little bigger. Number 4 won both tests.'],
@@ -65,6 +68,11 @@ const LOG = [
   ['Sep 14', 'Plan', 'Parts list checked link by link. Two stores turned out to be dead ends and were replaced.'],
   ['Sep 14', 'Decision', 'The robot is named Dusty.'],
   ['Sep 14', 'Decision', 'Picked the crumb-sweeping robot with cliff detection from a list of cleaning robot ideas.'],
+];
+
+const MOC4 = [
+  ['Screw lead-in (45° funnel)', 'Deck posts (top), base motor pads and caster posts', 'none', '4.2 mm wide, 1.0 mm deep', 'Tested: fit check 3 #2'],
+  ['Post peg holes', 'Base (and the base test piece)', '4.30 mm', '3.95 mm', 'Tested: fit check 4 #6'],
 ];
 
 const MOC3 = [
@@ -246,6 +254,65 @@ export default function DustyChangesPage() {
               See the new design
             </Link>
           </div>
+        </Section>
+
+        <Section title="Change order MOC-004: a funnel for the screws, and tighter post holes" sub="Sep 27, 2026. Approved by Dad after fit checks 3 and 4.">
+          <div className="bg-naw-card rounded-2xl border border-naw-orange/40 p-5">
+            <div className="text-naw-orange text-xs font-semibold">The short version</div>
+            <p className="text-white leading-relaxed mt-1">
+              Two things we learned from test prints. First, screws were hard to start because the hole was a tiny dot: now
+              each screw hole has a little funnel at the top that guides the screw in. Second, the deck posts wiggled in the
+              base, so the holes they plug into are now a bit smaller and the posts fit snug.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3 mt-3">
+            <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
+              <div className="text-white/45 text-xs font-semibold">Why we need it</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">A screw that starts crooked can crack a printed part. A wobbly post makes the deck wobble, and the moto:bit rides on the deck.</div>
+            </div>
+            <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
+              <div className="text-white/45 text-xs font-semibold">How we picked</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">Fit check 3: three funnel styles and three hole sizes. Fit check 4: three smaller hole sizes. Funnel #2 and hole #6 won.</div>
+            </div>
+          </div>
+          <h3 className="text-white font-bold mt-6">Technical record</h3>
+          <div className="mt-2 bg-naw-card rounded-2xl border border-white/10 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-white/45 text-xs text-left">
+                  <th className="px-4 py-2 font-semibold">Feature</th>
+                  <th className="px-4 py-2 font-semibold">Parts</th>
+                  <th className="px-4 py-2 font-semibold">Was</th>
+                  <th className="px-4 py-2 font-semibold">Now</th>
+                  <th className="px-4 py-2 font-semibold">Basis</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5 text-white/80">
+                {MOC4.map(([h, pts, was, now, basis]) => (
+                  <tr key={h}>
+                    <td className="px-4 py-2 text-white">{h}</td>
+                    <td className="px-4 py-2">{pts}</td>
+                    <td className="px-4 py-2 tabular-nums">{was}</td>
+                    <td className="px-4 py-2 tabular-nums text-naw-orange font-semibold">{now}</td>
+                    <td className="px-4 py-2 text-white/60">{basis}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-white/60 text-sm mt-3 leading-relaxed">
+            The gear peg end gets no funnel: the washer presses on that face and needs it flat. What this taught us: small
+            holes (2 mm) print too small on this printer, but a 4 mm hole prints about right. So the +0.25 mm we added in
+            MOC-003 to the bigger sliding fits (the gear on its peg, the dowel holes) gets checked in Batch 4, and gets its own
+            change order if those parts wobble.
+          </p>
+          <h3 className="text-white font-bold mt-6">Tests that prove it works</h3>
+          <ul className="mt-2 space-y-1 text-sm text-white/75 list-disc pl-5">
+            <li>An M2 × 8 screw starts straight in the post top without hunting for the hole (passed on fit check 3, #2).</li>
+            <li>A deck post peg pushes into the base snug by hand (passed on fit check 4, #6).</li>
+            <li>Batch 1 test pieces match: base test piece snug, deck screw slides through.</li>
+            <li>Batch 2: both posts push into the real base snug; screws start easily in the motor pads and caster posts.</li>
+          </ul>
         </Section>
 
         <Section title="Change order MOC-003: bigger holes" sub="Sep 26, 2026. Approved by Dad after fit check 2.">

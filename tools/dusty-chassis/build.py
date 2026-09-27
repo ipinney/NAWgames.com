@@ -94,7 +94,15 @@ EAR_Y = (-8.0, 2.0); EAR_X = (40.0, 42.5)
 # allowance: M2 pass-through holes +0.4 like the pilot, sliding fits on pins and the axle +0.25 like the gear bore.
 FIT_ADD = 0.25
 SCREW_HOLE = 2.8; PILOT = 2.2; PINION_BORE = 2.1   # were 2.4, 1.8, 1.85
-LEAD_D, LEAD_DEPTH = 4.2, 1.0   # fit check 3 #2 (Sep 27): 45 deg chamfer at the screw end of the deck posts
+LEAD_D, LEAD_DEPTH = 4.2, 1.0   # MOC-004 (Sep 27): fit check 3 #2, 45 deg lead-in on every hole a screw starts in
+PEG_HOLE = 3.95                 # MOC-004: fit check 4 #6 (was PEG_D + 0.05 + FIT_ADD = 4.30, loose)
+# Lead-ins go on the deck post tops, motor pad and caster pilots. Not on the gear peg end: the washer needs that face.
+
+
+def lead_up(x, y, z_face):
+    """Lead-in for a pilot entered from below: wide at z_face, narrowing upward."""
+    return (M.cylinder(LEAD_DEPTH, LEAD_D/2, PILOT/2, 48).translate([x, y, z_face])
+            + M.cylinder(1.0, LEAD_D/2, LEAD_D/2, 48).translate([x, y, z_face - 1.0]))
 
 def mirror_x(s):
     return s.mirror([1, 0, 0])
@@ -147,12 +155,14 @@ def base(print_fin=False):
         for dy in (-BR_HOLE_DY, BR_HOLE_DY):
             x = sx*(GX - BR_HOLE_DX); y = A + dy
             holes.append(cyl(x, y, BR_Z - 1, BR_Z + 8.0, PILOT))
+            holes.append(lead_up(x, y, BR_Z))
     # caster pilot holes (blind, from below)
     for dx in (-CASTER_DX, CASTER_DX):
         holes.append(cyl(dx, CASTER_Y, CASTER_H - 1, CASTER_H + 9.0, PILOT))
+        holes.append(lead_up(dx, CASTER_Y, CASTER_H))
     # post pegs
     for (x, y) in POSTS:
-        holes.append(cyl(x, y, PL_Z0 - 3, PL_Z1 + 1, PEG_D + 0.05 + FIT_ADD))
+        holes.append(cyl(x, y, PL_Z0 - 3, PL_Z1 + 1, PEG_HOLE, 64))
     # battery sleeve screws (M2 x 8 up from underneath)
     for (x, y) in SL_TABS + SL_REAR:
         holes.append(cyl(x, y, PL_Z0 - 1, PL_Z1 + 1, SCREW_HOLE))
@@ -268,7 +278,7 @@ def post():
     s = M.cylinder(h, POST_D/2, POST_D/2, 32)
     s = s + M.cylinder(PL_T - 0.3, PEG_D/2, PEG_D/2, 32).translate([0, 0, -(PL_T - 0.3)])
     s = s - M.cylinder(8, PILOT/2, PILOT/2, 16).translate([0, 0, h - 7.5])
-    s = s - M.cylinder(LEAD_DEPTH + 0.01, PILOT/2, LEAD_D/2, 48).translate([0, 0, h - LEAD_DEPTH])   # MOC-003: screw lead-in
+    s = s - M.cylinder(LEAD_DEPTH + 0.01, PILOT/2, LEAD_D/2, 48).translate([0, 0, h - LEAD_DEPTH])   # MOC-004: screw lead-in
     return s   # local: z=0 at plate top
 
 # ================= BATTERY SLEEVE =================

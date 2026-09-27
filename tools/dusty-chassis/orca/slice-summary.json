@@ -4,7 +4,7 @@
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "21m 16s",
+  "time": "21m 13s",
   "grams": "4.34",
   "brim": 8
  },
@@ -13,8 +13,8 @@
   "gcode": [
    "plate_1.gcode"
   ],
-  "time": "1h 21m 27s",
-  "grams": "36.62",
+  "time": "1h 21m 14s",
+  "grams": "36.60",
   "brim": 8
  },
  "3": {
