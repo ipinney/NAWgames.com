@@ -313,11 +313,11 @@ scene('b3-s2', [mesh(slv, COL['sleeve']), mesh(moved(bank, [-110, 0, 0]), '#8394
 # Batch 3 step 3: test-fit a sensor arm on its ear
 carR = PR['carrier_R']
 scr = screw(8, [42.5, -3.0, 13.0], [-1, 0, 0])
-scene('b3-s3', [mesh(B, COL['base'], 0.95), mesh(moved(carR, [12, 0, 0]), COL['carrier_R']), mesh(moved(scr, [26, 0, 0]), STEEL)],
-      arrows=[A([80, -3, 22], [60, -3, 22])],
-      labels=[L([41.2, -3, 22], 'ear on the base', -120, -110), L([60, -3, 26], 'right sensor arm', 60, -90),
-              L([72, -3, 13], 'M2 × 8 through the slot', 60, 90)],
-      az=62, el=18, zoom=1.5, focus=[48, 10, 18])
+scene('b3-s3', [mesh(B, COL['base']), mesh(moved(carR, [14, 0, 0]), COL['carrier_R']), mesh(moved(scr, [20, 0, 0]), STEEL)],
+      arrows=[A([84, -3, 22], [64, -3, 22])],
+      labels=[L([41.2, -8, 24], 'ear on the base (hole in the middle)', -200, -90), L([57, -8, 24], 'right sensor arm, slot facing out', 40, -150),
+              L([70, -3, 13], 'M2 × 8 goes through the slot into the ear', 40, 110), L([74, -3, 22], 'push the arm onto the ear', 130, -60, ORANGE)],
+      az=38, el=22, zoom=1.8, focus=[52, -3, 16])
 
 # Batch 4 step 1: clean teeth
 gs = [('pinion', load_stl('pinion'), [-30, 0, 0]), ('compound', load_stl('compound_gear'), [0, 0, 0]),
