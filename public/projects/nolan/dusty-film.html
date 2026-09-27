@@ -31,6 +31,8 @@ button.on{background:var(--line);color:var(--ink);border-color:var(--line)}
 #track{flex:1;height:6px;background:rgba(143,211,234,.18);border-radius:3px;position:relative;cursor:pointer}
 #prog{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--line);border-radius:3px}
 #time{font-size:13px;color:var(--dim);font-variant-numeric:tabular-nums;min-width:74px;text-align:right}
+#bSound{border-color:var(--part);color:var(--part)}
+#bSound.on{background:var(--part);color:var(--ink)}
 #loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:18px}
 #scrollhint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(40px + env(safe-area-inset-bottom,0px));font-size:13px;color:var(--dim);pointer-events:none}
 .render .hud,.render #ui,.render #bar,.render #scrollhint{display:none}
@@ -68,13 +70,14 @@ main h2 span{color:var(--part)}
   <canvas id="c"></canvas>
   <div class="hud"><div class="kicker">NOLAN'S INVENTION</div><h1>Dusty<span>.</span></h1><p>The crumb-eating robot that knows where the edge is.</p></div>
   <div id="ui">
-    <div class="row"><button id="bPlay">Play film</button><button id="bExplore">Explore</button></div>
+    <div class="row"><button id="bSound">Sound on</button><button id="bPlay">Play film</button><button id="bExplore">Explore</button></div>
     <div class="row" id="groups"></div>
     <div class="row"><button id="bExplode">Explode</button><button id="bCut">Cutaway</button></div>
   </div>
   <div id="cap"><div class="t"></div><div class="b"></div></div>
   <div id="bar"><div id="track"><div id="prog"></div></div><div id="time">0:00</div></div>
   <div id="loading">Loading Dusty...</div>
+  <audio id="snd" src="dusty-film/dusty-audio-v1.mp3" preload="auto"></audio>
 </section>
 
 <main id="making">
@@ -94,14 +97,16 @@ main h2 span{color:var(--part)}
       <p>Dusty sweeps in rows like a lawnmower. The page checks every crumb against the roller as Dusty drives and only keeps crumbs the roller will reach, so the counter really does end up clean. The edge stop uses the design numbers: sensors ahead of the wheels, stop the moment the table disappears.</p></div></div>
     <div class="step"><div class="num">6</div><div><h3>Light it like a movie <span class="tag done">DONE</span></h3>
       <p>One warm light under the cabinet, cool moonlight from the side, reflections from a studio environment map, and a glow filter that only catches very bright things, like Dusty's red LED eyes.</p></div></div>
-    <div class="step"><div class="num">7</div><div><h3>Nolan's voice and face <span class="tag next">NEXT</span></h3>
-      <p>Narration recorded with a voice model of Nolan's voice, one clip per scene so any line can be redone. The eye and face patterns on the micro:bit are placeholders until Nolan designs his own.</p></div></div>
-    <div class="step"><div class="num">8</div><div><h3>Render every frame <span class="tag next">NEXT</span></h3>
+    <div class="step"><div class="num">7</div><div><h3>Sound <span class="tag done">DONE</span></h3>
+      <p>Narration is 15 separate ElevenLabs clips read like a nature documentary, each placed at its moment in the movie, so any line can be redone on its own. The motor whir, crumb crunch, beeps, kitchen hum and both music cues are synthesized in code, and the music automatically gets quieter whenever the narrator talks.</p></div></div>
+    <div class="step"><div class="num">8</div><div><h3>Nolan's voice and face <span class="tag next">NEXT</span></h3>
+      <p>Swap the narrator for a voice model of Nolan's voice. The eye and face patterns on the micro:bit are placeholders until Nolan designs his own.</p></div></div>
+    <div class="step"><div class="num">9</div><div><h3>Render every frame <span class="tag next">NEXT</span></h3>
       <p>A robot web browser steps the movie one frame at a time, 60 frames per second, and saves each one. Then the frames and the voice clips are stitched into the final video. No screen recording, no skipped frames.</p></div></div>
   </div>
 
   <div class="status">
-    <div><h4>WORKING NOW</h4><ul><li>Real CAD assembly, Rev A.6</li><li>Kitchen scene</li><li>Wake up, sweep, edge stop</li><li>System-by-system breakdown</li></ul></div>
+    <div><h4>WORKING NOW</h4><ul><li>Real CAD assembly, Rev A.6</li><li>Kitchen scene</li><li>Wake up, sweep, edge stop</li><li>System-by-system breakdown</li><li>Narration, sound effects, music</li></ul></div>
     <div><h4>COMING</h4><ul><li>Nolan's LED faces</li><li>Narration in Nolan's voice</li><li>Measured stopping distances (Oct 10 test)</li><li>Final 4K video</li></ul></div>
   </div>
   <a class="back" href="/projects/nolan">&larr; Back to Nolan's projects</a>
@@ -298,7 +303,7 @@ const SPEED_CLIFF = 0.09;
 const STOP_Z = FRONT_Z - (-0.0068) * -1 + 0.003; // sensor tip (local z -0.0068) crosses the edge by 3 mm
 T.edge = T.sweep1 + (STOP_Z - 0.03) / SPEED_CLIFF;
 T.back0 = T.edge + 1.6; T.back1 = T.back0 + 0.9; T.spin1 = T.back1 + 1.4; T.go1 = T.spin1 + 2.0;
-T.happy = T.go1 + 0.2; T.break0 = 50; T.end = 125;
+T.happy = T.go1 + 0.2; T.break0 = 50; T.rea = 120.4; T.end = 130;
 const heading = (tx, tz) => Math.atan2(-tx, -tz);
 const SAMPLES = []; const DT = 1 / 120;
 function poseRaw(t) {
@@ -428,19 +433,19 @@ function setFace(name, level) {
 
 // ---------- film script: captions, systems, camera ----------
 const SYS = [
-  ['brain', 54, 65, 'Brain: micro:bit v2', 'Checks the sensors about 25 times a second and decides what to do. Its 25 red LEDs are Dusty\u2019s eyes.'],
-  ['power', 65, 76, 'Power: USB-C power bank', 'Rides in a printed sleeve under the deck. One cable feeds the moto:bit, and the moto:bit feeds everything else.'],
-  ['drive', 76, 87, 'Drive: two N20 gear motors', '298:1 gearboxes on 32 mm wheels. An encoder on the back of each motor counts wheel turns. A ball caster holds up the back.'],
-  ['sensors', 87, 98, 'Edge sensors: 2x QTR-1A + whisker', 'Infrared light bounces off the table 4 mm below. No bounce means no table, so the motors stop. The whisker switch is the backup.'],
-  ['sweeper', 98, 109, 'Sweeper: paddle roller', 'A small 130 motor turns a paddle roller through a gear train. The roller flicks crumbs up and back.'],
-  ['tray', 109, 116, 'Tray', 'Catches everything the roller throws. Slide it out and dump it.']
+  ['brain', 54, 66.2, 'Brain: micro:bit v2', 'Checks the sensors about 25 times a second and decides what to do. Its 25 red LEDs are Dusty\u2019s eyes.'],
+  ['power', 66.2, 77.6, 'Power: USB-C power bank', 'Rides in a printed sleeve under the deck. One cable feeds the moto:bit, and the moto:bit feeds everything else.'],
+  ['drive', 77.6, 88.6, 'Drive: two N20 gear motors', '298:1 gearboxes on 32 mm wheels. An encoder on the back of each motor counts wheel turns. A ball caster holds up the back.'],
+  ['sensors', 88.6, 101.8, 'Edge sensors: 2x QTR-1A + whisker', 'Infrared light bounces off the table 4 mm below. No bounce means no table, so the motors stop. The whisker switch is the backup.'],
+  ['sweeper', 101.8, 111.6, 'Sweeper: paddle roller', 'A small 130 motor turns a paddle roller through a gear train. The roller flicks crumbs up and back.'],
+  ['tray', 111.6, 120.4, 'Tray', 'Catches everything the roller throws. Slide it out and dump it.']
 ];
 const CAPS = [
   [0.6, 5.6, 'Kitchen. 11:47 PM.', 'Someone left the chips open.'],
   [T.edge - 0.3, T.back1 + 0.4, 'Edge detected', 'The sensors see no table. Motors stop. Back up. Turn.'],
   [T.happy + 0.5, 49.0, 'Counter: clean', 'Every crumb is in the tray. Let\u2019s look inside.'],
   ...SYS.map(s => [s[1] + 0.6, s[2] - 0.4, s[3], s[4]]),
-  [117.5, 123.5, 'Dusty', 'Built by Nolan. Sweeps crumbs, knows where the edge is.']
+  [T.rea + 1.1, T.rea + 8, 'Dusty', 'Built by Nolan. Sweeps crumbs, knows where the edge is.']
 ];
 const CENTER = V(-0.13, 0, -0.03);
 function lookFrom(target, az, el, dist) { return V(target.x + dist * Math.cos(el) * Math.sin(az), target.y + dist * Math.sin(el), target.z + dist * Math.cos(el) * Math.cos(az)); }
@@ -453,16 +458,16 @@ function shotAt(t) {
   if (t < T.back1 + 0.2) { const k = smooth((t - (T.sweep1 - 1.5)) / (T.back1 + 0.2 - T.sweep1 + 1.5)); const e = V(0.10, 0.0, FRONT_Z - 0.03); return { pos: lookFrom(e, lerp(1.75, 1.6, k), lerp(0.14, 0.2, k), lerp(0.36, 0.3, k)), tgt: e, fov: 28 }; }
   if (t < T.break0) { const k = smooth((t - T.back1 - 0.2) / (T.break0 - T.back1 - 0.2)); const tg = CENTER.clone().lerp(endP(), 0.5); return { pos: lookFrom(tg, lerp(0.2, 0.0, k), lerp(0.75, 0.62, k), lerp(0.95, 0.7, k)), tgt: tg, fov: 32 }; }
   const e = endP(); const lift = liftAt(t); const pe = pose(T.break0 - 0.01); const c = V(e.x + Math.sin(pe[2]) * 0.055, 0.045 + lift, e.z + Math.cos(pe[2]) * 0.055);
-  const inK = ramp(t, T.break0, T.break0 + 4), outK = ramp(t, 116, 123);
+  const inK = ramp(t, T.break0, T.break0 + 4), outK = ramp(t, T.rea, T.rea + 7);
   const tgFar = CENTER.clone().lerp(e, 0.5);
   const az = 0.0 + 0.11 * (t - T.break0), el = lerp(0.62, 0.45, inK), dist = lerp(0.7, 0.46, inK);
   let pos = lookFrom(tgFar.clone().lerp(c, inK), az * inK, el, dist), tgt = tgFar.clone().lerp(c, inK);
   if (outK > 0) { const pw = lookFrom(tgFar, 0.35, 0.72, 1.0); pos.lerp(pw, outK); tgt.lerp(tgFar, outK); }
   return { pos, tgt, fov: 32 };
 }
-function liftAt(t) { return 0.1 * (ramp(t, T.break0, T.break0 + 4) - ramp(t, 116, 121)); }
+function liftAt(t) { return 0.1 * (ramp(t, T.break0, T.break0 + 4) - ramp(t, T.rea, T.rea + 5)); }
 function focusAt(t) { const w = {}; for (const [g, a, b] of SYS) w[g] = ramp(t, a, a + 0.9) * (1 - ramp(t, b - 0.6, b + 0.3)); return w; }
-function kitchenFade(t) { return ramp(t, T.break0 + 0.5, T.break0 + 3.5) * (1 - ramp(t, 116.5, 120.5)); }
+function kitchenFade(t) { return ramp(t, T.break0 + 0.5, T.break0 + 3.5) * (1 - ramp(t, T.rea + 0.5, T.rea + 4.5)); }
 
 // ---------- explore state ----------
 const ex = { focus: null, explode: false, cut: false, expT: 0, cutT: 0 };
@@ -510,7 +515,7 @@ function filmState(t) {
   if (edgeK) { beamLen = 0.004 + 0.06 * ramp(t, T.edge - 0.25, T.edge); beamRed = true; }
   const f = focusAt(t); if (f.sensors > 0) { beam = Math.max(beam, f.sensors); }
   let roll = 0; if (t > T.sweep0 - 0.5) roll = (Math.min(t, T.sweep1 + 0.8) - T.sweep0 + 0.5) * 18;
-  if (t > 98) roll += (t - 98) * 6 * (1 - ramp(t, 108, 109));
+  if (t > 101.8) roll += (t - 101.8) * 6 * (1 - ramp(t, 110.6, 111.6));
   return { x: p[0], z: p[1], th: p[2] + (t > T.break0 ? 0 : 0), lift, focus: f, explode: 0, cut: false, roll, face: faceAt(t), beam, beamLen, beamRed };
 }
 function applyScene(t) {
@@ -547,6 +552,20 @@ $('bExplode').onclick = () => { enterExplore(); ex.explode = !ex.explode; syncBu
 $('bCut').onclick = () => { enterExplore(); ex.cut = !ex.cut; syncButtons(); };
 $('track').onclick = e => { const r = e.currentTarget.getBoundingClientRect(); filmT = clamp((e.clientX - r.left) / r.width, 0, 1) * T.end; if (mode !== 'film') { mode = 'film'; controls.enabled = false; } syncButtons(); };
 const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const snd = $('snd'); let soundOn = false;
+$('bSound').onclick = () => {
+  soundOn = !soundOn;
+  if (soundOn) { if (mode !== 'film') { mode = 'film'; controls.enabled = false; } if (!playing || filmT >= T.end - 0.5 || filmT > 8) filmT = 0; playing = true; snd.currentTime = filmT; snd.play().catch(() => {}); }
+  else snd.pause();
+  $('bSound').classList.toggle('on', soundOn); $('bSound').textContent = soundOn ? 'Sound off' : 'Sound on'; syncButtons();
+};
+function syncSound() {
+  if (!soundOn) return;
+  const want = mode === 'film' && playing && filmT < T.end;
+  if (!want) { if (!snd.paused) snd.pause(); return; }
+  if (snd.paused) { snd.currentTime = filmT; snd.play().catch(() => {}); }
+  else if (Math.abs(snd.currentTime - filmT) > 0.25) snd.currentTime = filmT;
+}
 
 // ---------- frame ----------
 function resize() {
@@ -575,11 +594,30 @@ function frame(t) {
   composer.render();
 }
 let resolveReady; window.dustyReady = new Promise(r => resolveReady = r);
-window.DUSTY = { T, renderAt: t => { mode = 'render'; frame(t); }, count: eaten.length };
+const comp = document.createElement('canvas');
+function wrap(g, text, maxW) { const words = text.split(' '), lines = []; let cur = ''; for (const w of words) { const t = cur ? cur + ' ' + w : w; if (g.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t; } if (cur) lines.push(cur); return lines; }
+function frameJPEG(t, q = 0.92, caps = true) {
+  mode = 'render'; frame(t);
+  const W = canvas.width, H = canvas.height; comp.width = W; comp.height = H; const g = comp.getContext('2d'); g.drawImage(canvas, 0, 0);
+  const c = CAPS.find(c => t >= c[0] && t < c[1]);
+  if (caps && c) {
+    const k = H / 720, a = Math.min(1, (t - c[0]) / 0.35, (c[1] - t) / 0.35); g.globalAlpha = Math.max(0, a);
+    const x = 40 * k, pad = 10 * k; g.font = `700 ${30 * k}px "Barlow Semi Condensed", sans-serif`; const tw = g.measureText(c[2]).width;
+    g.font = `500 ${22 * k}px "Barlow Semi Condensed", sans-serif`; const lines = wrap(g, c[3], 620 * k); const bw = Math.max(...lines.map(l => g.measureText(l).width));
+    const lh = 28 * k, bodyH = lines.length * lh + pad * 1.6, titleH = 42 * k; const y0 = H - 48 * k - bodyH - titleH;
+    g.fillStyle = 'rgba(11,20,34,0.8)'; g.fillRect(x, y0, tw + pad * 2.4, titleH); g.fillRect(x, y0 + titleH + 3 * k, bw + pad * 2.4, bodyH);
+    g.fillStyle = '#f0b43c'; g.fillRect(x, y0, 4 * k, titleH);
+    g.fillStyle = '#ffffff'; g.font = `700 ${30 * k}px "Barlow Semi Condensed", sans-serif`; g.textBaseline = 'middle'; g.fillText(c[2], x + pad * 1.3, y0 + titleH / 2);
+    g.fillStyle = '#dbe5f1'; g.font = `500 ${22 * k}px "Barlow Semi Condensed", sans-serif`; lines.forEach((l, i) => g.fillText(l, x + pad * 1.3, y0 + titleH + 3 * k + pad * 0.8 + lh * (i + 0.5)));
+    g.globalAlpha = 1;
+  }
+  return comp.toDataURL('image/jpeg', q);
+}
+window.DUSTY = { T, renderAt: t => { mode = 'render'; frame(t); }, frameJPEG, count: eaten.length };
 function loop(now) {
   const dt = Math.min(0.1, (now - last) / 1000); last = now;
   if (mode === 'film' && playing) { filmT += dt; if (filmT >= T.end) { filmT = T.end; playing = false; syncButtons(); } }
-  if (mode !== 'render') { frame(filmT); $('prog').style.width = (filmT / T.end * 100) + '%'; $('time').textContent = fmt(filmT) + ' / ' + fmt(T.end); }
+  if (mode !== 'render') { syncSound(); frame(filmT); $('prog').style.width = (filmT / T.end * 100) + '%'; $('time').textContent = fmt(filmT) + ' / ' + fmt(T.end); }
   requestAnimationFrame(loop);
 }
 if (!RENDER) { syncButtons(); requestAnimationFrame(loop); }
