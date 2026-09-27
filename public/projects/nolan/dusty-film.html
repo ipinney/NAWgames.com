@@ -77,7 +77,7 @@ main h2 span{color:var(--part)}
   <div id="cap"><div class="t"></div><div class="b"></div></div>
   <div id="bar"><div id="track"><div id="prog"></div></div><div id="time">0:00</div></div>
   <div id="loading">Loading Dusty...</div>
-  <audio id="snd" src="dusty-film/dusty-audio-v1.mp3" preload="auto"></audio>
+  <audio id="snd" src="dusty-film/dusty-audio-v2.mp3" preload="auto"></audio>
 </section>
 
 <main id="making">
@@ -139,7 +139,8 @@ const V = (x, y, z) => new THREE.Vector3(x, y, z);
 // ---------- renderer ----------
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: RENDER });
-renderer.setPixelRatio(RENDER ? 1 : Math.min(devicePixelRatio, 2));
+const LITE = !RENDER && (matchMedia('(pointer: coarse)').matches || Math.min(innerWidth, innerHeight) < 700);
+renderer.setPixelRatio(RENDER ? 1 : Math.min(devicePixelRatio, LITE ? 1.25 : 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -163,7 +164,7 @@ composer.addPass(new OutputPass());
 // ---------- lights ----------
 const KEY = 0.32; const key = new THREE.SpotLight('#ffd7a3', KEY, 3, 1.1, 0.9, 1.2);
 key.position.set(-0.1, 0.5, -0.26); key.target.position.set(-0.1, 0, 0.12);
-key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.002;
+key.castShadow = true; key.shadow.mapSize.set(LITE ? 1024 : 2048, LITE ? 1024 : 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.002;
 key.shadow.camera.near = 0.1; key.shadow.camera.far = 2;
 scene.add(key, key.target);
 const moon = new THREE.DirectionalLight('#9fb8ff', 0.55); moon.position.set(-1.2, 1.4, 0.9); scene.add(moon);
@@ -550,22 +551,26 @@ $('bExplore').onclick = () => { enterExplore(); };
 $('bPlay').onclick = () => { if (mode !== 'film') { mode = 'film'; controls.enabled = false; if (filmT >= T.end) filmT = 0; playing = true; } else { playing = !playing; if (filmT >= T.end) filmT = 0; } syncButtons(); };
 $('bExplode').onclick = () => { enterExplore(); ex.explode = !ex.explode; syncButtons(); };
 $('bCut').onclick = () => { enterExplore(); ex.cut = !ex.cut; syncButtons(); };
-$('track').onclick = e => { const r = e.currentTarget.getBoundingClientRect(); filmT = clamp((e.clientX - r.left) / r.width, 0, 1) * T.end; if (mode !== 'film') { mode = 'film'; controls.enabled = false; } syncButtons(); };
+$('track').onclick = e => { const r = e.currentTarget.getBoundingClientRect(); filmT = clamp((e.clientX - r.left) / r.width, 0, 1) * T.end; seekPending = true; if (mode !== 'film') { mode = 'film'; controls.enabled = false; } syncButtons(); };
 const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const snd = $('snd'); let soundOn = false;
 $('bSound').onclick = () => {
   soundOn = !soundOn;
-  if (soundOn) { if (mode !== 'film') { mode = 'film'; controls.enabled = false; } if (!playing || filmT >= T.end - 0.5 || filmT > 8) filmT = 0; playing = true; snd.currentTime = filmT; snd.play().catch(() => {}); }
+  if (soundOn) { if (mode !== 'film') { mode = 'film'; controls.enabled = false; } if (!playing || filmT >= T.end - 0.5 || filmT > 8) filmT = 0; playing = true; }
   else snd.pause();
   $('bSound').classList.toggle('on', soundOn); $('bSound').textContent = soundOn ? 'Sound off' : 'Sound on'; syncButtons();
 };
+let seekPending = false;
 function syncSound() {
   if (!soundOn) return;
   const want = mode === 'film' && playing && filmT < T.end;
   if (!want) { if (!snd.paused) snd.pause(); return; }
-  if (snd.paused) { snd.currentTime = filmT; snd.play().catch(() => {}); }
-  else if (Math.abs(snd.currentTime - filmT) > 0.25) snd.currentTime = filmT;
+  if (seekPending) { seekPending = false; snd.currentTime = filmT; }
+  if (snd.paused && !starting) { starting = true; snd.currentTime = filmT; snd.play().then(() => { starting = false; }).catch(() => { starting = false; soundOn = false; $('bSound').classList.remove('on'); $('bSound').textContent = 'Sound on'; }); }
 }
+let starting = false;
+snd.addEventListener('ended', () => { if (soundOn) { filmT = T.end; } });
+const audioClock = () => soundOn && !snd.paused && !snd.seeking && snd.readyState >= 3;
 
 // ---------- frame ----------
 function resize() {
@@ -616,7 +621,7 @@ function frameJPEG(t, q = 0.92, caps = true) {
 window.DUSTY = { T, renderAt: t => { mode = 'render'; frame(t); }, frameJPEG, count: eaten.length };
 function loop(now) {
   const dt = Math.min(0.1, (now - last) / 1000); last = now;
-  if (mode === 'film' && playing) { filmT += dt; if (filmT >= T.end) { filmT = T.end; playing = false; syncButtons(); } }
+  if (mode === 'film' && playing) { if (audioClock()) filmT = Math.min(T.end, snd.currentTime); else if (!(soundOn && !snd.paused)) filmT += dt; if (filmT >= T.end) { filmT = T.end; playing = false; syncButtons(); } }
   if (mode !== 'render') { syncSound(); frame(filmT); $('prog').style.width = (filmT / T.end * 100) + '%'; $('time').textContent = fmt(filmT) + ' / ' + fmt(T.end); }
   requestAnimationFrame(loop);
 }
