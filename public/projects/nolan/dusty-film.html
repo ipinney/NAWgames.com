@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dusty: the crumb-eating robot</title>
+<meta name="description" content="Nolan's crumb-sweeping robot that knows where the table edge is. A 3D movie built from the real CAD.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0b1422;--ink2:#111e31;--line:#8fd3ea;--part:#f0b43c;--red:#ff4a3d;--text:#dbe5f1;--dim:#7d93ad;--rule:#1f3350}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--ink);color:var(--text);font-family:"Barlow Semi Condensed",system-ui,-apple-system,"Segoe UI",sans-serif;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--ink)}
+#hero{position:relative;width:100%;height:100vh;height:100dvh;overflow:hidden;background:#05080e}
+#c{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.hud{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));left:18px;pointer-events:none;max-width:60%}
+.kicker{font-size:12px;letter-spacing:.18em;color:var(--dim);font-weight:600}
+.hud h1{font-size:34px;line-height:1;font-weight:700;letter-spacing:.01em}
+.hud h1 span{color:var(--red)}
+.hud p{font-size:15px;color:var(--dim);margin-top:4px}
+#cap{position:absolute;left:18px;bottom:calc(64px + env(safe-area-inset-bottom,0px));max-width:min(560px,86vw);opacity:0;transition:opacity .35s;pointer-events:none}
+#cap .t{display:inline-block;font-size:22px;font-weight:700;color:#fff;background:rgba(11,20,34,.78);border-left:3px solid var(--part);padding:4px 10px}
+#cap .b{font-size:17px;color:var(--text);background:rgba(11,20,34,.78);padding:6px 10px 8px 13px;margin-top:2px;line-height:1.3}
+#ui{position:absolute;right:14px;top:calc(14px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.row{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end}
+button{font:inherit;font-size:14px;font-weight:600;color:var(--text);background:rgba(17,30,49,.85);border:1px solid var(--rule);border-radius:4px;padding:5px 10px;cursor:pointer}
+button:hover{border-color:var(--line)}
+button.on{background:var(--line);color:var(--ink);border-color:var(--line)}
+#bar{position:absolute;left:0;right:0;bottom:0;height:calc(34px + env(safe-area-inset-bottom,0px));padding:0 14px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px;background:linear-gradient(transparent,rgba(5,8,14,.7))}
+#track{flex:1;height:6px;background:rgba(143,211,234,.18);border-radius:3px;position:relative;cursor:pointer}
+#prog{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--line);border-radius:3px}
+#time{font-size:13px;color:var(--dim);font-variant-numeric:tabular-nums;min-width:74px;text-align:right}
+#loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:18px}
+#scrollhint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(40px + env(safe-area-inset-bottom,0px));font-size:13px;color:var(--dim);pointer-events:none}
+.render .hud,.render #ui,.render #bar,.render #scrollhint{display:none}
+.render.nocap #cap{display:none}
+.render #cap{bottom:48px;left:48px}
+.render #cap .t{font-size:40px}
+.render #cap .b{font-size:30px;max-width:900px}
+
+main{max-width:880px;margin:0 auto;padding:56px 20px 80px}
+main h2{font-size:34px;font-weight:700;line-height:1.1}
+main h2 span{color:var(--part)}
+.lede{font-size:19px;color:var(--text);margin-top:12px;line-height:1.45}
+.steps{margin-top:34px;display:grid;gap:14px}
+.step{display:grid;grid-template-columns:44px 1fr;gap:14px;background:var(--ink2);border:1px solid var(--rule);border-radius:6px;padding:16px 18px}
+.num{font-size:30px;font-weight:700;color:var(--line);line-height:1}
+.step h3{font-size:21px;font-weight:700}
+.step p{font-size:16.5px;color:#b9c7d8;line-height:1.45;margin-top:4px}
+.step code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;color:var(--part)}
+.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;padding:1px 7px;border-radius:3px;margin-left:8px;vertical-align:3px}
+.tag.done{background:#1d4a33;color:#7fe0a6}
+.tag.next{background:#4a3a14;color:#f0c86a}
+.status{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.status div{background:var(--ink2);border:1px solid var(--rule);border-radius:6px;padding:14px 18px}
+.status h4{font-size:15px;letter-spacing:.12em;color:var(--dim)}
+.status ul{margin:8px 0 0 18px;font-size:16px;line-height:1.5;color:#b9c7d8}
+.back{display:inline-block;margin-top:34px;color:var(--line);font-size:16px;text-decoration:none}
+@media (max-width:640px){.hud h1{font-size:28px}.status{grid-template-columns:1fr}#cap .t{font-size:18px}#cap .b{font-size:15px}}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<section id="hero">
+  <canvas id="c"></canvas>
+  <div class="hud"><div class="kicker">NOLAN'S INVENTION</div><h1>Dusty<span>.</span></h1><p>The crumb-eating robot that knows where the edge is.</p></div>
+  <div id="ui">
+    <div class="row"><button id="bPlay">Play film</button><button id="bExplore">Explore</button></div>
+    <div class="row" id="groups"></div>
+    <div class="row"><button id="bExplode">Explode</button><button id="bCut">Cutaway</button></div>
+  </div>
+  <div id="cap"><div class="t"></div><div class="b"></div></div>
+  <div id="bar"><div id="track"><div id="prog"></div></div><div id="time">0:00</div></div>
+  <div id="loading">Loading Dusty...</div>
+</section>
+
+<main id="making">
+  <h2>How we're making <span>Dusty's movie</span></h2>
+  <p class="lede">Everything above is built from code. The robot is the same CAD model we 3D print from, Rev A.6. The kitchen, the chip bag and all <b id="nCrumbs">the</b> crumbs are generated by this page. Nothing is hand-animated and nothing is a downloaded model.</p>
+
+  <div class="steps">
+    <div class="step"><div class="num">1</div><div><h3>Design the parts in code <span class="tag done">DONE</span></h3>
+      <p>Every printed part of Dusty is a Python program. Change one number, rebuild, and every part, print plate and download updates together. Each change gets a change order (MOC) so we know why it happened.</p></div></div>
+    <div class="step"><div class="num">2</div><div><h3>Put it together on the computer <span class="tag done">DONE</span></h3>
+      <p><code>assemble.py</code> places every part where it sits on the real robot, adds the parts we buy (N20 motors, micro:bit, moto:bit, power bank, QTR-1A sensors) and checks that nothing overlaps before anything gets printed.</p></div></div>
+    <div class="step"><div class="num">3</div><div><h3>Export it for the web <span class="tag done">DONE</span></h3>
+      <p>The whole assembly is saved as one 3D file (GLB), and every part is tagged with its system: brain, power, drive, sensors, sweeper or tray. That tag is what lets the movie light up one system at a time.</p></div></div>
+    <div class="step"><div class="num">4</div><div><h3>Build the kitchen out of math <span class="tag done">DONE</span></h3>
+      <p>The counter, sink, faucet, tile, chip bag and crumbs are shapes and formulas in three.js. The crumbs are scattered from a fixed random seed, so the same crumbs land in the same spots every time the movie plays.</p></div></div>
+    <div class="step"><div class="num">5</div><div><h3>Script the robot <span class="tag done">DONE</span></h3>
+      <p>Dusty sweeps in rows like a lawnmower. The page checks every crumb against the roller as Dusty drives and only keeps crumbs the roller will reach, so the counter really does end up clean. The edge stop uses the design numbers: sensors ahead of the wheels, stop the moment the table disappears.</p></div></div>
+    <div class="step"><div class="num">6</div><div><h3>Light it like a movie <span class="tag done">DONE</span></h3>
+      <p>One warm light under the cabinet, cool moonlight from the side, reflections from a studio environment map, and a glow filter that only catches very bright things, like Dusty's red LED eyes.</p></div></div>
+    <div class="step"><div class="num">7</div><div><h3>Nolan's voice and face <span class="tag next">NEXT</span></h3>
+      <p>Narration recorded with a voice model of Nolan's voice, one clip per scene so any line can be redone. The eye and face patterns on the micro:bit are placeholders until Nolan designs his own.</p></div></div>
+    <div class="step"><div class="num">8</div><div><h3>Render every frame <span class="tag next">NEXT</span></h3>
+      <p>A robot web browser steps the movie one frame at a time, 60 frames per second, and saves each one. Then the frames and the voice clips are stitched into the final video. No screen recording, no skipped frames.</p></div></div>
+  </div>
+
+  <div class="status">
+    <div><h4>WORKING NOW</h4><ul><li>Real CAD assembly, Rev A.6</li><li>Kitchen scene</li><li>Wake up, sweep, edge stop</li><li>System-by-system breakdown</li></ul></div>
+    <div><h4>COMING</h4><ul><li>Nolan's LED faces</li><li>Narration in Nolan's voice</li><li>Measured stopping distances (Oct 10 test)</li><li>Final 4K video</li></ul></div>
+  </div>
+  <a class="back" href="/projects/nolan">&larr; Back to Nolan's projects</a>
+</main>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { toCreasedNormals } from 'three/addons/utils/BufferGeometryUtils.js';
+
+const Q = new URLSearchParams(location.search);
+const RENDER = Q.has('render');
+if (RENDER) { document.body.classList.add('render'); if (Q.get('captions') === '0') document.body.classList.add('nocap'); document.getElementById('making').style.display = 'none'; }
+const GLB = 'dusty-film/dusty-revA6.glb';
+
+// ---------- helpers ----------
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+const ramp = (t, a, b) => smooth((t - a) / (b - a));
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+
+// ---------- renderer ----------
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: RENDER });
+renderer.setPixelRatio(RENDER ? 1 : Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.localClippingEnabled = true;
+
+const scene = new THREE.Scene();
+const NIGHT = new THREE.Color('#070b12'), STUDIO = new THREE.Color('#0b1422');
+scene.background = NIGHT.clone();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.35;
+
+const camera = new THREE.PerspectiveCamera(32, 16 / 9, 0.005, 20);
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0.7, 0.4, 1.25);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+// ---------- lights ----------
+const KEY = 0.32; const key = new THREE.SpotLight('#ffd7a3', KEY, 3, 1.1, 0.9, 1.2);
+key.position.set(-0.1, 0.5, -0.26); key.target.position.set(-0.1, 0, 0.12);
+key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.002;
+key.shadow.camera.near = 0.1; key.shadow.camera.far = 2;
+scene.add(key, key.target);
+const moon = new THREE.DirectionalLight('#9fb8ff', 0.55); moon.position.set(-1.2, 1.4, 0.9); scene.add(moon);
+const fill = new THREE.HemisphereLight('#6d85b3', '#1a1410', 0.25); scene.add(fill);
+const rim = new THREE.DirectionalLight('#8fd3ea', 0); rim.position.set(0.6, 0.5, -1.0); scene.add(rim);
+const studioKey = new THREE.DirectionalLight('#ffffff', 0); studioKey.position.set(-0.6, 1.0, 0.8); scene.add(studioKey);
+
+// ---------- procedural textures ----------
+function canvasTex(w, h, draw, srgb = true) { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; }
+const quartzTex = canvasTex(2048, 2048, (g, w, h) => {
+  const r = rng(7); g.fillStyle = '#e9e7e2'; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 26000; i++) { const s = r() * 3.2 + 0.6; const v = 150 + r() * 90 | 0; g.fillStyle = `rgba(${v - 10},${v - 12},${v - 16},${0.25 + r() * 0.5})`; g.fillRect(r() * w, r() * h, s, s); }
+  g.lineCap = 'round';
+  for (let k = 0; k < 7; k++) { let x = r() * w, y = r() * h; g.strokeStyle = `rgba(150,150,155,${0.08 + r() * 0.12})`; g.lineWidth = 1 + r() * 3; g.beginPath(); g.moveTo(x, y); for (let j = 0; j < 40; j++) { x += (r() - 0.35) * 60; y += (r() - 0.5) * 40; g.lineTo(x, y); } g.stroke(); }
+});
+quartzTex.wrapS = quartzTex.wrapT = THREE.RepeatWrapping; quartzTex.repeat.set(1.2, 1.2);
+const tileTex = canvasTex(1024, 1024, (g, w, h) => {
+  const r = rng(3); g.fillStyle = '#9ea3a6'; g.fillRect(0, 0, w, h);
+  const tw = w / 4, th = h / 8;
+  for (let row = 0; row < 8; row++) for (let col = -1; col < 5; col++) {
+    const x = col * tw + (row % 2 ? tw / 2 : 0), y = row * th; const v = 232 + r() * 14 | 0;
+    const gr = g.createLinearGradient(0, y, 0, y + th); gr.addColorStop(0, `rgb(${v},${v},${v - 3})`); gr.addColorStop(1, `rgb(${v - 14},${v - 14},${v - 16})`);
+    g.fillStyle = gr; g.fillRect(x + 5, y + 5, tw - 10, th - 10);
+  }
+});
+tileTex.wrapS = tileTex.wrapT = THREE.RepeatWrapping; tileTex.repeat.set(9, 3);
+const labelTex = canvasTex(1024, 768, (g, w, h) => {
+  const gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, '#d9361e'); gr.addColorStop(1, '#f07a1a'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+  g.fillStyle = '#ffd23f'; g.beginPath(); g.ellipse(w * 0.66, h * 0.62, 190, 120, -0.3, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#f2b640'; for (let i = 0; i < 3; i++) { g.beginPath(); g.ellipse(w * (0.58 + i * 0.07), h * (0.58 + i * 0.05), 70, 44, -0.5 + i * 0.4, 0, Math.PI * 2); g.fill(); }
+  g.save(); g.translate(w * 0.36, h * 0.36); g.rotate(-0.08);
+  g.font = '900 150px "Barlow Semi Condensed", Impact, sans-serif'; g.textAlign = 'center';
+  g.lineWidth = 16; g.strokeStyle = '#7a1407'; g.strokeText('CRUNCHIES', 0, 40); g.fillStyle = '#fff4c9'; g.fillText('CRUNCHIES', 0, 40);
+  g.font = '700 58px "Barlow Semi Condensed", sans-serif'; g.fillStyle = '#ffffff'; g.fillText('SEA SALT  \u2022  KETTLE', 0, 120);
+  g.restore();
+});
+
+// ---------- kitchen ----------
+const kitchen = new THREE.Group(); scene.add(kitchen);
+const FRONT_Z = 0.30, BACK_Z = -0.34, SINK = { x0: 0.30, x1: 0.74, z0: -0.27, z1: 0.07 };
+function roundedRect(shape, x0, y0, x1, y1, r, hole) {
+  const p = hole ? new THREE.Path() : shape;
+  p.moveTo(x0 + r, y0); p.lineTo(x1 - r, y0); p.quadraticCurveTo(x1, y0, x1, y0 + r); p.lineTo(x1, y1 - r); p.quadraticCurveTo(x1, y1, x1 - r, y1);
+  p.lineTo(x0 + r, y1); p.quadraticCurveTo(x0, y1, x0, y1 - r); p.lineTo(x0, y0 + r); p.quadraticCurveTo(x0, y0, x0 + r, y0);
+  if (hole) shape.holes.push(p);
+}
+{
+  const s = new THREE.Shape(); roundedRect(s, -1.1, -FRONT_Z, 1.1, -BACK_Z, 0.004);
+  roundedRect(s, SINK.x0, -SINK.z1, SINK.x1, -SINK.z0, 0.03, true);
+  const g = new THREE.ExtrudeGeometry(s, { depth: 0.03, bevelEnabled: true, bevelThickness: 0.002, bevelSize: 0.002, bevelSegments: 3, curveSegments: 12 });
+  g.rotateX(-Math.PI / 2); g.translate(0, -0.032, 0);
+  const m = new THREE.MeshPhysicalMaterial({ map: quartzTex, roughness: 0.22, clearcoat: 0.5, clearcoatRoughness: 0.12 });
+  const counter = new THREE.Mesh(g, m); counter.receiveShadow = true; kitchen.add(counter);
+}
+const paint = new THREE.MeshStandardMaterial({ color: '#2b3a4a', roughness: 0.55 });
+const brass = new THREE.MeshStandardMaterial({ color: '#c9a25a', metalness: 1, roughness: 0.3 });
+{
+  const cab = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.86, 0.6), paint); cab.position.set(0, -0.034 - 0.43, BACK_Z + 0.3 - 0.02); kitchen.add(cab);
+  for (let i = 0; i < 5; i++) {
+    const x = -1.1 + 0.22 + i * 0.44; const door = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.62, 0.018), paint); door.position.set(x, -0.40, FRONT_Z - 0.03); door.receiveShadow = true; kitchen.add(door);
+    const drawer = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.16, 0.018), paint); drawer.position.set(x, -0.13, FRONT_Z - 0.03); kitchen.add(drawer);
+    const pull = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.12, 12), brass); pull.rotation.z = Math.PI / 2; pull.position.set(x, -0.10, FRONT_Z - 0.012); kitchen.add(pull);
+  }
+  const splash = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 0.52), new THREE.MeshStandardMaterial({ map: tileTex, roughness: 0.25 }));
+  splash.position.set(0, 0.26, BACK_Z); splash.receiveShadow = true; kitchen.add(splash);
+  const upper = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.5, 0.34), paint); upper.position.set(0, 0.52 + 0.25, BACK_Z + 0.17); kitchen.add(upper);
+  const lightBar = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.006, 0.02), new THREE.MeshStandardMaterial({ color: '#fff3dd', emissive: '#ffcf8a', emissiveIntensity: 2.2 }));
+  lightBar.position.set(-0.2, 0.516, BACK_Z + 0.16); kitchen.add(lightBar);
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(6, 3), new THREE.MeshStandardMaterial({ color: '#1b2533', roughness: 0.9 })); wall.position.set(0, 0.8, BACK_Z - 0.01); kitchen.add(wall);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), new THREE.MeshStandardMaterial({ color: '#3a2c20', roughness: 0.7 })); floor.rotation.x = -Math.PI / 2; floor.position.y = -0.9; kitchen.add(floor);
+}
+// sink basin
+{
+  const steel = new THREE.MeshStandardMaterial({ color: '#c3c7cc', metalness: 1, roughness: 0.32 });
+  const D = 0.2, w = SINK.x1 - SINK.x0, d = SINK.z1 - SINK.z0, cx = (SINK.x0 + SINK.x1) / 2, cz = (SINK.z0 + SINK.z1) / 2;
+  const add = (gw, gh, gd, x, y, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(gw, gh, gd), steel); m.position.set(x, y, z); m.receiveShadow = true; kitchen.add(m); };
+  add(w, 0.004, d, cx, -D, cz);
+  add(w, D, 0.004, cx, -D / 2, SINK.z0); add(w, D, 0.004, cx, -D / 2, SINK.z1);
+  add(0.004, D, d, SINK.x0, -D / 2, cz); add(0.004, D, d, SINK.x1, -D / 2, cz);
+  const drain = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.003, 32), new THREE.MeshStandardMaterial({ color: '#555a60', metalness: 1, roughness: 0.4 })); drain.position.set(cx, -D + 0.003, cz + 0.03); kitchen.add(drain);
+  const chrome = new THREE.MeshStandardMaterial({ color: '#e8ebef', metalness: 1, roughness: 0.07 });
+  const fx = cx, fz = SINK.z0 - 0.045;
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.03, 0.035, 32), chrome); base.position.set(fx, 0.0175, fz); base.castShadow = true; kitchen.add(base);
+  const curve = new THREE.CatmullRomCurve3([V(fx, 0.03, fz), V(fx, 0.25, fz), V(fx, 0.33, fz + 0.04), V(fx, 0.33, fz + 0.13), V(fx, 0.28, fz + 0.19), V(fx, 0.25, fz + 0.2)]);
+  const neck = new THREE.Mesh(new THREE.TubeGeometry(curve, 80, 0.012, 20), chrome); neck.castShadow = true; kitchen.add(neck);
+  const lever = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.012, 0.08), chrome); lever.position.set(fx + 0.045, 0.06, fz); lever.rotation.x = 0.35; kitchen.add(lever);
+  const lb = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.03, 20), chrome); lb.position.set(fx + 0.045, 0.02, fz); kitchen.add(lb);
+}
+// mug
+{
+  const pts = []; for (let i = 0; i <= 10; i++) pts.push(new THREE.Vector2(0.041 + 0.002 * Math.sin(i / 10 * Math.PI), i / 10 * 0.095));
+  pts.push(new THREE.Vector2(0.037, 0.095), new THREE.Vector2(0.037, 0.008), new THREE.Vector2(0.0, 0.008));
+  const mug = new THREE.Mesh(new THREE.LatheGeometry(pts, 48), new THREE.MeshPhysicalMaterial({ color: '#d98f3a', roughness: 0.18, clearcoat: 1 }));
+  mug.position.set(-0.86, 0, -0.24); mug.castShadow = true; kitchen.add(mug);
+  const handle = new THREE.Mesh(new THREE.TorusGeometry(0.026, 0.007, 12, 32, Math.PI), mug.material); handle.position.set(-0.86 + 0.041, 0.05, -0.24); handle.rotation.z = -Math.PI / 2; kitchen.add(handle);
+}
+// chip bag
+const BAG = { x: -0.38, z: -0.205, rot: 0.35, L: 0.2, W: 0.15, T: 0.045 };
+{
+  const g = new THREE.BoxGeometry(BAG.L, BAG.T, BAG.W, 48, 6, 36); const p = g.attributes.position; const r = rng(11);
+  const hash = (x, y, z) => { const s = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453; return s - Math.floor(s); };
+  for (let i = 0; i < p.count; i++) {
+    let x = p.getX(i), y = p.getY(i), z = p.getZ(i);
+    const u = x / BAG.L + 0.5;
+    const pinchL = Math.pow(Math.sin(clamp(u, 0, 1) * Math.PI * 0.5 + 0.0001), 0.35);
+    const pinch = u < 0.5 ? Math.pow(Math.max(0, Math.sin(u * Math.PI)), 0.45) : lerp(1, 0.55, ramp(u, 0.75, 1));
+    const edge = Math.pow(Math.max(0, Math.cos((z / BAG.W) * Math.PI)), 0.4);
+    y *= Math.max(0.06, pinch * edge);
+    const n = (hash(Math.round(x * 90), Math.round(y * 90), Math.round(z * 90)) - 0.5) * 0.004;
+    y += n * (Math.abs(y) > 0.002 ? 1 : 0.3); z += (hash(z * 50, x * 50, 1) - 0.5) * 0.002;
+    if (u < 0.06) y += (hash(z * 400, 3, 3) - 0.5) * 0.002;
+    p.setXYZ(i, x, y + BAG.T / 2 * pinch * edge * 0.9 + 0.002, z);
+  }
+  g.computeVertexNormals();
+  const foil = new THREE.MeshStandardMaterial({ color: '#d8dade', metalness: 0.9, roughness: 0.28 });
+  const label = new THREE.MeshStandardMaterial({ map: labelTex, metalness: 0.35, roughness: 0.32 });
+  const inside = new THREE.MeshStandardMaterial({ color: '#8f8f93', metalness: 0.9, roughness: 0.35, side: THREE.DoubleSide });
+  const bag = new THREE.Mesh(g, [inside, foil, label, label, label, label]);
+  bag.position.set(BAG.x, 0, BAG.z); bag.rotation.y = BAG.rot; bag.castShadow = true; bag.receiveShadow = true; kitchen.add(bag);
+}
+const MOUTH = V(BAG.x + Math.cos(BAG.rot) * BAG.L / 2, 0, BAG.z - Math.sin(BAG.rot) * BAG.L / 2);
+
+// ---------- motion ----------
+const P0 = [-0.60, 0.10];
+const ROWS = [0.075, 0.025, -0.025, -0.075, -0.125], XL = -0.29, XR = 0.03;
+const pts = [V(P0[0], 0, P0[1]), V(-0.46, 0, 0.08)];
+ROWS.forEach((z, i) => {
+  const dir = i % 2 === 0 ? 1 : -1; const a = dir > 0 ? XL : XR, b = dir > 0 ? XR : XL;
+  if (i > 0) pts.push(V(a, 0, z));
+  pts.push(V(b, 0, z));
+  if (i < ROWS.length - 1) pts.push(V(b + dir * 0.03, 0, z - 0.025));
+});
+pts.push(V(0.075, 0, -0.10), V(0.10, 0, -0.03), V(0.10, 0, 0.03));
+const sweepCurve = new THREE.CatmullRomCurve3(pts, false, 'centripetal', 0.5);
+const T = { wake: 6, sweep0: 12.5, sweep1: 33.5 };
+const SPEED_CLIFF = 0.09;
+const STOP_Z = FRONT_Z - (-0.0068) * -1 + 0.003; // sensor tip (local z -0.0068) crosses the edge by 3 mm
+T.edge = T.sweep1 + (STOP_Z - 0.03) / SPEED_CLIFF;
+T.back0 = T.edge + 1.6; T.back1 = T.back0 + 0.9; T.spin1 = T.back1 + 1.4; T.go1 = T.spin1 + 2.0;
+T.happy = T.go1 + 0.2; T.break0 = 50; T.end = 125;
+const heading = (tx, tz) => Math.atan2(-tx, -tz);
+const SAMPLES = []; const DT = 1 / 120;
+function poseRaw(t) {
+  if (t <= T.sweep0) return [P0[0], P0[1], -Math.PI / 2];
+  if (t <= T.sweep1) { const u = smooth01lin((t - T.sweep0) / (T.sweep1 - T.sweep0)); const p = sweepCurve.getPointAt(u), d = sweepCurve.getTangentAt(u); return [p.x, p.z, heading(d.x, d.z)]; }
+  if (t <= T.edge) { const k = (t - T.sweep1) / (T.edge - T.sweep1); const e = k < 0.93 ? k : 0.93 + (1 - Math.pow(1 - (k - 0.93) / 0.07, 2)) * 0.07; return [0.10, lerp(0.03, STOP_Z, e), Math.PI]; }
+  if (t <= T.back0) return [0.10, STOP_Z, Math.PI];
+  if (t <= T.back1) return [0.10, STOP_Z - 0.05 * smooth((t - T.back0) / (T.back1 - T.back0)), Math.PI];
+  const zb = STOP_Z - 0.05;
+  if (t <= T.spin1) return [0.10, zb, Math.PI - 2.5 * smooth((t - T.back1) / (T.spin1 - T.back1))];
+  const th = Math.PI - 2.5; const f = [-Math.sin(th), -Math.cos(th)];
+  const d = 0.16 * smooth((t - T.spin1) / (T.go1 - T.spin1));
+  return [0.10 + f[0] * d, zb + f[1] * d, th];
+}
+function smooth01lin(u) { const a = 0.04; if (u < a) return (u * u) / (2 * a) / (1 - a); if (u > 1 - a) return 1 - ((1 - u) * (1 - u)) / (2 * a) / (1 - a); return (u - a / 2) / (1 - a); }
+for (let t = 0; t <= T.break0 + 1e-6; t += DT) SAMPLES.push(poseRaw(t));
+function pose(t) { if (t >= T.break0) return SAMPLES[SAMPLES.length - 1]; const f = t / DT, i = Math.floor(f), k = f - i; const a = SAMPLES[i], b = SAMPLES[Math.min(i + 1, SAMPLES.length - 1)]; let dth = b[2] - a[2]; dth = Math.atan2(Math.sin(dth), Math.cos(dth)); return [lerp(a[0], b[0], k), lerp(a[1], b[1], k), a[2] + dth * k]; }
+
+// ---------- crumbs ----------
+const crumbs = [];
+{
+  const r = rng(2026);
+  for (let i = 0; i < 2600; i++) {
+    const a = lerp(-0.25, 1.35, Math.pow(r(), 0.9)) - BAG.rot; const d = 0.012 + 0.34 * Math.pow(r(), 0.75);
+    const x = MOUTH.x + Math.cos(a) * d, z = MOUTH.z + Math.sin(a) * d;
+    const chip = r() < 0.06; const s = chip ? 0.008 + r() * 0.012 : 0.0016 + Math.pow(r(), 2) * 0.004;
+    crumbs.push({ x, z, s, chip, ry: r() * 6.28, rx: (r() - 0.5) * (chip ? 0.5 : 3), rz: (r() - 0.5) * (chip ? 0.5 : 3), shade: r(), eat: Infinity });
+  }
+  for (let t = T.sweep0; t <= T.edge; t += 1 / 240) {
+    const [px, pz, th] = pose(t); const c = Math.cos(th), s = Math.sin(th);
+    for (const k of crumbs) {
+      if (k.eat < Infinity) continue;
+      const dx = k.x - px, dz = k.z - pz; const lx = dx * c - dz * s, lz = dx * s + dz * c;
+      if (Math.abs(lx) < 0.027 && lz > -0.006 && lz < 0.028) k.eat = t;
+    }
+  }
+}
+const eaten = crumbs.filter(k => k.eat < Infinity);
+document.getElementById('nCrumbs').textContent = eaten.length;
+const crumbGeo = new THREE.IcosahedronGeometry(1, 0); { const p = crumbGeo.attributes.position, r = rng(5); for (let i = 0; i < p.count; i++) p.setXYZ(i, p.getX(i) * (0.7 + r() * 0.5), p.getY(i) * (0.55 + r() * 0.4), p.getZ(i) * (0.7 + r() * 0.5)); crumbGeo.computeVertexNormals(); }
+const chipGeo = new THREE.CylinderGeometry(1, 0.9, 0.12, 9, 1); { const p = chipGeo.attributes.position, r = rng(9); for (let i = 0; i < p.count; i++) { const x = p.getX(i), z = p.getZ(i); p.setXYZ(i, x * (0.8 + r() * 0.35), p.getY(i) + (x * x + z * z) * 0.35, z * (0.8 + r() * 0.35)); } chipGeo.computeVertexNormals(); }
+const crumbMat = new THREE.MeshStandardMaterial({ roughness: 0.75 });
+const crumbList = eaten.filter(k => !k.chip), chipList = eaten.filter(k => k.chip);
+const crumbIM = new THREE.InstancedMesh(crumbGeo, crumbMat, crumbList.length), chipIM = new THREE.InstancedMesh(chipGeo, crumbMat, chipList.length);
+crumbIM.castShadow = chipIM.castShadow = true; kitchen.add(crumbIM, chipIM);
+const tmpC = new THREE.Color();
+[[crumbIM, crumbList], [chipIM, chipList]].forEach(([im, list]) => list.forEach((k, i) => { tmpC.setHSL(0.1 + k.shade * 0.025, 0.62, 0.42 + k.shade * 0.18); im.setColorAt(i, tmpC); }));
+
+// ---------- Dusty ----------
+const dusty = new THREE.Group(); scene.add(dusty);
+const model = new THREE.Group(); dusty.add(model);
+const GROUPS = { brain: { name: 'Brain', vec: V(0, 0.04, 0) }, power: { name: 'Power', vec: V(0, 0.012, 0.06) }, drive: { name: 'Drive', vec: V(0, -0.018, 0) }, sensors: { name: 'Sensors', vec: V(0, -0.004, -0.035) }, sweeper: { name: 'Sweeper', vec: V(0, -0.008, -0.03) }, tray: { name: 'Tray', vec: V(0, 0.028, -0.02) }, chassis: { name: 'Chassis', vec: V(0, 0, 0) } };
+for (const g of Object.values(GROUPS)) { g.obj = new THREE.Group(); model.add(g.obj); g.mats = []; g.w = 0; }
+const spinners = [];
+const PLA = '#27292d';
+const LOOK = {
+  printed: { color: PLA, roughness: 0.62, metalness: 0 },
+  microbit: { color: '#1c2a24', roughness: 0.5 }, motobit: { color: '#b3261e', roughness: 0.5 },
+  power_bank: { color: '#e8e8ea', roughness: 0.4 }, USB_adapter_and_cable: { color: '#f2f2f2', roughness: 0.45 }, foam_shims: { color: '#3b3b3f', roughness: 0.95 }, rocker_switch: { color: '#111', roughness: 0.4 },
+  N20_motors__brackets: { color: '#c8cacc', roughness: 0.3, metalness: 1 }, N20_encoder_boards__plugs: { color: '#1f6b3a', roughness: 0.5 }, wheels: { color: '#101010', roughness: 0.85 }, ball_caster: { color: '#d0d2d5', roughness: 0.2, metalness: 1 },
+  'QTR-1A_sensors': { color: '#1f5a9e', roughness: 0.45 }, whisker_switch: { color: '#151515', roughness: 0.4 }, '130_brush_motor': { color: '#d6d8db', roughness: 0.28, metalness: 1 }, 'pipe-cleaner_bristles': { color: '#f28a1d', roughness: 1 },
+  axle: { color: '#bfc2c6', roughness: 0.25, metalness: 1 }
+};
+let DUSTY_READY = false, trayFill, leds = [], ledOn, ledOff, eyeLight, beams = [];
+const loader = new GLTFLoader();
+loader.load(GLB, gltf => {
+  const meshes = []; gltf.scene.traverse(o => { if (o.isMesh) meshes.push(o); });
+  for (const m of meshes) {
+    const nm = (m.name || m.parent.name || '');
+    const [gname, ...rest] = nm.split('__'); const part = rest.join('__');
+    const G = GROUPS[gname] || GROUPS.chassis;
+    const look = LOOK[part] || LOOK.printed;
+    const mat = new THREE.MeshPhysicalMaterial({ color: look.color, roughness: look.roughness, metalness: look.metalness || 0, transparent: false, side: THREE.DoubleSide });
+    m.geometry = toCreasedNormals(m.geometry, Math.PI / 6);
+    { const nrm = m.geometry.attributes.normal.array; for (let i = 0; i < nrm.length; i += 3) { if (!(Number.isFinite(nrm[i]) && Number.isFinite(nrm[i + 1]) && Number.isFinite(nrm[i + 2])) || (nrm[i] === 0 && nrm[i + 1] === 0 && nrm[i + 2] === 0)) { nrm[i] = 0; nrm[i + 1] = 1; nrm[i + 2] = 0; } } }
+    m.material = mat; m.castShadow = true; m.receiveShadow = true;
+    m.updateWorldMatrix(true, false); const w = m.matrixWorld.clone();
+    m.parent.remove(m); m.matrix.copy(w); m.matrix.decompose(m.position, m.quaternion, m.scale);
+    G.mats.push(mat);
+    if (/^(roller|roller_gear|axle|collar|pipe-cleaner_bristles|pinion|compound|washer)$/.test(part)) {
+      m.geometry.computeBoundingBox(); const b = m.geometry.boundingBox; const c = V(0, (b.min.y + b.max.y) / 2, (b.min.z + b.max.z) / 2);
+      if (part === 'pipe-cleaner_bristles' || part === 'axle' || part === 'collar' || part === 'roller_gear' || part === 'washer') { c.y = 0.014; c.z = 0.017; }
+      const pivot = new THREE.Group(); pivot.position.copy(c); m.geometry.translate(0, -c.y, -c.z); pivot.add(m); G.obj.add(pivot);
+      spinners.push({ pivot, ratio: part === 'pinion' ? -4.5 : part === 'compound' ? 2.2 : -1 });
+    } else G.obj.add(m);
+  }
+  // tray fill (crumbs caught)
+  trayFill = new THREE.Mesh(new THREE.BoxGeometry(0.044, 1, 0.017), new THREE.MeshStandardMaterial({ color: '#c79445', roughness: 0.9 }));
+  trayFill.position.set(0, 0.034, 0.0115); GROUPS.tray.obj.add(trayFill); GROUPS.tray.mats.push(trayFill.material);
+  // LED matrix on the micro:bit (5x5, faces up)
+  ledOn = new THREE.MeshStandardMaterial({ color: '#ff2a1a', emissive: '#ff2410', emissiveIntensity: 7 });
+  ledOff = new THREE.MeshStandardMaterial({ color: '#3a1512', roughness: 0.4 });
+  const ledGeo = new THREE.BoxGeometry(0.0019, 0.0007, 0.0012);
+  for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) { const l = new THREE.Mesh(ledGeo, ledOff); l.position.set((2 - c) * 0.0044, 0.0744, 0.019 + (2 - r) * 0.0044); GROUPS.brain.obj.add(l); leds.push(l); }
+  eyeLight = new THREE.PointLight('#ff2a1a', 0, 0.25, 2); eyeLight.position.set(0, 0.085, 0.019); GROUPS.brain.obj.add(eyeLight);
+  // IR beams under the QTR-1A sensors
+  const beamMat = new THREE.MeshBasicMaterial({ color: '#7ff0ff', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+  for (const sx of [-0.0405, 0.0405]) { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.0012, 0.0045, 1, 20, 1, true), beamMat.clone()); b.position.set(sx, 0.004, -0.003); GROUPS.sensors.obj.add(b); beams.push(b); }
+  DUSTY_READY = true; document.getElementById('loading').style.display = 'none'; buildGroupButtons(); resolveReady();
+}, undefined, e => { document.getElementById('loading').textContent = 'Could not load Dusty: ' + e.message; });
+
+// ---------- eyes ----------
+const FACES = {
+  off: '0000000000000000000000000', open: '0000001010010100000000000', blink: '0000000000010100000000000',
+  left: '0000010100101000000000000', right: '0000000101001010000000000', chompA: '0101001010000000111001110',
+  chompB: '0101001010000000000001110', whoa: '0101001010000000010000000', happy: '0101001010000001000101110'
+};
+function faceAt(t) {
+  if (t < 7.0) return ['off', 0];
+  const on = ramp(t, 7.0, 7.5);
+  if (t < 7.6) return ['blink', on]; if (t < 8.3) return ['open', 1]; if (t < 8.45) return ['blink', 1]; if (t < 8.9) return ['open', 1];
+  if (t < 9.7) return ['left', 1]; if (t < 10.5) return ['right', 1]; if (t < 11.3) return ['open', 1];
+  if (t < 12.0) return [Math.floor(t * 8) % 2 ? 'open' : 'blink', 1];
+  if (t < T.sweep1 - 0.5) return [Math.floor(t * 4) % 2 ? 'chompA' : 'chompB', 1];
+  if (t < T.edge - 0.1) return ['open', 1];
+  if (t < T.back0 + 0.6) return ['whoa', 0.6 + 0.4 * (Math.floor(t * 6) % 2)];
+  if (t < T.happy) return ['open', 1];
+  if (t < T.break0) return ['happy', 1];
+  if (t < T.end - 3) return ['open', 1];
+  return ['open', 1 - ramp(t, T.end - 3, T.end - 1.5)];
+}
+function setFace(name, level) {
+  const f = FACES[name]; let n = 0;
+  leds.forEach((l, i) => { const on = f[i] === '1' && level > 0.01; l.material = on ? ledOn : ledOff; if (on) n++; });
+  ledOn.emissiveIntensity = 7 * level; eyeLight.intensity = 0.0015 * n * level;
+}
+
+// ---------- film script: captions, systems, camera ----------
+const SYS = [
+  ['brain', 54, 65, 'Brain: micro:bit v2', 'Checks the sensors about 25 times a second and decides what to do. Its 25 red LEDs are Dusty\u2019s eyes.'],
+  ['power', 65, 76, 'Power: USB-C power bank', 'Rides in a printed sleeve under the deck. One cable feeds the moto:bit, and the moto:bit feeds everything else.'],
+  ['drive', 76, 87, 'Drive: two N20 gear motors', '298:1 gearboxes on 32 mm wheels. An encoder on the back of each motor counts wheel turns. A ball caster holds up the back.'],
+  ['sensors', 87, 98, 'Edge sensors: 2x QTR-1A + whisker', 'Infrared light bounces off the table 4 mm below. No bounce means no table, so the motors stop. The whisker switch is the backup.'],
+  ['sweeper', 98, 109, 'Sweeper: paddle roller', 'A small 130 motor turns a paddle roller through a gear train. The roller flicks crumbs up and back.'],
+  ['tray', 109, 116, 'Tray', 'Catches everything the roller throws. Slide it out and dump it.']
+];
+const CAPS = [
+  [0.6, 5.6, 'Kitchen. 11:47 PM.', 'Someone left the chips open.'],
+  [T.edge - 0.3, T.back1 + 0.4, 'Edge detected', 'The sensors see no table. Motors stop. Back up. Turn.'],
+  [T.happy + 0.5, 49.0, 'Counter: clean', 'Every crumb is in the tray. Let\u2019s look inside.'],
+  ...SYS.map(s => [s[1] + 0.6, s[2] - 0.4, s[3], s[4]]),
+  [117.5, 123.5, 'Dusty', 'Built by Nolan. Sweeps crumbs, knows where the edge is.']
+];
+const CENTER = V(-0.13, 0, -0.03);
+function lookFrom(target, az, el, dist) { return V(target.x + dist * Math.cos(el) * Math.sin(az), target.y + dist * Math.sin(el), target.z + dist * Math.cos(el) * Math.cos(az)); }
+function dustyPos(t) { const p = pose(t); return V(p[0], 0, p[1]); }
+const endP = () => dustyPos(T.break0 - 0.01);
+function shotAt(t) {
+  if (t < T.wake) { const k = smooth(t / T.wake); return { pos: lookFrom(CENTER, lerp(-0.05, -0.12, k), 0.78, lerp(1.25, 1.05, k)), tgt: CENTER, fov: 32 }; }
+  if (t < T.sweep0) { const k = smooth((t - T.wake) / (T.sweep0 - T.wake)); const d = V(P0[0], 0.045, P0[1]); return { pos: lookFrom(d, lerp(0.95, 1.2, k), 0.5, lerp(0.30, 0.24, k)), tgt: d, fov: 30 }; }
+  if (t < T.sweep1 - 1.5) { const k = (t - T.sweep0) / (T.sweep1 - T.sweep0); const d = dustyPos(t); const tg = CENTER.clone().lerp(d, 0.45); tg.y = 0.02; return { pos: lookFrom(tg, lerp(-0.35, 0.25, k), 0.72, 0.78), tgt: tg, fov: 32 }; }
+  if (t < T.back1 + 0.2) { const k = smooth((t - (T.sweep1 - 1.5)) / (T.back1 + 0.2 - T.sweep1 + 1.5)); const e = V(0.10, 0.0, FRONT_Z - 0.03); return { pos: lookFrom(e, lerp(1.75, 1.6, k), lerp(0.14, 0.2, k), lerp(0.36, 0.3, k)), tgt: e, fov: 28 }; }
+  if (t < T.break0) { const k = smooth((t - T.back1 - 0.2) / (T.break0 - T.back1 - 0.2)); const tg = CENTER.clone().lerp(endP(), 0.5); return { pos: lookFrom(tg, lerp(0.2, 0.0, k), lerp(0.75, 0.62, k), lerp(0.95, 0.7, k)), tgt: tg, fov: 32 }; }
+  const e = endP(); const lift = liftAt(t); const pe = pose(T.break0 - 0.01); const c = V(e.x + Math.sin(pe[2]) * 0.055, 0.045 + lift, e.z + Math.cos(pe[2]) * 0.055);
+  const inK = ramp(t, T.break0, T.break0 + 4), outK = ramp(t, 116, 123);
+  const tgFar = CENTER.clone().lerp(e, 0.5);
+  const az = 0.0 + 0.11 * (t - T.break0), el = lerp(0.62, 0.45, inK), dist = lerp(0.7, 0.46, inK);
+  let pos = lookFrom(tgFar.clone().lerp(c, inK), az * inK, el, dist), tgt = tgFar.clone().lerp(c, inK);
+  if (outK > 0) { const pw = lookFrom(tgFar, 0.35, 0.72, 1.0); pos.lerp(pw, outK); tgt.lerp(tgFar, outK); }
+  return { pos, tgt, fov: 32 };
+}
+function liftAt(t) { return 0.1 * (ramp(t, T.break0, T.break0 + 4) - ramp(t, 116, 121)); }
+function focusAt(t) { const w = {}; for (const [g, a, b] of SYS) w[g] = ramp(t, a, a + 0.9) * (1 - ramp(t, b - 0.6, b + 0.3)); return w; }
+function kitchenFade(t) { return ramp(t, T.break0 + 0.5, T.break0 + 3.5) * (1 - ramp(t, 116.5, 120.5)); }
+
+// ---------- explore state ----------
+const ex = { focus: null, explode: false, cut: false, expT: 0, cutT: 0 };
+let mode = RENDER ? 'render' : 'film', filmT = 0, playing = !RENDER, last = performance.now();
+const controls = new OrbitControls(camera, canvas); controls.enabled = false; controls.enableDamping = true; controls.minDistance = 0.15; controls.maxDistance = 1.2;
+const cutPlane = new THREE.Plane(V(-1, 0, 0), 0);
+
+// ---------- apply state ----------
+const kitchenMats = []; kitchen.traverse(o => { if (o.isMesh) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => { if (!kitchenMats.includes(m)) kitchenMats.push(m); }); });
+const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _s = new THREE.Vector3(), _p = new THREE.Vector3(), _e = new THREE.Euler();
+function applyCrumbs(t) {
+  const tray = new THREE.Vector3(0, 0.05, 0.012); const dp = pose(t);
+  [[crumbIM, crumbList], [chipIM, chipList]].forEach(([im, list]) => {
+    list.forEach((k, i) => {
+      let x = k.x, z = k.z, y = k.s * 0.35, sc = k.s;
+      if (t >= k.eat) { const a = (t - k.eat) / 0.35; if (a >= 1) { sc = 1e-5; y = -5; } else { const c = Math.cos(dp[2]), s = Math.sin(dp[2]); const wx = dp[0] + tray.x * c + tray.z * s, wz = dp[1] - tray.x * s + tray.z * c; const e = a * a; x = lerp(k.x, wx, e); z = lerp(k.z, wz, e); y = lerp(y, tray.y, Math.sin(a * Math.PI / 2)); sc = k.s * (1 - a * 0.7); } }
+      _e.set(k.rx + (t >= k.eat ? (t - k.eat) * 20 : 0), k.ry, k.rz); _q.setFromEuler(_e); _s.set(sc, k.chip ? sc : sc, sc); _p.set(x, y, z);
+      im.setMatrixAt(i, _m.compose(_p, _q, _s));
+    });
+    im.instanceMatrix.needsUpdate = true;
+  });
+  const n = eaten.filter(k => t >= k.eat + 0.35).length / Math.max(1, eaten.length);
+  trayFill.visible = n > 0.002; trayFill.scale.y = 0.002 + 0.012 * n; trayFill.position.y = 0.034 + trayFill.scale.y / 2;
+}
+function applyDusty(t, st) {
+  dusty.position.set(st.x, st.lift, st.z); dusty.rotation.y = st.th;
+  let any = 0; for (const g in st.focus) any = Math.max(any, st.focus[g]);
+  for (const [gname, G] of Object.entries(GROUPS)) {
+    const w = st.focus[gname] || 0; const ew = Math.max(w, st.explode);
+    G.obj.position.copy(G.vec).multiplyScalar(ew);
+    const ghost = any * (1 - w);
+    const op = 1 - 0.94 * ghost;
+    for (const m of G.mats) { const tr = op < 0.995; if (m.transparent !== tr) { m.transparent = tr; m.needsUpdate = true; } m.opacity = op; m.depthWrite = op > 0.5; m.emissive && m.emissive.setRGB(0, 0, 0); m.clippingPlanes = st.cut ? [cutPlane] : null; }
+  }
+  for (const s of spinners) s.pivot.rotation.x = st.roll * s.ratio;
+  const [fname, lvl] = st.face; setFace(fname, lvl);
+  beams.forEach(b => { b.material.opacity = st.beam * 0.55; b.scale.y = st.beamLen; b.position.y = 0.004 - st.beamLen / 2; b.material.color.set(st.beamRed ? '#ff5a4a' : '#7ff0ff'); });
+  if (st.cut) { dusty.updateMatrixWorld(); const n = V(-1, 0, 0).applyQuaternion(dusty.quaternion); cutPlane.setFromNormalAndCoplanarPoint(n, dusty.position.clone().add(V(0, 0, 0))); }
+}
+function filmState(t) {
+  const p = pose(t), lift = liftAt(t);
+  const edgeK = t >= T.edge - 0.25 && t < T.back1;
+  let beam = 0, beamLen = 0.004, beamRed = false;
+  if (t > T.sweep1 - 1.5 && t < T.back1 + 1) beam = ramp(t, T.sweep1 - 1.5, T.sweep1 - 0.5) * (1 - ramp(t, T.back1, T.back1 + 1));
+  if (edgeK) { beamLen = 0.004 + 0.06 * ramp(t, T.edge - 0.25, T.edge); beamRed = true; }
+  const f = focusAt(t); if (f.sensors > 0) { beam = Math.max(beam, f.sensors); }
+  let roll = 0; if (t > T.sweep0 - 0.5) roll = (Math.min(t, T.sweep1 + 0.8) - T.sweep0 + 0.5) * 18;
+  if (t > 98) roll += (t - 98) * 6 * (1 - ramp(t, 108, 109));
+  return { x: p[0], z: p[1], th: p[2] + (t > T.break0 ? 0 : 0), lift, focus: f, explode: 0, cut: false, roll, face: faceAt(t), beam, beamLen, beamRed };
+}
+function applyScene(t) {
+  const kf = mode === 'explore' ? 1 : kitchenFade(t);
+  for (const m of kitchenMats) { const tr = kf > 0.001; if (m.transparent !== tr) { m.transparent = tr; m.needsUpdate = true; } m.opacity = 1 - kf; }
+  kitchen.visible = kf < 0.999;
+  scene.background.copy(NIGHT).lerp(STUDIO, kf);
+  key.intensity = KEY * (1 - kf); moon.intensity = 0.55 * (1 - kf); rim.intensity = 1.6 * kf; studioKey.intensity = 0.8 * kf;
+  scene.environmentIntensity = lerp(0.35, 0.45, kf);
+}
+
+// ---------- UI ----------
+const $ = id => document.getElementById(id);
+const cap = $('cap'), capT = cap.querySelector('.t'), capB = cap.querySelector('.b');
+let capKey = '';
+function applyCaption(t) {
+  const c = mode === 'explore' ? (ex.focus ? SYS.find(s => s[0] === ex.focus) : null) : CAPS.find(c => t >= c[0] && t < c[1]);
+  const k = c ? (mode === 'explore' ? c[3] : c[2]) : '';
+  if (k !== capKey) { capKey = k; if (c) { capT.textContent = mode === 'explore' ? c[3] : c[2]; capB.textContent = mode === 'explore' ? c[4] : c[3]; } }
+  cap.style.opacity = c ? 1 : 0;
+}
+function buildGroupButtons() {
+  const row = $('groups'); row.innerHTML = '';
+  for (const [g] of SYS) { const b = document.createElement('button'); b.textContent = GROUPS[g].name; b.dataset.g = g; b.onclick = () => { enterExplore(); ex.focus = ex.focus === g ? null : g; syncButtons(); }; row.appendChild(b); }
+}
+function syncButtons() { document.querySelectorAll('#groups button').forEach(b => b.classList.toggle('on', b.dataset.g === ex.focus)); $('bExplode').classList.toggle('on', ex.explode); $('bCut').classList.toggle('on', ex.cut); $('bExplore').classList.toggle('on', mode === 'explore'); $('bPlay').textContent = mode === 'film' && playing ? 'Pause film' : 'Play film'; }
+function enterExplore() {
+  if (mode === 'explore') return; mode = 'explore'; playing = false;
+  controls.enabled = true; controls.target.set(0, 0.10, 0.05); camera.position.set(0.25, 0.26, -0.28); camera.fov = 32; camera.updateProjectionMatrix(); syncButtons();
+}
+$('bExplore').onclick = () => { enterExplore(); };
+$('bPlay').onclick = () => { if (mode !== 'film') { mode = 'film'; controls.enabled = false; if (filmT >= T.end) filmT = 0; playing = true; } else { playing = !playing; if (filmT >= T.end) filmT = 0; } syncButtons(); };
+$('bExplode').onclick = () => { enterExplore(); ex.explode = !ex.explode; syncButtons(); };
+$('bCut').onclick = () => { enterExplore(); ex.cut = !ex.cut; syncButtons(); };
+$('track').onclick = e => { const r = e.currentTarget.getBoundingClientRect(); filmT = clamp((e.clientX - r.left) / r.width, 0, 1) * T.end; if (mode !== 'film') { mode = 'film'; controls.enabled = false; } syncButtons(); };
+const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+// ---------- frame ----------
+function resize() {
+  let w, h;
+  if (RENDER) { w = +(Q.get('w') || 1920); h = +(Q.get('h') || 1080); canvas.style.width = w + 'px'; canvas.style.height = h + 'px'; document.getElementById('hero').style.width = w + 'px'; document.getElementById('hero').style.height = h + 'px'; }
+  else { const r = canvas.getBoundingClientRect(); w = r.width; h = r.height; }
+  renderer.setSize(w, h, false); composer.setSize(w, h); bloom.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize); resize();
+function frame(t) {
+  if (!DUSTY_READY) return;
+  let st;
+  if (mode === 'explore') {
+    ex.expT = lerp(ex.expT, ex.explode ? 1 : 0, 0.08); ex.cutT = ex.cut;
+    const f = {}; for (const [g] of SYS) f[g] = 0; if (ex.focus) f[ex.focus] = 1;
+    ex.f = ex.f || {}; for (const g in f) { ex.f[g] = lerp(ex.f[g] || 0, f[g], 0.1); }
+    const tt = performance.now() / 1000;
+    st = { x: 0, z: 0, th: 0, lift: 0.05, focus: { ...ex.f }, explode: ex.expT, cut: ex.cut, roll: tt * 12, face: [Math.floor(tt * 1.3) % 7 === 0 ? 'blink' : 'open', 1], beam: Math.max(0.35, ex.f.sensors || 0), beamLen: 0.004 + 0.046, beamRed: false };
+    applyScene(0); applyDusty(0, st); applyCrumbs(0); crumbIM.visible = chipIM.visible = false; controls.update();
+  } else {
+    crumbIM.visible = chipIM.visible = true;
+    st = filmState(t); applyScene(t); applyDusty(t, st); applyCrumbs(t);
+    const s = shotAt(t); camera.position.copy(s.pos); camera.lookAt(s.tgt); if (camera.fov !== s.fov) { camera.fov = s.fov; camera.updateProjectionMatrix(); }
+  }
+  applyCaption(t);
+  composer.render();
+}
+let resolveReady; window.dustyReady = new Promise(r => resolveReady = r);
+window.DUSTY = { T, renderAt: t => { mode = 'render'; frame(t); }, count: eaten.length };
+function loop(now) {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  if (mode === 'film' && playing) { filmT += dt; if (filmT >= T.end) { filmT = T.end; playing = false; syncButtons(); } }
+  if (mode !== 'render') { frame(filmT); $('prog').style.width = (filmT / T.end * 100) + '%'; $('time').textContent = fmt(filmT) + ' / ' + fmt(T.end); }
+  requestAnimationFrame(loop);
+}
+if (!RENDER) { syncButtons(); requestAnimationFrame(loop); }
+</script>
+</body>
+</html>
