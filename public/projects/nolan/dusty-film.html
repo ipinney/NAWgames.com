@@ -5,6 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dusty: the crumb-eating robot</title>
 <meta name="description" content="Nolan's crumb-sweeping robot that knows where the table edge is. A 3D movie built from the real CAD.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NAW Games">
+<meta property="og:title" content="Dusty: Nolan's crumb-eating robot">
+<meta property="og:description" content="Watch Nolan's robot sweep a kitchen counter, stop at the edge, then see how every part works.">
+<meta property="og:url" content="https://nawgames.com/projects/nolan/dusty-film.html">
+<meta property="og:image" content="https://nawgames.com/projects/nolan/dusty-film/dusty-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dusty, a small black robot with red LED eyes, on a kitchen counter">
+<meta property="og:video" content="https://nawgames.com/projects/nolan/dusty-film/dusty-film-1080p60.mp4">
+<meta property="og:video:type" content="video/mp4">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dusty: Nolan's crumb-eating robot">
+<meta name="twitter:description" content="Watch Nolan's robot sweep a kitchen counter, stop at the edge, then see how every part works.">
+<meta name="twitter:image" content="https://nawgames.com/projects/nolan/dusty-film/dusty-og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -41,6 +56,14 @@ button.on{background:var(--line);color:var(--ink);border-color:var(--line)}
 .render #cap .t{font-size:40px}
 .render #cap .b{font-size:30px;max-width:900px}
 
+#watch{max-width:1100px;margin:0 auto;padding:calc(22px + env(safe-area-inset-top,0px)) 16px 28px}
+#watch .wkick{font-size:13px;letter-spacing:.18em;color:var(--dim);font-weight:600}
+#watch h1{font-size:44px;line-height:1;font-weight:700}
+#watch h1 span{color:var(--red)}
+#watch p{font-size:17px;color:var(--dim);margin:6px 0 14px}
+#watch video{display:block;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--rule);border-radius:6px}
+#watch p.more{margin-top:12px;font-size:15px}
+.render #watch{display:none}
 main{max-width:880px;margin:0 auto;padding:56px 20px 80px}
 main h2{font-size:34px;font-weight:700;line-height:1.1}
 main h2 span{color:var(--part)}
@@ -66,9 +89,16 @@ main h2 span{color:var(--part)}
 </script>
 </head>
 <body>
+<section id="watch">
+  <div class="wkick">NOLAN'S INVENTION</div>
+  <h1>Dusty<span>.</span></h1>
+  <p>The crumb-eating robot that knows where the edge is.</p>
+  <video controls playsinline preload="metadata" poster="dusty-film/dusty-poster.jpg"><source src="dusty-film/dusty-film-1080p60.mp4" type="video/mp4"></video>
+  <p class="more">Scroll down to fly around Dusty in 3D, take it apart, and see how the movie was made.</p>
+</section>
 <section id="hero">
   <canvas id="c"></canvas>
-  <div class="hud"><div class="kicker">NOLAN'S INVENTION</div><h1>Dusty<span>.</span></h1><p>The crumb-eating robot that knows where the edge is.</p></div>
+  <div class="hud"><div class="kicker">EXPLORE IN 3D</div><h1>Dusty<span>.</span></h1><p>Live 3D. Tap a system, explode it, or cut it open.</p></div>
   <div id="ui">
     <div class="row"><button id="bSound">Sound on</button><button id="bPlay">Play film</button><button id="bExplore">Explore</button></div>
     <div class="row" id="groups"></div>
@@ -477,7 +507,8 @@ function kitchenFade(t) { return ramp(t, T.break0 + 0.5, T.break0 + 3.5) * (1 - 
 
 // ---------- explore state ----------
 const ex = { focus: null, explode: false, cut: false, expT: 0, cutT: 0 };
-let mode = RENDER ? 'render' : 'film', filmT = 0, playing = !RENDER, last = performance.now();
+let mode = RENDER ? 'render' : 'film', filmT = 0, playing = false, last = performance.now();
+if (!RENDER) { const io = new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting && mode === 'film' && filmT === 0 && !playing) { playing = true; syncButtons(); io.disconnect(); } }, { threshold: 0.5 }); io.observe(document.getElementById('hero')); }
 const controls = new OrbitControls(camera, canvas); controls.enabled = false; controls.enableDamping = true; controls.minDistance = 0.15; controls.maxDistance = 1.2;
 const cutPlane = new THREE.Plane(V(-1, 0, 0), 0);
 
