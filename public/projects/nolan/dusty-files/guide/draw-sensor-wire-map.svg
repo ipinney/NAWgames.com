@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="fit" viewBox="0 0 420 614" role="img" aria-label="Wire map: each sensor pin, its jumper color, and the moto:bit pin it plugs onto, plus a top view of the moto:bit sensor pins">
+<text x="10" y="26" font-family="Fredoka, sans-serif" font-size="17" fill="#E6ECF5" text-anchor="start">Left cliff sensor</text>
+<rect x="10" y="43" width="80" height="26" rx="4" fill="#2B2F3A" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="50" y="60" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">OUT</text>
+<path d="M94 56 H316" stroke="#F0B43C" stroke-width="5"/>
+<text x="205" y="47" font-family="Fredoka, sans-serif" font-size="13" fill="#F0B43C" text-anchor="middle">yellow</text>
+<rect x="320" y="43" width="90" height="26" rx="4" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="365" y="60" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P0 top</text>
+<rect x="10" y="81" width="80" height="26" rx="4" fill="#2B2F3A" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="50" y="98" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">VIN</text>
+<path d="M94 94 H316" stroke="#FF5A5A" stroke-width="5"/>
+<text x="205" y="85" font-family="Fredoka, sans-serif" font-size="13" fill="#FF5A5A" text-anchor="middle">red</text>
+<rect x="320" y="81" width="90" height="26" rx="4" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="365" y="98" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P0 middle</text>
+<rect x="10" y="119" width="80" height="26" rx="4" fill="#2B2F3A" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="50" y="136" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">GND</text>
+<path d="M94 132 H316" stroke="#8A99B0" stroke-width="8"/>
+<path d="M94 132 H316" stroke="#1B1E26" stroke-width="5"/>
+<text x="205" y="123" font-family="Fredoka, sans-serif" font-size="13" fill="#A9B6CA" text-anchor="middle">black</text>
+<rect x="320" y="119" width="90" height="26" rx="4" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="365" y="136" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P0 bottom</text>
+<text x="10" y="166" font-family="Fredoka, sans-serif" font-size="17" fill="#E6ECF5" text-anchor="start">Right cliff sensor</text>
+<rect x="10" y="183" width="80" height="26" rx="4" fill="#2B2F3A" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="50" y="200" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">OUT</text>
+<path d="M94 196 H316" stroke="#9BE15D" stroke-width="5"/>
+<text x="205" y="187" font-family="Fredoka, sans-serif" font-size="13" fill="#9BE15D" text-anchor="middle">green</text>
+<rect x="320" y="183" width="90" height="26" rx="4" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="365" y="200" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P1 top</text>
+<rect x="10" y="221" width="80" height="26" rx="4" fill="#2B2F3A" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="50" y="238" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">VIN</text>
+<path d="M94 234 H316" stroke="#FF5A5A" stroke-width="5"/>
+<text x="205" y="225" font-family="Fredoka, sans-serif" font-size="13" fill="#FF5A5A" text-anchor="middle">red</text>
+<rect x="320" y="221" width="90" height="26" rx="4" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="365" y="238" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P1 middle</text>
+<rect x="10" y="259" width="80" height="26" rx="4" fill="#2B2F3A" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="50" y="276" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">GND</text>
+<path d="M94 272 H316" stroke="#8A99B0" stroke-width="8"/>
+<path d="M94 272 H316" stroke="#1B1E26" stroke-width="5"/>
+<text x="205" y="263" font-family="Fredoka, sans-serif" font-size="13" fill="#A9B6CA" text-anchor="middle">black</text>
+<rect x="320" y="259" width="90" height="26" rx="4" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="365" y="276" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P1 bottom</text>
+<text x="10" y="306" font-family="Fredoka, sans-serif" font-size="17" fill="#E6ECF5" text-anchor="start">Whisker switch</text>
+<rect x="10" y="323" width="80" height="26" rx="4" fill="#2B2F3A" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="50" y="340" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">NO</text>
+<path d="M94 336 H316" stroke="#5AA9FF" stroke-width="5"/>
+<text x="205" y="327" font-family="Fredoka, sans-serif" font-size="13" fill="#5AA9FF" text-anchor="middle">blue</text>
+<rect x="320" y="323" width="90" height="26" rx="4" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="365" y="340" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P2 top</text>
+<rect x="10" y="361" width="80" height="26" rx="4" fill="#2B2F3A" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="50" y="378" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">C</text>
+<path d="M94 374 H316" stroke="#8A99B0" stroke-width="8"/>
+<path d="M94 374 H316" stroke="#1B1E26" stroke-width="5"/>
+<text x="205" y="365" font-family="Fredoka, sans-serif" font-size="13" fill="#A9B6CA" text-anchor="middle">black</text>
+<rect x="320" y="361" width="90" height="26" rx="4" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="365" y="378" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P2 bottom</text>
+<rect x="10" y="399" width="80" height="26" rx="4" fill="#2B2F3A" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="50" y="416" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">NC</text>
+<text x="205" y="416" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="middle">not connected</text>
+<text x="10" y="450" font-family="Fredoka, sans-serif" font-size="17" fill="#E6ECF5" text-anchor="start">moto:bit SENSOR pins, from above</text>
+<text x="190" y="476" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P0</text>
+<circle cx="190" cy="500" r="11" fill="#F0B43C" stroke="#8A99B0" stroke-width="1.5"/>
+<circle cx="190" cy="534" r="11" fill="#FF5A5A" stroke="#8A99B0" stroke-width="1.5"/>
+<circle cx="190" cy="568" r="11" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="250" y="476" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P1</text>
+<circle cx="250" cy="500" r="11" fill="#9BE15D" stroke="#8A99B0" stroke-width="1.5"/>
+<circle cx="250" cy="534" r="11" fill="#FF5A5A" stroke="#8A99B0" stroke-width="1.5"/>
+<circle cx="250" cy="568" r="11" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="310" y="476" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P2</text>
+<circle cx="310" cy="500" r="11" fill="#5AA9FF" stroke="#8A99B0" stroke-width="1.5"/>
+<circle cx="310" cy="534" r="11" fill="none" stroke="#8A99B0" stroke-width="1.5" stroke-dasharray="3 3"/>
+<circle cx="310" cy="568" r="11" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<text x="370" y="476" font-family="IBM Plex Mono, monospace" font-size="13" fill="#E6ECF5" text-anchor="middle">P8</text>
+<circle cx="370" cy="500" r="11" fill="none" stroke="#8A99B0" stroke-width="1.5" stroke-dasharray="3 3"/>
+<circle cx="370" cy="534" r="11" fill="none" stroke="#8A99B0" stroke-width="1.5" stroke-dasharray="3 3"/>
+<circle cx="370" cy="568" r="11" fill="none" stroke="#8A99B0" stroke-width="1.5" stroke-dasharray="3 3"/>
+<text x="10" y="504" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">top: signal</text>
+<text x="10" y="538" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">middle: 3V3</text>
+<text x="10" y="572" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">bottom: GND</text>
+<text x="10" y="606" font-family="IBM Plex Mono, monospace" font-size="11" fill="#A9B6CA" text-anchor="start">top row = the row nearest the micro:bit slot. Dashed = empty.</text>
+</svg>

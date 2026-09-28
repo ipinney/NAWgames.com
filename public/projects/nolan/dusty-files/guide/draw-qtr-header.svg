@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="fit" viewBox="0 0 420 330" role="img" aria-label="Side view of a cliff sensor with its three header pins soldered on, and three solder joints: a good cone, a ball, and a bridge">
+<text x="10" y="22" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">SIDE VIEW, SENSOR FACE DOWN</text>
+<rect x="207" y="44" width="6" height="94" fill="#F0B43C"/>
+<rect x="188" y="108" width="44" height="12" rx="2" fill="#2B2F3A" stroke="#8A99B0" stroke-width="1.5"/>
+<rect x="40" y="120" width="200" height="10" fill="#2E8B57"/>
+<path d="M199 130 L210 144 L221 130 Z" fill="#C8D0DC"/>
+<rect x="70" y="130" width="24" height="14" rx="3" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<rect x="102" y="130" width="24" height="14" rx="3" fill="#1B1E26" stroke="#8A99B0" stroke-width="1.5"/>
+<path d="M10 176 H410" stroke="#8A99B0" stroke-width="2"/>
+<path d="M98 146 V174 M92 146 h12 M92 174 h12" stroke="#F0609E" stroke-width="1.5"/>
+<text x="110" y="166" font-family="Fredoka, sans-serif" font-size="15" fill="#F0609E" text-anchor="start">3 mm</text>
+<path d="M218 56 L262 56" stroke="#8A99B0" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+<text x="268" y="60" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">long pins point UP</text>
+<path d="M234 114 L262 98" stroke="#8A99B0" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+<text x="268" y="96" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">black plastic on the</text>
+<text x="268" y="110" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">back (no bumps)</text>
+<path d="M222 138 L262 142" stroke="#8A99B0" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+<text x="268" y="140" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">short ends through,</text>
+<text x="268" y="154" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">solder on bump side</text>
+<text x="40" y="196" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">bumps face the table</text>
+<text x="330" y="196" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">table</text>
+<text x="10" y="236" font-family="IBM Plex Mono, monospace" font-size="12" fill="#A9B6CA" text-anchor="start">CHECK EACH JOINT</text>
+<rect x="50" y="282" width="60" height="7" fill="#2E8B57"/>
+<rect x="77" y="252" width="6" height="38" fill="#F0B43C"/>
+<path d="M65 282 L80 258 L95 282 Z" fill="#C8D0DC"/>
+<rect x="180" y="282" width="60" height="7" fill="#2E8B57"/>
+<rect x="207" y="252" width="6" height="38" fill="#F0B43C"/>
+<circle cx="210" cy="266" r="12" fill="#C8D0DC"/>
+<rect x="310" y="282" width="60" height="7" fill="#2E8B57"/>
+<rect x="325" y="252" width="6" height="38" fill="#F0B43C"/>
+<rect x="349" y="252" width="6" height="38" fill="#F0B43C"/>
+<ellipse cx="340" cy="276" rx="26" ry="8" fill="#C8D0DC"/>
+<text x="80" y="312" font-family="Fredoka, sans-serif" font-size="14" fill="#9BE15D" text-anchor="middle">GOOD: shiny cone</text>
+<text x="210" y="312" font-family="Fredoka, sans-serif" font-size="14" fill="#FF6B6B" text-anchor="middle">BALL: reheat it</text>
+<text x="340" y="312" font-family="Fredoka, sans-serif" font-size="14" fill="#FF6B6B" text-anchor="middle">BRIDGE: split it</text>
+</svg>

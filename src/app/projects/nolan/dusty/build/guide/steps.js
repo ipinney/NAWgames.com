@@ -7,6 +7,7 @@ const HT = '/projects/nolan/dusty-files/howto';
 const r = (name) => `${GD}/${name}.png`;
 const h = (name) => `${HT}/${name}.png`;
 const dr = (name) => `${GD}/draw-${name}.svg`;
+const ph = (name) => `${GD}/photo-${name}.jpg`;
 
 export const FACTS = ['Due Mon Nov 16', '21 printed pieces', '23 M2 screws', 'A little soldering'];
 
@@ -36,7 +37,7 @@ export const TOOLS = [
 // [drawing, name, what it looks like, its job, spec line]
 export const BOUGHT = [
   ['microbit', 'micro:bit v2', 'A tiny computer the size of a credit card cut in half. The 25 red squares are little lights called LEDs. The gold stripes at the bottom plug into other boards.', "Dusty's brain. It reads the sensors, decides what to do, and tells the motors to go.", 'Plugs in flat · LEDs face up'],
-  ['motobit', 'moto:bit motor board', 'A red board with a connector on its front edge for the micro:bit, a round hole for the power plug, connectors for two motors, a STOP/RUN motor switch, and rows of pins for sensors.', 'The middleman. The micro:bit is far too weak to run motors, so it whispers instructions to this board, and this board does the heavy lifting.', '3 to 11 volts · drives 2 motors'],
+  ['motobit', 'moto:bit motor board', 'A black board with a connector on its front edge for the micro:bit, a round hole for the power plug, connectors for two motors, a STOP/RUN motor switch, and rows of pins for sensors.', 'The middleman. The micro:bit is far too weak to run motors, so it whispers instructions to this board, and this board does the heavy lifting.', '3 to 11 volts · drives 2 motors'],
   ['n20', 'N20 gear motor ×2', 'A small silver can with a gold gearbox and a flat-sided metal shaft, in a black bracket. A tiny circuit board on the back, with a plug for a cable of six colored wires.', 'One drives the left wheel, one the right. Only red and white power the motor. Blue and black power a turn counter on the little board, and yellow and green carry its signals. Dusty does not use the turn counter yet.', '6 volts · 298:1 gearbox'],
   ['wheel', 'Wheels ×2', 'Black wheels with a soft rubber tire. The hole in the middle is a circle with one flat side, shaped to match the motor shaft.', 'Wheel size decides how fast Dusty drives, and speed is what the experiment measures. Do not swap for bigger ones.', '32 mm · press fit, no glue'],
   ['caster', 'Ball caster', 'A little cage holding a 3/8 inch metal ball.', 'The third foot at the back. The printed base already has the right height built in.', 'Two M2 × 8 screws'],
@@ -172,21 +173,33 @@ export const STEPS = {
     title: 'Mount the sensor arms',
     time: 'About 45 minutes',
     intro: 'The two pink arms carry the cliff sensors out in front of the wheels. That head start is what lets Dusty stop in time.',
-    need: ['Both sensor arms (Batch 3)', '2 QTR-1A sensors', '2 × M2 × 8 and 2 × M2 × 6, 4 nuts', '6 jumper wires', 'Soldering (grown-up)', '2 US pennies'],
+    need: ['Both sensor arms (Batch 3)', '2 QTR-1A sensors and the bag of pins that came with them', '2 × M2 × 8 and 2 × M2 × 6, 4 nuts', '6 female-to-female jumper wires: 2 red, 2 black, 1 yellow, 1 green', 'Soldering iron and solder (grown-up)', 'Tape or a scrap of foam', 'Flush cutters', '2 US pennies'],
     draw: [[dr('sensor-side'), 'The sensor sees the edge 62 mm before the wheels get there.']],
     sub: [
-      ['A grown-up solders the three header pins onto each sensor.', 'Push the short ends of the pins through from the side without the two tiny bumps, so the pins point up when the sensor faces the table. Heat pin and pad together, then feed in the solder.'],
+      ['Find the header pins in the sensor bag and snap off two pieces of 3.', 'They are gold pins held in a black plastic strip. If it is a strip of 6, bend it at the middle notch with pliers and it snaps into two 3s. Use the straight pins, not the bent ones.'],
+      ['Push the short ends of one 3-pin piece through the three holes marked OUT, VIN and GND, from the back of the sensor.', 'The back is the side without the two tiny bumps. The black plastic sits flat against the back, and the short ends poke through on the bump side. The long pins point up when the sensor faces the table.', dr('qtr-header')],
+      ['Hold it so it cannot tip while you solder.', 'Tape the plastic strip down, or push the long pins into a scrap of foam with the bump side facing up.'],
+      ['A grown-up solders the middle pin first.', 'Iron at about 330 to 350°C. Touch the tip to the pin and the gold pad together for about a second, feed a little solder into the joint (not onto the iron), take the solder away, then the iron. 2 to 3 seconds per joint: longer can cook the tiny sensor.'],
+      ['Check the pins stand straight up, then solder the two outside pins.', 'Tilted? Reheat the middle joint and nudge the strip straight while the solder is melted.'],
+      ['Check every joint.', 'Good is a small shiny cone around the pin. A round ball sitting on top needs reheating. Solder joining two pins is a bridge: drag the hot tip between them to split it. Nothing may stick out lower than the two bumps, or the sensor cannot sit at 3 mm. Snip a long pin end with flush cutters.'],
+      ['Do the second sensor the same way.', ''],
       ['Put a sensor face down in the foot of each arm, and hold it with an M2 × 6 screw and nut.', 'The two tiny bumps must look down through the window.', r('g6-sensor')],
       ['Hold the right arm against the outside of the right ear at the front of the base. The left arm, with the extra pad, goes on the left.', '', h('b3-s3')],
       ['Push an M2 × 8 screw through the slot and the ear, and add a nut on the inside.', 'Snug, not tight yet.'],
       ['Set Dusty on the table. Slide each arm until the sensor is 3 mm above the table, then tighten.', 'Two US pennies stacked are almost exactly 3 mm. Slide them under the sensor, push the arm down onto them, tighten, pull the pennies out.'],
-      ['Run three jumper wires from each sensor to the moto:bit: VIN to 3.3V, GND to GND, OUT to the pin.', 'Left sensor to P0, right sensor to P1.'],
+      ['Pick off anything stuck on the moto:bit SENSOR pins.', 'The board ships with its pins pushed into black foam, and bits can stay behind. Foam stops the plugs from going on, and it leaks a little electricity between pins, which throws off the sensor numbers.'],
+      ['Peel six jumpers off the ribbon: yellow, red and black for the left sensor; green, red and black for the right.', 'Red is always 3V3 and black is always GND. Each sensor gets its own signal color, so you can tell left from right at a glance.', dr('sensor-wire-map')],
+      ['Push one end of each left sensor jumper onto its pins: yellow on OUT, red on VIN, black on GND.', 'Push straight down until the black plastic sleeve stops. About 5 mm of pin disappears inside. A sleeve sitting crooked is only half on.'],
+      ['Switch the power off. Push the other ends onto the P0 column of the moto:bit: yellow on top, red in the middle, black on the bottom.', 'P0 is the left column of the first SENSOR block. Top is the row closest to the micro:bit slot.', ph('motobit-sensor-pins')],
+      ['Right sensor the same way on the P1 column: green on OUT and the top pin, red on VIN and the middle, black on GND and the bottom.', 'P1 is the right column of that same block. Leave the SERVO block alone: its middle row is full battery power, not 3V3.'],
+      ['Twist each sensor’s three wires loosely together, fold the extra length, and tape it to the side of the deck.', 'The jumpers are 30 cm long and Dusty needs about 10. Keep the loops away from the wheels and the brush.'],
     ],
+    tip: 'Once the sensors work, wrap tape around the three plugs at each end. Then they go on as one plug and can never get mixed up.',
     why: [
       ['How does a cliff sensor see?', ['One bump is a tiny infrared light, the other is a light detector. Infrared is just past red, so your eyes cannot see it, but a phone camera can. Try it.', 'On the table, the light bounces straight back into the detector. Past the edge, it shines into empty space and almost nothing comes back.']],
       ['Why 3 mm?', ['This sensor sees best at about 3 mm and gets unreliable past 6 mm. The slot lets you set the height exactly, and set it again if an arm gets bumped.']],
     ],
-    done: 'Both sensors sit 3 mm above the table, both arms are tight, and the wires are plugged into P0 and P1.',
+    done: 'Both sensors sit 3 mm above the table, both arms are tight, and each sensor’s three wires are on its own column: left on P0, right on P1.',
   },
   7: {
     title: 'Teach Dusty about edges',
@@ -226,13 +239,17 @@ export const STEPS = {
     title: 'Add the whisker',
     time: 'About 30 minutes',
     intro: 'A second way to notice the edge that works in a completely different way, so the two cannot fail for the same reason.',
-    need: ['Whisker switch', '2 × M2 × 10 with nuts', '2 jumper wires', 'Soldering (grown-up)'],
+    need: ['Whisker switch', '2 × M2 × 10 with nuts', '1 blue and 1 black jumper wire', 'Scissors or wire strippers', 'Heat shrink tube or electrical tape', 'Soldering (grown-up)'],
     draw: [[dr('whisker-panels'), 'It is not looking, it is touching. A dark table cannot fool it.']],
     sub: [
-      ['A grown-up solders two wires to the C and NO tabs first.', 'Cut one end off two jumper wires so the other ends still plug onto pins. Solder before screwing the switch on, so the heat cannot soften the plastic arm. C is common, NO is normally open.'],
+      ['Cut the blue and the black jumper about 10 cm from one plug.', 'Keep the pieces that still have a plug on the end. The plug is what pushes onto the moto:bit pin.'],
+      ['Strip about 3 mm of plastic off each cut end and twist the thin wires inside together.', 'A grown-up tins them: a little solder on the bare wire so the strands stay together.'],
+      ['Slide a short piece of heat shrink onto each wire before soldering.', 'Once the wire is soldered on, the tube cannot go on from the other end. Tape works if there is no heat shrink.'],
+      ['A grown-up solders blue to the NO tab and black to the C tab. NC stays empty.', 'The letters are molded into the plastic next to each tab. Hook the bare wire through the hole in the tab, then solder. Do this before the switch is screwed on, so the heat cannot soften the arm. C is common, NO is normally open.'],
+      ['Slide the heat shrink over each joint and shrink it.', 'A hair dryer or the side of the iron works. It stops the two tabs from touching.'],
       ['Screw the switch to the pad on the left sensor arm with two M2 × 10 screws and nuts.', 'Arm pointing down, little wheel toward the front.', r('g8-whisker')],
       ['Set Dusty on the table. The wheel should rest on the table and push the arm in with a click.', 'No click? Loosen the arm slot and lower it a little.'],
-      ['Plug the wires into the moto:bit: C to GND, NO to P2.', ''],
+      ['Switch off. Plug the wires onto the P2 column: blue (NO) on top, black (C) on the bottom. The middle pin stays empty.', 'P2 is the left column of the second SENSOR block, just right of P0 and P1. Same picture as Step 6.', ph('motobit-sensor-pins')],
       ['In on start, add set pull pin P2 to up. In the forever loop, add: if digital read P2 = 1, stop both motors.', ''],
       ['Test it with both infrared sensors covered by tape.', 'Only the whisker is working now. Does Dusty still stop?'],
     ],
