@@ -93,6 +93,24 @@ export const PHASES = [
 
 export const PHOTOS = [
   {
+    file: '2026-09-27-batch3-plate.jpg',
+    phase: 'print',
+    date: '2026-09-27',
+    title: 'Batch 3 off the printer',
+    caption: 'Batch 3 finished on the build plate: the deck with its square window on the left, the battery sleeve standing on its closed end in the middle with the thin keeper bar beside it, and the two sensor arms. The left arm is the one with the extra pad for the whisker switch.',
+    alt: 'A Flashforge 3D printer build plate holding black printed parts: a flat deck with a square window, a tall open box standing on end, a thin bar, and two small L-shaped arms',
+    tall: true,
+  },
+  {
+    file: '2026-09-27-motobit-sensor-headers.jpg',
+    phase: 'cliff',
+    date: '2026-09-27',
+    title: 'Where the sensors plug in',
+    caption: 'The SENSOR pins on the moto:bit. Each block is two columns of three pins. The left cliff sensor goes on the P0 column, the right cliff sensor on P1, and the whisker on P2. In every column the top pin is the signal, the middle is 3V3 and the bottom is ground. The SERVO block stays empty, because its middle pin is full battery power.',
+    alt: 'A black SparkFun moto:bit board held in two hands, micro:bit slot at the top, with three SENSOR pin blocks, a SERVO block and an I2C header in a row below it, motor connectors and a barrel power jack further down',
+    tall: true,
+  },
+  {
     file: '2026-09-27-nolan-caster.jpg',
     phase: 'drive',
     date: '2026-09-27',
