@@ -130,7 +130,7 @@ main h2 span{color:var(--part)}
     <div><b>CAD</b><span>Python with manifold3d. Every printed part is a program, so a design change rebuilds every part.</span></div>
     <div><b>3D on the web</b><span>three.js 0.170: physical materials, filmic tone mapping, soft shadows, a bloom filter for the LED eyes.</span></div>
     <div><b>3D file</b><span>trimesh exports the assembly as one GLB (0.6 MB), every part tagged with its system.</span></div>
-    <div><b>Voice</b><span>ElevenLabs text-to-speech, model eleven_v3, voice "George". 15 clips, about 1,800 characters.</span></div>
+    <div><b>Voice</b><span>ElevenLabs text-to-speech, model eleven_v3. The kitchen scenes use the stock voice "George". The breakdown is Nolan himself: an ElevenLabs clone of his voice made from recordings of him talking. 15 clips, about 2,000 characters.</span></div>
     <div><b>Music and sound effects</b><span>Synthesized from math in Python (NumPy and SciPy). No samples.</span></div>
     <div><b>Mixing and encoding</b><span>A Python mixer, then ffmpeg (H.264 video, AAC audio).</span></div>
     <div><b>Rendering</b><span>Headless Chromium driven by Playwright, on a NVIDIA DGX Spark.</span></div>
@@ -148,13 +148,13 @@ main h2 span{color:var(--part)}
     <div class="step"><div class="num">4</div><div><h3>Light it</h3>
       <p>A warm spotlight under the cabinet, cool moonlight, a room light so the floor shows below the edge, and reflections from an environment map. ACES filmic tone mapping keeps bright areas from blowing out, and the bloom filter only catches things brighter than white, which is just the red LEDs.</p></div></div>
     <div class="step"><div class="num">5</div><div><h3>Write and record the narration</h3>
-      <p>The script is 15 short lines, each written for one moment and timed to fit its window. ElevenLabs eleven_v3 understands tags like <code>[whispers]</code>, <code>[tense]</code> and <code>[relieved]</code>, which gave the nature-documentary feel. Each line is its own file, so one line can be redone without touching the rest. Where a line ran long, the movie was retimed to fit the voice.</p></div></div>
+      <p>The script is 15 short lines, each written for one moment and timed to fit its window. ElevenLabs eleven_v3 understands tags like <code>[whispers]</code>, <code>[tense]</code> and <code>[relieved]</code>, which gave the nature-documentary feel. Halfway through, the narrator hands off to Nolan, the inventor and chief engineer, who explains how each system works in his own (cloned) voice. Each line is its own file, so one line can be redone without touching the rest. Where a line ran long, the movie was retimed to fit the voice.</p></div></div>
     <div class="step"><div class="num">6</div><div><h3>Make the music and sound effects from math</h3>
       <p>The pizzicato strings are the Karplus-Strong algorithm (a burst of noise in a short delay loop that rings like a plucked string). The marimba is decaying sine waves. The synth pads are detuned sawtooth waves through a low-pass filter. The motor whir, crumb crunch, beeps, whooshes and fridge hum are filtered noise and tones. Two cues: sneaky D minor for the kitchen, bright C major for the breakdown.</p></div></div>
     <div class="step"><div class="num">7</div><div><h3>Mix it</h3>
-      <p>Every clip and effect is placed on one 130-second timeline. The music ducks about 7 dB whenever the narrator talks, using the voice's own loudness as the trigger, then a soft limiter levels the whole thing. The web copy of the audio is 48 kbps mono, 0.8 MB.</p></div></div>
+      <p>Every clip and effect is placed on one 134-second timeline. The music ducks about 7 dB whenever someone talks, using the voice's own loudness as the trigger, then a soft limiter levels the whole thing. The web copy of the audio is 48 kbps mono, 0.8 MB.</p></div></div>
     <div class="step"><div class="num">8</div><div><h3>Render every frame on a GPU</h3>
-      <p>A script opens the page in headless Chromium, steps time forward 1/60 of a second at a time, and saves each frame, captions included. Four copies run at once, each on a quarter of the movie. Then ffmpeg joins the 7,800 frames with the soundtrack.</p>
+      <p>A script opens the page in headless Chromium, steps time forward 1/60 of a second at a time, and saves each frame, captions included. Four copies run at once, each on a quarter of the movie. Then ffmpeg joins the 8,052 frames with the soundtrack.</p>
       <div class="spec">
         <div><b>Machine</b><span>NVIDIA DGX Spark</span></div>
         <div><b>Chip</b><span>NVIDIA GB10 Grace Blackwell superchip</span></div>
@@ -163,7 +163,7 @@ main h2 span{color:var(--part)}
         <div><b>GPU path</b><span>Chromium + ANGLE on Vulkan, NVIDIA driver 580</span></div>
         <div><b>Software</b><span>Ubuntu 24.04, Playwright 1.58, ffmpeg 6.1</span></div>
         <div><b>Speed</b><span>about 60 ms per 720p frame on the GPU, versus 1.2 s on a 4-core cloud server with software rendering</span></div>
-        <div><b>Full movie</b><span>7,800 frames at 1920x1080, 60 fps, rendered in under a minute, encoded in about a minute</span></div>
+        <div><b>Full movie</b><span>8,052 frames at 1920x1080, 60 fps, rendered in under a minute, encoded in about a minute</span></div>
       </div></div></div>
     <div class="step"><div class="num">9</div><div><h3>Publish</h3>
       <p>The master file is 55 MB. The web copy is 28 MB, with the index moved to the front so it starts playing before it finishes downloading. The share picture is a still rendered from the same scene with the title added in Python. Change anything, push the page, and one command re-renders the movie from the live site.</p></div></div>
@@ -376,7 +376,7 @@ const SPEED_CLIFF = 0.09;
 const STOP_Z = FRONT_Z - (-0.0068) * -1 + 0.003; // sensor tip (local z -0.0068) crosses the edge by 3 mm
 T.edge = T.sweep1 + (STOP_Z - 0.03) / SPEED_CLIFF;
 T.back0 = T.edge + 1.6; T.back1 = T.back0 + 0.9; T.spin1 = T.back1 + 1.4; T.go1 = T.spin1 + 2.0;
-T.happy = T.go1 + 0.2; T.break0 = 50; T.rea = 120.4; T.end = 130;
+T.happy = T.go1 + 0.2; T.break0 = 50; T.rea = 124.6; T.end = 134.2;
 const heading = (tx, tz) => Math.atan2(-tx, -tz);
 const SAMPLES = []; const DT = 1 / 120;
 function poseRaw(t) {
@@ -506,19 +506,20 @@ function setFace(name, level) {
 
 // ---------- film script: captions, systems, camera ----------
 const SYS = [
-  ['brain', 54, 66.2, 'Brain: micro:bit v2', 'Checks the sensors about 25 times a second and decides what to do. Its 25 red LEDs are Dusty\u2019s eyes.'],
-  ['power', 66.2, 77.6, 'Power: USB-C power bank', 'Rides in a printed sleeve under the deck. One cable feeds the moto:bit, and the moto:bit feeds everything else.'],
-  ['drive', 77.6, 88.6, 'Drive: two N20 gear motors', '298:1 gearboxes on 32 mm wheels. An encoder on the back of each motor counts wheel turns. A ball caster holds up the back.'],
-  ['sensors', 88.6, 101.8, 'Edge sensors: 2x QTR-1A + whisker', 'Infrared light bounces off the table 4 mm below. No bounce means no table, so the motors stop. The whisker switch is the backup.'],
-  ['sweeper', 101.8, 111.6, 'Sweeper: paddle roller', 'A small 130 motor turns a paddle roller through a gear train. The roller flicks crumbs up and back.'],
-  ['tray', 111.6, 120.4, 'Tray', 'Catches everything the roller throws. Slide it out and dump it.']
+  ['brain', 54, 67.4, 'Brain: micro:bit v2', 'Checks the sensors about 25 times a second and decides what to do. Its 25 red LEDs are Dusty\u2019s eyes.'],
+  ['power', 67.4, 78.9, 'Power: USB-C power bank', 'Rides in a printed sleeve under the deck. One cable feeds the moto:bit, and the moto:bit feeds everything else.'],
+  ['drive', 78.9, 91.6, 'Drive: two N20 gear motors', '298:1 gearboxes on 32 mm wheels. An encoder on the back of each motor counts wheel turns. A ball caster holds up the back.'],
+  ['sensors', 91.6, 104.0, 'Edge sensors: 2x QTR-1A + whisker', 'Infrared light bounces off the table 4 mm below. No bounce means no table, so the motors stop. The whisker switch is the backup.'],
+  ['sweeper', 104.0, 114.8, 'Sweeper: paddle roller', 'A small 130 motor turns a paddle roller through a gear train. The roller flicks crumbs up and back.'],
+  ['tray', 114.8, 124.6, 'Tray', 'Catches everything the roller throws. Slide it out and dump it.']
 ];
 const CAPS = [
   [0.6, 5.6, 'Kitchen. 11:47 PM.', 'Someone left the chips open.'],
   [T.edge - 0.3, T.back1 + 0.4, 'Edge detected', 'The sensors see no table. Motors stop. Back up. Turn.'],
-  [T.happy + 0.5, 49.0, 'Counter: clean', 'Every crumb is in the tray. Let\u2019s look inside.'],
+  [T.happy + 0.5, 48.6, 'Counter: clean', 'Every crumb is in the tray. Time to look inside.'],
+  [48.9, 53.6, 'Handing off to the chief engineer', 'Nolan Pinney, inventor of Dusty'],
   ...SYS.map(s => [s[1] + 0.6, s[2] - 0.4, s[3], s[4]]),
-  [T.rea + 1.1, T.rea + 8, 'Dusty', 'Built by Nolan. Sweeps crumbs, knows where the edge is.']
+  [T.rea + 1.1, T.rea + 8.2, 'Dusty', 'Designed and built by Nolan Pinney. Sweeps crumbs, knows where the edge is.']
 ];
 const CENTER = V(-0.13, 0, -0.03);
 function lookFrom(target, az, el, dist) { return V(target.x + dist * Math.cos(el) * Math.sin(az), target.y + dist * Math.sin(el), target.z + dist * Math.cos(el) * Math.cos(az)); }
@@ -588,7 +589,7 @@ function filmState(t) {
   if (edgeK) { beamLen = 0.004 + 0.06 * ramp(t, T.edge - 0.25, T.edge); beamRed = true; }
   const f = focusAt(t); if (f.sensors > 0) { beam = Math.max(beam, f.sensors); }
   let roll = 0; if (t > T.sweep0 - 0.5) roll = (Math.min(t, T.sweep1 + 0.8) - T.sweep0 + 0.5) * 18;
-  if (t > 101.8) roll += (t - 101.8) * 6 * (1 - ramp(t, 110.6, 111.6));
+  if (t > 104.0) roll += (t - 104.0) * 6 * (1 - ramp(t, 113.8, 114.8));
   return { x: p[0], z: p[1], th: p[2] + (t > T.break0 ? 0 : 0), lift, focus: f, explode: 0, cut: false, roll, face: faceAt(t), beam, beamLen, beamRed };
 }
 function applyScene(t) {
