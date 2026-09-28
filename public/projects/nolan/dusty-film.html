@@ -660,7 +660,7 @@ function frame(t) {
     const f = {}; for (const [g] of SYS) f[g] = 0; if (ex.focus) f[ex.focus] = 1;
     ex.f = ex.f || {}; for (const g in f) { ex.f[g] = lerp(ex.f[g] || 0, f[g], 0.1); }
     const tt = performance.now() / 1000;
-    st = { x: 0, z: 0, th: 0, lift: 0.05, focus: { ...ex.f }, explode: ex.expT, cut: ex.cut, roll: tt * 12, face: [Math.floor(tt * 1.3) % 7 === 0 ? 'blink' : 'open', 1], beam: Math.max(0.35, ex.f.sensors || 0), beamLen: 0.004 + 0.046, beamRed: false };
+    st = { x: 0, z: 0, th: 0, lift: 0.05, focus: { ...ex.f }, explode: ex.expT, cut: ex.cut, roll: tt * 12, face: [Math.floor(tt * 1.3) % 7 === 0 ? 'blink' : 'open', 1], beam: ex.f.sensors || 0, beamLen: 0.012, beamRed: false };
     applyScene(0); applyDusty(0, st); applyCrumbs(0); crumbIM.visible = chipIM.visible = false; controls.update();
   } else {
     crumbIM.visible = chipIM.visible = true;
