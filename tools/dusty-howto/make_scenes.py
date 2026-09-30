@@ -296,15 +296,15 @@ scene('b2-s4', ms, arrows=arrows,
 # Batch 3 step 1: moto:bit sits on the four risers (MOC-007), screws go down through its holes
 mb = GH['moto:bit']
 RIS = [(-20.0, 106.32), (20.0, 106.32), (-10.0, 56.32), (10.0, 56.32)]
-lift = 20
+lift = 32
 ms = [mesh(PR['deck'], COL['deck']), mesh(moved(mb, [0, 0, lift]), BOARD)]
 for (x, y) in RIS:
-    ms.append(mesh(screw(8, [x, y, 74.6 + lift + 6], [0, 0, -1]), STEEL))
+    ms.append(mesh(screw(8, [x, y, 74.6 + lift + 5], [0, 0, -1]), STEEL))
 scene('b3-s1', ms,
-      arrows=[A([34, 80, 100], [34, 80, 80])],
-      labels=[L([34, 80, 90], 'set it on the risers', 80, -60, ORANGE), L([-29, 60, 74.6 + lift], 'moto:bit', -90, -40),
-              L([20, 106.3, 73], 'four risers, 5 mm tall', 90, 70), L([-10, 56.3, 74.6 + lift + 14], '4 × M2 × 8', -110, -70)],
-      az=-30, el=38, zoom=1.0)
+      arrows=[A([-40, 30, 100], [-40, 30, 78])],
+      labels=[L([-40, 30, 92], 'lower it onto the risers', -60, -80, ORANGE), L([-29, 90, 74.6 + lift], 'moto:bit', -110, -30),
+              L([10, 56.3, 72], 'four risers, 5 mm tall', 130, 60), L([20, 106.3, 74.6 + lift + 12], '4 × M2 × 8 screws', 110, -60)],
+      az=-30, el=24, zoom=1.0)
 
 # Batch 3 step 2: power bank into the sleeve, then the keeper bar
 bank = GH['power bank']; slv = PR['sleeve']; kp = PR['keeper']
