@@ -46,6 +46,7 @@ const TOUCHED = ['3D model and all 19 print files', 'Parts list', 'Build guide s
 
 // Newest first. Add a line every time something about the plan changes.
 const LOG = [
+  ['Sep 30', 'Change', 'MOC-008: Dusty is coded with Claude instead of hand-built MakeCode blocks. Nolan writes the spec file and the tests, Claude writes the code, Nolan reads every line in the Blocks view before flashing. Code Lab added to the Build Guide with test programs T1 to T9 in steps 4, 5, 7, 8 and 11. Calibration moves from button A to switch-on. R6 becomes: explain every wire and every line. Plan and code only, no parts or print files.'],
   ['Sep 27', 'Plan', 'Size limit (under 5 by 5 inches) is measured on the robot itself, not the power cord. The straight power plug on the moto:bit sticks out about 20 mm past the left wheel, which is fine under this rule. Dusty measures 121 by 126 mm.'],
   ['Sep 27', 'Change', 'MOC-006: the deck fits the real moto:bit. The left side guide stops at y 88 so the power socket has room, and both zip tie slots moved (the front tie could not get under the deck past the battery sleeve wall, and the back tie pressed on the power socket). Only the deck changed: the deck file and Plate 3 are revA6, every other file stays revA5. Build Guide step 4 updated.'],
   ['Sep 27', 'Change', 'MOC-005: a window in the base for the little board and plug on each wheel motor, the old motor wire slot removed, and a small pocket under the battery sleeve over each window. Motor measured at 33 mm long with its plug (the model said 37). All 5 plates re-sliced. Every download now has revA5 in its name, and the old files were deleted. Build Guide steps 2, 4 and 5 updated, with the motor wire colors.'],
@@ -73,6 +74,19 @@ const LOG = [
   ['Sep 14', 'Decision', 'The robot is named Dusty.'],
   ['Sep 14', 'Decision', 'Picked the crumb-sweeping robot with cliff detection from a list of cleaning robot ideas.'],
 ];
+
+const MOC8 = [
+  ['Who writes the code', 'Nolan, block by block in MakeCode', 'Claude, from Nolan’s prompts', 'Nolan owns the spec, the prompts and the tests'],
+  ['How code is checked', 'Build it, run it', 'Predict, read in Blocks, flash, test, log', 'Every test has a pass mark written down before it runs'],
+  ['Instructions to the computer', 'Block lists in the Build Guide', 'dusty-spec.txt: pins, measured numbers, 8 rules', 'Claude reads the spec at the start of every prompt'],
+  ['Test programs', 'Heart on button A, one sensor readout', 'T1 to T9, one job each', 'Built in order; the main program is assembled from ones that passed'],
+  ['Calibration', 'Press button A while sitting on the table', 'Automatic at switch-on, 1 s still, table reading + 200 per sensor', 'Frees button A for random bounce, which T8 needs'],
+  ['Loop speed', 'Assumed 40 ms', 'Rule: 25 loops a second or more, measured with T5', 'A picture on the LEDs inside forever drops it to 1 to 2 a second (T5b)'],
+  ['Requirement R6', 'Explain every wire', 'Explain every wire and every line', 'The judges’ question: did you write this?'],
+  ['Editor', 'MakeCode Blocks', 'MakeCode JavaScript, read in Blocks', 'Same program either way; Blocks is how Nolan reads it'],
+];
+
+const MOC8_TOUCHED = ['Build Guide: new Code Lab section', 'Build Guide steps 4, 5, 7, 8, 11', 'Weekend plan', 'Fixing it table', 'Words to know', 'Learn page (the brain)', 'Starter spec file', 'Design document'];
 
 const MOC6 = [
   ['Left side guide', 'Deck', 'y 39 to 108 mm', 'y 39 to 88 mm', 'Barrel jack overhangs the left board edge 3.5 to 5.3 mm, 54.5 to 65 mm back from the connector, 1.6 mm up. It hit the 3 mm guide by 29 mm³'],
@@ -120,6 +134,7 @@ const MOC3 = [
 const MOC3_TOUCHED = ['3D model (Rev A.2)', '13 of 17 part files', 'All 5 plates re-sliced', '3D viewers', 'Print plan pictures', 'Source zip'];
 
 const LESSONS = [
+  ['Write the rules down before you ask for code', 'Claude only knows what you tell it. The spec file is where the pins, the numbers you measured and the safety rules live, so every program starts from the same facts.'],
   ['Model the cable and plug, not just the part', 'The 3D model had the motor’s length with its connector, but not the little board and plug sticking out sideways. The plug hit the base. Draw the wires and plugs too, and where they have to go.'],
   ['Measure the space before picking a part', 'We picked a power bank before checking the room it had. A two-minute check with the 3D model would have shown it could not go lengthwise.'],
   ['Every number needs a reason', 'The 300 gram limit was a guess. When we needed to change it, there was nothing behind it. Write down why each limit exists.'],
@@ -281,6 +296,72 @@ export default function DustyChangesPage() {
           <div className="mt-4">
             <Link href="/projects/nolan/dusty/build" className="bg-naw-orange text-naw-dark hover:bg-naw-orange/90 inline-flex items-center px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors">
               See the new design
+            </Link>
+          </div>
+        </Section>
+
+        <Section title="Change order MOC-008: coding Dusty with Claude" sub="Sep 30, 2026. Approved by Dad.">
+          <div className="bg-naw-card rounded-2xl border border-naw-orange/40 p-5">
+            <div className="text-naw-orange text-xs font-semibold">The short version</div>
+            <p className="text-white leading-relaxed mt-1">
+              Nolan stops dragging code blocks by hand. Claude writes Dusty&apos;s code instead, and Nolan does the engineer&apos;s
+              job: he writes down exactly what Dusty must do, asks Claude for one small program at a time, reads every line
+              before it goes on the robot, and proves it works with tests he designs first.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3 mt-3">
+            <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
+              <div className="text-white/45 text-xs font-semibold">Why we need it</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">By the time Nolan is grown up, people will tell computers what to build more than they type code themselves. The skill that lasts is saying exactly what you want, and catching it when the computer gets it wrong. A robot that can fall off a table is a good place to practice that.</div>
+            </div>
+            <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
+              <div className="text-white/45 text-xs font-semibold">How we picked</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">Two choices: keep block coding, or code with Claude. We picked Claude, with three guardrails: a spec file Claude reads every time, a test program for each build step with the pass mark written first, and a rule that Nolan can explain every line. The robot, its parts and the build order do not change.</div>
+            </div>
+          </div>
+          <h3 className="text-white font-bold mt-6">Technical record</h3>
+          <div className="mt-2 bg-naw-card rounded-2xl border border-white/10 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-white/45 text-xs text-left">
+                  <th className="px-4 py-2 font-semibold">What</th>
+                  <th className="px-4 py-2 font-semibold">Was</th>
+                  <th className="px-4 py-2 font-semibold">Now</th>
+                  <th className="px-4 py-2 font-semibold">Basis</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5 text-white/80">
+                {MOC8.map(([h, was, now, basis]) => (
+                  <tr key={h}>
+                    <td className="px-4 py-2 text-white">{h}</td>
+                    <td className="px-4 py-2">{was}</td>
+                    <td className="px-4 py-2 text-naw-orange font-semibold">{now}</td>
+                    <td className="px-4 py-2 text-white/60">{basis}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-white/60 text-sm mt-3 leading-relaxed">
+            Claude accounts are for grown-ups, so Claude runs on Dad&apos;s account with Dad beside Nolan. Not changed: every part,
+            every print file (revision tags stay as they are), the wiring, the cliff math, the experiment, the due dates.
+          </p>
+          <h3 className="text-white font-bold mt-6">What had to be updated</h3>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {MOC8_TOUCHED.map((t) => (
+              <span key={t} className="bg-white/10 text-white/80 text-xs font-semibold px-2.5 py-1 rounded-full">{t}</span>
+            ))}
+          </div>
+          <h3 className="text-white font-bold mt-6">Tests that prove it works</h3>
+          <ul className="mt-2 space-y-1 text-sm text-white/75 list-disc pl-5">
+            <li>Every test program T1 to T9 passes its written pass mark, logged in the notebook.</li>
+            <li>The main program runs 25 loops a second or more (T5 on Dusty v1).</li>
+            <li>Dusty still stops at the edge 20 times out of 20.</li>
+            <li>Nolan can point at any line of the final program and say what it does.</li>
+          </ul>
+          <div className="mt-4">
+            <Link href="/projects/nolan/dusty/build/guide#code" className="bg-naw-orange text-naw-dark hover:bg-naw-orange/90 inline-flex items-center px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors">
+              Open the Code Lab
             </Link>
           </div>
         </Section>
