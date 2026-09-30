@@ -164,9 +164,11 @@ scene('g4-deck', ms, [A([0, 80, DECK_Z0 + dl + 26], [0, 80, DECK_Z0 + dl + 8])],
 
 ms = [P('base')] + under + [P('sleeve'), G('power bank'), P('keeper'), P('post1'), P('post2'), P('deck'),
                             G('moto:bit'), G('micro:bit', (0, -22, 0)), G('USB adapter and cable')]
+for (x, y) in [(-20.0, 106.32), (20.0, 106.32), (-10.0, 56.32), (10.0, 56.32)]:   # MOC-007: board screwed to the risers
+    ms.append(mesh(screw(8, [x, y, DECK_Z0 + DECK_T + 5.0 + 1.6 - 8], [0, 0, -1]), STEEL))
 scene('g4-brain', ms, [A([0, -48, 76], [0, -30, 76])],
       [L([0, -45, 74], 'micro:bit: LEDs up, gold stripes into the connector', -20, -120),
-       L([20, 70, 70], 'moto:bit between the guides', 130, -80),
+       L([20, 106.3, 76], 'moto:bit screwed to 4 risers', 130, -80),
        L([-50, 45, 50], '90° USB adapter, cable runs forward', -120, 80)],
       az=-25, el=35, zoom=1.0)
 

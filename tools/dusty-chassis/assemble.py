@@ -105,9 +105,9 @@ ghosts['USB adapter and cable'] = trimesh.util.concatenate([
 ghosts['foam shims'] = trimesh.util.concatenate([
     boxc(BANK_X0 + 5, BANK_X1 - 5, _byc - 8, _byc + 8, PL_Z1 + SL_FLOOR_T, _bz0),
     boxc(BANK_X0 + 5, BANK_X1 - 5, _byc - 8, _byc + 8, _bz0 + BANK[2], DECK_Z0)])
-mb_z = DECK_Z0 + DECK_T + 1.6
+mb_z = DECK_Z0 + DECK_T + RISER_H + 1.6   # MOC-007: board sits on 5 mm risers
 ghosts['moto:bit'] = trimesh.util.concatenate([
-    boxc(-MB[0]/2, MB[0]/2, MB_Y0, MB_Y1, DECK_Z0 + DECK_T, mb_z),
+    boxc(-MB[0]/2, MB[0]/2, MB_Y0, MB_Y1, mb_z - 1.6, mb_z),
     boxc(-27, 27, MB_Y0, MB_Y0 + 6, mb_z, mb_z + 5),             # right-angle edge connector
     boxc(-MB[0]/2 - JACK_OUT, -MB[0]/2 + 14.0, JACK_Y[0], JACK_Y[1], mb_z, mb_z + 11.0)])   # MOC-006: barrel jack, overhangs the left edge
 # micro:bit v2 (52 x 42) lies flat, plugged 4 mm into the connector, overhanging the front

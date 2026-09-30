@@ -47,6 +47,7 @@ const TOUCHED = ['3D model and all 19 print files', 'Parts list', 'Build guide s
 // Newest first. Add a line every time something about the plan changes.
 const LOG = [
   ['Sep 30', 'Change', 'MOC-008: Dusty is coded with Claude instead of hand-built MakeCode blocks. Nolan writes the spec file and the tests, Claude writes the code, Nolan reads every line in the Blocks view before flashing. Code Lab added to the Build Guide with test programs T1 to T9 in steps 4, 5, 7, 8 and 11. Calibration moves from button A to switch-on. R6 becomes: explain every wire and every line. Plan and code only, no parts or print files.'],
+  ['Sep 30', 'Change', 'MOC-007 published: the moto:bit screws onto four printed risers on the deck instead of zip ties. Only the deck changed: the deck file and Plate 3 are revA7, every other file keeps its revision. Deck-only print file added. Build Guide step 4, the Batch 3 check, the screw map (23 to 27) and the pictures updated. Approved Sep 27; the site update waited until the server connection was back.'],
   ['Sep 27', 'Plan', 'Size limit (under 5 by 5 inches) is measured on the robot itself, not the power cord. The straight power plug on the moto:bit sticks out about 20 mm past the left wheel, which is fine under this rule. Dusty measures 121 by 126 mm.'],
   ['Sep 27', 'Change', 'MOC-006: the deck fits the real moto:bit. The left side guide stops at y 88 so the power socket has room, and both zip tie slots moved (the front tie could not get under the deck past the battery sleeve wall, and the back tie pressed on the power socket). Only the deck changed: the deck file and Plate 3 are revA6, every other file stays revA5. Build Guide step 4 updated.'],
   ['Sep 27', 'Change', 'MOC-005: a window in the base for the little board and plug on each wheel motor, the old motor wire slot removed, and a small pocket under the battery sleeve over each window. Motor measured at 33 mm long with its plug (the model said 37). All 5 plates re-sliced. Every download now has revA5 in its name, and the old files were deleted. Build Guide steps 2, 4 and 5 updated, with the motor wire colors.'],
@@ -87,6 +88,20 @@ const MOC8 = [
 ];
 
 const MOC8_TOUCHED = ['Build Guide: new Code Lab section', 'Build Guide steps 4, 5, 7, 8, 11', 'Weekend plan', 'Fixing it table', 'Words to know', 'Learn page (the brain)', 'Starter spec file', 'Design document'];
+
+const MOC7 = [
+  ['moto:bit risers', 'Deck', 'none', '4 round risers, 6 mm across, 5 mm tall', 'Hole positions from SparkFun’s board file: back pair 40 mm apart, 5.88 mm from the back edge; neck pair 20 mm apart, 20.32 mm from the connector edge'],
+  ['Riser screw holes', 'Deck', 'none', '2.2 mm pilot, 45° lead-in, blind with a 0.6 mm floor', 'Same pilot and lead-in as every other screw hole (MOC-003, MOC-004). No screw tip shows under the deck'],
+  ['Board height above the deck', 'Deck', '0 mm (on its solder bumps)', '5 mm', 'The 2 to 3 mm of pins and solder under the board keep at least 2 mm of air'],
+  ['How the board is held', 'Assembly', '2 zip ties', '4 × M2 × 8 down through the board', 'About 6.4 mm of thread in each riser'],
+  ['Screw count', 'Whole robot', '23 (18 × M2 × 8)', '27 (22 × M2 × 8)', 'The 2 back screws alone hold the board if you run short'],
+  ['Part volume', 'Deck', '13.46 cm³', '13.90 cm³', '3D model'],
+  ['Plate 3 (deck, sleeve, arms) print', 'Plate 3', '42.0 g, 1 h 46 min', '42.7 g, 1 h 50 min', 'Slicer'],
+  ['Deck by itself', 'New print file', 'none', '15.0 g, 33 min', 'dusty-deck-only-revA7, for reprinting just the deck'],
+  ['Robot height', 'Whole robot', 'about 81 mm', 'about 86 mm', 'Footprint unchanged, 120.6 × 125.9 mm'],
+];
+
+const MOC7_TOUCHED = ['3D model (Rev A.7)', 'Deck', 'Plate 3 re-sliced', 'Deck-only print file', 'Build Guide step 4', 'Batch 3 check', 'Screw map', 'Assembly pictures', '3D viewers'];
 
 const MOC6 = [
   ['Left side guide', 'Deck', 'y 39 to 108 mm', 'y 39 to 88 mm', 'Barrel jack overhangs the left board edge 3.5 to 5.3 mm, 54.5 to 65 mm back from the connector, 1.6 mm up. It hit the 3 mm guide by 29 mm³'],
@@ -134,6 +149,8 @@ const MOC3 = [
 const MOC3_TOUCHED = ['3D model (Rev A.2)', '13 of 17 part files', 'All 5 plates re-sliced', '3D viewers', 'Print plan pictures', 'Source zip'];
 
 const LESSONS = [
+  ['Use the holes the part came with', 'The moto:bit has four mounting holes. Screwing it to risers under those holes holds it better than zip ties, and the maker’s drawing gives exact positions.'],
+  ['A change is not done until every page matches', 'MOC-007 was approved, but the Build Guide still said zip ties for three days. Update the guide, the files and the log in the same sitting.'],
   ['Write the rules down before you ask for code', 'Claude only knows what you tell it. The spec file is where the pins, the numbers you measured and the safety rules live, so every program starts from the same facts.'],
   ['Model the cable and plug, not just the part', 'The 3D model had the motor’s length with its connector, but not the little board and plug sticking out sideways. The plug hit the base. Draw the wires and plugs too, and where they have to go.'],
   ['Measure the space before picking a part', 'We picked a power bank before checking the room it had. A two-minute check with the 3D model would have shown it could not go lengthwise.'],
@@ -364,6 +381,77 @@ export default function DustyChangesPage() {
               Open the Code Lab
             </Link>
           </div>
+        </Section>
+
+        <Section title="Change order MOC-007: screws instead of zip ties" sub="Sep 27, 2026. Approved by Dad. Published Sep 30.">
+          <div className="bg-naw-card rounded-2xl border border-naw-orange/40 p-5">
+            <div className="text-naw-orange text-xs font-semibold">The short version</div>
+            <p className="text-white leading-relaxed mt-1">
+              The moto:bit has four holes made for screws, but we were holding it down with zip ties, resting on the lumpy
+              solder bumps underneath. Now the deck has four little round towers called risers, one under each hole. The board
+              sits on top of them and four tiny screws hold it tight.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3 mt-3">
+            <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
+              <div className="text-white/45 text-xs font-semibold">Why we need it</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">Under the board there are 2 to 3 mm of pins and solder bumps, so it rocked on the flat deck, and zip ties could loosen or press on parts. A board that moves can pull on wires while Dusty drives.</div>
+            </div>
+            <div className="bg-naw-card rounded-2xl border border-white/10 p-4">
+              <div className="text-white/45 text-xs font-semibold">How we picked</div>
+              <div className="text-white text-sm mt-1 leading-relaxed">We used the holes the board already has. The hole positions came from SparkFun&apos;s own drawing of the board, not from photos. The risers are 5 mm tall so the bumps underneath never touch the deck. Only the deck changes.</div>
+            </div>
+          </div>
+          <h3 className="text-white font-bold mt-6">Technical record</h3>
+          <div className="mt-2 bg-naw-card rounded-2xl border border-white/10 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-white/45 text-xs text-left">
+                  <th className="px-4 py-2 font-semibold">Feature</th>
+                  <th className="px-4 py-2 font-semibold">Parts</th>
+                  <th className="px-4 py-2 font-semibold">Was</th>
+                  <th className="px-4 py-2 font-semibold">Now</th>
+                  <th className="px-4 py-2 font-semibold">Basis</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5 text-white/80">
+                {MOC7.map(([h, pts, was, now, basis]) => (
+                  <tr key={h}>
+                    <td className="px-4 py-2 text-white">{h}</td>
+                    <td className="px-4 py-2">{pts}</td>
+                    <td className="px-4 py-2 tabular-nums">{was}</td>
+                    <td className="px-4 py-2 tabular-nums text-naw-orange font-semibold">{now}</td>
+                    <td className="px-4 py-2 text-white/60">{basis}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-white/60 text-sm mt-3 leading-relaxed">
+            Checked in the 3D model: the deck is one solid printable part, all four pilot holes are clear for a full M2 × 8,
+            and nothing on the deck reaches into the space under the board except the four riser tops. The side guides,
+            rear stop and zip tie slots stay; they no longer touch the board. Not changed: base, sleeve, posts, motors,
+            sensor arms, wiring, the cliff math, the footprint, and every other part. No new parts to buy.
+          </p>
+          <h3 className="text-white font-bold mt-6">What had to be updated</h3>
+          <div className="flex flex-wrap gap-2 mt-3">
+            {MOC7_TOUCHED.map((t) => (
+              <span key={t} className="bg-white/10 text-white/80 text-xs font-semibold px-2.5 py-1 rounded-full">{t}</span>
+            ))}
+          </div>
+          <h3 className="text-white font-bold mt-6">What we learned</h3>
+          <p className="text-white/60 text-sm mt-1 leading-relaxed">
+            Use the mounting holes a board comes with, and get their positions from the maker&apos;s drawing. And a change is
+            not finished until every page that describes it is updated: this one was approved on Sep 27, but the Build Guide
+            still said zip ties for three days.
+          </p>
+          <h3 className="text-white font-bold mt-6">Tests that prove it works</h3>
+          <ul className="mt-2 space-y-1 text-sm text-white/75 list-disc pl-5">
+            <li>All four board holes sit over the four risers without bending the board.</li>
+            <li>All four screws start and pull snug, and none of them strips.</li>
+            <li>The board does not rock or wiggle, and nothing underneath touches the deck.</li>
+            <li>The power socket and the sensor pins are easy to reach.</li>
+          </ul>
         </Section>
 
         <Section title="Change order MOC-006: room for the power socket" sub="Sep 27, 2026. Approved by Dad.">

@@ -1,5 +1,5 @@
 // Build Guide content: safety, tools, bought parts, screws, the 10 build steps, fixes and words.
-// Rev A.6 (MOC-006, Sep 27 2026). Pictures: 3D renders in dusty-files/guide/*.png and dusty-files/howto/*.png,
+// Rev A.7 (MOC-007, Sep 27 2026; published Sep 30). Pictures: 3D renders in dusty-files/guide/*.png and dusty-files/howto/*.png,
 // drawings in dusty-files/guide/draw-*.svg.
 
 const GD = '/projects/nolan/dusty-files/guide';
@@ -9,7 +9,7 @@ const h = (name) => `${HT}/${name}.png`;
 const dr = (name) => `${GD}/draw-${name}.svg`;
 const ph = (name) => `${GD}/photo-${name}.jpg`;
 
-export const FACTS = ['Due Mon Nov 16', '21 printed pieces', '23 M2 screws', 'A little soldering', 'Coded with Claude', '9 test programs'];
+export const FACTS = ['Due Mon Nov 16', '21 printed pieces', '27 M2 screws', 'A little soldering', 'Coded with Claude', '9 test programs'];
 
 export const SAFETY = [
   ['A grown-up runs the 3D printer.', 'The nozzle is about 220°C and the bed about 60°C. Never touch either while it is printing or cooling.'],
@@ -57,6 +57,7 @@ export const SCREWS = [
   ['Ball caster', 'M2 × 8', 2, 'Up into the round posts (funnel holes)', 3],
   ['Battery sleeve', 'M2 × 8', 4, 'Up through the base into the sleeve', 4],
   ['Deck', 'M2 × 8', 4, 'Down: two into the posts (funnel holes), two into the sleeve', 4],
+  ['moto:bit', 'M2 × 8', 4, 'Down through the board’s holes into the four round risers', 4],
   ['Sensor arms', 'M2 × 8', 2, 'Through the slot, nut on the inside', 6],
   ['Sensors in the arms', 'M2 × 6', 2, 'With a nut', 6],
   ['Whisker switch', 'M2 × 10', 2, 'With nuts', 8],
@@ -115,7 +116,7 @@ export const STEPS = {
     title: 'Add the deck, the brain and the power',
     time: 'About 1 hour',
     intro: 'The power bank rides in its own sleeve at the back, and the moto:bit and micro:bit sit on the deck above it. Keep the in-line switch OFF for this whole step.',
-    need: ['Battery sleeve, keeper bar, deck (Batch 3)', '2 deck posts', 'Power bank, charged', '90° USB adapter, USB to round-plug cable, in-line switch, Y splitter', 'moto:bit and micro:bit', 'Foam tape, 2 zip ties', '8 × M2 × 8'],
+    need: ['Battery sleeve, keeper bar, deck (Batch 3)', '2 deck posts', 'Power bank, charged', '90° USB adapter, USB to round-plug cable, in-line switch, Y splitter', 'moto:bit and micro:bit', 'Foam tape', '12 × M2 × 8'],
     sub: [
       ['Check that both motor cables already come up through the windows in the base.', 'The front of the sleeve sits over the back of each window. Once it is screwed down, you cannot feed a cable through anymore.'],
       ['Set the battery sleeve on the back of the base, open end on the left, the two screw tabs toward the front.', 'The tabs and the back wall line up with four holes in the base. Keep the motor wires in front of the sleeve, not under it. The sleeve should sit flat without touching the little motor boards.', r('g4-sleeve')],
@@ -125,8 +126,8 @@ export const STEPS = {
       ['Push the two deck posts, peg end down, into the holes near the front of the base.', 'They go in snug by hand. The funnel end is the top.'],
       ['Stick a second strip of foam tape under the deck, right over the bank.', 'It squeezes the bank gently so it cannot rattle.'],
       ['Set the deck on the posts and the sleeve, and drive four M2 × 8 screws down.', 'Two into the posts, two into the back wall of the sleeve. The screw heads sit down in the pockets.', r('g4-deck')],
-      ['Slide the moto:bit onto the deck between the two side guides, connector edge toward the front, until it touches the stop at the back.', 'The round power socket sits on the left, where the left guide stops short so the socket has room (change order MOC-006).', h('b3-s1')],
-      ['Zip tie the board down in two places. Front tie: push it down through the front slot on one side, slide it under the deck to the other side, and bring it up over the narrow neck of the board. Back tie: slide the power bank out first, then thread it the same way through the back slots, across the empty sleeve above where the bank sits.', 'The front tie goes over the neck, just behind the micro:bit connector. The back tie goes between the motor sockets and the power socket, not over them. Snug, not crushing. Slide the bank back in and push the keeper bar home.'],
+      ['Set the moto:bit on the four round risers on the deck, connector edge toward the front, so the four holes in the board sit on top of the four risers.', 'Two risers are at the back corners and two at the narrow neck behind the connector. The board sits 5 mm up, so the solder bumps and pins underneath never touch the deck. The round power socket is on the left (change orders MOC-006 and MOC-007).', h('b3-s1')],
+      ['Drive an M2 × 8 screw down through each hole into its riser. Start all four, then tighten them a little at a time.', 'The risers have funnel pilot holes like the rest of Dusty. Snug, then stop: the board must not bend. No zip ties needed anymore.'],
       ['Slide the micro:bit into the connector on the front of the moto:bit, LEDs and buttons facing up.', 'It lies flat and sticks out over the brush like a little roof. The gold stripes go in. If it will not go, flip it over rather than pushing harder.', r('g4-brain')],
       ['A grown-up connects the power: the 90° adapter into the bank’s USB-A port, turned so the cable runs toward the front. Then the USB to round-plug cable, the in-line switch, and the Y splitter, with one end into the moto:bit.', 'Stick the switch to the edge of the deck with mounting tape where you can reach it. The second splitter end is for the brush motor in Step 9.'],
       ['Flip the switch ON, then tap the button on the power bank once. The micro:bit should light up.', 'Nothing? Check every plug. Then check the bank is charged: pull the keeper bar, slide the bank out and press its button to see the lights.'],
@@ -138,7 +139,7 @@ export const STEPS = {
       ['Why a power bank', ['A power bank holds a steady 5 volts until it is empty. AA batteries start near 6 volts and fade, which would make Dusty slower as the day goes on. Speed is what the experiment measures, so a steady supply keeps the test fair (change order MOC-001).']],
       ['How to charge Dusty', ['Switch Dusty off. Plug a USB-C phone charger into the port on Dusty’s left side. The bank’s lights are hidden under the deck, so leave it about three hours, or slide it out and press the button to check. Always charge on a hard surface with a grown-up nearby.']],
     ],
-    done: 'Switch on plus one tap runs your T1 program with no cable attached, the bank does not slide or rattle, and Dusty still sits flat with everything on board.',
+    done: 'Switch on plus one tap runs your T1 program with no cable attached, the moto:bit does not wiggle on its risers, the bank does not slide or rattle, and Dusty still sits flat with everything on board.',
   },
   5: {
     title: 'Wire the motors and make it drive',
@@ -345,7 +346,7 @@ export const FIXES = [
   ['A wheel does not turn at all', 'Wrong wire', 'Only red and white go to the motor terminal. Black is a turn-counter wire on these motors.'],
   ['A motor will not sit flat on its pad', 'Old base file, or plug facing the wrong way', 'The plug must point into the square window. A base without windows is an old file: reprint Plate 2 from the current files.'],
   ['A print lifted off the bed', 'First layer did not stick', 'Clean the bed, let it heat fully, try again. A glue stick helps.'],
-  ['A screw will not start', 'Hole too small', 'Check you printed the current files: the deck ends in revA6, every other part in revA5. Push firmly and turn slowly: the funnel should guide it.'],
+  ['A screw will not start', 'Hole too small', 'Check you printed the current files: the deck ends in revA7, every other part in revA5. Push firmly and turn slowly: the funnel should guide it.'],
   ['A screw spins and will not tighten', 'Stripped plastic thread', 'Use the next longer screw, or a grown-up adds a drop of glue in the hole and waits.'],
   ['A deck post wiggles in the base', 'Old base file', 'Post holes since Rev A.5 are 3.95 mm and snug. Reprint the base from the new files.'],
   ['A part will not fit', 'Printed a little big', 'Sand or file the edge a little. Do not force it: PLA cracks.'],

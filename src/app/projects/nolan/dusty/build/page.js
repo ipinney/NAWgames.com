@@ -40,14 +40,14 @@ const VIEWERS = [
   {
     title: 'Every part',
     text: 'All 30 parts, printed and bought. Tap one to see it by itself with its size, or in place on the robot.',
-    open: `${F}/dusty-components-3d-revA6.html`,
-    file: 'dusty-components-3d-revA6.html',
+    open: `${F}/dusty-components-3d-revA7.html`,
+    file: 'dusty-components-3d-revA7.html',
   },
   {
     title: 'Whole robot',
     text: 'The full assembly with measurements. Hide the bought parts to see just the printed ones.',
-    open: `${F}/dusty-chassis-3d-revA6.html`,
-    file: 'dusty-chassis-3d-revA6.html',
+    open: `${F}/dusty-chassis-3d-revA7.html`,
+    file: 'dusty-chassis-3d-revA7.html',
   },
   {
     title: 'Dustpan (foam board version)',
@@ -61,7 +61,7 @@ const VIEWERS = [
 // size in mm (as printed), grams of PLA each from the slicer (Adventurer 5M, 3 walls, 20% gyroid)
 const PARTS = [
   ['base', 'Base plate', 1, '85 × 122 × 28', '36', 'Top face down'],
-  ['deck', 'Electronics deck', 1, '79 × 77 × 6', '15', ''],
+  ['deck', 'Electronics deck', 1, '79 × 77 × 7.5', '17', 'Rev A.7: four moto:bit risers'],
   ['post', 'Deck post', 2, '6 × 6 × 35', '0.8', 'Peg up'],
   ['sleeve', 'Battery sleeve', 1, '35 × 58 × 106', '25', 'Standing on its closed end'],
   ['keeper', 'Keeper bar', 1, '6 × 54 × 8', '0.6', 'Head down, flat'],
@@ -134,10 +134,10 @@ export default function DustyBuildPage() {
                 <Link href="/projects/nolan/dusty/build/guide" className="bg-naw-orange text-naw-dark hover:bg-naw-orange/90 inline-flex items-center px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors">
                   Build guide
                 </Link>
-                <Btn href={`${F}/dusty-components-3d-revA6.html`}>Explore in 3D</Btn>
+                <Btn href={`${F}/dusty-components-3d-revA7.html`}>Explore in 3D</Btn>
               </div>
             </div>
-            <a href={`${F}/dusty-chassis-3d-revA6.html`} target="_blank" rel="noopener noreferrer" className="block rounded-2xl overflow-hidden border border-white/10 bg-[#0d1b2e]">
+            <a href={`${F}/dusty-chassis-3d-revA7.html`} target="_blank" rel="noopener noreferrer" className="block rounded-2xl overflow-hidden border border-white/10 bg-[#0d1b2e]">
               <img src={`${P}/dusty-hero.png`} alt="3D model of the Dusty chassis" width={720} height={630} className="w-full h-auto" />
             </a>
           </div>
@@ -195,9 +195,9 @@ export default function DustyBuildPage() {
           sub="Set up for the FlashForge Adventurer 5M: PLA, 0.4 mm nozzle, 0.2 mm layers, no supports. Sizes are in millimeters as the part sits on the print bed."
         >
           <div className="flex flex-wrap gap-2 mb-4">
-            <Btn href={`${F}/dusty-chassis-revA6-stl.zip`} download primary>All parts (ZIP)</Btn>
-            <Btn href={`${F}/dusty-chassis-all-parts-plate-revA6.stl`} download>Whole plate, one STL</Btn>
-            <Btn href={`${F}/dusty-3d-source-revA6.zip`} download>Design source (Python)</Btn>
+            <Btn href={`${F}/dusty-chassis-revA7-stl.zip`} download primary>All parts (ZIP)</Btn>
+            <Btn href={`${F}/dusty-chassis-all-parts-plate-revA7.stl`} download>Whole plate, one STL</Btn>
+            <Btn href={`${F}/dusty-3d-source-revA7.zip`} download>Design source (Python)</Btn>
           </div>
           <div className="bg-naw-card rounded-2xl border border-naw-cyan/20 overflow-x-auto">
             <table className="w-full text-sm">
@@ -225,7 +225,7 @@ export default function DustyBuildPage() {
                     <td className="hidden sm:table-cell px-2 py-2.5 text-white/70 tabular-nums">{g}</td>
                     <td className="hidden sm:table-cell px-2 py-2.5 text-white/50">{note}</td>
                     <td className="px-4 py-2.5 text-right">
-                      <a href={`${F}/dusty-${file}-${file === 'deck' ? 'revA6' : 'revA5'}.stl`} download className="text-naw-cyan font-semibold hover:underline whitespace-nowrap">
+                      <a href={`${F}/dusty-${file}-${file === 'deck' ? 'revA7' : 'revA5'}.stl`} download className="text-naw-cyan font-semibold hover:underline whitespace-nowrap">
                         STL
                       </a>
                     </td>
@@ -235,7 +235,7 @@ export default function DustyBuildPage() {
             </table>
           </div>
           <p className="text-white/40 text-xs mt-3">
-            Also needed and not printed: M2 screws and nuts, female jumper wires, pipe cleaners, a KCD11 mini rocker switch, a 5.5 × 2.1 mm Y splitter and screw-terminal jack, a USB-C power bank, a 90° USB-A adapter, a USB to barrel cable, an in-line power switch, foam tape, and small zip ties.
+            Also needed and not printed: M2 screws and nuts, female jumper wires, pipe cleaners, a KCD11 mini rocker switch, a 5.5 × 2.1 mm Y splitter and screw-terminal jack, a USB-C power bank, a 90° USB-A adapter, a USB to barrel cable, an in-line power switch, foam tape, and a small zip tie for the brush motor.
           </p>
         </Section>
 

@@ -293,12 +293,17 @@ scene('b2-s4', ms, arrows=arrows,
               L([36.5, 53, 30.5 + 22], 'peg end down', 120, 40)],
       az=-25, el=30, zoom=1.2)
 
-# Batch 3 step 1: moto:bit slides into the deck guides
+# Batch 3 step 1: moto:bit sits on the four risers (MOC-007), screws go down through its holes
 mb = GH['moto:bit']
-scene('b3-s1', [mesh(PR['deck'], COL['deck']), mesh(moved(mb, [0, -62, 0]), BOARD)],
-      arrows=[A([0, -40, 80], [0, -4, 80])],
-      labels=[L([0, -10, 80], 'slide it toward the back', 80, -90, ORANGE), L([-31, -20, 72], 'moto:bit', -70, 90),
-              L([36, 110, 71], 'stop at the back', 60, -60), L([-37, 90, 71], 'guides', -120, -60)],
+RIS = [(-20.0, 106.32), (20.0, 106.32), (-10.0, 56.32), (10.0, 56.32)]
+lift = 20
+ms = [mesh(PR['deck'], COL['deck']), mesh(moved(mb, [0, 0, lift]), BOARD)]
+for (x, y) in RIS:
+    ms.append(mesh(screw(8, [x, y, 74.6 + lift + 6], [0, 0, -1]), STEEL))
+scene('b3-s1', ms,
+      arrows=[A([34, 80, 100], [34, 80, 80])],
+      labels=[L([34, 80, 90], 'set it on the risers', 80, -60, ORANGE), L([-29, 60, 74.6 + lift], 'moto:bit', -90, -40),
+              L([20, 106.3, 73], 'four risers, 5 mm tall', 90, 70), L([-10, 56.3, 74.6 + lift + 14], '4 × M2 × 8', -110, -70)],
       az=-30, el=38, zoom=1.0)
 
 # Batch 3 step 2: power bank into the sleeve, then the keeper bar

@@ -1,6 +1,6 @@
 // Print-plan data for the Dusty Build Guide (was build/batches/page.js).
 export const F = '/projects/nolan/dusty-files';
-export const V3D = `${F}/dusty-components-3d-revA6.html`;
+export const V3D = `${F}/dusty-components-3d-revA7.html`;
 
 export const SETTINGS = [
   ['Printer', 'FlashForge Adventurer 5M, 0.4 mm nozzle, textured PEI plate'],
@@ -123,14 +123,14 @@ export const BATCHES = [
   },
   {
     n: 3,
-    stem: 'dusty-plate-3-deck-and-arms-revA6',
+    stem: 'dusty-plate-3-deck-and-arms-revA7',
     title: 'Deck, battery sleeve and sensor arms',
     when: 'After Batch 2',
-    time: 'About 1 hour 45 minutes',
+    time: 'About 1 hour 50 minutes',
     pieces: 'Deck, battery sleeve (standing on its end), keeper bar, right sensor arm, left sensor arm (the one with the switch pad)',
     why: 'The deck and the battery sleeve are needed for the first drive. The arms print now too, so the sensor weekend has nothing left to print.',
     need: [],
-    grams: 42.0,
+    grams: 42.7,
     learn: {
       title: 'How a power bank works',
       items: [
@@ -140,20 +140,20 @@ export const BATCHES = [
       ],
     },
     parts: [
-      { k: 'deck', name: 'Deck', looks: 'Flat shelf, 79 × 77 mm, with a square window in the middle and a raised guide along each side. The left guide stops short so the moto:bit power socket fits.', job: 'Holds the moto:bit board on top of the robot.', goes: 'Build Step 4' },
+      { k: 'deck', name: 'Deck', looks: 'Flat shelf, 79 × 77 mm, with a square window in the middle, a raised guide along each side, and four round risers 5 mm tall with a screw hole in each.', job: 'Holds the moto:bit board on top of the robot. The board screws onto the risers.', goes: 'Build Step 4' },
       { k: 'sleeve', name: 'Battery sleeve', looks: 'Long box, 106 mm, open at one end and closed at the other, with windows in the sides. It prints standing on its closed end.', job: 'The power bank slides inside. The back of the deck rests on top of it.', goes: 'Build Step 4' },
       { k: 'keeper', name: 'Keeper bar', looks: 'Thin bar, 54 mm long, with a flat head on one end.', job: 'Slides through the back wall of the sleeve so the power bank cannot slide out.', goes: 'Build Step 4' },
       { k: 'carrier_R', name: 'Right sensor arm', looks: 'L shape, 27 mm tall, with a slot in the tall side and a small frame at the foot.', job: 'Holds a cliff sensor face down just above the table.', goes: 'SENSORS cup, Build Step 6' },
       { k: 'carrier_L', name: 'Left sensor arm', looks: 'Same as the right arm, plus an extra pad with two holes on the outside.', job: 'Holds the other cliff sensor. The pad holds the whisker switch.', goes: 'SENSORS cup, Build Steps 6 and 8', tip: 'Right or left? Only the left arm has the pad with two holes.' },
     ],
     after: [
-      { t: 'Clean up the deck and slide the moto:bit between the guides to check the fit.', tip: 'It should slide in with light pressure and touch the stop at the back.', img: ['b3-s1'] },
+      { t: 'Clean up the deck, run an M2 × 8 screw into each of the four risers once and back it out, then set the moto:bit on the risers to check the fit.', tip: 'This cuts the threads now so the real screws go in easily. All four board holes should sit right over the four risers.', img: ['b3-s1'] },
       { t: 'Slide the power bank into the sleeve from the open end, USB ports facing out, all the way to the closed end. Then push the keeper bar in through the slot in the back wall until its head sits flat.', tip: 'If the bank rattles, a grown-up adds a strip of foam tape to the floor rib.', img: ['b3-s2'] },
       { t: 'Hold each sensor arm against its ear on the base and push an M2 × 8 screw through the slot.', tip: 'Just a test fit. Take them off again and put both arms in a cup labeled SENSORS.', img: ['b3-s3'] },
     ],
     gate: 'The moto:bit fits the deck and the bank fits the sleeve. That is everything for the first drive.',
     build: [
-      [4, 'Add the deck, the brain and the power', 'Two posts, battery sleeve, keeper bar, deck, power bank, 90° USB adapter, USB to barrel cable, in-line switch, Y splitter, moto:bit, micro:bit, foam tape, two zip ties, eight M2 × 8'],
+      [4, 'Add the deck, the brain and the power', 'Two posts, battery sleeve, keeper bar, deck, power bank, 90° USB adapter, USB to barrel cable, in-line switch, Y splitter, moto:bit, micro:bit, foam tape, twelve M2 × 8'],
       [5, 'Wire the motors and make it drive', 'Laptop, micro-USB cable'],
       [6, 'Mount the sensor arms (Sat Sep 26)', 'Both arms, two QTR-1A sensors, soldering, 2 × M2 × 8 and 2 × M2 × 6 with nuts, six jumper wires'],
       [7, 'Teach Dusty about edges (Sep 26 and 27)', ''],

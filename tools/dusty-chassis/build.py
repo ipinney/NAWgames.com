@@ -94,6 +94,14 @@ DECK_NOSE_Y = 37.0                          # deck extends forward under the boa
 JACK_Y = (MB_Y0 + 54.5, MB_Y0 + 65.0); JACK_OUT = 5.3
 JACK_GUIDE_END = 88.0
 TIE_Y = [(56.8, 60.2), (84.0, 88.0)]
+# MOC-007 (Sep 27 2026): the moto:bit screws to four printed risers instead of sitting on its solder bumps under zip
+# ties. Hole positions from SparkFun's board file (Micro_Bit_Moto_Bit.brd, 58.42 x 76.2 mm, 3.302 mm holes):
+# back pair 40 mm apart, 5.88 mm from the back edge; neck pair 20 mm apart, 20.32 mm from the connector edge.
+# Risers 6 mm across, 5 mm tall (2 mm clear of the 2 to 3 mm of pins and solder under the board). M2 x 8 down through
+# the board: 6.4 mm of thread in a blind 2.2 mm pilot with the usual lead-in. Zip ties no longer needed.
+MB_REAL = (58.42, 76.2)
+RISER_D, RISER_H = 6.0, 5.0
+RISERS = [(sx * 20.0, MB_Y0 + MB_REAL[1] - 5.88) for sx in (-1, 1)] + [(sx * 10.0, MB_Y0 + 20.32) for sx in (-1, 1)]
 POSTS = [(sx*36.5, 53.0) for sx in (-1, 1)]         # front posts; the sleeve carries the rear of the deck
 POST_D = 5.6; PEG_D = 4.0
 WIDE_Y0 = 47.0; FRONT_HALF = SP_X1; WIDE_HALF = 39.5
@@ -290,6 +298,12 @@ def deck():
         for (ya, yb) in TIE_Y:                                                # MOC-006: moved, see TIE_Y
             s = s - box(xa, xb, ya, yb, z0 - 1, z1 + 1)
     s = s - box(-20, 20, 72, 94, z0 - 1, z1 + 1)       # wire pass-through / weight
+    zr = z1 + RISER_H                                                          # MOC-007: moto:bit risers
+    for (x, y) in RISERS:
+        s = s + cyl(x, y, z1 - 0.01, zr, RISER_D)
+    for (x, y) in RISERS:
+        s = s - cyl(x, y, z0 + 0.6, zr + 1, PILOT)                             # blind: 0.6 mm floor left under the pilot
+        s = s - M.cylinder(LEAD_DEPTH + 0.01, PILOT/2, LEAD_D/2, 48).translate([x, y, zr - LEAD_DEPTH])
     return s
 
 def post():

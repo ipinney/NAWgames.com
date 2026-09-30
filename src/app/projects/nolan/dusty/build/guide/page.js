@@ -265,7 +265,7 @@ export default function DustyBuildGuidePage() {
           {FACTS.map((f) => (
             <span key={f} className="bg-white/5 border border-white/15 rounded-full px-3 py-1 text-xs text-white/70">{f}</span>
           ))}
-          <span className="bg-white/5 border border-white/15 rounded-full px-3 py-1 text-xs text-white/70">Rev A.6</span>
+          <span className="bg-white/5 border border-white/15 rounded-full px-3 py-1 text-xs text-white/70">Rev A.7</span>
         </div>
         <div className="mt-5 rounded-2xl overflow-hidden border border-white/10">
           <img src="/projects/nolan/dusty-files/guide/g-hero.png" alt="Dusty, finished, from the front left" className="w-full h-auto bg-[#0d1b2e]" />
@@ -383,7 +383,7 @@ export default function DustyBuildGuidePage() {
                   <td className="px-4 py-2"><a href={`#step-${st}`} className="text-naw-orange font-semibold">{st}</a></td>
                 </tr>
               ))}
-              <tr><td className="px-4 py-2 text-white font-bold">Total</td><td className="px-4 py-2" /><td className="px-4 py-2 font-bold">23</td><td className="px-4 py-2 text-white/60" colSpan={2}>18 × 8 mm, 3 × 6 mm, 2 × 10 mm, plus 6 nuts. Spares get lost.</td></tr>
+              <tr><td className="px-4 py-2 text-white font-bold">Total</td><td className="px-4 py-2" /><td className="px-4 py-2 font-bold">27</td><td className="px-4 py-2 text-white/60" colSpan={2}>22 × 8 mm, 3 × 6 mm, 2 × 10 mm, plus 6 nuts. Spares get lost.</td></tr>
             </tbody>
           </table>
         </div>
