@@ -2,11 +2,11 @@ import Link from 'next/link';
 import { Nav } from '../../ui';
 import { F, V3D, SETTINGS, BEFORE, BATCHES } from './data';
 import { WiringMap } from './Wiring';
-import { FACTS, SAFETY, TOOLS, BOUGHT, SCREWS, WEEKENDS, STEPS, FIXES, WORDS } from './steps';
+import { FACTS, SAFETY, TOOLS, BOUGHT, SCREWS, WEEKENDS, STEPS, FIXES, WORDS, CODELAB, TESTS, TEST_INDEX, SPEC_URL, MOTOBIT_REF } from './steps';
 
 const OG = 'https://nawgames.com/projects/nolan/dusty-og.png';
 const TITLE = 'Dusty: Build Guide';
-const DESC = 'Print, clean up, check and build Dusty batch by batch: every part, every screw and every step, with 3D pictures from the real design.';
+const DESC = 'Print, clean up, check, build and code Dusty batch by batch: every part, every screw, every step, and a test program for each one, written with Claude.';
 
 export const metadata = {
   title: `${TITLE} | NAW Games`,
@@ -125,13 +125,31 @@ function Code({ rows }) {
   const tint = { event: 'bg-sky-500/25 border-sky-400/50', logic: 'bg-emerald-500/20 border-emerald-400/40' };
   return (
     <div className="mt-4 bg-[#0b1526] rounded-xl border border-white/10 p-3 space-y-1.5">
-      <div className="text-white/40 text-xs font-semibold mb-1">MakeCode blocks</div>
+      <div className="text-white/40 text-xs font-semibold mb-1">The logic, in plain steps · Claude writes the real code: find each of these in it before you flash</div>
       {rows.map(([t, note, depth, kind], i) => (
         <div key={i} style={{ marginLeft: `${(depth || 0) * 1.25}rem` }}>
           <span className={`inline-block rounded-md border px-2 py-1 text-sm font-mono text-white ${tint[kind] || 'bg-fuchsia-500/20 border-fuchsia-400/40'}`}>{t}</span>
           {note && <span className="text-white/45 text-xs ml-2">{note}</span>}
         </div>
       ))}
+    </div>
+  );
+}
+
+function TestCard({ t }) {
+  return (
+    <div id={`test-${t.id}`} className="scroll-mt-4 mt-4 rounded-xl border border-fuchsia-400/40 bg-fuchsia-500/10 p-4">
+      <div className="flex items-baseline gap-2 flex-wrap">
+        <span className="rounded-md bg-fuchsia-400 text-naw-dark text-xs font-bold px-2 py-0.5">{t.id}</span>
+        <span className="text-white font-bold">Test program: {t.name}</span>
+      </div>
+      <p className="text-white/55 text-xs mt-1">Checks: {t.checks}</p>
+      <div className="mt-3 text-fuchsia-200 text-xs font-semibold">1 · Write down first</div>
+      <p className="text-white/80 text-sm mt-0.5">{t.predict}</p>
+      <div className="mt-3 text-fuchsia-200 text-xs font-semibold">2 · Ask Claude</div>
+      <p className="mt-1 bg-[#0b1526] rounded-lg border border-white/10 p-3 text-sm font-mono text-white/90 leading-relaxed">{t.prompt}</p>
+      <div className="mt-3 text-fuchsia-200 text-xs font-semibold">3 · Read it, flash it, run it. It passes when</div>
+      <p className="text-white/80 text-sm mt-0.5">{t.pass}</p>
     </div>
   );
 }
@@ -180,6 +198,8 @@ function Step({ n }) {
       </ol>
 
       {s.code && <Code rows={s.code} />}
+
+      {TESTS[n] && TESTS[n].map((t) => <TestCard key={t.id} t={t} />)}
 
       {s.tip && (
         <div className="mt-4 rounded-xl border border-naw-cyan/40 bg-naw-cyan/10 p-3 text-sm text-white/85">{s.tip}</div>
@@ -254,7 +274,7 @@ export default function DustyBuildGuidePage() {
         <nav className="mt-6 bg-naw-card rounded-2xl border border-white/10 p-4">
           <div className="text-white/45 text-xs font-semibold">Jump to</div>
           <div className="flex flex-wrap gap-2 mt-2 text-sm">
-            {[['#start', 'Start here'], ['#parts', 'Meet the parts'], ['#screws', 'Screws'], ['#wiring', 'Wiring map'], ['#settings', 'Printer settings']].map(([h2, t]) => (
+            {[['#start', 'Start here'], ['#parts', 'Meet the parts'], ['#screws', 'Screws'], ['#wiring', 'Wiring map'], ['#code', 'Code Lab'], ['#settings', 'Printer settings']].map(([h2, t]) => (
               <a key={h2} href={h2} className="bg-white/5 hover:bg-white/10 rounded-lg px-3 py-1.5 text-white/80">{t}</a>
             ))}
             {BATCHES.map((b) => (
@@ -370,6 +390,90 @@ export default function DustyBuildGuidePage() {
 
         <H2 id="wiring" kicker="Every wire">Wiring map</H2>
         <WiringMap />
+
+        <H2 id="code" kicker="Code Lab">Coding Dusty with Claude</H2>
+        <section className="mt-3 bg-naw-card rounded-2xl border border-fuchsia-400/30 p-5">
+          {CODELAB.intro.map((p, i) => <p key={i} className={`text-sm leading-relaxed ${i ? 'text-white/70 mt-2' : 'text-white'}`}>{p}</p>)}
+          <div className="mt-4 flex flex-wrap items-center gap-1.5 text-sm">
+            {CODELAB.loop.map((x, i) => (
+              <span key={x} className="flex items-center gap-1.5">
+                <span className="rounded-lg bg-fuchsia-500/15 border border-fuchsia-400/40 px-2.5 py-1 text-white"><span className="text-fuchsia-300 font-bold">{i + 1}</span> {x}</span>
+                {i < CODELAB.loop.length - 1 && <span className="text-white/30">→</span>}
+              </span>
+            ))}
+            <span className="text-white/40 text-xs ml-1">then back to 2 until it passes</span>
+          </div>
+        </section>
+
+        <section className="mt-4 bg-naw-card rounded-2xl border border-white/10 p-5">
+          <h3 className="text-white font-bold">Set up once: Claude, MakeCode and finding the micro:bit</h3>
+          <List items={CODELAB.setup} />
+        </section>
+
+        <section className="mt-4 bg-naw-card rounded-2xl border border-white/10 p-5">
+          <h3 className="text-white font-bold">The spec: Dusty’s instruction sheet for Claude</h3>
+          {CODELAB.spec.map((p, i) => <p key={i} className="text-white/70 text-sm mt-2 leading-relaxed">{p}</p>)}
+          <div className="flex flex-wrap gap-2 mt-4">
+            <Btn href={SPEC_URL} primary download>Starter spec (dusty-spec.txt)</Btn>
+            <Btn href={MOTOBIT_REF}>moto:bit extension reference</Btn>
+            <a href="#wiring" className="bg-naw-cyan/15 border border-naw-cyan/40 text-naw-cyan hover:bg-naw-cyan/25 inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-semibold">Wiring map</a>
+          </div>
+        </section>
+
+        <section className="mt-4 bg-naw-card rounded-2xl border border-white/10 p-5">
+          <h3 className="text-white font-bold">Good prompts</h3>
+          <List items={CODELAB.rules} />
+          <div className="mt-4 grid sm:grid-cols-2 gap-3">
+            <div className="rounded-xl border border-red-400/40 bg-red-500/10 p-3">
+              <div className="text-red-300 text-xs font-semibold">Too vague</div>
+              <p className="font-mono text-sm text-white mt-1">{CODELAB.bad}</p>
+              <p className="text-white/60 text-xs mt-2">{CODELAB.badWhy}</p>
+            </div>
+            <div className="rounded-xl border border-naw-green/40 bg-naw-green/10 p-3">
+              <div className="text-naw-green text-xs font-semibold">Exact</div>
+              <p className="font-mono text-sm text-white mt-1">{CODELAB.good}</p>
+            </div>
+          </div>
+        </section>
+
+        <div className="mt-4 grid md:grid-cols-2 gap-4">
+          <section className="bg-naw-card rounded-2xl border border-white/10 p-5">
+            <h3 className="text-white font-bold">Read it before you flash it</h3>
+            <List items={CODELAB.read} />
+          </section>
+          <section className="bg-naw-card rounded-2xl border border-white/10 p-5">
+            <h3 className="text-white font-bold">Design the test first</h3>
+            <p className="text-white/70 text-sm mt-2 leading-relaxed">{CODELAB.testFirst}</p>
+            <h3 className="text-white font-bold mt-4">When it goes wrong, tell Claude</h3>
+            <p className="mt-2 bg-[#0b1526] rounded-lg border border-white/10 p-3 text-sm font-mono text-white/90">{CODELAB.broken}</p>
+            <p className="text-white/55 text-xs mt-2">{CODELAB.brokenTip}</p>
+          </section>
+        </div>
+
+        <section className="mt-4 bg-naw-card rounded-2xl border border-white/10 overflow-x-auto">
+          <div className="px-5 pt-4 text-white font-bold">The test programs</div>
+          <p className="px-5 text-white/55 text-sm mt-1">Small programs, one job each, built in order. Each one is in the build step where you need it.</p>
+          <table className="w-full text-sm mt-2">
+            <thead>
+              <tr className="text-white/45 text-xs text-left">
+                <th className="px-5 py-2 font-semibold">Test</th>
+                <th className="px-4 py-2 font-semibold">Name</th>
+                <th className="px-4 py-2 font-semibold">Checks</th>
+                <th className="px-4 py-2 font-semibold">Step</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {TEST_INDEX.map(([id, name, checks, st]) => (
+                <tr key={id}>
+                  <td className="px-5 py-2"><a href={`#test-${id}`} className="text-fuchsia-300 font-bold">{id}</a></td>
+                  <td className="px-4 py-2 text-white">{name}</td>
+                  <td className="px-4 py-2 text-white/60">{checks}</td>
+                  <td className="px-4 py-2"><a href={`#step-${st}`} className="text-naw-orange font-semibold">{st}</a></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
 
         <H2 id="settings" kicker="For the grown-up at the printer">Printer settings for every batch</H2>
         <section className="mt-3 bg-naw-card rounded-2xl border border-white/10 p-5">

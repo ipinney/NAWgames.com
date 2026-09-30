@@ -99,7 +99,7 @@ export const BATCHES = [
     learn: {
       title: 'Meet the micro:bit',
       items: [
-        ['Open makecode.microbit.org and make the micro:bit show a heart when you press button A.', 'Code is a list of steps the computer follows exactly, in order.'],
+        ['Code Lab setup, then test T1 on the bare micro:bit: Claude writes it, you read it, flash it and check it.', 'Code is a list of steps the computer follows exactly, in order. Your job is saying exactly which steps, and proving they work.'],
         ['Read Steps 2 and 3 of the build guide so you know where the motors and caster go.', ''],
         ['Solder practice: a grown-up warms up the iron on a spare header pin.', 'The sensors get soldered later, so practice now while nothing is at stake.'],
       ],

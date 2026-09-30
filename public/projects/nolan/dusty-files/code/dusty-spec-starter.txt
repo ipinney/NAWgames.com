@@ -1,0 +1,65 @@
+DUSTY SPEC
+Give this file to Claude every time. Every prompt starts with: Read dusty-spec.txt.
+
+Version: 1        Last changed: ____________        By: Nolan Pinney
+
+WHAT DUSTY IS
+A palm-sized robot that sweeps crumbs off a table into a tray.
+It must NEVER drive off the edge of the table.
+This is my 4th grade invention project. I have to explain every line of the code
+to the judges, so keep the code simple and explain it so a 4th grader gets it.
+
+HARDWARE
+- Brain: BBC micro:bit v2.
+- Motor board: SparkFun moto:bit. In MakeCode, use the moto:bit extension
+  (github.com/sparkfun/pxt-moto-bit).
+- The motors only run after "turn motors ON" in on start, and with the switch
+  on the moto:bit set to RUN MOTORS.
+- Left wheel motor: moto:bit LEFT. Right wheel motor: moto:bit RIGHT.
+- Invert LEFT motor: ____ (yes or no, from test T2)
+- Invert RIGHT motor: ____ (yes or no, from test T2)
+- Left cliff sensor: Pololu QTR-1A on pin P0, analog, 0 to 1023.
+- Right cliff sensor: Pololu QTR-1A on pin P1, analog, 0 to 1023.
+  Small number = table under it. Big number = no table (edge).
+- Whisker switch: pin P2, digital. Set pull pin P2 to UP in on start.
+  0 = wheel on the table. 1 = STOP. A loose wire also reads 1, so Dusty stops.
+- Brush motor: has its own switch. The code does not control it.
+- Power: USB power bank, a steady 5 volts.
+- The cliff sensors sit 62 mm in front of the wheels. That is Dusty's head start.
+
+NUMBERS I MEASURED
+- Real speed at 40%: ______ mm per second (test T3)
+- Drifts to the: ______ (left / right / straight) (test T3)
+- Left sensor:  table ______   edge ______   (white paper, test T4)
+- Right sensor: table ______   edge ______   (white paper, test T4)
+- Black placemat: left ______  right ______   (test T4)
+- Loop runs per second: ______ (test T5)
+
+RULES THE CODE MUST FOLLOW
+1. Safety first. Every time through the forever loop, check both cliff sensors
+   and the whisker before anything else.
+2. The forever loop must run at least 25 times a second (40 ms or less).
+   While driving, nothing slow goes inside it: no show icon, no show number,
+   no show string, no scrolling, no pause longer than the turn itself.
+3. No sounds. The micro:bit plays sound out of pin P0, which scrambles the
+   left sensor.
+4. Calibration happens in on start: Dusty sits still on the table, waits 1
+   second, reads each sensor, and sets that sensor's threshold to its table
+   reading + 200. Show a check mark when ready.
+5. Edge seen (either sensor above its threshold, or whisker = 1): stop both
+   motors, drive backward 400 ms, spin a random 300 to 900 ms, then go on.
+6. Normal speed is 40, unless the program is the speed experiment.
+7. Buttons: A = random bounce. B = Spot Clean. A+B = stop.
+8. Spot Clean: 8 rows. Each row is 4400 ms forward at 40. Between rows, turn 90,
+   drive 570 ms, turn 90 the same way, alternating right and left. Cliff and
+   whisker checks keep running the whole time.
+
+HOW TO ANSWER ME
+- Write MakeCode JavaScript for the micro:bit that I paste into
+  makecode.microbit.org with the moto:bit extension added.
+- Only use things that still show as blocks when I switch to Blocks.
+- Put the test name at the top in a comment, like: // T3 Drive
+- Explain every line so a 4th grader gets it.
+- Tell me how to test it and what I should see.
+- If my request breaks one of the rules above, tell me which rule before
+  you write anything.

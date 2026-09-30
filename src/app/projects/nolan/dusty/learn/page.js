@@ -54,7 +54,7 @@ const TOPICS = [
       ['Variable', 'A named box that holds a number.'],
     ],
     visual: 'code',
-    tryit: 'At makecode.microbit.org, make the micro:bit show a heart when you press button A. That is your first if/then.',
+    tryit: 'Ask Claude for a MakeCode program that shows a heart when you press button A. Paste it into makecode.microbit.org, flip to Blocks, and find the if/then. Then flash it and check it works.',
     fact: 'The micro:bit is about 4 cm by 5 cm, smaller than a credit card.',
   },
   {

@@ -9,7 +9,7 @@ const h = (name) => `${HT}/${name}.png`;
 const dr = (name) => `${GD}/draw-${name}.svg`;
 const ph = (name) => `${GD}/photo-${name}.jpg`;
 
-export const FACTS = ['Due Mon Nov 16', '21 printed pieces', '23 M2 screws', 'A little soldering'];
+export const FACTS = ['Due Mon Nov 16', '21 printed pieces', '23 M2 screws', 'A little soldering', 'Coded with Claude', '9 test programs'];
 
 export const SAFETY = [
   ['A grown-up runs the 3D printer.', 'The nozzle is about 220°C and the bed about 60°C. Never touch either while it is printing or cooling.'],
@@ -30,7 +30,7 @@ export const TOOLS = [
   ['tool-iron', 'Soldering iron', 'Grown-up only'],
   ['tool-ruler', 'Ruler', 'Millimeters matter'],
   ['tool-scale', 'Kitchen scale', 'To weigh crumbs'],
-  ['tool-laptop', 'Laptop', 'To load the code'],
+  ['tool-laptop', 'Laptop', 'Claude and MakeCode'],
   ['tool-stopwatch', 'Stopwatch', 'A phone works'],
 ].map(([k, n, d]) => [dr(k), n, d]);
 
@@ -66,12 +66,12 @@ export const SCREWS = [
 
 // Weekend plan (no fixed dates: the order is what matters). Due Mon Nov 16.
 export const WEEKENDS = [
-  ['Now', 'Print Batch 1, check the test pieces, then Batches 2 and 3', 'Batches 1 to 3'],
-  ['Weekend 1', 'Steps 2 to 5: motors, caster, deck and power, first drive', 'Needs Batches 2 and 3'],
-  ['Weekend 2', 'Steps 6 to 8: sensor arms, edge code, whisker', 'Print Batches 4 and 5 during the week'],
+  ['Now', 'Print Batch 1, check the test pieces, then Batches 2 and 3. Code Lab setup and test T1 on the bare micro:bit while they print', 'Batches 1 to 3'],
+  ['Weekend 1', 'Steps 2 to 5: motors, caster, deck and power. Tests T1 to T3: first drive and your real speed', 'Needs Batches 2 and 3'],
+  ['Weekend 2', 'Steps 6 to 8: sensor arms and whisker. Tests T4 to T7: sensor numbers, loop timer, edge stop', 'Print Batches 4 and 5 during the week'],
   ['Weekend 3', 'Steps 9 and 10: brush, gears, tray, sweep test', 'Needs Batches 4 and 5'],
-  ['Weekend 4', 'Step 11: two cleaning patterns, then the experiment', 'Charts for the board'],
-  ['After that', 'Display board and practice explaining it', 'Due Mon Nov 16'],
+  ['Weekend 4', 'Step 11: tests T8 and T9, then the experiment', 'Charts for the board'],
+  ['After that', 'Display board, and practice explaining every wire and every line of the final program', 'Due Mon Nov 16'],
 ];
 
 export const STEPS = {
@@ -130,6 +130,7 @@ export const STEPS = {
       ['Slide the micro:bit into the connector on the front of the moto:bit, LEDs and buttons facing up.', 'It lies flat and sticks out over the brush like a little roof. The gold stripes go in. If it will not go, flip it over rather than pushing harder.', r('g4-brain')],
       ['A grown-up connects the power: the 90° adapter into the bank’s USB-A port, turned so the cable runs toward the front. Then the USB to round-plug cable, the in-line switch, and the Y splitter, with one end into the moto:bit.', 'Stick the switch to the edge of the deck with mounting tape where you can reach it. The second splitter end is for the brush motor in Step 9.'],
       ['Flip the switch ON, then tap the button on the power bank once. The micro:bit should light up.', 'Nothing? Check every plug. Then check the bank is charged: pull the keeper bar, slide the bank out and press its button to see the lights.'],
+      ['Switch off and run test T1 below. It proves the laptop can find Dusty and put code on it.', 'Do the Code Lab setup first if you have not. Flash with the cable, unplug the cable, then switch Dusty on.'],
     ],
     why: [
       ['What even is a microcontroller?', ['A laptop can do millions of different things. A microcontroller is a computer that does one job forever, very reliably, using almost no electricity. There is one in your microwave and a few dozen in a car.', 'When you load code onto the micro:bit, it stays there. Switch it on a week later and it starts your program again immediately.']],
@@ -137,37 +138,26 @@ export const STEPS = {
       ['Why a power bank', ['A power bank holds a steady 5 volts until it is empty. AA batteries start near 6 volts and fade, which would make Dusty slower as the day goes on. Speed is what the experiment measures, so a steady supply keeps the test fair (change order MOC-001).']],
       ['How to charge Dusty', ['Switch Dusty off. Plug a USB-C phone charger into the port on Dusty’s left side. The bank’s lights are hidden under the deck, so leave it about three hours, or slide it out and press the button to check. Always charge on a hard surface with a grown-up nearby.']],
     ],
-    done: 'Switch on plus one tap lights the micro:bit, the bank does not slide or rattle, and Dusty still sits flat with everything on board.',
+    done: 'Switch on plus one tap runs your T1 program with no cable attached, the bank does not slide or rattle, and Dusty still sits flat with everything on board.',
   },
   5: {
     title: 'Wire the motors and make it drive',
     time: 'About 1 hour',
-    intro: 'First code of the project. Forward, backward, spin. No sensors yet.',
-    need: ['Laptop with makecode.microbit.org', 'Micro-USB cable that moves data'],
+    intro: 'First code of the project, written with Claude and tested one wheel at a time. No sensors yet.',
+    need: ['Laptop with Chrome or Edge', 'Claude (a grown-up signs in)', 'Your dusty-spec.txt', 'Micro-USB cable that moves data', 'Masking tape and a ruler'],
     draw: [[dr('wiring'), 'Red and white from the left motor to the LEFT connector, from the right motor to the RIGHT. Write it down.']],
     sub: [
       ['Switch the power off.', ''],
       ['Find the red and white wires on each motor cable. Those two run the motor.', 'Blue and black power the turn counter. Yellow and green carry its signals. Fold those four back and tape them. Dusty does not use them yet.'],
       ['Connect the left motor’s red and white wires to the moto:bit LEFT MOTOR terminal, and the right motor’s to RIGHT MOTOR.', 'Red goes where the board says red. White goes where the board says black. A grown-up checks before you switch on.'],
       ['Slide the moto:bit switch to RUN MOTORS.', 'STOP MOTORS keeps the wheels still while you work, even with power on.'],
-      ['Open MakeCode, start a new project, and add the moto:bit extension.', 'Extensions is at the bottom of the block list. Search for moto:bit.'],
-      ['Build the test program below and download it to the micro:bit.', ''],
-      ['Hold Dusty in the air, switch on, and press A.', 'In the air, not on the table. It does not know about edges yet.'],
+      ['Run test T2 below with Dusty held in the air.', 'In the air, not on the table. It does not know about edges yet.'],
+      ['Fix any backward wheel in the spec, then run test T3 on the floor and measure your real speed.', 'Your measured speed goes in the spec. The cliff math and the experiment both use it.'],
     ],
-    code: [
-      ['on start', 'Runs once when Dusty switches on', 0, 'event'],
-      ['turn motors ON', 'The moto:bit keeps the motors off until you say so', 1],
-      ['on button A pressed', '', 0, 'event'],
-      ['set LEFT motor to FORWARD at 40', '', 1],
-      ['set RIGHT motor to FORWARD at 40', '', 1],
-      ['pause 2000 ms', 'Two seconds', 1],
-      ['set LEFT motor to FORWARD at 0', '', 1],
-      ['set RIGHT motor to FORWARD at 0', '', 1],
-    ],
-    why: [['What does 40% speed mean?', ['The board switches the power fully on and fully off hundreds of times every second. On 40% of the time, the motor acts like it is getting 40% of the power. This is called PWM, pulse width modulation. A dimmer switch works the same way.', 'At 40%, Dusty drives about 7 centimeters per second. Changing that number is the experiment.']]],
+    why: [['What does 40% speed mean?', ['The board switches the power fully on and fully off hundreds of times every second. On 40% of the time, the motor acts like it is getting 40% of the power. This is called PWM, pulse width modulation. A dimmer switch works the same way.', 'At 40%, Dusty should drive about 7 centimeters per second. T3 tells you the real number. Changing that speed is the experiment.']]],
     warn: 'On these motors black is not a motor wire. Only red and white go to the motor terminals.',
-    tip: 'A wheel spins the wrong way? Do not rewire it. Add the invert LEFT motor block (or RIGHT) in on start. Fixed in code, it can never come loose.',
-    done: 'On the floor, pressing A drives Dusty forward in a straight line for two seconds. That finishes the first weekend.',
+    tip: 'A wheel spins the wrong way? Do not rewire it. Write "invert LEFT: yes" (or RIGHT) in the spec and ask Claude to add it in on start. Fixed in code, it can never come loose.',
+    done: 'On the floor, T3 drives Dusty straight forward for two seconds, and your real speed is written in the spec. That finishes the first weekend.',
   },
   6: {
     title: 'Mount the sensor arms',
@@ -205,28 +195,33 @@ export const STEPS = {
     title: 'Teach Dusty about edges',
     time: 'About 1.5 hours',
     intro: 'The big one. By the end of this step Dusty stops itself at the edge of a real table, and you have the numbers written down to prove it.',
-    need: ['Laptop', 'Notebook', 'A low table and a cushion for the floor'],
+    need: ['Laptop and Claude', 'Your dusty-spec.txt', 'Notebook', 'White paper, a black placemat', 'A low table and a cushion for the floor'],
     sub: [
       ['Check the sensor wires: left sensor on P0, right sensor on P1.', ''],
-      ['Load a program that shows analog read P0 on the LEDs, and watch the numbers scroll.', ''],
-      ['Write down two numbers: what it reads on the table, and what it reads held over the edge.', 'They should be far apart. On white paper, maybe 200 on the table and 900 over the edge.'],
-      ['Add the calibration routine below, so Dusty works out its own threshold on whatever table it is sitting on.', ''],
-      ['Add the stop-and-turn behavior.', ''],
+      ['Run test T4 and write down the numbers.', 'On the table and held over the edge, for each sensor. Try white paper, bare wood and a black placemat. Table and edge should be far apart: maybe 200 on the table and 900 over the edge.'],
+      ['Put your numbers in the spec, then run test T5, the loop timer.', 'It tells you how often Dusty checks for the edge. The cliff math needs that number.'],
+      ['Ask Claude for test T6, the edge program. The logic below is what it has to do.', 'The rules are already in your spec. Your prompt only has to say which ones this program uses.'],
+      ['Before you flash it, switch MakeCode to Blocks and find each line of the logic below.', 'Find the thresholds, the check inside forever, and every pause. If you cannot explain a block, ask Claude about it before you run it.'],
       ['Test on a low table. Twenty approaches: ten straight on, five at an angle, five into a corner.', ''],
-      ['Write down every single run in a notebook.', 'Twenty out of twenty, or keep fixing.'],
+      ['Write down every single run in a notebook.', 'Twenty out of twenty, or keep fixing. Tell Claude exactly what happened on the runs that failed.'],
+      ['Then spring the trap in T5b.', 'It shows how code that looks fine can make Dusty notice the edge too late.'],
     ],
     code: [
-      ['on button A pressed', 'Calibration. Hold Dusty still on the table, then press A.', 0, 'event'],
-      ['set onTable to analog read pin P0', '', 1],
-      ['set threshold to onTable + 200', 'Anything much brighter than the table means no table', 1],
-      ['show icon: yes', '', 1],
-      ['forever', 'The main loop, running over and over', 0, 'event'],
-      ['if analog read P0 > threshold or analog read P1 > threshold then', '', 1, 'logic'],
-      ['set LEFT and RIGHT motors to 0', '', 2],
+      ['on start', 'Runs once. Dusty sits still on the table.', 0, 'event'],
+      ['turn motors ON', '', 1],
+      ['pause 1000 ms', 'Time to take your hand away', 1],
+      ['set leftTable to analog read P0, rightTable to analog read P1', '', 1],
+      ['set each threshold to its table reading + 200', 'Much bigger than the table means no table', 1],
+      ['show icon: yes', 'Ready', 1],
+      ['on button A pressed', 'Go', 0, 'event'],
+      ['set driving to true', '', 1],
+      ['forever', 'The main loop, at least 25 times a second', 0, 'event'],
+      ['if driving and (P0 > left threshold or P1 > right threshold) then', '', 1, 'logic'],
+      ['stop both motors', '', 2],
       ['drive backward 400 ms', '', 2],
       ['spin for pick random 300 to 900 ms', '', 2],
-      ['else', '', 1, 'logic'],
-      ['set LEFT and RIGHT motors to FORWARD at 40', '', 2],
+      ['else if driving', '', 1, 'logic'],
+      ['both motors FORWARD at 40', '', 2],
     ],
     why: [
       ['What does "analog" mean?', ['Some questions have two answers: is the button pressed, yes or no. That is digital.', 'Other questions have a whole range of answers: how much light came back? That is analog. The micro:bit turns it into a number from 0 to 1023.', 'Analog is better here, because you get to pick where the line falls. Picking that line on the actual table you are using is what calibration means.']],
@@ -250,7 +245,7 @@ export const STEPS = {
       ['Screw the switch to the pad on the left sensor arm with two M2 × 10 screws and nuts.', 'Arm pointing down, little wheel toward the front.', r('g8-whisker')],
       ['Set Dusty on the table. The wheel should rest on the table and push the arm in with a click.', 'No click? Loosen the arm slot and lower it a little.'],
       ['Switch off. Plug the wires onto the P2 column: blue (NO) on top, black (C) on the bottom. The middle pin stays empty.', 'P2 is the left column of the second SENSOR block, just right of P0 and P1. Same picture as Step 6.', ph('motobit-sensor-pins')],
-      ['In on start, add set pull pin P2 to up. In the forever loop, add: if digital read P2 = 1, stop both motors.', ''],
+      ['Run test T7 to check the switch, then ask Claude to add the whisker to your edge program.', 'T7 needs no motors. The whisker rule is already in your spec: 1 on P2 means stop.'],
       ['Test it with both infrared sensors covered by tape.', 'Only the whisker is working now. Does Dusty still stop?'],
     ],
     why: [['Why two of everything?', ['The infrared sensors can be fooled by a black placemat. The whisker cannot, because it touches instead of looking. Engineers call this redundancy: two systems that fail for different reasons.', 'When a judge asks "what if the sensor is wrong?", this is the answer.']]],
@@ -314,10 +309,9 @@ export const STEPS = {
     need: ['Charged power bank', 'Ruler taped along the table edge', 'Notebook', 'Masking tape for a 1 foot square', '5 g of crushed cereal', 'Phone for slow-motion video'],
     draw: [[dr('patterns'), 'Same robot, two different ideas. Race them and see which wins.']],
     sub: [
-      ['Put random bounce on button A and Spot Clean on button B.', ''],
-      ['Build Spot Clean from the blocks below.', 'Spot Clean sweeps a 1 foot square in front of Dusty in rows, like mowing a lawn. The cliff sensors still work the whole time.'],
+      ['Run test T8: your edge program becomes the main program, random bounce on A and Spot Clean on B.', 'Spot Clean sweeps a 1 foot square in front of Dusty in rows, like mowing a lawn. The logic below is what it has to do. The cliff sensors still work the whole time.'],
       ['Tape a 1 foot (30 cm) square on the table. Put Dusty at the bottom left corner, facing into the square, and press B.', 'Adjust the row time until Dusty just reaches the far tape, and the turn time until each turn is square.'],
-      ['Run the speed experiment at four speeds: 25, 50, 75 and 100. Twenty runs at each.', 'Cushion on the floor anyway.'],
+      ['Load test T9 and run the speed experiment at four speeds: 25, 50, 75 and 100. Twenty runs at each.', 'Touch the gold logo to change speed. Cushion on the floor anyway.'],
       ['For every run, write down how far the sensor went past the edge before Dusty stopped, in millimeters, and whether it fell.', 'A ruler along the edge makes it easy. Slow-motion video makes it exact.'],
       ['Make the first chart: speed along the bottom, stopping distance up the side.', ''],
       ['Spill race: 5 g of cereal in the square. Press B and time Spot Clean until it stops. Weigh the tray.', ''],
@@ -345,9 +339,9 @@ export const STEPS = {
 
 export const FIXES = [
   ['Nothing happens at all', 'Power', 'Switch on? Tapped the power bank button? Plugs pushed fully in? Charge the power bank.'],
-  ['micro:bit lights up, motors do nothing', 'Motors not turned on', 'Check turn motors ON is in on start, and the moto:bit switch is on RUN.'],
-  ['Drives in a curve', 'One motor slower', 'Check both wheels are fully on. Then lower the faster side by a few percent in code.'],
-  ['One wheel goes backward', 'Wires swapped', 'Use the invert motor block. No rewiring.'],
+  ['micro:bit lights up, motors do nothing', 'Motors not turned on', 'Find turn motors ON in on start (flip to Blocks), and check the moto:bit switch is on RUN.'],
+  ['Drives in a curve', 'One motor slower', 'Check both wheels are fully on. Then write the drift in the spec and ask Claude to slow the faster side by a few percent.'],
+  ['One wheel goes backward', 'Wires swapped', 'Write invert yes for that motor in the spec and ask Claude to add it. No rewiring.'],
   ['A wheel does not turn at all', 'Wrong wire', 'Only red and white go to the motor terminal. Black is a turn-counter wire on these motors.'],
   ['A motor will not sit flat on its pad', 'Old base file, or plug facing the wrong way', 'The plug must point into the square window. A base without windows is an old file: reprint Plate 2 from the current files.'],
   ['A print lifted off the bed', 'First layer did not stick', 'Clean the bed, let it heat fully, try again. A glue stick helps.'],
@@ -355,14 +349,19 @@ export const FIXES = [
   ['A screw spins and will not tighten', 'Stripped plastic thread', 'Use the next longer screw, or a grown-up adds a drop of glue in the hole and waits.'],
   ['A deck post wiggles in the base', 'Old base file', 'Post holes since Rev A.5 are 3.95 mm and snug. Reprint the base from the new files.'],
   ['A part will not fit', 'Printed a little big', 'Sand or file the edge a little. Do not force it: PLA cracks.'],
-  ['Refuses to move, sensors fine', 'Dark surface', 'It thinks it is at a cliff. Recalibrate on that table with button A.'],
+  ['Refuses to move, sensors fine', 'Dark surface', 'It thinks it is at a cliff. Recalibrate: switch Dusty off and on again, sitting still on that table.'],
+  ['Notices the edge late', 'Slow loop', 'Run T5 on your program. Anything that shows or scrolls on the LEDs inside forever slows the loop down.'],
   ['Falls off despite the sensors', 'Arm moved or too fast', 'Re-check the 3 mm height, re-tighten the arms, lower the speed.'],
   ['Gears click or skip', 'Big gear loose', 'Check the washer screw. The gear should spin freely but not wobble.'],
   ['Brush motor hums, roller does not turn', 'Too much drag', 'Bristles too long or pressing too hard. Trim the pipe cleaners. Check nothing rubs the gears.'],
   ['Motor gear slips on the shaft', 'Press fit too loose', 'A grown-up adds a tiny drop of superglue. Keep it off the other gears.'],
   ['Crumbs fly forward', 'Brush spins the wrong way', 'Switch off, swap the two wires on the brush motor tabs.'],
   ['Stops suddenly, micro:bit goes dark', 'Power bank empty or asleep', 'Tap the bank button. If nothing happens, charge it. Keep the brush on while driving so the bank stays awake.'],
-  ['micro:bit will not take the code', 'Cable', 'Many micro-USB cables only charge. Use one you know moves data.'],
+  ['micro:bit will not take the code', 'Cable', 'Many micro-USB cables only charge. Use one you know moves data. No MICROBIT drive on the laptop means the laptop cannot see it.'],
+  ['Download does nothing', 'Not paired', 'Click Download and follow the pair steps, or drag the .hex file from Downloads onto the MICROBIT drive.'],
+  ['Claude’s code shows red errors', 'Wrong tab or missing extension', 'Paste into JavaScript, not Blocks, and check the moto:bit extension is added. Paste the exact error back to Claude.'],
+  ['New version broke what worked', 'Too many changes at once', 'Go back to the last version that passed its test. Ask for one change, then test again.'],
+  ['Claude says it cannot do what you asked', 'A spec rule', 'Good. Read which rule it names. Change the request, or change the spec on purpose and write down why.'],
 ];
 
 export const WORDS = [
@@ -383,4 +382,132 @@ export const WORDS = [
   ['Calibration', 'Letting the robot measure its own surroundings instead of guessing.'],
   ['Threshold', 'The line you draw in a measurement: above means cliff, below means table.'],
   ['Redundancy', 'Two systems that fail for different reasons, so one catches what the other misses.'],
+  ['Spec', 'The written list of what a program must do and must never do. Short for specification.'],
+  ['Prompt', 'What you type to Claude. A good one is short, exact and asks for one job.'],
+  ['Test program', 'A small program that checks one thing, with a pass or fail you decide before you run it.'],
+  ['Flash', 'Copy a program onto the micro:bit so it stays there.'],
+  ['Loop time', 'How long one trip through the forever loop takes. Shorter means Dusty sees the edge sooner.'],
+  ['Bug', 'A mistake in the code. Tests find bugs. Reading code only finds some of them.'],
 ];
+
+// ---------- Code Lab: coding Dusty with Claude (replaces block coding, Sep 30 2026) ----------
+export const SPEC_URL = '/projects/nolan/dusty-files/code/dusty-spec-starter.txt';
+export const MOTOBIT_REF = 'https://github.com/sparkfun/pxt-moto-bit';
+
+export const CODELAB = {
+  intro: [
+    'You are the engineer. Claude writes the code. Your job is the part that matters: say exactly what Dusty must do, check what comes back, and prove it works with tests.',
+    'Rule for the whole project: you can explain every wire and every line. Judges will ask, "Did you write this?" Your answer: "I wrote the spec and the tests. Claude wrote the code. Ask me about any line."',
+  ],
+  loop: ['Write the spec', 'Ask Claude', 'Read the answer', 'Flash it', 'Test it', 'Tell Claude what happened'],
+  setup: [
+    ['A grown-up signs in to Claude and makes a project called Dusty Code.', 'Claude accounts are for grown-ups, so a grown-up stays next to you. You type the prompts.'],
+    ['Download the starter spec, fill in the date, and add it to the project files. Add the moto:bit extension page too.', 'Claude reads project files in every chat, so you do not paste them each time.'],
+    ['Open makecode.microbit.org in Chrome or Edge. Start a New Project named Dusty T1 Hello.', 'Name every project after its test. MakeCode keeps them, so you can always go back to one that worked.'],
+    ['Add the moto:bit extension.', 'Click Extensions at the bottom of the block list and search for moto:bit.'],
+    ['Switch the editor from Blocks to JavaScript with the switch at the top.', 'Claude writes JavaScript. Paste it in, then flip back to Blocks to see the same program as blocks.'],
+    ['Find the device: plug the micro:bit into the laptop with the data cable.', 'A drive called MICROBIT shows up in File Explorer. No drive means the cable only charges. Try another cable.'],
+    ['Click Download. The first time, MakeCode asks to pair: Next, then Pair, then pick BBC micro:bit CMSIS-DAP and click Connect.', 'After that, Download sends the code straight to the micro:bit. If pairing fails, Download saves a .hex file: drag it onto the MICROBIT drive. The yellow light on the back blinks while it copies.'],
+    ['Unplug the cable before you switch Dusty on.', 'The program stays on the micro:bit. Testing with no cable also proves Dusty works on its own.'],
+  ],
+  spec: [
+    'Claude has never seen Dusty. It does not know your left sensor is on P0, that black is not a motor wire, or that Dusty has 62 mm to stop. The spec file tells it. Every prompt starts with "Read dusty-spec.txt."',
+    'The starter has blanks for numbers only you can measure: your real speed, your sensor numbers, how fast your loop runs. Fill them in as the tests give them to you, change the version number, and swap the new file into the project.',
+    'Try it once: ask for T4 with no spec, then with the spec. Compare which pins Claude picks.',
+  ],
+  rules: [
+    ['One job per program.', 'A test program checks one thing. The big program is built from small ones that already passed.'],
+    ['Say what it must not do.', '"No motors." "No sounds." Anything you leave out, Claude fills with a guess.'],
+    ['Name the tools.', 'MakeCode JavaScript, the moto:bit extension, the pins from the spec.'],
+    ['Ask for an explanation.', 'End with "Explain every line so a 4th grader gets it."'],
+    ['Change one thing at a time.', 'Two changes and it breaks, and you will not know which one did it.'],
+  ],
+  bad: 'make dusty not fall off the table',
+  badWhy: 'Which pins? Which speed? What counts as the edge? Claude has to guess all of it, and a guess that looks right is the most dangerous kind.',
+  good: 'Read dusty-spec.txt. Write test program T4 Sensor Numbers in MakeCode JavaScript. No motors, no sounds. Button A shows the left sensor number, button B shows the right. Explain every line so a 4th grader gets it.',
+  read: [
+    ['Flip to Blocks. Does it look like what you asked for?', ''],
+    ['Find the forever loop and every pause.', 'Anything slow inside forever makes Dusty late at the edge.'],
+    ['Find the numbers.', 'Speeds, times, thresholds, pins. Do they match the spec?'],
+    ['Point at every block and say what it does.', 'Stuck on one? Ask Claude "What does this line do?" Still cannot explain it? Do not flash it.'],
+  ],
+  testFirst: 'Before you press Download, write three things in the notebook: what should happen, how you will measure it, and what counts as a pass. Then run it and write what actually happened. The tests are yours, not Claude’s. They are how you know the code is right.',
+  broken: 'I ran T6. I expected: Dusty stops at the edge. What happened: it stopped on the black placemat in the middle of the table, 3 times out of 3. The LEDs showed a check mark at the start. Here is the code I ran: (paste it). What should I check first?',
+  brokenTip: 'Say what really happened, not what you think is wrong. Then change one thing and run the same test again.',
+};
+
+// Test programs, by build step. prompt = what Nolan types. predict = write this down first. pass = the pass mark.
+export const TESTS = {
+  4: [
+    {
+      id: 'T1', name: 'Hello, Dusty', checks: 'The laptop can find the micro:bit and put code on it',
+      prompt: 'Read dusty-spec.txt. Write test program T1 Hello in MakeCode JavaScript. When Dusty switches on, scroll DUSTY once, then show a happy face. Button A shows a heart. Button B shows a check mark. No motors, no sounds. Explain every line.',
+      predict: 'What you will see at switch on, after pressing A, and after pressing B.',
+      pass: 'All three happen with the cable unplugged, running from the power bank. That proves the program lives on the micro:bit, not on the laptop.',
+    },
+  ],
+  5: [
+    {
+      id: 'T2', name: 'Which wheel is which', checks: 'Each motor is wired to the right side and spins forward',
+      prompt: 'Read dusty-spec.txt. Write test program T2 Wheels. Turn the motors on in on start. Button A: left motor forward at 40 for 1 second, then stop, and show L while it runs. Button B: the same for the right motor, showing R. Nothing else. Explain every line.',
+      predict: 'Point to the wheel you think A will spin, and which way it will turn.',
+      pass: 'A spins only the left wheel, B only the right, and both would roll Dusty forward. A wheel going backward? Put invert yes for that motor in the spec, ask Claude to add it, and run T2 again.',
+    },
+    {
+      id: 'T3', name: 'Straight line and real speed', checks: 'Dusty drives straight, and how fast it really goes',
+      prompt: 'Read dusty-spec.txt. Change T2 into test program T3 Drive. Keep the invert settings from the spec. Button A: both motors forward at 40 for exactly 2 seconds, then stop. Button B: the same, backward. Explain what you changed.',
+      predict: 'The spec guesses about 70 mm per second at 40%. So 2 seconds should go about ____ mm.',
+      pass: 'Tape a start line on the floor, press A, measure. Three runs. Average distance ÷ 2 = your real speed: write it in the spec. Drifting more than about 3 cm sideways? See Fixing it.',
+    },
+  ],
+  7: [
+    {
+      id: 'T4', name: 'Sensor numbers', checks: 'What each cliff sensor reads on the table and over the edge',
+      prompt: 'Read dusty-spec.txt. Write test program T4 Sensor Numbers. No motors, no sounds. Button A shows the left sensor number. Button B shows the right. Also send both numbers to the laptop 10 times a second with serial write value, named left and right, so MakeCode can graph them. Explain every line.',
+      predict: 'Will the number be bigger on the table or over the edge? Which surface will be hardest?',
+      pass: 'Table and edge numbers are far apart for both sensors on every surface. All of them go in the spec. With the cable in and paired, click Show console Device in MakeCode and watch the line jump as you slide Dusty off the edge by hand.',
+    },
+    {
+      id: 'T5', name: 'Loop timer', checks: 'How many times a second Dusty checks for the edge',
+      prompt: 'Read dusty-spec.txt. Write test program T5 Loop Timer. No motors. In the forever loop, read both cliff sensors and the whisker pin the way a real edge program would, and count each trip through the loop. Every second, save the count and start again from 0. Button A shows the last count. Explain every line.',
+      predict: 'How many loops per second? The spec needs at least 25.',
+      pass: '25 or more. Write the number in the spec. 25 a second means Dusty checks at least every 40 ms. At 70 mm per second that is under 3 mm of travel between checks.',
+    },
+    {
+      id: 'T5b', name: 'The trap', checks: 'That code can look right and still be dangerous',
+      prompt: 'Add a happy face to T5 that shows the whole time the loop is running.',
+      predict: 'Will the loop count change? By how much?',
+      pass: 'Watch the count drop to about 1 or 2 a second: showing a picture makes the micro:bit wait more than half a second. Do the math: 0.6 s × 70 mm per second is 42 mm before Dusty even notices the edge, most of the 62 mm head start. At full speed, about 180 mm per second, that is 108 mm: off the table. If Claude warns you about spec rule 2 instead, that is the spec doing its job. Tell it this is an experiment, then change it back afterward.',
+    },
+    {
+      id: 'T6', name: 'Edge stop', checks: 'Dusty stops and turns away at every edge',
+      prompt: 'Read dusty-spec.txt. Write test program T6 Edge Stop. Follow spec rules 1 to 7, but only button A (start driving) and A+B (stop) for now: no Spot Clean yet. Explain every line.',
+      predict: 'Which approach will be hardest: straight on, at an angle, or into a corner? Why?',
+      pass: '20 out of 20: ten straight on, five at an angle, five into a corner, every run written in the notebook.',
+    },
+  ],
+  8: [
+    {
+      id: 'T7', name: 'Whisker check', checks: 'The whisker switch reads 0 on the table and 1 at the edge',
+      prompt: 'Read dusty-spec.txt. Write test program T7 Whisker. No motors. Set pull pin P2 to up. In forever, show a check mark when P2 reads 0 and an X when it reads 1. Explain every line.',
+      predict: 'What should the LEDs show when you lift Dusty off the table? When a whisker wire comes loose?',
+      pass: 'Check mark on the table. X when you lift Dusty. X when you pull a whisker wire off: the safe way to fail. Then ask Claude to add the whisker to T6 as rule 5 says, and run the taped-sensor test below.',
+    },
+  ],
+  11: [
+    {
+      id: 'T8', name: 'Main program', checks: 'Both cleaning patterns work and the cliff checks never stop',
+      prompt: 'Read dusty-spec.txt. Turn my edge program into the main program Dusty v1: random bounce on A, Spot Clean on B exactly as spec rule 8 says, A+B stops. Keep every safety rule. Explain every line, and tell me what changed from T6.',
+      predict: 'Inside the taped square, where will Spot Clean miss? What happens if the square is near the table edge?',
+      pass: 'Spot Clean ends at the far tape with square turns, and with the square taped against the table edge, Dusty still stops at the edge. Then run T5 on this program: still 25 loops a second or more.',
+    },
+    {
+      id: 'T9', name: 'Speed picker', checks: 'You can set the four experiment speeds without changing the code',
+      prompt: 'Read dusty-spec.txt. Copy Dusty v1 into test program T9 Speed Picker, only for the experiment. Touching the logo steps the speed 25, 50, 75, 100 and back to 25, and shows the number while Dusty is stopped. Button A drives straight at that speed with the edge stop. Everything else stays the same. Explain what you changed.',
+      predict: 'Your stopping distance at each speed, before you measure any of them.',
+      pass: 'The number shown matches the speed Dusty drives, and it still stops at the edge at 25. Then run the experiment.',
+    },
+  ],
+};
+
+export const TEST_INDEX = Object.entries(TESTS).flatMap(([step, list]) => list.map((t) => [t.id, t.name, t.checks, Number(step)]));
