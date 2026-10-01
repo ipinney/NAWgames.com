@@ -21,7 +21,7 @@ const TOPICS = [
       'The first Roomba had a dirt tray you empty instead of a vacuum bag, the same idea as Dusty’s crumb tray.',
       'iRobot gave the Roomba three separate safety systems just to keep it from falling down stairs. Falling is the number one danger for a driving robot.',
     ],
-    use: 'Know box, and the Reason for Creation part of the board. A robot vacuum cannot help on a table because it would drive off the side, and that is exactly why a table robot has to be built differently.',
+    use: 'Why can a floor robot not just be put on a table? What would have to be different?',
     sources: [
       ['IEEE Spectrum Robots Guide, Roomba entry', 'https://robotsguide.com/robots/roomba/'],
       ['Smithsonian National Museum of American History, Roomba Robot Vacuum Cleaner', 'https://americanhistory.si.edu/collections/object/nmah_1448432'],
@@ -42,7 +42,7 @@ const TOPICS = [
       'These sensors work best a few millimeters from the surface. Too high up and the reading gets weak. That is why Dusty’s sensor arms slide up and down.',
       'Sunlight has infrared in it, so bright sun can mess with the reading. Testing in the same light every time is a controlled variable.',
     ],
-    use: 'How It Works, on the board and on the Design Thinking page. Say it in order: shine down, measure the bounce, no bounce means no table, stop the motors.',
+    use: 'Could you explain how a cliff sensor works to a friend without looking at this page? Try it out loud first.',
     sources: [
       ['Science Buddies, Line-Following Robot lesson plan', 'https://www.sciencebuddies.org/teacher-resources/lesson-plans/line-following-robot'],
       ['SparkFun Learn, RedBot experiment 6, IR reflectance sensors', 'https://learn.sparkfun.com/tutorials/sparkfun-inventors-kit-for-redbot/experiment-6-line-following-with-ir-sensors'],
@@ -62,7 +62,7 @@ const TOPICS = [
       'Your two fixes are the right ones: calibrate at startup on the actual surface, and add a whisker switch that does not care about color at all.',
       'When a judge asks "what if the sensor is wrong," the answer is two different sensors that fail for different reasons. That is called redundancy.',
     ],
-    use: 'Need to know box, and research question number 2. This is the strongest thing in the project, because it is a real problem you found before you built anything.',
+    use: 'What other surfaces at home might fool a sensor? How could you test that?',
     sources: [
       ['Wikipedia, Roomba, sensors section', 'https://en.wikipedia.org/wiki/Roomba'],
       ['Science Buddies, BlueBot line-following project', 'https://www.sciencebuddies.org/science-fair-projects/project-ideas/Robotics_p023/robotics/line-following-robot'],
@@ -82,7 +82,7 @@ const TOPICS = [
       'Spot Clean on button B sweeps one small square in rows, like a lawn mower, which is what you want for a spill. Racing the two on the same spill is a second experiment.',
       'Simple code that never crashes beats clever code that fails at the science fair.',
     ],
-    use: 'How will it operate, on Design Thinking page 24, and How Does It Work on the board.',
+    use: 'Why might simple driving work better than clever driving? Which pattern do you think will clean a spill faster, and why?',
     sources: [
       ['IEEE Spectrum Robots Guide, Roomba entry', 'https://robotsguide.com/robots/roomba/'],
       ['MIT Technology Review, review of the original iRobot Roomba, Oct 2002', 'https://www.technologyreview.com/2002/10/09/234680/irobot-roomba/'],
@@ -103,7 +103,7 @@ const TOPICS = [
       'A processor, the actual brain chip, which runs your blocks about as fast as you will ever need.',
       'A power plug so it runs with no computer attached.',
     ],
-    use: 'What is it made of, on Design Thinking page 24, and the labels on your sketch. You also need to be able to explain every wire.',
+    use: 'Which parts of the micro:bit will Dusty actually use, and what does each one do?',
     sources: [
       ['Micro:bit Educational Foundation, features overview', 'https://microbit.org/get-started/features/overview/'],
       ['Micro:bit developer community, hardware', 'https://tech.microbit.org/hardware/'],
@@ -123,7 +123,7 @@ const TOPICS = [
       'Wiping with a hand moves them to the floor instead of removing them.',
       'Dusty picks them up into a tray you dump in the trash, so the crumbs actually leave the house.',
     ],
-    use: '"This topic is interesting because" on the Research Question page, plus Purpose and Impact on Society on the board. To cite this one, look for a university extension service page rather than a pest company ad, because a company selling bug spray is not a neutral source.',
+    use: 'What happens to crumbs at your house after a meal? Where is a neutral source you could check this with, like a university extension page instead of a bug spray company?',
     sources: [],
   },
 ];
@@ -140,13 +140,7 @@ const WORDS = [
   ['Threshold', 'The cutoff number between table and cliff.'],
 ];
 
-const BIB = [
-  ['Features Overview', 'Micro:bit Educational Foundation', 'https://microbit.org/get-started/features/overview/'],
-  ['Line-Following Robot Lesson Plan', 'Science Buddies', 'https://www.sciencebuddies.org/teacher-resources/lesson-plans/line-following-robot'],
-  ['Roomba', 'IEEE Spectrum Robots Guide', 'https://robotsguide.com/robots/roomba/'],
-];
-
-const CHIPS = [...TOPICS.map((t) => [t.id, t.title]), ['words', 'Words to use'], ['bibliography', 'Bibliography']];
+const CHIPS = [...TOPICS.map((t) => [t.id, t.title]), ['words', 'Words to use'], ['bibliography', 'Citing a website']];
 
 export default function ResearchPage() {
   return (
@@ -154,9 +148,9 @@ export default function ResearchPage() {
       <Nav current="research" />
       <Hero
         title="RESEARCH"
-        lead="Six things worth knowing before you build a table robot, written out so you can read them and then say them in your own words."
-        sub="The sources are real and the links work. Read it, then fill in the Know and Need to know boxes."
-        badge="Research Question page due Thu Sep 17"
+        lead="Six things worth knowing before you build a table robot, with real sources to read for yourself."
+        sub="Open the sources, read them, then explain what you learned in your own words. Never copy sentences."
+        badge="Research notes"
         chips={CHIPS}
       />
 
@@ -184,7 +178,7 @@ export default function ResearchPage() {
             </Card>
             <div className="grid md:grid-cols-2 gap-4">
               <Box title={t.factsTitle} items={t.facts} />
-              <Box tone="warn" title="Where this goes in the packet"><p>{t.use}</p></Box>
+              <Box tone="warn" title="Think about it"><p>{t.use}</p></Box>
             </div>
           </Section>
         ))}
@@ -194,27 +188,23 @@ export default function ResearchPage() {
           <Btn href={`${BASE}/learn#words`}>All the words from Learn the science</Btn>
         </Section>
 
-        <Section id="bibliography" n={TOPICS.length + 2} title="Three websites, already filled in" big="Copy them in cursive onto the Research Resources page.">
-          <div className="grid md:grid-cols-3 gap-3">
-            {BIB.map(([title, site, url]) => (
-              <Card key={url}>
-                <dl className="text-sm space-y-1.5">
-                  {[
-                    ['Author', '(none listed)'],
-                    ['Title of article', title],
-                    ['Publication date', '(none listed, write the date you read it)'],
-                    ['Website', site],
-                    ['URL', url],
-                  ].map(([k, v]) => (
-                    <div key={k}>
-                      <dt className="text-white/40 text-xs">{k}</dt>
-                      <dd className="text-white break-all">{v}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </Card>
-            ))}
-          </div>
+        <Section id="bibliography" n={TOPICS.length + 2} title="How to cite a website" big="Pick three websites you actually read, and find each field yourself.">
+          <Card>
+            <dl className="text-sm space-y-2">
+              {[
+                ['Author', 'Look near the top or bottom of the page. If no person is named, leave it blank.'],
+                ['Title of article', 'The big heading of the page you read, not the whole website.'],
+                ['Publication date', 'Often near the title or at the bottom. If there is none, write the date you read it.'],
+                ['Website', 'The name of the site or the group that runs it.'],
+                ['URL', 'The full address from the top of the browser, every character.'],
+              ].map(([k, v]) => (
+                <div key={k}>
+                  <dt className="text-naw-cyan font-semibold">{k}</dt>
+                  <dd className="text-white/70">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </Card>
           <Box
             tone="pick"
             title="The two books are still on you"
@@ -226,7 +216,7 @@ export default function ResearchPage() {
             ]}
           />
           <Box tone="warn" title="Now go write it">
-            <p>Reading research does not count until it is on paper. The Research Question page is due Thursday Sep 17, in cursive.</p>
+            <p>Reading research does not count until it is on paper, in your own words, in cursive.</p>
           </Box>
           <div className="flex flex-wrap gap-2">
             <Btn href={`${BASE}/packet#research-question`} primary>Packet guide, Part 1</Btn>

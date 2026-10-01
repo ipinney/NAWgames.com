@@ -2,12 +2,21 @@ import { BASE, BOARD, meta, Nav, Hero, Section, Card, Box, Tag, Btn } from '../u
 
 export const metadata = meta(
   'Dusty: Invention Convention packet guide',
-  'Every page of the Invention Convention packet in order, with the Dusty facts to answer it, the trifold layout, and the 100 point rubric.',
+  'Every page of the Invention Convention packet in order, with questions to think through for each one, the trifold layout, and the 100 point rubric.',
   `${BASE}/packet`
 );
 
+// Each part's help turns into thinking questions from midnight Central on its due date.
+export const dynamic = 'force-dynamic';
+const DUE = { impact: '2026-10-08T00:00:00-05:00', catholic: '2026-10-15T00:00:00-05:00' };
+const past = (iso) => Date.now() >= new Date(iso).getTime();
+
+function Think({ title = 'Think about it', tone = 'facts', items }) {
+  return <Box tone={tone} title={title} items={items} />;
+}
+
 const CHIPS = [
-  ['rules', 'The four rules'],
+  ['rules', 'The rules'],
   ['due-dates', 'Due dates'],
   ['research-question', 'Research Question'],
   ['design-plan', 'Design plan p. 23'],
@@ -20,6 +29,7 @@ const CHIPS = [
 ];
 
 const RULES = [
+  ['Your words, your thinking', 'This guide asks questions. It does not give answers. Think, talk it over, then write what you figured out in your own words. Never copy sentences from a website, a book, or anyone else.'],
   ['Cursive, by hand', 'Every single thing written in the packet must be handwritten and in cursive. No typing, no printing. Easy to forget and easy to lose points on.'],
   ['Five separate grades', 'Each part is a science classwork grade on its own due date. A late part is a zero on that grade, not just a late project.'],
   ['The board can be typed', 'Board text may be typed and printed, and titles may be typed or stickers. Only the sketch has to be hand drawn.'],
@@ -44,12 +54,6 @@ function Sheet({ tag, title, ask, children }) {
     </Card>
   );
 }
-
-const QUESTIONS = [
-  ['How fast can a robot drive and still stop before the edge of a table?', 'The main experiment. Measured in millimeters and in falls out of 20 runs.'],
-  ['How does the color of a table surface change how well an infrared cliff sensor works?', 'White paper, bare wood, black placemat. Same robot, three surfaces.'],
-  ['Which sweeper design collects the most crumbs instead of pushing them off the table?', 'Measured by weighing the tray after a set number of passes.'],
-];
 
 const SAINTS = [
   ['Option 1: Saint Zita', 'A housekeeper who did ordinary cleaning work her whole life with love and care instead of treating it as beneath her. Patron saint of housekeepers and domestic workers. Dusty does the smallest, least glamorous cleaning job there is. The connection: small work done well still matters.'],
@@ -102,14 +106,14 @@ export default function PacketPage() {
       <Nav current="packet" />
       <Hero
         title="THE PACKET"
-        lead="Everything the Invention Convention packet asks for, in order, with the Dusty facts you need to answer it."
-        sub="You still write it, in cursive. This just means you never stare at a blank line."
+        lead="Everything the Invention Convention packet asks for, in order, with questions to get you thinking about each one."
+        sub="The answers are yours. Think it through, then write it in your own words, in cursive."
         badge="Showcase Mon Nov 16 · 2:15 to 3:00 · Parish Hall"
         chips={CHIPS}
       />
 
       <div className="max-w-4xl mx-auto px-4 pb-20">
-        <Section id="rules" n={1} title="The four rules" big="Read this first.">
+        <Section id="rules" n={1} title="The rules" big="Read this first.">
           <Box tone="tip" title="Driving question for the whole project">
             <p className="text-white font-semibold">How can a real-world problem be changed by an invention you create?</p>
           </Box>
@@ -148,120 +152,153 @@ export default function PacketPage() {
             <Btn href={`${BASE}/research`} primary>Read the research notes first</Btn>
           </div>
           <Sheet tag="Topic" title="Topic and why it is interesting" ask={'Two blank lines under "This topic is interesting because."'}>
-            <Box title="Topic to write">
-              <p>Robots that clean, and how a robot knows where the edge of a table is.</p>
-            </Box>
-            <Box tone="tip" title="For the two lines, use your own reason">
-              <p>Something true, in your own words: you eat at the table and at the desk, crumbs get wiped onto the floor, robot vacuums only work on floors, and you wanted to find out how a robot can see a drop-off when it has no eyes.</p>
-            </Box>
-          </Sheet>
-          <Sheet tag="Know / Need to know" title="The two boxes" ask="Fill both. Do not leave Need to know short. It shows you are actually researching.">
-            <Box
-              title="Know (things you can already say)"
+            <Think
               items={[
-                'Crumbs on a table get pushed to the floor when you wipe with your hand.',
-                'Robot vacuums exist but they only work on floors.',
-                'Robots can be programmed with a micro:bit using code blocks.',
-                'Infrared light bounces off surfaces and sensors can measure the bounce.',
-                'Motors turn wheels, and turning one wheel faster than the other steers.',
+                'What were you doing the first time you thought "somebody should invent something for this"?',
+                'What happens to crumbs at your house right now, and where do they end up?',
+                'What do you want to find out that you do not know yet?',
               ]}
             />
-            <Box
-              tone="tip"
-              title="Need to know (real open questions)"
+          </Sheet>
+          <Sheet tag="Know / Need to know" title="The two boxes" ask="Fill both. A long Need to know box shows you are actually researching.">
+            <Think
+              title="Know: what could you explain to a friend right now?"
               items={[
-                'How far ahead of the wheels does a sensor have to sit to stop in time.',
-                'Whether a dark tablecloth tricks an infrared sensor into thinking it is a cliff.',
-                'How fast is too fast to stop safely.',
-                'What kind of brush picks crumbs up instead of shoving them off the side.',
-                'How long one charge of a power bank can run two motors and a brush.',
+                'What do you already know about how robots move and steer?',
+                'What do you know about light, and what happens when it hits something?',
+                'What do you know about robot cleaners that already exist?',
+              ]}
+            />
+            <Think
+              tone="tip"
+              title="Need to know: what would you have to find out before it works?"
+              items={[
+                'How does a robot notice something it cannot see with eyes?',
+                'What could trick a sensor into being wrong?',
+                'What happens if the robot goes faster? What happens if it goes slower?',
+                'How will you know if it really picked the crumbs up?',
               ]}
             />
           </Sheet>
           <Sheet tag="Three questions" title="Write 3 strong research questions" ask="Not yes or no. Good ones start with How, What, or Which and have an answer you could measure.">
-            <ol className="space-y-2">
-              {QUESTIONS.map(([q, s], i) => (
-                <li key={q} className="flex gap-3 rounded-xl bg-white/5 p-3">
-                  <span className="flex-none w-6 h-6 rounded-md bg-naw-orange text-naw-dark text-xs font-bold flex items-center justify-center">{i + 1}</span>
-                  <span>
-                    <span className="block text-white text-sm font-semibold">{q}</span>
-                    <span className="block text-white/50 text-xs mt-0.5">{s}</span>
-                  </span>
-                </li>
-              ))}
-            </ol>
-            <Box tone="tip" title="Why these three work">
-              <p>Each one has a number at the end of it. A question you can answer with a number is a question a judge can see you actually tested.</p>
+            <Box tone="tip" title="How to turn a yes or no question into a strong one">
+              <p>Weak: &quot;Do plants need light?&quot; The answer is just yes.</p>
+              <p>Strong: &quot;How does the number of hours of light change how tall a bean plant grows?&quot; Now there is something to change, something to measure, and a number at the end.</p>
             </Box>
+            <Think
+              title="Ask yourself for each of your three"
+              items={[
+                'What would I change in the test?',
+                'What would I measure, and with what tool?',
+                'Could the answer be a number?',
+              ]}
+            />
           </Sheet>
         </Section>
 
         <Section id="design-plan" n={4} title="Design Thinking Plan, page 23" big="Part 2 · due Thu Oct 1">
           <Sheet tag="Question 1" title="What will you invent and what is it called?">
-            <Box><p>My invention is a small robot that drives around on a table, sweeps crumbs into a tray, and stops itself at the edge instead of falling off. I call it Dusty.</p></Box>
+            <Think
+              items={[
+                'If you had one sentence to tell a friend what it does, what would you say?',
+                'Where does it work, and what does it do there?',
+                'Why did you pick its name?',
+              ]}
+            />
           </Sheet>
           <Sheet tag="Box" title="How will you learn more about this topic?">
-            <Box
+            <Think
               items={[
-                'Books from the library about robots and about the micro:bit.',
-                'The micro:bit website and the guides from the companies that make the sensors.',
-                'Building it and testing it, which is the real answer. Twenty runs at four different speeds.',
-                'Asking my dad when a part does not work the way the guide says.',
+                'Where have you actually gotten information so far? Books, websites, people?',
+                'Which one taught you the most?',
+                'What can building and testing tell you that a book cannot?',
               ]}
             />
           </Sheet>
           <Sheet tag="Question 2" title="What does it do and what problem does it solve?">
-            <Box><p>I hope to solve the problem of crumbs on tables and desks. Right now people wipe crumbs onto the floor with their hand, which moves the mess instead of cleaning it, and it brings ants. A robot vacuum cannot help because it would drive off the side of the table. Dusty sweeps the crumbs into a tray you can empty, and it stops at the edge.</p></Box>
+            <Think
+              items={[
+                'What is the problem, in your own words?',
+                'What do people do about it now, and what goes wrong with that?',
+                'Why can’t a product that already exists fix it?',
+              ]}
+            />
           </Sheet>
           <Sheet tag="Question 3" title="How does it make life better or easier?">
-            <Box
+            <Think
               items={[
-                'You push one button instead of getting up for a towel and a dustpan.',
-                'Crumbs end up in a tray in the trash instead of on the floor.',
-                'Fewer crumbs on the floor means fewer ants and less sweeping later.',
-                'It cleans while you do something else, so nobody has to stop what they are doing.',
+                'Picture cleaning the table without your invention, then with it. Which steps disappear?',
+                'Where do the crumbs end up each way?',
+                'Who gets time back?',
               ]}
             />
           </Sheet>
           <Sheet tag="Question 4" title="Who would use this product?">
-            <Box><p>Families with little kids, people who eat lunch at a desk, gamers who snack at their setup, teachers with craft tables, older people who have trouble reaching across a table, and restaurants or coffee shops cleaning tables between customers.</p></Box>
+            <Think
+              items={[
+                'Think of three different places that have tables. Who uses each one?',
+                'Who has a hard time reaching across a table or cleaning one?',
+                'Who eats in the same place they work or play?',
+              ]}
+            />
           </Sheet>
           <Sheet tag="Question 5" title="Three describing words">
-            <Box tone="pick" title="Pick three you actually like">
-              <p>Automatic, safe, tiny, smart, helpful, quiet, clever, hardworking. &quot;Safe&quot; is a strong one because stopping at the edge is the whole point of the design.</p>
-            </Box>
+            <Think
+              items={[
+                'What three words would you want a judge to remember about it?',
+                'For each word, which part of your design proves it?',
+              ]}
+            />
           </Sheet>
         </Section>
 
         <Section id="design-plan-24" n={5} title="Design Thinking Plan, page 24" big="Part 2 · due Thu Oct 1">
-          <Sheet tag="Drawing" title="Drawing of the invention with detailed labels" ask="Labels are worth as much as the drawing. Draw it from the side so the sensor arms and the brush both show.">
-            <Box
-              title="Labels to include"
+          <Sheet tag="Drawing" title="Drawing of the invention with detailed labels" ask="Labels are worth as much as the drawing.">
+            <Think
               items={[
-                'micro:bit brain with the 25 LED screen',
-                'Two drive wheels and the motors',
-                'Ball caster at the back',
-                'Two infrared cliff sensors on the arms, 62 mm in front of the wheels',
-                'Whisker switch, the backup cliff detector',
-                'Pipe-cleaner brush roller at the front, turned by a small motor through gears',
-                'Crumb tray you can slide out',
-                'USB-C power bank in its own sleeve, and the on/off switch',
+                'Which side view shows the most parts at once?',
+                'Which parts sense? Which parts move? Which parts clean? Which part gives power?',
+                'Can you point to every part on the real robot and say what it does? Label those.',
               ]}
             />
-            <Btn href="/projects/nolan/dusty-files/dusty-components-3d-revA7.html" newTab>3D model to draw from</Btn>
+            <Btn href="/projects/nolan/dusty-files/dusty-components-3d-revA7.html" newTab>3D model to look at while you draw</Btn>
           </Sheet>
           <Sheet tag="Box" title="What is the size and weight?">
-            <Box><p>About 4 and 3/4 inches wide and 5 inches long (121 by 126 mm), and 3 inches tall, smaller than a sandwich. Under 400 grams, about the weight of a full can of soda.</p></Box>
+            <Think
+              items={[
+                'Measure it yourself with a ruler. How wide, how long, how tall?',
+                'Weigh it on the kitchen scale.',
+                'What everyday thing is about the same size, or the same weight?',
+              ]}
+            />
           </Sheet>
           <Sheet tag="Box" title="What is it made of?">
-            <Box><p>3D printed PLA plastic body (PLA is made from corn or sugarcane), small metal screws, plastic wheels with rubber tires, a ball caster, a micro:bit circuit board, two small metal gearmotors, two infrared sensor boards, a metal whisker switch, a pipe-cleaner brush, printed gears, a printed tray, and a rechargeable USB-C power bank.</p></Box>
+            <Think
+              items={[
+                'Go part by part from the bottom up. What is each one made of?',
+                'Which parts did you print, and which parts did you buy?',
+                'What is PLA plastic made from? Look it up.',
+              ]}
+            />
           </Sheet>
           <Sheet tag="Box" title="Cost per unit">
-            <Box><p>About $125 to build this first one from US stores, or about $78 buying the cheaper versions of the same parts. A factory building thousands at a time would pay much less per robot, because the electronics get far cheaper in big batches.</p></Box>
-            <Box tone="tip"><p>Saying both numbers, the real one and the factory one, shows you know a prototype costs more than a product.</p></Box>
+            <Think
+              items={[
+                'Look at the parts list. About how much did the parts for this one cost?',
+                'Would a factory making thousands pay more or less for each one? Why?',
+              ]}
+            />
+            <Btn href="/projects/nolan/dusty-parts-list.pdf" newTab>Parts list</Btn>
           </Sheet>
           <Sheet tag="Box" title="How will it operate?">
-            <Box><p>Flip the switch on. Press button A and it drives in straight lines and turns a random direction whenever it reaches an edge. Press button B and it does a Spot Clean: it sweeps a 1 foot square right in front of it in neat rows, like mowing a lawn. The brush spins the whole time and flicks crumbs into the tray. The infrared sensors look down at the table 25 times a second. When the light stops bouncing back, the table is gone, so the micro:bit stops the motors, backs up, and turns. Slide the tray out and dump it in the trash.</p></Box>
+            <Think
+              items={[
+                'Explain it like recipe steps. What do you do first to turn it on?',
+                'What does each button do?',
+                'What is the robot checking while it drives, and what does it do at the edge?',
+                'How do you get the crumbs out at the end?',
+              ]}
+            />
           </Sheet>
         </Section>
 
@@ -269,30 +306,64 @@ export default function PacketPage() {
           <Card>
             <p className="text-white/70 text-sm">Eight lines. This is a &quot;what if everyone had one&quot; question, not a &quot;what does mine do&quot; question. Go wider than your own kitchen table.</p>
           </Card>
-          <Box
-            title="Ideas worth using"
-            items={[
-              'Food on the floor brings ants and roaches. Less food on the floor means less bug spray in houses and restaurants.',
-              'People who use a wheelchair or have trouble bending and reaching cannot clean the far side of a table. A robot can get there.',
-              'Restaurants and school cafeterias clean hundreds of tables a day. Saving a minute each time adds up to hours.',
-              'It shows that robots are useful for small boring jobs, not just big factory jobs.',
-              'An honest downside: it costs money, and its lithium battery has to be recycled properly when it wears out. Naming a downside makes the rest of the answer more believable.',
-            ]}
-          />
+          {past(DUE.impact) ? (
+            <Think
+              items={[
+                'If every house, restaurant and school cafeteria had one, what would change?',
+                'What happens to bugs when there is less food on the floor?',
+                'Who has trouble cleaning a table themselves, and how would this help them?',
+                'Is there a downside? What would someone who does not like it say?',
+              ]}
+            />
+          ) : (
+            <Box
+              title="Ideas worth using"
+              items={[
+                'Food on the floor brings ants and roaches. Less food on the floor means less bug spray in houses and restaurants.',
+                'People who use a wheelchair or have trouble bending and reaching cannot clean the far side of a table. A robot can get there.',
+                'Restaurants and school cafeterias clean hundreds of tables a day. Saving a minute each time adds up to hours.',
+                'It shows that robots are useful for small boring jobs, not just big factory jobs.',
+                'An honest downside: it costs money, and its lithium battery has to be recycled properly when it wears out. Naming a downside makes the rest of the answer more believable.',
+              ]}
+            />
+          )}
         </Section>
 
         <Section id="catholic" n={7} title="Catholic Connection" big="Part 4 · due Thu Oct 15">
           <Card>
             <p className="text-white/70 text-sm">Either a saint your invention relates to and why, or how your invention is a spiritual or corporal work of mercy. The rubric wants a strong connection <b className="text-white">with an explanation</b>, not just a name.</p>
           </Card>
-          <div className="grid md:grid-cols-3 gap-3">
-            {SAINTS.map(([t, d]) => (
-              <Box key={t} tone="pick" title={t}><p>{d}</p></Box>
-            ))}
-          </div>
-          <Box tone="tip" title="Or go the works of mercy route">
-            <p>Feeding the hungry is a corporal work of mercy. The table is where a family gets fed. Keeping it clean is a small part of serving the people who eat there. Serving others without being asked and without getting credit is the idea to write about.</p>
-          </Box>
+          {past(DUE.catholic) ? (
+            <>
+              <Think
+                title="If you pick a saint"
+                items={[
+                  'Which saints are known for serving, cooking, cleaning, or using technology to help people?',
+                  'Read about two of them. Which one’s life connects to what your invention does?',
+                  'What is the connection, in one or two sentences of your own?',
+                ]}
+              />
+              <Think
+                tone="tip"
+                title="If you pick a work of mercy"
+                items={[
+                  'Which corporal or spiritual work of mercy fits your invention best?',
+                  'How does your invention help someone, even in a small way?',
+                ]}
+              />
+            </>
+          ) : (
+            <>
+              <div className="grid md:grid-cols-3 gap-3">
+                {SAINTS.map(([t, d]) => (
+                  <Box key={t} tone="pick" title={t}><p>{d}</p></Box>
+                ))}
+              </div>
+              <Box tone="tip" title="Or go the works of mercy route">
+                <p>Feeding the hungry is a corporal work of mercy. The table is where a family gets fed. Keeping it clean is a small part of serving the people who eat there. Serving others without being asked and without getting credit is the idea to write about.</p>
+              </Box>
+            </>
+          )}
         </Section>
 
         <Section id="resources" n={8} title="Research Resources" big="Due with the packet Mon Nov 16 · 10 points">
@@ -306,9 +377,9 @@ export default function PacketPage() {
           </Sheet>
           <Sheet tag="Websites × 3" title="What each website slot needs" ask="Author if there is one, article title, publication date, website name, and the full URL.">
             <Box tone="tip">
-              <p>Three are already written out on the research page, ready to copy. If a page has no author, leave it blank. If there is no publication date, write the date you read it.</p>
+              <p>Use three websites you actually read. Find each field on the page yourself. If a page has no author, leave it blank. If there is no publication date, write the date you read it.</p>
             </Box>
-            <Btn href={`${BASE}/research#bibliography`}>Bibliography entries to copy</Btn>
+            <Btn href={`${BASE}/research#bibliography`}>How to cite a website</Btn>
           </Sheet>
         </Section>
 
