@@ -14,6 +14,7 @@
 //   caption - Nolan's note. What it is, or what happened. Can be empty.
 //   alt     - description for screen readers and when the image fails to load
 //   tall    - true for a portrait photo (phone held upright)
+//   video   - optional .mp4 in dusty-media/; then `file` is its still poster frame
 
 export const PHASES = [
   {
@@ -92,6 +93,34 @@ export const PHASES = [
 ];
 
 export const PHOTOS = [
+  {
+    file: '2026-10-04-spot-clean-run.jpg',
+    video: '2026-10-04-spot-clean-run.mp4',
+    phase: 'drive',
+    date: '2026-10-04',
+    title: 'Driving on its own (video)',
+    caption: 'Dusty on its own power bank with no cables, running the Spot Clean pattern: drive a row, turn, step over, turn back. Top speed is about 40 mm a second, the turns are tuned to 1.8 seconds for 90 degrees, and the starboard wheel runs at 97% so Dusty drives straight. No edge sensors yet, so this run was watched the whole time.',
+    alt: 'Short video of the black 3D printed robot driving and turning on a white marble counter next to a taped sheet of test paper, its micro:bit lights on',
+    tall: false,
+  },
+  {
+    file: '2026-10-04-paper-test-sheet.jpg',
+    phase: 'drive',
+    date: '2026-10-04',
+    title: 'The test sheet',
+    caption: 'Speed and straight-line tests on one taped sheet of paper. The start is where the lines cross. Each run is marked with how far it went and how far it drifted: 47 mm in 5 seconds at 40% power, 124 mm and 5 mm drift at 70%.',
+    alt: 'The robot sitting on a taped sheet of white paper with hand-drawn x and y axes, tick marks in centimeters, and pencil notes reading Test 1 47mm and 124mm, -5mm',
+    tall: false,
+  },
+  {
+    file: '2026-10-04-flashing-from-laptop.jpg',
+    phase: 'drive',
+    date: '2026-10-04',
+    title: 'Loading a program',
+    caption: 'The micro:bit plugged into the laptop with a USB cable. It shows up as a drive called MICROBIT, and a new program is copied onto it as a .hex file. For driving tests the cable comes out and Dusty runs on the power bank.',
+    alt: 'A laptop on a kitchen counter with a USB cable running to the robot, the micro:bit showing a small yellow light on its back',
+    tall: false,
+  },
   {
     file: '2026-09-27-batch3-plate.jpg',
     phase: 'print',

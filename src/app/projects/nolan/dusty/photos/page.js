@@ -30,14 +30,27 @@ const HOWTO = [
 function Photo({ p }) {
   return (
     <figure className="bg-naw-card rounded-2xl border border-white/10 overflow-hidden">
-      <a href={`${MEDIA}/${p.file}`} target="_blank" rel="noopener noreferrer">
-        <img
-          src={`${MEDIA}/${p.file}`}
-          alt={p.alt || p.title}
-          loading="lazy"
-          className={`w-full ${p.tall ? 'h-80' : 'h-56'} object-cover bg-[#0d1b2e] hover:opacity-90 transition-opacity`}
+      {p.video ? (
+        <video
+          src={`${MEDIA}/${p.video}`}
+          poster={`${MEDIA}/${p.file}`}
+          controls
+          playsInline
+          muted
+          preload="none"
+          aria-label={p.alt || p.title}
+          className={`w-full ${p.tall ? 'h-80' : 'h-56'} object-cover bg-[#0d1b2e]`}
         />
-      </a>
+      ) : (
+        <a href={`${MEDIA}/${p.file}`} target="_blank" rel="noopener noreferrer">
+          <img
+            src={`${MEDIA}/${p.file}`}
+            alt={p.alt || p.title}
+            loading="lazy"
+            className={`w-full ${p.tall ? 'h-80' : 'h-56'} object-cover bg-[#0d1b2e] hover:opacity-90 transition-opacity`}
+          />
+        </a>
+      )}
       <figcaption className="p-4">
         <div className="flex items-baseline justify-between gap-3">
           <span className="text-white font-bold text-sm">{p.title}</span>
@@ -88,7 +101,7 @@ export default function PhotosPage() {
               {shots.length ? (
                 <div className="grid sm:grid-cols-2 gap-4">
                   {shots.map((p) => (
-                    <Photo key={p.file} p={p} />
+                    <Photo key={p.video || p.file} p={p} />
                   ))}
                 </div>
               ) : (
