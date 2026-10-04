@@ -46,6 +46,8 @@ const TOUCHED = ['3D model and all 19 print files', 'Parts list', 'Build guide s
 
 // Newest first. Add a line every time something about the plan changes.
 const LOG = [
+  ['Oct 4', 'Decision', 'Sides are called port and starboard from now on. Port is Dusty\u2019s own left and starboard its own right, as if you were riding on Dusty facing the way it drives. That never changes when you turn Dusty around or look at it from the front. The moto:bit LEFT terminal drives the port wheel and RIGHT drives the starboard wheel. Test T2 now shows P and S.'],
+  ['Oct 4', 'Fix', 'Test T2 Wheels: the micro:bit showed L and R but neither wheel turned. Cause: the black wire from each motor was in the moto:bit terminal instead of the white one. On these motors red and white run the motor; black is ground for the little encoder board, so the motor never got a full circuit. Fixed by putting red and white in the terminals and taping back black, blue, yellow and green. Both wheels turn. The test program also now waits half a second before turning the motors on and turns them on again at every button press.'],
   ['Sep 30', 'Change', 'MOC-008: Dusty is coded with Claude instead of hand-built MakeCode blocks. Nolan writes the spec file and the tests, Claude writes the code, Nolan reads every line in the Blocks view before flashing. Code Lab added to the Build Guide with test programs T1 to T9 in steps 4, 5, 7, 8 and 11. Calibration moves from button A to switch-on. R6 becomes: explain every wire and every line. Plan and code only, no parts or print files.'],
   ['Sep 30', 'Change', 'MOC-007 published: the moto:bit screws onto four printed risers on the deck instead of zip ties. Only the deck changed: the deck file and Plate 3 are revA7, every other file keeps its revision. Deck-only print file added. Build Guide step 4, the Batch 3 check, the screw map (23 to 27) and the pictures updated. Approved Sep 27; the site update waited until the server connection was back.'],
   ['Sep 27', 'Plan', 'Size limit (under 5 by 5 inches) is measured on the robot itself, not the power cord. The straight power plug on the moto:bit sticks out about 20 mm past the left wheel, which is fine under this rule. Dusty measures 121 by 126 mm.'],
@@ -149,6 +151,9 @@ const MOC3 = [
 const MOC3_TOUCHED = ['3D model (Rev A.2)', '13 of 17 part files', 'All 5 plates re-sliced', '3D viewers', 'Print plan pictures', 'Source zip'];
 
 const LESSONS = [
+  ['Check every wire against the color chart', 'On most things black means ground, so it looked like a motor wire. On these motors it is not. The Build Guide had the right colors; we went by habit instead of the chart. Read the chart for every wire before you power up.'],
+  ['Split the problem in half', 'The L and R showed on the screen, so the program was running and the problem had to be power or wires. One clue cut the search in half before touching any code.'],
+  ['Name sides so they never flip', 'Left and right swap when you look at Dusty from the front. Port and starboard belong to the robot itself, so everyone means the same wheel no matter where they stand.'],
   ['Use the holes the part came with', 'The moto:bit has four mounting holes. Screwing it to risers under those holes holds it better than zip ties, and the maker’s drawing gives exact positions.'],
   ['A change is not done until every page matches', 'MOC-007 was approved, but the Build Guide still said zip ties for three days. Update the guide, the files and the log in the same sitting.'],
   ['Write the rules down before you ask for code', 'Claude only knows what you tell it. The spec file is where the pins, the numbers you measured and the safety rules live, so every program starts from the same facts.'],
