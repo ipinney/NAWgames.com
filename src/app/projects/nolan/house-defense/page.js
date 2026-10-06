@@ -21,24 +21,31 @@ const GATES = [
 const RULES = [
   ['R1 Sting, never injure', 'A sting teaches them our yard is a bad place, the way wildlife officers chase off coyotes with paintballs. No poison, glue, shock, spikes or anything that breaks skin. Poison also hurts pets and the animals that eat a poisoned rat.'],
   ['R2 Low voltage outside', 'Water and wall power do not mix. Batteries or USB power only, nothing plugged into the wall near the yard.'],
-  ['R3 It can never aim at a person', 'Animals are on the ground; faces are not. The turret physically cannot tilt above ground level, cannot point over the fence, and only fires when it is sure the target is a raccoon, opossum or rat. A key switch turns it off.'],
+  ['R3 It can never aim at a person', 'Animals are on the ground; faces are not. Mounted high and aiming down, with a software tilt limit checked against the home switch every time it starts. It only fires at a raccoon, opossum or rat, never with a person, cat or dog in the picture, and only when armed.'],
   ['R4 Follow the wildlife rules', 'Texas has rules about trapping and moving wild animals. A grown-up checks them before anything that catches an animal.'],
   ['R5 Explain every wire and line', 'Same as Dusty: if you cannot explain it, it is not done.'],
-  ['R7 Hits at 20 to 25 feet', 'That is the distance from where the turret sits to where they come over. It must hit a raccoon-sized target there, tested on a cardboard target first.'],
-  ['R8 Earn automatic', 'It fires on its own only after a run of manual nights where every clip shows it picked the right target. The number goes in the change order.'],
+  ['R7 Hits at 20 to 25 feet', 'That is the distance from where the turret sits to where they come over. It must hit a raccoon and a rat-sized target there, tested on cardboard targets first.'],
+  ['R8 Earn automatic', 'It fires on its own only after 10 correct manual shots in a row with zero wrong targets. One wrong target starts the count over.'],
   ['R6 Measure, do not guess', 'Count visits before we build so we can prove it worked.'],
 ];
 
 // The design choices we walk through at G0. Status changes as each one is decided.
 const CHOICES = [
-  ['D1 Which animal first?', 'Raccoons, opossums and rats act differently. Rats come in through small holes and need sealing, not scaring. Pick one target for version 1.', 'Open'],
+  ['D1 Which animals?', 'Raccoons, opossums and rats. Rats are a 3 inch target at 25 feet, which is why the aim uses steppers.', 'All three'],
   ['D2 Where are they?', 'Our outdoor cameras already show them coming over. Mark each crossing spot on a map of the yard.', 'Cameras'],
   ['D3 What are they after?', 'Food, water, shelter. Taking away the reason they come is the first defense.', 'Open'],
-  ['D4 How do we know one is there?', 'Motion sensor, night camera, or a camera that can tell a raccoon from a cat.', 'Open'],
-  ['D5 How do we make it leave?', 'A turret that fires a stinging, non-lethal projectile. Gel balls: enough sting, no mess, least harm if something goes wrong. Paintball only by change order.', 'Gel balls'],
-  ['D8 Who pulls the trigger?', 'Version 1: the turret finds and aims, a person presses fire. Automatic only by change order, after the clips prove it never mistakes a cat, dog or person.', 'Manual first'],
-  ['D6 What is the brain?', 'micro:bit (we know it from Dusty) or a Raspberry Pi (camera and animal spotting).', 'Open'],
-  ['D7 Power and weather', 'It lives outside: rain, heat, nights. Battery size and a box that keeps water out.', 'Open'],
+  ['D4 How does it see?', 'Raspberry Pi AI camera (no IR filter) plus a separate infrared floodlight. Invisible to the animals, clear at 25 feet.', 'AI camera + IR flood'],
+  ['D5 What does it fire?', 'Gel Blaster Surge XL: velocity dial 170 to 250 FPS so we set the smallest sting that works, semi-auto for one shot per press, USB-C charging.', 'Surge XL'],
+  ['D6 What is the brain?', 'Raspberry Pi 5. The AI camera spots the animal; the Pi aims, serves the phone page and saves a clip of every shot.', 'Pi 5'],
+  ['D7 Power and housing', 'Solar panel and battery, so nothing plugs into the house. 3D printed housing in PETG or ASA, which survive Houston sun.', 'Solar + printed'],
+  ['D8 Who pulls the trigger?', 'Version 1: phone page with live view and a FIRE button. Automatic only by change order (R8).', 'Phone FIRE'],
+  ['D9 How does it aim?', 'Stepper motors from the start, with a home switch. Rats need fine steps; servos are too coarse.', 'Steppers'],
+  ['D10 Where is it mounted?', 'High on the house, 6 to 8 feet up, aiming down, so every shot and every miss lands in our yard.', 'High, aims down'],
+  ['D11 When is it armed?', 'Dusk to dawn only, plus a key switch as the master off.', 'Night + key'],
+  ['D12 Budget', '$800 cap. First estimate $650 to $750 with solar.', '$800'],
+  ['D13 How do we prove it?', 'Count visits on the house cameras: 14 nights before, 14 nights after.', '14 vs 14'],
+  ['D14 How does it end?', 'A short film, and Nolan explains it to the family and his class.', 'Film + class'],
+  ['D15 Name', 'Nolan picks the name.', 'Open'],
 ];
 
 const PAGES = [
@@ -52,7 +59,7 @@ export default function HouseDefensePage() {
       <Nav current="overview" />
       <Hero tag="Our own project" title="HOUSE DEFENSE">
         <p className="text-white text-lg sm:text-xl font-semibold mt-4 leading-snug">
-          Raccoons, rats and opossums keep visiting our house. We are building a turret that spots them and stings them with a non-lethal shot so they learn to stay away.
+          Raccoons, rats and opossums keep visiting our house. We are building a solar-powered turret that spots them and stings them with a non-lethal shot so they learn to stay away.
         </p>
         <div className="mt-5 rounded-2xl border border-naw-cyan/30 bg-naw-cyan/10 p-4">
           <div className="text-naw-cyan text-xs font-semibold">The big question</div>
