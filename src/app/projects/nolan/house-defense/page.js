@@ -19,9 +19,9 @@ const GATES = [
 
 // Draft rules. Each needs a yes from Dad at G0.
 const RULES = [
-  ['R1 No animal gets hurt', 'We want them to leave, not get hurt. No poison, glue, shock or spikes. Poison also hurts pets and the animals that eat a poisoned rat.'],
+  ['R1 Sting, never injure', 'A sting teaches them our yard is a bad place, the way wildlife officers chase off coyotes with paintballs. No poison, glue, shock, spikes or anything that breaks skin. Poison also hurts pets and the animals that eat a poisoned rat.'],
   ['R2 Low voltage outside', 'Water and wall power do not mix. Batteries or USB power only, nothing plugged into the wall near the yard.'],
-  ['R3 Safe for people and pets', 'Our family, neighbors and pets walk past it too. Nothing that sprays, flashes or sounds at a person on purpose.'],
+  ['R3 It can never aim at a person', 'Animals are on the ground; faces are not. The turret physically cannot tilt above ground level, cannot point over the fence, and only fires when it is sure the target is a raccoon, opossum or rat. A key switch turns it off.'],
   ['R4 Follow the wildlife rules', 'Texas has rules about trapping and moving wild animals. A grown-up checks them before anything that catches an animal.'],
   ['R5 Explain every wire and line', 'Same as Dusty: if you cannot explain it, it is not done.'],
   ['R6 Measure, do not guess', 'Count visits before we build so we can prove it worked.'],
@@ -30,10 +30,11 @@ const RULES = [
 // The design choices we walk through at G0. Status changes as each one is decided.
 const CHOICES = [
   ['D1 Which animal first?', 'Raccoons, opossums and rats act differently. Rats come in through small holes and need sealing, not scaring. Pick one target for version 1.', 'Open'],
-  ['D2 Where are they?', 'Attic, garage, trash cans, yard, under the house? The survey answers this.', 'Open'],
+  ['D2 Where are they?', 'Our outdoor cameras already show them coming over. Mark each crossing spot on a map of the yard.', 'Cameras'],
   ['D3 What are they after?', 'Food, water, shelter. Taking away the reason they come is the first defense.', 'Open'],
   ['D4 How do we know one is there?', 'Motion sensor, night camera, or a camera that can tell a raccoon from a cat.', 'Open'],
-  ['D5 How do we make it leave?', 'Water spray, light, sound. Some work better than others; research first.', 'Open'],
+  ['D5 How do we make it leave?', 'A turret that fires a stinging, non-lethal projectile. Which one: gel balls, paintballs or foam.', 'Sting turret'],
+  ['D8 Who pulls the trigger?', 'The turret decides on its own, or it finds and aims and Dad says fire on his phone.', 'Open'],
   ['D6 What is the brain?', 'micro:bit (we know it from Dusty) or a Raspberry Pi (camera and animal spotting).', 'Open'],
   ['D7 Power and weather', 'It lives outside: rain, heat, nights. Battery size and a box that keeps water out.', 'Open'],
 ];
@@ -49,7 +50,7 @@ export default function HouseDefensePage() {
       <Nav current="overview" />
       <Hero tag="Our own project" title="HOUSE DEFENSE">
         <p className="text-white text-lg sm:text-xl font-semibold mt-4 leading-snug">
-          Raccoons, rats and opossums keep visiting our house. We are building a defense that makes them leave without hurting them.
+          Raccoons, rats and opossums keep visiting our house. We are building a turret that spots them and stings them with a non-lethal shot so they learn to stay away.
         </p>
         <div className="mt-5 rounded-2xl border border-naw-cyan/30 bg-naw-cyan/10 p-4">
           <div className="text-naw-cyan text-xs font-semibold">The big question</div>

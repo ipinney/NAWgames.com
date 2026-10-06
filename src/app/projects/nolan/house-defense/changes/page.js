@@ -8,6 +8,8 @@ export const metadata = meta(
 
 // Newest first. One line for every decision, change, fix or test result, the day it happens.
 const LOG = [
+  ['Oct 6', 'Decision', 'D5: the defense is a turret that fires a non-lethal stinging projectile. Rules R1 and R3 rewritten to match: sting but never injure, and the turret can never aim at a person.'],
+  ['Oct 6', 'Decision', 'No survey needed: the house cameras already show the animals coming over. Footage becomes the before count.'],
   ['Oct 6', 'Plan', 'Draft rules R1 to R6 and design choices D1 to D7 written. Waiting for a yes at G0.'],
   ['Oct 6', 'Plan', 'Gates set: G0 Scope (now to Feb), G1 Design lock, G2 Order, G3 Build, G4 Field test, G5 Show. Build starts spring 2027.'],
   ['Oct 6', 'Decision', 'New project: defend the house against raccoons, rats and opossums. No school packet; we write our own brief.'],
