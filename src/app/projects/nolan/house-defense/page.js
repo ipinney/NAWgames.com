@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Nav, Hero, Section, Cards, meta, BASE } from './ui';
 
 export const metadata = meta(
-  "House Defense: Nolan's project",
+  "Night Watch NW-1: Nolan's project",
   'Keeping raccoons, rats and opossums away from our house without hurting them. Our own project: we write the brief, set the gates and run every change through a change order.',
   BASE
 );
@@ -45,7 +45,7 @@ const CHOICES = [
   ['D12 Budget', '$800 cap. First estimate $650 to $750 with solar.', '$800'],
   ['D13 How do we prove it?', 'Count visits on the house cameras: 14 nights before, 14 nights after.', '14 vs 14'],
   ['D14 How does it end?', 'A short film, and Nolan explains it to the family and his class.', 'Film + class'],
-  ['D15 Name', 'Nolan picks the name.', 'Open'],
+  ['D15 Name', 'Night Watch NW-1. Model-number style, like Dusty MS-2000.', 'Night Watch'],
 ];
 
 const PAGES = [
@@ -57,7 +57,7 @@ export default function HouseDefensePage() {
   return (
     <div className="min-h-screen">
       <Nav current="overview" />
-      <Hero tag="Our own project" title="HOUSE DEFENSE">
+      <Hero tag="Our own project" title="NIGHT WATCH NW-1">
         <p className="text-white text-lg sm:text-xl font-semibold mt-4 leading-snug">
           Raccoons, rats and opossums keep visiting our house. We are building a solar-powered turret that spots them and stings them with a non-lethal shot so they learn to stay away.
         </p>

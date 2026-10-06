@@ -1,14 +1,15 @@
 import { Nav, Hero, Section, meta, BASE } from '../ui';
 
 export const metadata = meta(
-  'House Defense: changes and log',
+  'Night Watch NW-1: changes and log',
   'Every decision, change order, fix and test result for House Defense, newest first.',
   `${BASE}/changes`
 );
 
 // Newest first. One line for every decision, change, fix or test result, the day it happens.
 const LOG = [
-  ['Oct 6', 'Decision', 'Design walk-through D1 to D14: all three animals; Pi 5 with AI camera and IR flood; Surge XL launcher; stepper aim; solar and battery power; printed housing; mounted high aiming down; software tilt limit; armed dusk to dawn with a key switch; phone FIRE page; automatic after 10 correct shots and zero wrong (R8); 14 nights before vs 14 after; $800 budget; film and class presentation. Name still open.'],
+  ['Oct 6', 'Decision', 'D15: the turret is named Night Watch NW-1.'],
+  ['Oct 6', 'Decision', 'Design walk-through D1 to D14: all three animals; Pi 5 with AI camera and IR flood; Surge XL launcher; stepper aim; solar and battery power; printed housing; mounted high aiming down; software tilt limit; armed dusk to dawn with a key switch; phone FIRE page; automatic after 10 correct shots and zero wrong (R8); 14 nights before vs 14 after; $800 budget; film and class presentation. Name decided next (D15).'],
   ['Oct 6', 'Decision', 'D8: version 1 is manual fire. The turret spots and aims, a person presses fire. Going automatic is a future change order with a pass mark from the clips (rule R8).'],
   ['Oct 6', 'Decision', 'Payload: gel balls. Range: 20 to 25 feet from the turret to the crossing spot (rule R7).'],
   ['Oct 6', 'Decision', 'D5: the defense is a turret that fires a non-lethal stinging projectile. Rules R1 and R3 rewritten to match: sting but never injure, and the turret can never aim at a person.'],

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Nav, Hero, Section, Cards, meta, BASE } from '../ui';
 
 export const metadata = meta(
-  'House Defense: how we run it',
+  'Night Watch NW-1: how we run it',
   'The gates, the change order process, and the lessons from Dusty turned into a checklist for each gate.',
   `${BASE}/plan`
 );

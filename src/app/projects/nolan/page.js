@@ -6,8 +6,8 @@ import { useState } from 'react';
 const PROJECTS = [
   {
     slug: 'house-defense',
-    title: 'House Defense',
-    subject: 'Our own project',
+    title: 'Night Watch NW-1',
+    subject: 'House Defense',
     emoji: '\u{1F6E1}\u{FE0F}',
     description:
       'Raccoons, rats and opossums keep visiting. We are building a defense that makes them leave without hurting them. Our own brief, gates, and change orders.',

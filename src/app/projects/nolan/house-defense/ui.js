@@ -25,7 +25,7 @@ export function Nav({ current }) {
   return (
     <nav className="bg-naw-card/60 border-b border-white/10">
       <div className="max-w-5xl mx-auto px-4 flex items-center gap-1 overflow-x-auto">
-        <Link href={BASE} className="font-game text-[10px] text-naw-orange pr-3 py-3 whitespace-nowrap">HOUSE DEFENSE</Link>
+        <Link href={BASE} className="font-game text-[10px] text-naw-orange pr-3 py-3 whitespace-nowrap">NIGHT WATCH</Link>
         {TABS.map(([k, label, href]) => (
           <Link key={k} href={href} className={cls(k)}>{label}</Link>
         ))}
