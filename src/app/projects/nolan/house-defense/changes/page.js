@@ -8,6 +8,8 @@ export const metadata = meta(
 
 // Newest first. One line for every decision, change, fix or test result, the day it happens.
 const LOG = [
+  ['Oct 6', 'Decision', 'D8: version 1 is manual fire. The turret spots and aims, a person presses fire. Going automatic is a future change order with a pass mark from the clips (rule R8).'],
+  ['Oct 6', 'Decision', 'Payload: gel balls. Range: 20 to 25 feet from the turret to the crossing spot (rule R7).'],
   ['Oct 6', 'Decision', 'D5: the defense is a turret that fires a non-lethal stinging projectile. Rules R1 and R3 rewritten to match: sting but never injure, and the turret can never aim at a person.'],
   ['Oct 6', 'Decision', 'No survey needed: the house cameras already show the animals coming over. Footage becomes the before count.'],
   ['Oct 6', 'Plan', 'Draft rules R1 to R6 and design choices D1 to D7 written. Waiting for a yes at G0.'],

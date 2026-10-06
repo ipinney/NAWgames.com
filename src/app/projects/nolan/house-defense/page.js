@@ -24,6 +24,8 @@ const RULES = [
   ['R3 It can never aim at a person', 'Animals are on the ground; faces are not. The turret physically cannot tilt above ground level, cannot point over the fence, and only fires when it is sure the target is a raccoon, opossum or rat. A key switch turns it off.'],
   ['R4 Follow the wildlife rules', 'Texas has rules about trapping and moving wild animals. A grown-up checks them before anything that catches an animal.'],
   ['R5 Explain every wire and line', 'Same as Dusty: if you cannot explain it, it is not done.'],
+  ['R7 Hits at 20 to 25 feet', 'That is the distance from where the turret sits to where they come over. It must hit a raccoon-sized target there, tested on a cardboard target first.'],
+  ['R8 Earn automatic', 'It fires on its own only after a run of manual nights where every clip shows it picked the right target. The number goes in the change order.'],
   ['R6 Measure, do not guess', 'Count visits before we build so we can prove it worked.'],
 ];
 
@@ -33,8 +35,8 @@ const CHOICES = [
   ['D2 Where are they?', 'Our outdoor cameras already show them coming over. Mark each crossing spot on a map of the yard.', 'Cameras'],
   ['D3 What are they after?', 'Food, water, shelter. Taking away the reason they come is the first defense.', 'Open'],
   ['D4 How do we know one is there?', 'Motion sensor, night camera, or a camera that can tell a raccoon from a cat.', 'Open'],
-  ['D5 How do we make it leave?', 'A turret that fires a stinging, non-lethal projectile. Which one: gel balls, paintballs or foam.', 'Sting turret'],
-  ['D8 Who pulls the trigger?', 'The turret decides on its own, or it finds and aims and Dad says fire on his phone.', 'Open'],
+  ['D5 How do we make it leave?', 'A turret that fires a stinging, non-lethal projectile. Gel balls: enough sting, no mess, least harm if something goes wrong. Paintball only by change order.', 'Gel balls'],
+  ['D8 Who pulls the trigger?', 'Version 1: the turret finds and aims, a person presses fire. Automatic only by change order, after the clips prove it never mistakes a cat, dog or person.', 'Manual first'],
   ['D6 What is the brain?', 'micro:bit (we know it from Dusty) or a Raspberry Pi (camera and animal spotting).', 'Open'],
   ['D7 Power and weather', 'It lives outside: rain, heat, nights. Battery size and a box that keeps water out.', 'Open'],
 ];
