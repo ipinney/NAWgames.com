@@ -5,6 +5,18 @@ import { useState } from 'react';
 
 const PROJECTS = [
   {
+    slug: 'house-defense',
+    title: 'House Defense',
+    subject: 'Our own project',
+    emoji: '\u{1F6E1}\u{FE0F}',
+    description:
+      'Raccoons, rats and opossums keep visiting. We are building a defense that makes them leave without hurting them. Our own brief, gates, and change orders.',
+    whenLabel: 'Build starts spring 2027',
+    color: 'from-slate-700 to-emerald-500',
+    href: '/projects/nolan/house-defense',
+    tags: ['Scoping', 'Gates', 'Change orders', 'Log'],
+  },
+  {
     slug: 'dusty',
     title: 'Dusty',
     subject: 'Invention Project',
@@ -147,7 +159,7 @@ export default function NolanProjectsPage() {
                     {project.subject}
                   </span>
                   <span className="bg-naw-orange/20 text-naw-orange text-xs font-semibold px-2 py-0.5 rounded-full">
-                    Due {project.dueLabel}
+                    {project.whenLabel || `Due ${project.dueLabel}`}
                   </span>
                 </div>
                 <h3 className="text-white font-bold text-lg mb-1 group-hover:text-naw-cyan transition-colors">
