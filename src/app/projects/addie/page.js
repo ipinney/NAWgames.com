@@ -5,6 +5,18 @@ import { useState } from 'react';
 
 const PROJECTS = [
   {
+    slug: 'house-flipper',
+    title: 'House Flipper',
+    subject: 'Flip Academy',
+    emoji: '🏠',
+    description:
+      'Learn to flip houses with Flip the Fox: find a house, plan the fixes, check comps, make an offer, get a loan, pitch investors, and sell for a profit. Three practice flips earn your Flipper License.',
+    badge: 'Dad login only',
+    color: 'from-amber-400 to-pink-500',
+    href: '/projects/addie/house-flipper',
+    tags: ['8 skill levels', '3 practice flips', 'Flip the Fox coach', 'Real Houston numbers'],
+  },
+  {
     slug: 'mosquito-turret',
     title: 'MS-2000 Mosquito Shooter',
     subject: 'Science Fair',
