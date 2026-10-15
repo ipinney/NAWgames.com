@@ -22,6 +22,11 @@ export default function GameCard({ game }) {
               </span>
             </div>
           )}
+          {game.studio && (
+            <div className="absolute top-3 left-3 bg-naw-orange/90 rounded-full px-3 py-1">
+              <span className="text-black text-xs font-bold">🛠️ Made by {game.creator}</span>
+            </div>
+          )}
           <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1">
             <span className="text-white/90 text-xs font-medium">Play Now</span>
           </div>

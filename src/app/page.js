@@ -3,9 +3,14 @@
 import { getAllGames } from '@/lib/games';
 import GameCard from '@/components/GameCard';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function HomePage() {
-  const games = getAllGames();
+  const [studioGames, setStudioGames] = useState([]);
+  useEffect(() => {
+    fetch('/api/studio/games').then((r) => r.json()).then((d) => setStudioGames(d.games || [])).catch(() => {});
+  }, []);
+  const games = [...studioGames, ...getAllGames()].sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
   return (
     <div className="min-h-screen">
@@ -33,7 +38,7 @@ export default function HomePage() {
           </p>
           <p className="text-white/40 text-xs sm:text-sm mb-8">Play our games or request your very own!</p>
 
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3">
             <a
               href="#games"
               className="bg-gradient-to-r from-naw-purple to-naw-cyan text-white font-semibold px-5 py-2.5 rounded-xl text-sm hover:opacity-90 transition-opacity"
@@ -51,6 +56,12 @@ export default function HomePage() {
               className="border border-naw-pink/30 text-naw-pink px-5 py-2.5 rounded-xl text-sm hover:bg-naw-pink/10 transition-colors font-semibold flex items-center gap-1.5"
             >
               📚 Projects
+            </Link>
+            <Link
+              href="/studio"
+              className="bg-gradient-to-r from-naw-orange to-naw-pink text-white font-semibold px-5 py-2.5 rounded-xl text-sm hover:opacity-90 transition-opacity flex items-center gap-1.5"
+            >
+              🛠️ Game Studio
             </Link>
             <Link
               href="/lizardlens"

@@ -3,12 +3,29 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getGameBySlug, formatDate } from '@/lib/games';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function GamePage() {
   const { slug } = useParams();
-  const game = getGameBySlug(slug);
+  const staticGame = getGameBySlug(slug);
+  const [studioGame, setStudioGame] = useState(null);
+  const [lookedUp, setLookedUp] = useState(!!staticGame);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  useEffect(() => {
+    if (staticGame) return;
+    fetch(`/api/studio/games?slug=${encodeURIComponent(slug)}`)
+      .then((r) => r.json()).then((d) => setStudioGame(d.game || null))
+      .catch(() => {}).finally(() => setLookedUp(true));
+  }, [slug, staticGame]);
+  const game = staticGame || studioGame;
+
+  if (!game && !lookedUp) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-10 h-10 border-2 border-naw-cyan border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!game) {
     return (
@@ -42,7 +59,7 @@ export default function GamePage() {
                 <div className="w-6 h-6 rounded-full bg-gradient-to-br from-naw-purple to-naw-pink flex items-center justify-center">
                   <span className="text-white text-xs font-bold">{game.creator[0]}</span>
                 </div>
-                <span className="text-white/60 text-sm">Created by <span className="text-white/90 font-medium">{game.creator}</span></span>
+                <span className="text-white/60 text-sm">{game.studio ? 'Made by' : 'Created by'} <span className="text-white/90 font-medium">{game.creator}</span></span>
               </div>
               <span className="text-white/20">|</span>
               <span className="text-white/40 text-sm">{formatDate(game.createdAt)}</span>
@@ -69,10 +86,10 @@ export default function GamePage() {
         )}
         <div className={`${isFullscreen ? 'h-full' : 'rounded-2xl overflow-hidden border border-white/10'}`}>
           <iframe
-            src={`/games/${game.slug}.html`}
+            src={game.src || `/games/${game.slug}.html`}
             className={`w-full bg-black ${isFullscreen ? 'h-full' : 'h-[500px] sm:h-[600px]'}`}
             title={game.title}
-            sandbox="allow-scripts allow-same-origin"
+            sandbox={game.studio ? 'allow-scripts allow-pointer-lock' : 'allow-scripts allow-same-origin'}
           />
         </div>
       </div>
