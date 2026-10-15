@@ -104,31 +104,36 @@ export async function callGuide({ stage, design, history }) {
   if (!messages.length) messages.push({ role: 'user', content: '[The kid just opened this stage. Start it.]' });
   if (messages[messages.length - 1].role !== 'user') messages.push({ role: 'user', content: '[continue]' });
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 1500,
-      system: systemPrompt(stage, design),
-      tools: [REPLY_TOOL],
-      tool_choice: { type: 'tool', name: 'guide_reply' },
-      messages,
-    }),
-  });
-  if (!res.ok) {
-    const t = await res.text();
-    console.error('[studio] anthropic', res.status, t.slice(0, 300));
-    throw new Error('guide unavailable');
+  // Sonnet 5.5 does not accept a forced tool_choice, so ask for the tool and retry once if it answers in text.
+  let lastText = '';
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 1500,
+        system: systemPrompt(stage, design) + '\n\nIMPORTANT: Reply ONLY by calling the guide_reply tool. Never answer in plain text.',
+        tools: [REPLY_TOOL],
+        tool_choice: { type: 'auto' },
+        messages,
+      }),
+    });
+    if (!res.ok) {
+      const t = await res.text();
+      console.error('[studio] anthropic', res.status, t.slice(0, 300));
+      throw new Error('guide unavailable');
+    }
+    const data = await res.json();
+    const tool = (data.content || []).find((c) => c.type === 'tool_use' && c.name === 'guide_reply');
+    if (tool) return tool.input || {};
+    lastText = (data.content || []).filter((c) => c.type === 'text').map((c) => c.text).join(' ').trim();
   }
-  const data = await res.json();
-  const tool = (data.content || []).find((c) => c.type === 'tool_use');
-  if (!tool) throw new Error('guide gave no reply');
-  return tool.input || {};
+  return { say: lastText.slice(0, 400) || 'Hmm, let me think. Can you say that again?', chips: ['Say it again', 'Start over'], stage_complete: false };
 }
 
 export const STAGE_KEYS = STAGES.map((s) => s.key);
