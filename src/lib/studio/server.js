@@ -124,7 +124,7 @@ export function checkPreview(projectId, exp, sig) {
 export const GAME_CSP = [
   'sandbox allow-scripts allow-pointer-lock',
   "default-src 'none'",
-  "script-src 'unsafe-inline'",
+  "script-src 'unsafe-inline' https://nawgames.com/vendor/three-r159.min.js",
   "style-src 'unsafe-inline'",
   'img-src data: blob:',
   'media-src data: blob:',

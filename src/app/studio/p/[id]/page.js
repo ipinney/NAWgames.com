@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { StudioGate, api, speak, Spinner, CreatureCard } from '../../ui';
-import { STAGES, BUILD_STEPS, FEEDBACK_CHIPS, stageIndex } from '@/lib/studio/design';
+import { STAGES, buildSteps, FEEDBACK_CHIPS, stageIndex } from '@/lib/studio/design';
 
 function StageBar({ stage, maxStage, onGo }) {
   const cur = stage === 'build' ? STAGES.length : stageIndex(stage);
@@ -198,6 +198,7 @@ function BuildPanel({ project, builds, previewUrl, refresh }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const step = project.buildStep || 0;
+  const STEPS = buildSteps(project.design);
   const running = builds.find((b) => b.status === 'running' || b.status === 'queued');
   const lastFailed = !running && builds.length && builds[builds.length - 1].status === 'failed';
 
@@ -211,13 +212,13 @@ function BuildPanel({ project, builds, previewUrl, refresh }) {
     } catch (e) { setErr(e.message); }
     setBusy(false);
   };
-  const nextLabel = BUILD_STEPS.find((s) => s.step === step + 1)?.label || 'Make my changes';
+  const nextLabel = STEPS.find((s) => s.step === step + 1)?.label || 'Make my changes';
 
   return (
     <div className="space-y-4">
       <div className="bg-naw-card rounded-3xl border border-naw-pink/30 p-4">
         <div className="grid grid-cols-4 gap-2 mb-3">
-          {BUILD_STEPS.map((s) => {
+          {STEPS.map((s) => {
             const done = step >= s.step, now = running?.step === s.step;
             return (
               <div key={s.step} className={`rounded-2xl p-2 text-center border text-[11px] font-semibold

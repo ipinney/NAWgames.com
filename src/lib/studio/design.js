@@ -17,6 +17,16 @@ export const BUILD_STEPS = [
   { step: 3, label: 'Levels', emoji: '🗺️' },
   { step: 4, label: 'Polish and screens', emoji: '🏆' },
 ];
+// 3D games (Three.js r159, global THREE) get a movement-first plan: the world and how it feels to move come before content.
+export const BUILD_STEPS_3D = [
+  { step: 1, label: 'Move around the world', emoji: '🌎' },
+  { step: 2, label: 'Juice and sounds', emoji: '✨' },
+  { step: 3, label: 'Levels', emoji: '🗺️' },
+  { step: 4, label: 'Polish and screens', emoji: '🏆' },
+];
+export function is3D(design) { return design?.idea?.dimension === '3d'; }
+export function buildSteps(design) { return is3D(design) ? BUILD_STEPS_3D : BUILD_STEPS; }
+
 export const MAX_STEP = 10; // steps 5+ are kid-requested tweaks after the game is finished
 
 export const FEEDBACK_CHIPS = [
@@ -31,7 +41,7 @@ export function stageIndex(key) {
 
 export function emptyDesign() {
   return {
-    idea: { gesture: '', gameType: '', name: '' },
+    idea: { dimension: '', gesture: '', gameType: '', name: '' },
     hero: { description: '', base: '', emoji: '', color: '', layers: [] },
     world: { setting: '', levels: [] },
     bestiary: [],
@@ -45,7 +55,7 @@ export function emptyDesign() {
 export function stageMissing(stage, d) {
   switch (stage) {
     case 'idea':
-      return [!d.idea?.gesture && 'gesture', !d.idea?.gameType && 'game type', !d.idea?.name && 'name'].filter(Boolean);
+      return [!['2d', '3d'].includes(d.idea?.dimension) && 'flat or 3D', !d.idea?.gesture && 'gesture', !d.idea?.gameType && 'game type', !d.idea?.name && 'name'].filter(Boolean);
     case 'hero':
       return [!d.hero?.description && 'hero description', !d.hero?.emoji && 'hero emoji'].filter(Boolean);
     case 'world':

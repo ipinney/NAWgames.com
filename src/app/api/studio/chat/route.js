@@ -28,6 +28,10 @@ function mergeSection(stage, design, section) {
     if (typeof section === 'string') d.mockup = section.slice(0, 2000);
   } else if (typeof section === 'object' && !Array.isArray(section)) {
     d[stage] = { ...(design[stage] || {}), ...section };
+    if (stage === 'idea' && d.idea.dimension) {
+      const v = String(d.idea.dimension).toLowerCase();
+      d.idea.dimension = v.includes('3') ? '3d' : v.includes('2') || v.includes('flat') ? '2d' : '';
+    }
   }
   return d;
 }
