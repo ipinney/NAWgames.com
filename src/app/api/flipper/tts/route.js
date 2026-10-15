@@ -1,34 +1,37 @@
-import { handle, json, requireIvan, getUsage, addUsage, PRICE } from '@/lib/flipper/server';
+import { handle, json, requireIvan, getUsage, addUsage } from '@/lib/flipper/server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 30;
 
-// Flip's voice: ElevenLabs "Callum" (animated-character trickster voice).
-const VOICE = process.env.FLIP_VOICE_ID || 'N2lVS1w4EtoT3dr4eOWO';
-
-// POST {text} -> audio/mpeg, or 204 meaning "use the browser voice".
+// Flip's voice: Kokoro TTS ("am_puck") running on spark, reached at FLIPVOICE_URL. Free, so it adds no spend.
+// POST {text} -> audio/mpeg, or 204 meaning "use the browser voice" (spark down, asleep, or not configured).
 export const POST = handle(async (req) => {
   const { uid } = await requireIvan(req);
   const { text } = await req.json().catch(() => ({}));
   const clean = String(text || '').replace(/[^\x20-\x7E]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 700);
   if (!clean) return json({ error: 'Nothing to say.' }, 400);
-  const key = process.env.ELEVENLABS_API_KEY;
-  if (!key) return new Response(null, { status: 204 });
+  const url = process.env.FLIPVOICE_URL;
+  const token = process.env.FLIPVOICE_TOKEN;
+  if (!url || !token) return new Response(null, { status: 204 });
   const usage = await getUsage(uid);
   if (usage.asleep) return new Response(null, { status: 204 });
 
-  const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE}?output_format=mp3_44100_64`, {
-    method: 'POST',
-    headers: { 'xi-api-key': key, 'content-type': 'application/json', accept: 'audio/mpeg' },
-    body: JSON.stringify({ text: clean, model_id: 'eleven_flash_v2_5', voice_settings: { stability: 0.45, similarity_boost: 0.8, style: 0.35 } }),
-  });
-  if (!res.ok) {
-    // Out of characters or any other problem: fall back to the browser voice quietly.
-    console.warn('[flipper] tts', res.status, (await res.text()).slice(0, 200));
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 15000);
+    const res = await fetch(url, {
+      method: 'POST', signal: ctrl.signal,
+      headers: { Authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ text: clean }),
+    });
+    clearTimeout(t);
+    if (!res.ok) { console.warn('[flipper] voice', res.status); return new Response(null, { status: 204 }); }
+    const buf = Buffer.from(await res.arrayBuffer());
+    await addUsage(uid, { ttsChars: clean.length });
+    return new Response(buf, { status: 200, headers: { 'Content-Type': 'audio/mpeg', 'Cache-Control': 'no-store' } });
+  } catch (e) {
+    console.warn('[flipper] voice unreachable', e?.name);
     return new Response(null, { status: 204 });
   }
-  const buf = Buffer.from(await res.arrayBuffer());
-  await addUsage(uid, { usd: clean.length * PRICE.ttsChar, ttsChars: clean.length });
-  return new Response(buf, { status: 200, headers: { 'Content-Type': 'audio/mpeg', 'Cache-Control': 'no-store' } });
 });
