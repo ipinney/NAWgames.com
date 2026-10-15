@@ -70,8 +70,15 @@ export const POST = handle(async (req) => {
   }
 
   const updated = [...chat, ...newMsgs].slice(-MAX_CHAT);
+  const prevMax = Math.max(idx, STAGES.findIndex((s) => s.key === project.maxStage));
+  const goingBack = stage === 'redteam' && nextStage !== stage;
+  const ni = STAGES.findIndex((s) => s.key === nextStage);
+  // The furthest stage reached; going back from the Fun Check means the Fun Check must be redone.
+  const maxStage = goingBack ? 'redteam' : STAGES[Math.max(prevMax, ni)].key;
+  // Finishing a revisited stage jumps back to where the kid was.
+  if (advanced && !goingBack && ni <= prevMax && prevMax > idx) nextStage = STAGES[prevMax].key;
   await ref.update({
-    design, chat: updated, stage: nextStage, updatedAt: FieldValue.serverTimestamp(),
+    design, chat: updated, stage: nextStage, maxStage, updatedAt: FieldValue.serverTimestamp(),
     chatTurns: FieldValue.increment(1),
   });
   return json({ ok: true, stage: nextStage, advanced, design, messages: newMsgs });

@@ -6,14 +6,15 @@ import { useParams } from 'next/navigation';
 import { StudioGate, api, speak, Spinner, CreatureCard } from '../../ui';
 import { STAGES, BUILD_STEPS, FEEDBACK_CHIPS, stageIndex } from '@/lib/studio/design';
 
-function StageBar({ stage, onGo }) {
+function StageBar({ stage, maxStage, onGo }) {
   const cur = stage === 'build' ? STAGES.length : stageIndex(stage);
+  const reached = Math.max(cur, maxStage ? stageIndex(maxStage) : 0);
   return (
     <div className="flex gap-1.5 overflow-x-auto pb-2 -mx-1 px-1">
       {STAGES.map((s, i) => {
-        const done = i < cur, now = i === cur;
+        const done = i < reached && i !== cur, now = i === cur, open = i <= reached && !now;
         return (
-          <button key={s.key} disabled={!done || stage === 'build'} onClick={() => onGo(s.key)}
+          <button key={s.key} disabled={!open || stage === 'build'} onClick={() => onGo(s.key)}
             className={`shrink-0 flex flex-col items-center justify-center rounded-2xl px-3 py-2 min-w-[64px] border text-xs font-semibold transition
               ${now ? 'bg-naw-orange text-black border-naw-orange scale-105' : done ? 'bg-naw-green/20 text-naw-green border-naw-green/40' : 'bg-white/5 text-white/30 border-white/10'}`}>
             <span className="text-xl leading-none mb-0.5">{done ? '✅' : s.emoji}</span>
@@ -350,7 +351,7 @@ function Project({ id }) {
       <h1 className="text-white text-2xl sm:text-3xl font-bold mb-3 flex items-center gap-2">
         <span>{d.hero?.emoji || '🎮'}</span><span className="truncate">{d.idea?.name || 'My New Game'}</span>
       </h1>
-      <StageBar stage={project.stage} onGo={go} />
+      <StageBar stage={project.stage} maxStage={project.maxStage} onGo={go} />
       {err && <p className="text-red-400 text-sm my-2">{err}</p>}
 
       {project.stage === 'build' ? (

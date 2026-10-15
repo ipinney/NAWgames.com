@@ -33,7 +33,7 @@ export const GET = handle(async (req) => {
     const p = d.data();
     return {
       id: d.id, name: p.design?.idea?.name || 'New game', emoji: p.design?.hero?.emoji || '🎮',
-      stage: p.stage, builder: p.builder, buildStep: p.buildStep || 0, publishedSlug: p.publishedSlug || null,
+      stage: p.stage, maxStage: p.maxStage || p.stage, builder: p.builder, buildStep: p.buildStep || 0, publishedSlug: p.publishedSlug || null,
       updatedMs: p.updatedAt?.toMillis?.() || 0, test: !!p.test,
     };
   }).sort((a, b) => b.updatedMs - a.updatedMs);
@@ -80,11 +80,9 @@ export const POST = handle(async (req) => {
   if (action === 'goto') {
     const target = body.stage;
     const ti = STAGES.findIndex((s) => s.key === target);
-    const ci = STAGES.findIndex((s) => s.key === project.stage);
-    if (ti === -1 || project.stage === 'build' || ti > ci) throw new HttpError(400, 'Cannot go there yet.');
-    const upd = { stage: target, updatedAt: FieldValue.serverTimestamp() };
-    if (ti < STAGES.findIndex((s) => s.key === 'redteam')) upd['design.redteam'] = { checks: [], passed: false };
-    await ref.update(upd);
+    const reached = Math.max(STAGES.findIndex((s) => s.key === project.stage), STAGES.findIndex((s) => s.key === project.maxStage));
+    if (ti === -1 || project.stage === 'build' || ti > reached) throw new HttpError(400, 'Cannot go there yet.');
+    await ref.update({ stage: target, maxStage: STAGES[reached].key, updatedAt: FieldValue.serverTimestamp() });
     return json({ ok: true });
   }
 
