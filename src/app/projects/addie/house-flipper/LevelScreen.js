@@ -31,6 +31,8 @@ export default function LevelScreen({ n }) {
   const l5fix = Math.round(l5.fixTotal * 1.12 / 100) * 100;
   const l5price = l5.sellerMin;
   const l5fin = financeNumbers({ price: l5price, fix: l5fix, arv: l5.arv, loan: maxLoan({ price: l5price, fix: l5fix, arv: l5.arv }), months: 4 });
+  // Level 6 savings scale with the deal: enough to work at max loan, rounded up to $5k, plus $5k cushion.
+  const l6cash = Math.ceil((l5fin.cashNeeded + l5fin.monthly.total * 4) / 5000) * 5000 + 5000;
 
   useEffect(() => {
     const house = n === 3 ? houses.l3 : n === 4 ? houses.l4 : n >= 5 ? l5 : null;
@@ -91,8 +93,8 @@ export default function LevelScreen({ n }) {
       )}
       {n === 6 && (
         <div className="space-y-3">
-          <TeamNote>You bought <b>{l5.address}</b> for <b>{money(l5price)}</b>. Fixes will cost <b>{money(l5fix)}</b>. You have <b>{money(40000)}</b> saved. Borrow from Town Bank to make it work.</TeamNote>
-          <Bank price={l5price} fix={l5fix} arv={l5.arv} cash={40000} required quiz months={4} onDone={taskDone} />
+          <TeamNote>You bought <b>{l5.address}</b> for <b>{money(l5price)}</b>. Fixes will cost <b>{money(l5fix)}</b>. You have <b>{money(l6cash)}</b> saved. Borrow from Town Bank to make it work.</TeamNote>
+          <Bank price={l5price} fix={l5fix} arv={l5.arv} cash={l6cash} required quiz months={4} onDone={taskDone} />
         </div>
       )}
       {n === 7 && (

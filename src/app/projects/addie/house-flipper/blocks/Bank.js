@@ -48,7 +48,7 @@ export default function Bank({ price, fix, arv, cash, required = false, months =
         </div>
         <div className="mt-4">
           <div className="flex justify-between font-black"><span>Loan from Town Bank</span><CountUp value={loan} format={money} className="text-2xl text-sky-600" /></div>
-          <input id="hf-loan" type="range" min="0" max={max} step="1000" value={loan} onChange={(e) => { setLoan(Number(e.target.value)); setStamp(false); }} className="w-full accent-sky-500" />
+          <input id="hf-loan" type="range" min="0" max={max} step="100" value={loan} onChange={(e) => { setLoan(Number(e.target.value)); setStamp(false); }} className="w-full accent-sky-500" />
           <div className="text-xs font-bold text-slate-400">The most the bank will lend on this deal: {money(max)}</div>
         </div>
         <div className="mt-3 rounded-2xl bg-sky-50 p-3 font-bold space-y-1">
