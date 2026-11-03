@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'mosaic-maker',
+    title: 'Mosaic Maker',
+    creator: 'Wyatt',
+    description: 'Paint by numbers, tile by tile. Pick a number, then tap or drag your finger across the matching tiles and watch them pop into place. Sixteen hidden pictures to set in glowing mosaic: dinosaurs, trucks and machines, animals, and space and robots, each with 5 to 8 colors. Finish one and it shines in a gold frame, roars or honks, and earns its stars. Tap a finished mosaic to play it like an instrument.',
+    createdAt: '2026-11-02',
+    thumbnail: '/images/mosaic-maker-preview.png',
+    color: 'from-amber-400 to-violet-700',
+  },
+  {
     slug: 'ninja-hop',
     title: 'Ninja Hop: Number Line Quest',
     creator: 'Nolan',
