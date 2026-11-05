@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'pom-pom-coders',
+    title: 'Pom Pom Coders',
+    creator: 'Wyatt',
+    description: 'Learn to code with fuzzy pom poms. Tap arrows, press GO, and watch your pom roll through the maze. Five worlds and 75 levels build from simple steps to buttons and doors, fixing bugs, loops in brackets, if blocks and your own magic spells. A friendly voice teaches every new idea, so no reading is needed. Earn coins for hats, glasses, capes and trails, open treasure chests, and unlock 20 characters. Peek at the real code behind every solution.',
+    createdAt: '2026-11-04',
+    thumbnail: '/images/pom-pom-coders-preview.png',
+    color: 'from-orange-400 to-fuchsia-700',
+  },
+  {
     slug: 'mosaic-maker',
     title: 'Mosaic Maker',
     creator: 'Wyatt',
