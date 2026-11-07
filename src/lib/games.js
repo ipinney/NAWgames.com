@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'pole-rush',
+    title: 'Pole Rush',
+    creator: 'Ivan',
+    description: 'Race across the rooftops holding a giant pole. Drag left and right to grab yellow bars and grow your pole longer, but watch out for spinning saws that snip it short. When the building ends, your pole has to reach both rails so you can slide across the gap high above the sea. Scoop up gems with the whole pole, fill the Fever meter for a rainbow speed boost that smashes saws, and collect stars across 15 levels in Beach City, Sunset Towers and Neon Night. Spend gems on new runners and poles, then try Endless mode.',
+    createdAt: '2026-11-06',
+    thumbnail: '/images/pole-rush-preview.png',
+    color: 'from-pink-400 to-violet-700',
+  },
+  {
     slug: 'pom-pom-coders',
     title: 'Pom Pom Coders',
     creator: 'Wyatt',
