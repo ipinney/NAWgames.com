@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Super Smash Bots</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;background:#0b0f2a;font-family:'Trebuchet MS',Arial,sans-serif;color:#fff;overflow:hidden;touch-action:manipulation}
+#game{position:fixed;inset:0;display:flex;flex-direction:column}
+canvas{display:block;width:100%;flex:1}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,#3a1d7a,#0b0f2a);z-index:10;padding:16px;text-align:center}
+.hidden{display:none!important}
+h1{font-size:clamp(36px,9vw,72px);color:#ffd23f;text-shadow:4px 4px 0 #e63946,8px 8px 0 #000;letter-spacing:2px;animation:bob 1.4s ease-in-out infinite}
+h2{font-size:clamp(24px,6vw,40px);color:#ffd23f;text-shadow:3px 3px 0 #000;margin-bottom:12px}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-2deg)}}
+.big{font-size:26px;font-weight:bold;padding:16px 40px;border:none;border-radius:18px;background:#e63946;color:#fff;box-shadow:0 6px 0 #8b1e2b;margin-top:20px;cursor:pointer}
+.big:active{transform:translateY(4px);box-shadow:0 2px 0 #8b1e2b}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;width:100%;max-width:640px}
+.card{background:#1d2357;border:4px solid #3c47a8;border-radius:18px;padding:12px 6px;cursor:pointer;transition:transform .15s}
+.card:active,.card.sel{transform:scale(1.07);border-color:#ffd23f;background:#2b3380}
+.card .emo{font-size:52px}
+.card .nm{font-weight:bold;font-size:18px;margin-top:4px}
+.card .tx{font-size:12px;opacity:.8}
+.card.locked{opacity:.4}
+#hud{position:absolute;top:0;left:0;right:0;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;pointer-events:none;font-weight:bold;font-size:16px}
+#controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px;background:#141a45}
+.btn{font-size:clamp(14px,4vw,20px);font-weight:bold;border:none;border-radius:16px;padding:16px 4px;color:#fff;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.45)}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.45)}
+.b-punch{background:#2a9d8f}.b-kick{background:#457b9d}.b-block{background:#6c757d}
+.b-super{background:#555;position:relative;overflow:hidden}
+.b-super.ready{background:#ffb703;color:#000;animation:glow .5s ease-in-out infinite alternate}
+@keyframes glow{to{box-shadow:0 0 22px #ffd23f,0 5px 0 rgba(0,0,0,.45);transform:scale(1.05)}}
+.stars{font-size:48px;margin:10px}
+p{font-size:18px;margin:6px}
+</style></head><body>
+<div id="game">
+  <canvas id="c"></canvas>
+  <div id="hud"><span id="roundTxt">Round 1</span><span id="scoreTxt">⭐ 0</span></div>
+  <div id="controls">
+    <button class="btn b-punch" data-a="punch">👊 Punch</button>
+    <button class="btn b-kick" data-a="kick">🦶 Kick</button>
+    <button class="btn b-block" data-a="block">🛡️ Block</button>
+    <button class="btn b-super" id="superBtn" data-a="super">💥 SUPER</button>
+  </div>
+</div>
+
+<div class="screen" id="start">
+  <h1>SUPER SMASH BOTS</h1>
+  <p>🤖 The evil robots are attacking! 🤖</p>
+  <p>Pick your hero and smash them with your SUPER PUNCH!</p>
+  <button class="big" id="goPick">PLAY!</button>
+  <p style="font-size:13px;opacity:.6;margin-top:18px">Made for Nolan</p>
+</div>
+
+<div class="screen hidden" id="pick">
+  <h2>Pick Your Hero!</h2>
+  <div class="grid" id="heroGrid"></div>
+</div>
+
+<div class="screen hidden" id="foe">
+  <h2>Pick Your Robot to Fight!</h2>
+  <div class="grid" id="foeGrid"></div>
+</div>
+
+<div class="screen hidden" id="end">
+  <h2 id="endTitle">YOU WIN!</h2>
+  <div class="stars" id="endStars">⭐⭐⭐</div>
+  <p id="endMsg"></p>
+  <button class="big" id="nextBtn">NEXT ROBOT!</button>
+  <button class="big" id="menuBtn" style="background:#457b9d;box-shadow:0 6px 0 #22405a">Pick Again</button>
+</div>
+<script>
+const HEROES=[
+ {id:'ninja',name:'Ninja',emo:'🥷',tx:'Super fast',hp:100,spd:1.3,pow:1,col:'#222'},
+ {id:'dino',name:'Dino',emo:'🦖',tx:'Big chomp hits',hp:130,spd:.85,pow:1.3,col:'#2a9d3f'},
+ {id:'wizard',name:'Wizard',emo:'🧙',tx:'Super charges fast',hp:95,spd:1,pow:1,col:'#6a4c93',charge:1.5},
+ {id:'knight',name:'Knight',emo:'🛡️',tx:'Tough armor',hp:150,spd:.9,pow:1.05,col:'#8d99ae'},
+ {id:'tiger',name:'Tiger',emo:'🐯',tx:'Wild claws',hp:110,spd:1.15,pow:1.15,col:'#f77f00'},
+ {id:'astro',name:'Astronaut',emo:'🧑‍🚀',tx:'Moon jumps',hp:115,spd:1.05,pow:1.1,col:'#4cc9f0'}
+];
+const BOTS=[
+ {name:'Rusty Bot',emo:'🤖',hp:80,dmg:6,rate:1.6,col:'#b5651d'},
+ {name:'Zap Bot',emo:'⚡',hp:100,dmg:8,rate:1.4,col:'#ffd60a'},
+ {name:'Drill Bot',emo:'🔩',hp:120,dmg:9,rate:1.25,col:'#adb5bd'},
+ {name:'Laser Bot',emo:'👾',hp:140,dmg:10,rate:1.1,col:'#e63946'},
+ {name:'Mega Bot',emo:'🦾',hp:180,dmg:12,rate:1,col:'#7209b7'},
+ {name:'BOSS BOT',emo:'👹',hp:240,dmg:14,rate:.9,col:'#000'}
+];
+</script>
+<script>
+const $=id=>document.getElementById(id);
+const cv=$('c'),cx=cv.getContext('2d');
+let W,H,DPR;
+function rs(){DPR=window.devicePixelRatio||1;W=cv.clientWidth;H=cv.clientHeight;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0)}
+addEventListener('resize',rs);
+// ---- audio ----
+let AC;function au(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}
+function tone(f,d,t='square',v=.15,sl=0){if(!AC)return;const o=AC.createOscillator(),g=AC.createGain();o.type=t;o.frequency.value=f;if(sl)o.frequency.exponentialRampToValueAtTime(Math.max(30,f*sl),AC.currentTime+d);g.gain.setValueAtTime(v,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}
+function noise(d,v=.25){if(!AC)return;const b=AC.createBuffer(1,AC.sampleRate*d,AC.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);const s=AC.createBufferSource(),g=AC.createGain();g.gain.value=v;s.buffer=b;s.connect(g);g.connect(AC.destination);s.start()}
+const SFX={hit:()=>{noise(.12,.3);tone(180,.12,'square',.12,.5)},kick:()=>{noise(.18,.35);tone(120,.18,'sawtooth',.12,.4)},block:()=>tone(900,.08,'triangle',.15),
+ ouch:()=>tone(300,.2,'sawtooth',.12,.5),zap:()=>tone(1200,.15,'square',.08,.3),
+ super:()=>{tone(200,.6,'sawtooth',.2,6);setTimeout(()=>{noise(.6,.6);tone(80,.6,'square',.25,.3)},250)},
+ ready:()=>{[523,659,784].forEach((f,i)=>setTimeout(()=>tone(f,.12,'triangle',.15),i*80))},
+ win:()=>{[523,659,784,1047,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.18,'triangle',.18),i*130))},
+ lose:()=>{[400,330,260,200].forEach((f,i)=>setTimeout(()=>tone(f,.25,'sawtooth',.12),i*180))},
+ click:()=>tone(660,.06,'triangle',.12)};
+// ---- state ----
+let hero,bot,botIdx=0,unlocked=1,score=0,G=null,parts=[],texts=[],shake=0,last=0,running=false;
+try{unlocked=Math.max(1,+localStorage.ssb_unl||1)}catch(e){}
+function show(id){['start','pick','foe','end'].forEach(s=>$(s).classList.toggle('hidden',s!==id))}
+function buildPick(){const g=$('heroGrid');g.innerHTML='';HEROES.forEach(h=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<div class=emo>${h.emo}</div><div class=nm>${h.name}</div><div class=tx>${h.tx}</div>`;d.onclick=()=>{au();SFX.click();hero=h;buildFoe();show('foe')};g.appendChild(d)})}
+function buildFoe(){const g=$('foeGrid');g.innerHTML='';BOTS.forEach((b,i)=>{const L=i>=unlocked,d=document.createElement('div');d.className='card'+(L?' locked':'');d.innerHTML=`<div class=emo>${L?'🔒':b.emo}</div><div class=nm>${b.name}</div><div class=tx>${L?'Beat the one before!':'❤️ '+b.hp}</div>`;d.onclick=()=>{if(L){SFX.block();return}au();SFX.click();botIdx=i;startFight()};g.appendChild(d)})}
+$('goPick').onclick=()=>{au();SFX.click();buildPick();show('pick')};
+$('menuBtn').onclick=()=>{SFX.click();buildPick();show('pick')};
+$('nextBtn').onclick=()=>{SFX.click();if(G&&G.won&&botIdx<BOTS.length-1)botIdx++;startFight()};
+function startFight(){
+ show(null);['start','pick','foe','end'].forEach(s=>$(s).classList.add('hidden'));rs();
+ bot=BOTS[botIdx];
+ G={p:{hp:hero.hp,max:hero.hp,x:.28,act:null,t:0,cd:0,blk:false,hurt:0},b:{hp:bot.hp,max:bot.hp,x:.72,act:null,t:0,hurt:0,next:2,warn:0,y:0},
+  power:0,combo:0,comboT:0,over:false,won:false,hitsTaken:0,flash:0,superT:0,timer:0};
+ parts=[];texts=[];$('roundTxt').textContent=bot.name;updSuper();running=true;last=performance.now();requestAnimationFrame(loop);
+ floatTxt('FIGHT!',.5,.4,'#ffd23f',60);SFX.ready();
+}
+function floatTxt(s,x,y,c,sz=32){texts.push({s,x:x*W,y:y*H,c,sz,l:1})}
+function burst(x,y,c,n=14,sp=6){for(let i=0;i<n;i++){const a=Math.random()*6.28,v=Math.random()*sp+2;parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,l:1,c,r:Math.random()*5+3})}}
+function updSuper(){const b=$('superBtn');if(!G)return;b.classList.toggle('ready',G.power>=100);b.textContent=G.power>=100?'💥 SUPER PUNCH!':'💥 '+Math.floor(G.power)+'%'}
+function act(a){
+ if(!G||G.over)return;au();const p=G.p,b=G.b;
+ if(a==='block'){p.blk=true;p.act='block';p.t=.5;return}
+ if(p.cd>0)return;
+ if(a==='super'){if(G.power<100){SFX.block();floatTxt('Charge it up!',.3,.5,'#aaa',22);return}
+  G.power=0;p.act='super';p.t=.9;p.cd=.9/hero.spd;G.superT=.9;SFX.super();
+  setTimeout(()=>{if(!G||G.over)return;const d=Math.round(45*hero.pow);dmgBot(d,true)},350);updSuper();return}
+ const kick=a==='kick';p.act=a;p.t=.25;p.cd=(kick?.45:.28)/hero.spd;
+ setTimeout(()=>{if(!G||G.over)return;
+  if(b.act==='dodge'){floatTxt('Missed!',.7,.4,'#aaa',24);return}
+  const d=Math.round((kick?9:6)*hero.pow*(1+Math.min(G.combo,10)*.05));dmgBot(d,false,kick)},90);
+}
+function dmgBot(d,sup,kick){const b=G.b;b.hp=Math.max(0,b.hp-d);b.hurt=.25;G.combo++;G.comboT=1.2;
+ G.power=Math.min(100,G.power+(sup?0:(kick?9:6)*(hero.charge||1)));if(G.power>=100&&!G.readyS){G.readyS=1;SFX.ready();floatTxt('SUPER READY!',.5,.3,'#ffb703',36)}if(G.power<100)G.readyS=0;
+ score+=d;const bx=b.x*W,by=H*.6;
+ if(sup){shake=25;G.flash=1;burst(bx,by,'#ffd23f',50,14);burst(bx,by,'#ff006e',30,10);floatTxt('SUPER PUNCH! -'+d,.7,.35,'#ffd23f',44);b.x=Math.min(.86,b.x+.08)}
+ else{shake=kick?8:4;(kick?SFX.kick:SFX.hit)();burst(bx,by,kick?'#4cc9f0':'#fff',kick?18:10);floatTxt('-'+d+(G.combo>2?'  x'+G.combo:''),.7,.45,G.combo>4?'#ff006e':'#fff',G.combo>4?34:28)}
+ b.act=null;b.warn=0;updSuper();if(b.hp<=0)finish(true)}
+function finish(w){G.over=true;G.won=w;setTimeout(()=>{running=false;
+ const stars=w?(G.hitsTaken<=2?3:G.hitsTaken<=6?2:1):0;
+ if(w){SFX.win();if(botIdx+1>=unlocked&&botIdx<BOTS.length-1){unlocked=botIdx+2;try{localStorage.ssb_unl=unlocked}catch(e){}}}else SFX.lose();
+ $('endTitle').textContent=w?(botIdx===BOTS.length-1?'YOU BEAT THE BOSS!':'YOU WIN!'):'Oh no! Try again!';
+ $('endStars').textContent=w?'⭐'.repeat(stars)+'☆'.repeat(3-stars):'🤖💪';
+ $('endMsg').textContent=w?`${hero.emo} ${hero.name} smashed ${bot.name}!  Score: ${score}`:`${bot.name} was tough! Use BLOCK when it flashes red!`;
+ $('nextBtn').textContent=w?(botIdx<BOTS.length-1?'NEXT ROBOT!':'FIGHT BOSS AGAIN'):'TRY AGAIN!';show('end')},w?1400:1000)}
+document.querySelectorAll('.btn').forEach(b=>{const a=b.dataset.a;
+ b.addEventListener('pointerdown',e=>{e.preventDefault();act(a)});
+ if(a==='block'){const up=()=>{if(G){G.p.blk=false;if(G.p.act==='block')G.p.act=null}};b.addEventListener('pointerup',up);b.addEventListener('pointerleave',up)}});
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(k==='a'||k==='j')act('punch');if(k==='s'||k==='k')act('kick');if(k==='d'||k==='l')act('block');if(k===' '){e.preventDefault();act('super')}});
+addEventListener('keyup',e=>{const k=e.key.toLowerCase();if((k==='d'||k==='l')&&G){G.p.blk=false}});
+</script>
+<script>
+function botAI(dt){const b=G.b,p=G.p;b.next-=dt;
+ if(b.warn>0){b.warn-=dt;if(b.warn<=0){b.act='attack';b.t=.3;
+   if(p.blk){SFX.block();burst(p.x*W+40,H*.6,'#90e0ef',12);floatTxt('BLOCKED!',.3,.4,'#90e0ef',30);G.power=Math.min(100,G.power+12*(hero.charge||1));updSuper();if(G.power>=100&&!G.readyS){G.readyS=1;SFX.ready();floatTxt('SUPER READY!',.5,.3,'#ffb703',36)}}
+   else{const d=bot.dmg;p.hp=Math.max(0,p.hp-d);p.hurt=.3;G.hitsTaken++;G.combo=0;shake=10;SFX.ouch();if(bot.name==='Zap Bot')SFX.zap();burst(p.x*W,H*.6,'#e63946',14);floatTxt('-'+d,.3,.45,'#e63946',30);if(p.hp<=0)finish(false)}}return}
+ if(b.next<=0){b.next=bot.rate*(0.7+Math.random()*.6);b.warn=.75;if(Math.random()<.15&&botIdx>1){b.act='dodge';b.t=.5;b.warn=0}}}
+function drawFighter(x,y,emo,sz,flip,hurt,extra){cx.save();cx.translate(x,y);if(hurt>0)cx.translate((Math.random()-.5)*10,0);if(flip)cx.scale(-1,1);
+ cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(0,sz*.55,sz*.5,sz*.12,0,0,6.28);cx.fill();
+ cx.font=sz+'px serif';cx.textAlign='center';cx.textBaseline='middle';if(hurt>0)cx.globalAlpha=.6+Math.random()*.4;cx.fillText(emo,0,0);if(extra)extra();cx.restore()}
+function bar(x,y,w,v,max,col,label){cx.fillStyle='#000';cx.fillRect(x-2,y-2,w+4,20);cx.fillStyle='#333';cx.fillRect(x,y,w,16);cx.fillStyle=v/max<.3?'#e63946':col;cx.fillRect(x,y,w*v/max,16);cx.fillStyle='#fff';cx.font='bold 13px sans-serif';cx.textAlign='left';cx.fillText(label,x+4,y+13)}
+function loop(t){if(!running)return;const dt=Math.min(.05,(t-last)/1000);last=t;
+ const p=G.p,b=G.b;if(!G.over){p.cd-=dt;p.t-=dt;if(p.t<=0&&p.act!=='block')p.act=null;b.t-=dt;if(b.t<=0&&b.act!=='attack'||b.t<=-.1)b.act=null;p.hurt-=dt;b.hurt-=dt;G.comboT-=dt;if(G.comboT<=0)G.combo=0;botAI(dt);G.timer+=dt}
+ G.flash=Math.max(0,G.flash-dt*2);G.superT-=dt;
+ cx.save();if(shake>0){cx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);shake*=.88;if(shake<.5)shake=0}
+ const gr=cx.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#1b1f5e');gr.addColorStop(1,'#43117a');cx.fillStyle=gr;cx.fillRect(-20,-20,W+40,H+40);
+ for(let i=0;i<30;i++){cx.fillStyle='rgba(255,255,255,'+(.2+.3*Math.sin(t/600+i))+')';cx.fillRect((i*137)%W,(i*71)%(H*.5),2,2)}
+ cx.fillStyle='#2b2d42';cx.fillRect(-20,H*.72,W+40,H);cx.strokeStyle='#ffd23f';cx.lineWidth=4;cx.beginPath();cx.moveTo(0,H*.72);cx.lineTo(W,H*.72);cx.stroke();
+ const sz=Math.min(W*.2,H*.3),gy=H*.6;
+ let px=p.x*W;if(p.act==='punch'||p.act==='kick')px+=W*.08;if(p.act==='super')px+=W*.18*Math.sin(Math.min(1,(.9-p.t)/.4)*3.14);
+ drawFighter(px,gy-(p.act==='kick'?sz*.15:0),hero.emo,sz,false,p.hurt,()=>{
+  if(p.act==='punch'||p.act==='super'){cx.font=(p.act==='super'?sz*.9:sz*.45)+'px serif';cx.fillText('👊',sz*.55,0)}
+  if(p.act==='kick'){cx.font=sz*.45+'px serif';cx.fillText('🦶',sz*.5,sz*.3)}
+  if(p.blk){cx.font=sz*.55+'px serif';cx.fillText('🛡️',sz*.45,0)}});
+ let bx=b.x*W;if(b.act==='attack')bx-=W*.1;if(b.act==='dodge')bx+=W*.06;b.y=Math.sin(t/300)*6;
+ drawFighter(bx,gy+b.y,bot.emo,sz,true,b.hurt,()=>{if(b.warn>0){cx.globalAlpha=.5+.5*Math.sin(t/40);cx.fillStyle='#e63946';cx.beginPath();cx.arc(0,0,sz*.6,0,6.28);cx.fill();cx.globalAlpha=1;cx.font=sz*.4+'px serif';cx.fillText('❗',0,-sz*.7)}if(b.act==='attack'){cx.font=sz*.45+'px serif';cx.fillText(bot.name==='Laser Bot'?'🔴':'🦾',sz*.5,0)}});
+ if(b.warn>0){cx.fillStyle='#e63946';cx.font='bold 26px sans-serif';cx.textAlign='center';cx.fillText('BLOCK NOW!',W/2,H*.25)}
+ parts=parts.filter(q=>(q.l-=dt*1.4)>0);parts.forEach(q=>{q.x+=q.vx;q.y+=q.vy;q.vy+=.25;cx.globalAlpha=q.l;cx.fillStyle=q.c;cx.beginPath();cx.arc(q.x,q.y,q.r,0,6.28);cx.fill()});cx.globalAlpha=1;
+ texts=texts.filter(q=>(q.l-=dt*.9)>0);texts.forEach(q=>{q.y-=1;cx.globalAlpha=Math.min(1,q.l*2);cx.font='bold '+q.sz+'px sans-serif';cx.textAlign='center';cx.lineWidth=5;cx.strokeStyle='#000';cx.strokeText(q.s,q.x,q.y);cx.fillStyle=q.c;cx.fillText(q.s,q.x,q.y)});cx.globalAlpha=1;
+ const bw=Math.min(W*.4,260);bar(12,40,bw,p.hp,p.max,'#2ec4b6',hero.emo+' '+hero.name);bar(W-bw-12,40,bw,b.hp,b.max,'#ff9f1c',bot.emo+' '+bot.name);
+ cx.fillStyle='#000';cx.fillRect(W/2-102,68,204,14);cx.fillStyle=G.power>=100?'hsl('+(t/3%360)+',100%,60%)':'#ffb703';cx.fillRect(W/2-100,70,2*G.power,10);cx.fillStyle='#fff';cx.font='bold 11px sans-serif';cx.textAlign='center';cx.fillText('SUPER POWER',W/2,64);
+ if(G.combo>2){cx.fillStyle='#ff006e';cx.font='bold 28px sans-serif';cx.fillText(G.combo+' HIT COMBO!',W/2,H*.18)}
+ if(G.flash>0){cx.fillStyle='rgba(255,255,255,'+G.flash*.7+')';cx.fillRect(-20,-20,W+40,H+40)}
+ cx.restore();$('scoreTxt').textContent='⭐ '+score;requestAnimationFrame(loop)}
+rs();
+</script>
+
+
+</body></html>

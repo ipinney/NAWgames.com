@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'super-smash-bots',
+    title: 'Super Smash Bots',
+    creator: 'Nolan',
+    description: 'Pick your hero, from a ninja, dino, wizard, knight, tiger or astronaut, then pick an evil robot to fight. Punch and kick to build combos, hold Block when the robot flashes red, and fill your power bar to unleash a screen-shaking SUPER PUNCH. Beat each robot to unlock a tougher one, all the way up to the Boss Bot.',
+    createdAt: '2026-11-08',
+    thumbnail: '/images/super-smash-bots-preview.png',
+    color: 'from-yellow-400 to-red-700',
+  },
+  {
     slug: 'pole-rush',
     title: 'Pole Rush',
     creator: 'Ivan',
