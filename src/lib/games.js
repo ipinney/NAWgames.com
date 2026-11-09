@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'super-smash-bots-2',
+    title: 'Super Smash Bots 2',
+    creator: 'Nolan',
+    description: 'The sequel is a real arena brawler. Run, double jump and battle on floating platforms, rack up your enemy\'s damage % and knock them right off the stage. Every hero has a special move, including two new fighters: the Tornado Spin Shark and the Banana Boomerang Monkey. Grab falling hammers, giant mushrooms and speed shoes, fill your meter for a slow-motion SUPER SMASH, and climb the Robot Tower across the Junkyard, Volcano, Space Station and Robot Factory to face the GIGA BOSS. Or battle a friend in 2 Player mode.',
+    createdAt: '2026-11-08',
+    thumbnail: '/images/super-smash-bots-2-preview.png',
+    color: 'from-cyan-400 to-purple-800',
+  },
+  {
     slug: 'super-smash-bots',
     title: 'Super Smash Bots',
     creator: 'Nolan',
