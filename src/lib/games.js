@@ -24,7 +24,7 @@ const GAMES = [
     slug: 'pole-rush',
     title: 'Pole Rush',
     creator: 'Ivan',
-    description: 'Race across the rooftops holding a giant pole. Grab yellow bars and +5 bundles to grow it, pick the green x2 gate and dodge the red one, and watch out for spinning saws that snip it short. At the end of each roof you leap off the edge and fall toward rails far below: steer in midair so your pole catches both rails, then slide downhill across the canyon. Miss and you tumble into the depths. Gaps go from skinny to huge, so your pole can grow up to 40 pieces long. 15 levels in Beach City, Sunset Towers and Neon Night, Fever mode, a shop and Endless mode.',
+    description: 'Now in real 3D! Race across white rooftops high above a green valley with mountains, a lake and pastel skyscrapers, holding a giant pole. Grab yellow bars and +5 bundles to grow it, pick the green x2 gate and dodge the red one, and watch out for spinning saws that snip it short. At the end of each roof you leap off the edge: steer in midair so your pole catches both rails, then slide downhill over the valley. Miss and you tumble to the grass below. Gaps go from skinny to huge, so your pole can grow up to 40 pieces long. 15 levels in Mountain Lake, Sunset Towers and Neon Night, Fever mode, a shop and Endless mode.',
     createdAt: '2026-11-06',
     thumbnail: '/images/pole-rush-preview.png',
     color: 'from-pink-400 to-violet-700',
