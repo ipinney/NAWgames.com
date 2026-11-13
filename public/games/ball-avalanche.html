@@ -46,7 +46,7 @@
   <div class="sub">Sneak one ball through the crack. Pop the orbs. Watch it turn into a <b style="color:#ffd54f">million balls!</b></div>
   <button class="btn" id="playBtn">PLAY ▶</button>
   <div class="levels" id="levelGrid"></div>
-  <div class="tip">Drag to move the paddle · Tap to launch · Arrows + Space work too</div>
+  <div class="tip">Slide your thumb under the paddle to steer · Tap to launch · Arrows + Space work too</div>
 </div>
 
 <div id="clearScreen" class="screen dim">
@@ -94,11 +94,11 @@ const LW = 480, LH = 800;          // logical play size
 const CELL = 8;
 const COLS = 60, ROWS = 70;        // brick field: 480 x 560
 const FIELD_H = ROWS * CELL;       // 560
-const PADDLE_Y = 752;
-const PADDLE_H = 10;
-const BASE_PW = 84, WIDE_PW = 140;
+const PADDLE_Y = 712;              // raised: the strip below is the thumb zone
+const PADDLE_H = 14;
+const BASE_PW = 112, WIDE_PW = 176;
 const BALL_R = 2.6;
-const BALL_SPEED = 470;
+const BALL_SPEED = 380;
 const MAX_BALLS = 1400;
 const MAX_PARTICLES = 700;
 
@@ -276,7 +276,9 @@ function resize() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   K = scale * dpr;
   const cw = Math.round(LW * scale), ch = Math.round(LH * scale);
-  offX = Math.round((W - cw) / 2); offY = Math.round((H - ch) / 2);
+  offX = Math.round((W - cw) / 2);
+  // tall phones: pin the board to the top so all the spare screen sits under the paddle as thumb room
+  offY = H - ch > 40 ? Math.min(Math.round((H - ch) * 0.15), 30) : Math.round((H - ch) / 2);
   canvas.style.left = offX + 'px'; canvas.style.top = offY + 'px';
   canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
   canvas.width = Math.round(LW * K); canvas.height = Math.round(LH * K);
@@ -472,7 +474,7 @@ function breakCell(c, r, quiet) {
   }
   if (!quiet) SFX.brick();
   // the avalanche engine: broken bricks sometimes release a new ball, so more balls means even more balls
-  if (!quiet && Math.random() < 1 / 40) spawnBall(px, py);
+  if (!quiet && Math.random() < 1 / 34) spawnBall(px, py);
   if (t === CAGE) { cageLeft--; if (cageLeft <= 0) freeHero(); }
   // capsule drops
   if (!firstCapsuleDone && broken >= 12) { firstCapsuleDone = true; dropCapsule(px, py, 'x2'); }
@@ -848,6 +850,23 @@ function render() {
   ctx.fillStyle = pg; roundRect(px, py, pw, PADDLE_H, 5); ctx.fill();
   ctx.fillStyle = 'rgba(255,255,255,0.5)'; roundRect(px + 4, py + 1.5, pw - 8, 2.5, 1.2); ctx.fill();
 
+  // landing markers: where falling balls will meet the paddle line
+  drawLandingMarkers();
+  // thumb zone: a track that mirrors the paddle so you can see it even with your thumb down here
+  {
+    const ty = LH - 34;
+    ctx.fillStyle = 'rgba(255,255,255,0.06)'; roundRect(10, ty - 16, LW - 20, 40, 14); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.10)'; roundRect(20, ty + 2, LW - 40, 4, 2); ctx.fill();
+    const tx = 20 + (paddleX / LW) * (LW - 40);
+    const tw = Math.max(26, paddleW * (LW - 40) / LW);
+    ctx.fillStyle = 'rgba(255,255,255,0.55)'; roundRect(tx - tw / 2, ty, tw, 8, 4); ctx.fill();
+    if (levelTime < 8 && state === 'play') {
+      ctx.globalAlpha = 0.7; ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('◀  slide your thumb down here  ▶', LW / 2, ty - 6);
+      ctx.globalAlpha = 1;
+    }
+  }
+
   // launch hint
   if (balls.some(b => b.stuck) && state === 'play') {
     ctx.globalAlpha = 0.6 + Math.sin(performance.now() / 200) * 0.35;
@@ -913,6 +932,30 @@ function drawHud() {
     ctx.globalAlpha = 1;
   }
 }
+function drawLandingMarkers() {
+  // pick up to 10 falling balls closest to the paddle line and project where they will cross it
+  const cand = [];
+  for (const b of balls) {
+    if (b.stuck || b.vy <= 0 || b.y < FIELD_H - 4 || b.y > PADDLE_Y) continue;
+    const t = (PADDLE_Y - b.y) / b.vy;
+    if (t > 1.1) continue;
+    cand.push([t, b]);
+  }
+  if (!cand.length) return;
+  cand.sort((a, b) => a[0] - b[0]);
+  const n = Math.min(10, cand.length);
+  for (let i = 0; i < n; i++) {
+    const [t, b] = cand[i];
+    let x = b.x + b.vx * t;
+    // fold reflections off the side walls
+    const span = LW * 2; x = ((x % span) + span) % span; if (x > LW) x = span - x;
+    const a = Math.max(0.15, 1 - t) * (i === 0 ? 1 : 0.7);
+    ctx.globalAlpha = a;
+    ctx.fillStyle = i === 0 ? '#ffd54f' : '#ffffff';
+    ctx.beginPath(); ctx.moveTo(x, PADDLE_Y - 4); ctx.lineTo(x - 5, PADDLE_Y - 12); ctx.lineTo(x + 5, PADDLE_Y - 12); ctx.closePath(); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
 function roundRect(x, y, w, h, r) {
   ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
   ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
@@ -939,20 +982,40 @@ requestAnimationFrame(frame);
 // ============================================================
 const keys = { left: false, right: false };
 function toLogicalX(clientX) { return (clientX - offX) / scale; }
-let pointerDown = false, downX = 0, downT = 0;
-canvas.addEventListener('pointerdown', e => {
+// Touch steering works like a trackpad: slide anywhere (best: the empty strip under the paddle)
+// and the paddle moves by how far you slide, so your thumb never has to cover it.
+const DRAG_GAIN = 1.5;
+let pointerDown = false, dragId = null, dragStartX = 0, dragStartPaddle = 0, dragMoved = 0;
+function gameActive() { return state === 'play' || state === 'sweep'; }
+window.addEventListener('pointerdown', e => {
   ensureAudio();
-  pointerDown = true; downX = e.clientX; downT = performance.now();
-  paddleTarget = toLogicalX(e.clientX);
-  try { canvas.setPointerCapture(e.pointerId); } catch (er) {}
+  if (!gameActive() || (e.target && e.target.closest && e.target.closest('button, .screen.show'))) return;
+  if (e.pointerType === 'mouse') { paddleTarget = toLogicalX(e.clientX); pointerDown = true; dragMoved = 0; return; }
+  if (dragId !== null) return;
+  dragId = e.pointerId; pointerDown = true; dragMoved = 0;
+  dragStartX = e.clientX; dragStartPaddle = paddleTarget;
 });
-canvas.addEventListener('pointermove', e => {
-  if (e.pointerType === 'mouse' || pointerDown) paddleTarget = toLogicalX(e.clientX);
+window.addEventListener('pointermove', e => {
+  if (!gameActive()) return;
+  if (e.pointerType === 'mouse') { paddleTarget = toLogicalX(e.clientX); return; }
+  if (e.pointerId !== dragId) return;
+  const dx = (e.clientX - dragStartX) / scale;
+  dragMoved = Math.max(dragMoved, Math.abs(dx));
+  paddleTarget = dragStartPaddle + dx * DRAG_GAIN;
+  // keep the anchor honest when the paddle hits a wall so reversing feels instant
+  const lo = paddleW / 2, hi = LW - paddleW / 2;
+  if (paddleTarget < lo || paddleTarget > hi) {
+    paddleTarget = Math.max(lo, Math.min(hi, paddleTarget));
+    dragStartX = e.clientX; dragStartPaddle = paddleTarget;
+  }
 });
-canvas.addEventListener('pointerup', e => {
-  pointerDown = false;
+function endDrag(e) {
+  if (e.pointerType !== 'mouse' && e.pointerId !== dragId) return;
+  dragId = null; pointerDown = false;
   if (state === 'play') launch();
-});
+}
+window.addEventListener('pointerup', endDrag);
+window.addEventListener('pointercancel', e => { if (e.pointerId === dragId) { dragId = null; pointerDown = false; } });
 window.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
   if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
