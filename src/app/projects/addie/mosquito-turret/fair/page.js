@@ -18,7 +18,28 @@ const RULES = [
   ['The board can be typed', 'Title, question, photos, data, graphs, and captions can be printed and glued on.'],
   ['Addie writes it', 'Research and writing happen in class. This page asks the questions; the answers are in Addie\u2019s own words.'],
   ['Experiments happen at home', 'The build, the runs, and the board are done at home.'],
-  ['Laser rules first', 'Ask Miss Taggart about laser rules for the Parish Hall and the Archdiocesan fair before the board is made.'],
+  ['Teacher OK first', 'Miss Taggart and the St. Rose Science Fair Director have to say yes to the project. Show them the question, the fake mosquito, and the eye-safe laser.'],
+  ['Addie does the work', 'Archdiocesan rule: the project is the student\u2019s own work. Grown-ups give ideas and cheer. Addie wires, codes, runs the tests, and writes.'],
+  ['No real mosquitoes', 'Animal experiments are not allowed. The target is a stuffed toy mosquito on a fishing line. No live bugs, ever.'],
+  ['No names or faces', 'Addie\u2019s name and photos of her face cannot be on the board or in the journal. Photos show the MS-2000 and hands only.'],
+  ['Board size', 'No bigger than 48 inches wide and 36 inches tall. No title header board on top. The project has to stand up by itself.'],
+  ['Bring your own power', 'Any cords, switches, or a tablet to play a video come from home.'],
+  ['Category', 'Engineering: Robotics and Intelligent Machines.'],
+];
+
+// Archdiocesan rule: the handwritten journal must have all of these
+const JOURNAL_PARTS = [
+  'Title page',
+  'Table of contents',
+  'Problem, hypothesis, variables',
+  'Background research',
+  'Materials',
+  'Procedure',
+  'Observations',
+  'Data',
+  'Conclusion',
+  'Religion reflection',
+  'Bibliography',
 ];
 
 // Guide for each graded part, keyed by DUE id
@@ -223,7 +244,7 @@ export default function FairPage() {
           </p>
           <p className="text-white/55 text-sm mt-2">
             Final project due Monday, February 1. Exhibition Wednesday, February 3 at 2:00 PM in the Parish Hall. Winners go to
-            the Archdiocesan fair on February 25.
+            the Archdiocesan STREAM Fair at Corpus Christi on February 25.
           </p>
           <nav className="mt-6 flex flex-wrap gap-2">
             {[['dates', 'Due dates'], ['rules', 'Rules'], ['parts', 'Part by part'], ['variables', 'Variables'], ['catholic', 'Catholic connection'], ['sources', 'Sources'], ['journal', 'Journal'], ['judges', 'Judges'], ['rubric', 'Rubric']].map(([id, t]) => (
@@ -301,6 +322,13 @@ export default function FairPage() {
         </Section>
 
         <Section id="journal" title="The journal" sub="Handwritten in cursive. It is graded on its own and counts for handwriting. Write in it every day you work on the project.">
+          <div className="bg-naw-card rounded-2xl border border-naw-orange/40 p-5 mb-4">
+            <div className="text-white font-bold">The journal must have these sections, in this order</div>
+            <ol className="mt-3 grid sm:grid-cols-2 gap-x-6 gap-y-1.5 list-decimal list-inside text-sm text-white/75">
+              {JOURNAL_PARTS.map((t) => <li key={t}>{t}</li>)}
+            </ol>
+            <div className="text-white/45 text-xs mt-3">Archdiocesan fair rule. Leave room at the front for the table of contents and fill it in last.</div>
+          </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-naw-card rounded-2xl border border-white/10 p-5">
               <div className="text-white font-bold">Every entry has</div>

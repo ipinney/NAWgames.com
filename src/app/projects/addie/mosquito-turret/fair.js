@@ -1,5 +1,6 @@
 // St. Rose Elementary Science Fair 2026-2027, 3rd grade. From Miss Taggart's due-date sheet,
-// the Aug 19, 2026 parent letter, and the SRL 3rd and 5th grade rubric.
+// the Aug 19, 2026 parent letter, the SRL 3rd and 5th grade rubric, and the CSO Archdiocesan
+// Elementary STREAM Fair Rules and Guidelines 2026-2027 (sent Nov 12, 2026).
 
 export const FAIR = '/projects/addie/mosquito-turret/fair';
 
@@ -57,7 +58,8 @@ export const DUE = [
 
 export const EVENTS = [
   { date: '2027-02-03', label: 'Wed Feb 3, 2:00 PM', title: 'Parent exhibition', text: 'Parish Hall. Judging and the demo.' },
-  { date: '2027-02-25', label: 'Thu Feb 25', title: 'Archdiocesan Science Fair', text: 'For the projects St. Rose picks as winners.' },
+  { date: '2027-02-25', label: 'Thu Feb 25', title: 'Archdiocesan STREAM Fair', text: 'Corpus Christi Catholic School, 4005 Cheena Dr. Two students per grade from St. Rose. Dress uniform. Only students go into judging.' },
+  { date: '2027-03-05', label: 'Fri Mar 5, 11:30 AM', title: 'Archdiocesan awards', text: 'Online awards: 1st, 2nd, 3rd, and Honorable Mention for each grade.' },
 ];
 
 // SRL rubric: every row is scored 0, 1, 3, or 5. Nine rows, 45 points.
