@@ -3,6 +3,15 @@
 
 const GAMES = [
   {
+    slug: 'ball-avalanche',
+    title: 'Ball Avalanche',
+    creator: 'Ivan',
+    description: 'One little ball, a wall of tiny bricks and a steel maze with one small crack. Bounce your ball through the door, chip a hole through the crack and pop the glowing orbs: +4 balls, 14-ball bursts and KABOOM bombs. Catch falling capsules for Double, +10, Big Paddle, Fireballs and a Safety Net. Every broken brick can let out another ball, so 1 becomes 10, then 100, then a thousand-ball AVALANCHE that wipes the whole screen. Free the trapped critter in each of 10 levels, from First Crack to The Fortress.',
+    createdAt: '2026-11-12',
+    thumbnail: '/images/ball-avalanche-preview.png',
+    color: 'from-lime-300 to-indigo-800',
+  },
+  {
     slug: 'super-smash-bots-2',
     title: 'Super Smash Bots 2',
     creator: 'Nolan',
